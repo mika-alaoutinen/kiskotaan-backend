@@ -22,6 +22,6 @@ jobs:
       - name: Create settings.xml
         uses: whelk-io/maven-settings-xml-action@v4
         with:
-          servers: '[{ "id": "github", "username": "mika-alaoutinen", "password": "${{ secrets.ACCESS_TOKEN }}" }]'
+          servers: '[{ "id": "github", "username": "mika-alaoutinen", "password": "${{ secrets.GH_PASSWORD }}" }]'
       - name: Build and test with Maven
         run: mvn -B clean package

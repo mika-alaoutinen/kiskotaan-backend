@@ -22,7 +22,15 @@ jobs:
       - name: Create settings.xml
         uses: whelk-io/maven-settings-xml-action@v4
         with:
-          repositories: '[{ "id": "github", "name": "GitHub mika-alaoutinen Apache Maven Packages", "url": "https://maven.pkg.github.com/mika-alaoutinen/kiskotaan-openapi", "releases": { "enabled": "true" }, "snapshots": { "enabled": "true" } }]'
-          servers: '[{ "id": "github", "username": "mika-alaoutinen", "password": "${{ secrets.ACCESS_TOKEN }}" }]'
+          repositories: '[{
+            "id": "github",
+            "name": "GitHub mika-alaoutinen Apache Maven Packages",
+            "url": "https://maven.pkg.github.com/mika-alaoutinen/kiskotaan-openapi"
+          }]'
+          servers: '[{
+            "id": "github",
+            "username": "mika-alaoutinen",
+            "password": "${{ secrets.ACCESS_TOKEN }}"
+          }]'
       - name: Build and test with Maven
         run: mvn -B clean package

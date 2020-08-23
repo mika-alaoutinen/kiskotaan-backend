@@ -1,5 +1,5 @@
 # Workflow for master branch.
-# Packages the code as jar and pushes the package to GitHub Packages.
+# Tests that the code builds.
 
 name: Master branch workflow
 
@@ -18,6 +18,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.14
+      - name: Create settings.xml
+        uses: whelk-io/maven-settings-xml-action@v4
+        with:
+          repositories: '[{ "id": "github", "name": "GitHub mika-alaoutinen Apache Maven Packages", "url": "https://maven.pkg.github.com/mika-alaoutinen/kiskotaan-openapi", "releases": { "enabled": "true" }, "snapshots": { "enabled": "true" } }]'
+          servers: '[{ "id": "github", "username": "mika-alaoutinen", "password": "${{ secrets.ACCESS_TOKEN }}" }]'
       - name: Build and test with Maven
         run: mvn -B clean package
 

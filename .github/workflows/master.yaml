@@ -5,8 +5,8 @@ name: Master branch workflow
 
 on:
   push:
-#    branches:
-#      - master
+    branches:
+      - master
 
 jobs:
   build:
@@ -21,7 +21,7 @@ jobs:
       - name: Create settings.xml
         uses: whelk-io/maven-settings-xml-action@v4
         with:
-          servers: '[{ "id": "github", "username": mika-alaoutinen", "password": "${{ secrets.GITHUB_TOKEN }}" }]'
+          servers: '[{ "id": "github", "username": "mika-alaoutinen", "password": "${{ secrets.GITHUB_TOKEN }}" }]'
       - name: Build and test with Maven
         run: mvn -B clean package
 

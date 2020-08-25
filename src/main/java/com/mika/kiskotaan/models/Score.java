@@ -4,22 +4,21 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Game extends EntityModel {
+public class Score extends EntityModel {
 
-    private boolean hasScoreChanged;
-    private boolean isOver;
+    @NotNull
+    @ManyToOne
+    private Player player;
 
     @Min(1)
-    @Max(30)
-    private int hole;
-
-    @OneToOne
-    private ScoreCard scoreCard;
+    @Max(99)
+    private int score;
 }

@@ -1,4 +1,20 @@
 package com.mika.kiskotaan.models;
 
-public class Player {
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.Entity;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Entity
+public class Player extends EntityModel {
+
+    @NotBlank
+    @Min(3)
+    @Max(40)
+    private String name;
 }

@@ -1,10 +1,10 @@
-package com.mika.kiskotaan;
+package com.mika.kiskotaan.testdata;
 
 import com.mika.kiskotaan.models.Course;
 
 import java.util.List;
 
-public abstract class TestData {
+public abstract class TestModels {
 
     public static List<Course> courses() {
         Course c1 = new Course("Kuokkalan golf", 30);

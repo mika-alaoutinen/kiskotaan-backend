@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.models.EntityModel;
-import kiskotaan.openapi.model.CourseResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MvcResult;
@@ -33,7 +32,7 @@ public class TestUtils {
         return result.getResponse().getContentAsString();
     }
 
-    public String writeModel(CourseResource model) throws JsonProcessingException {
+    public String writeModel(Object model) throws JsonProcessingException {
         return mapper.writeValueAsString(model);
     }
 }

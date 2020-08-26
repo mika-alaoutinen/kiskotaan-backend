@@ -3,6 +3,7 @@ package com.mika.kiskotaan.controllers;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.repositories.CourseRepository;
 import com.mika.kiskotaan.testdata.TestModels;
+import com.mika.kiskotaan.testdata.TestResources;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -11,6 +12,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,11 +41,11 @@ public class CoursesControllerTest extends ControllerTest {
     @Test
     public void shouldAddCourse() throws Exception {
         Course course = TestModels.courses().get(0);
-        when(repository.save(course)).thenReturn(course);
+        when(repository.save(any(Course.class))).thenReturn(course);
 
         MvcResult result = mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(testUtils.writeModel(course)))
+                .content(testUtils.writeModel(TestResources.courseResource())))
             .andExpect(status().isCreated())
             .andReturn();
 

@@ -5,6 +5,7 @@ import kiskotaan.openapi.api.CoursesApi;
 import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.NewCourseResource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,7 @@ public class CoursesController implements CoursesApi {
 
     @Override
     public ResponseEntity<CourseResource> addCourse(@Valid NewCourseResource newCourseResource) {
-        return ResponseEntity.ok(service.addCourse(newCourseResource));
+        return new ResponseEntity<>(service.addCourse(newCourseResource), HttpStatus.CREATED);
     }
 
     @Override

@@ -16,11 +16,11 @@ import javax.validation.constraints.*;
 public class Course extends EntityModel {
 
     @NotBlank
-    @Size(min = 3, max = 34)
+    @Size(min = 3, max = 40)
     private String name;
 
     @NotNull
-    @Min(1)
-    @Max(6)
+    @Min(18)
+    @Max(150)
     private int par;
 }

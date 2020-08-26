@@ -5,7 +5,7 @@ import kiskotaan.openapi.model.CourseResource;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface ModelMapper {
+public interface CourseMapper {
 
     Course toModel(CourseResource resource);
     CourseResource toResource(Course model);

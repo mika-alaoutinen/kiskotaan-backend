@@ -6,7 +6,7 @@ public abstract class TestResources {
 
     public static CourseResource courseResource() {
         return new CourseResource()
-                .id("123")
+                .id("1")
                 .name("Kuokkalan golf")
                 .par(30);
     }

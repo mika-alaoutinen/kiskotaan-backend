@@ -5,6 +5,7 @@ import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.repositories.CourseRepository;
 import com.mika.kiskotaan.services.CourseService;
 import kiskotaan.openapi.model.CourseResource;
+import kiskotaan.openapi.model.NewCourseResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +24,7 @@ public class CourseServiceImpl implements CourseService {
                 .collect(Collectors.toList());
     }
 
-    public CourseResource addCourse(CourseResource resource) {
+    public CourseResource addCourse(NewCourseResource resource) {
         Course newCourse = repository.save(mapper.toModel(resource));
         return mapper.toResource(newCourse);
     }

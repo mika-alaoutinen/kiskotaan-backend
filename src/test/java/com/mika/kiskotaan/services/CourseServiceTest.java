@@ -6,12 +6,12 @@ import com.mika.kiskotaan.repositories.CourseRepository;
 import com.mika.kiskotaan.services.impl.CourseServiceImpl;
 import com.mika.kiskotaan.testdata.TestModels;
 import kiskotaan.openapi.model.CourseResource;
+import kiskotaan.openapi.model.NewCourseResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -35,13 +35,7 @@ public class CourseServiceTest {
 
     @BeforeEach
     public void setup() {
-        Mockito.lenient()
-                .when(mapper.toModel(any(CourseResource.class)))
-                .thenReturn(new Course());
-
-        Mockito.lenient()
-                .when(mapper.toResource(any(Course.class)))
-                .thenReturn(new CourseResource());
+        when(mapper.toResource(any(Course.class))).thenReturn(new CourseResource());
     }
 
     @Test
@@ -57,9 +51,10 @@ public class CourseServiceTest {
 
     @Test
     public void shouldAddCourse() {
-        CourseResource givenResource = new CourseResource();
+        NewCourseResource givenResource = new NewCourseResource();
         Course savedCourse = new Course();
 
+        when(mapper.toModel(any(NewCourseResource.class))).thenReturn(new Course());
         when(repository.save(any(Course.class))).thenReturn(savedCourse);
 
         CourseResource savedResource = service.addCourse(givenResource);

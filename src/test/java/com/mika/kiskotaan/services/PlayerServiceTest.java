@@ -90,4 +90,11 @@ public class PlayerServiceTest {
         verify(repository, times(1)).save(savedPlayer);
         verify(mapper, times(1)).toResource(savedPlayer);
     }
+
+    @Test
+    public void shouldDeletePlayer() {
+        Long id = 1L;
+        service.deletePlayer(id);
+        verify(repository, times(1)).deleteById(id);
+    }
 }

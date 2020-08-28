@@ -37,6 +37,6 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     public void deletePlayer(Long id) {
-
+        repository.deleteById(id);
     }
 }

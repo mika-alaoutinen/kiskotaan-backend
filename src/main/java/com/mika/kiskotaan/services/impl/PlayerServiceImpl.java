@@ -1,5 +1,6 @@
 package com.mika.kiskotaan.services.impl;
 
+import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.player.PlayerMapper;
 import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.repositories.PlayerRepository;
@@ -8,6 +9,7 @@ import kiskotaan.openapi.model.PlayerResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,15 +25,17 @@ public class PlayerServiceImpl implements PlayerService {
                 .collect(Collectors.toList());
     }
 
-    public PlayerResource getPlayer(String id) {
-        return null;
+    public PlayerResource getPlayer(Long id) {
+        return repository.findById(id)
+                .map(mapper::toResource)
+                .orElseThrow(() -> new NotFoundException(new Player(), id));
     }
 
     public PlayerResource addPlayer() {
         return null;
     }
 
-    public void deletePlayer(String id) {
+    public void deletePlayer(Long id) {
 
     }
 }

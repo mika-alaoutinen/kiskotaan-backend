@@ -5,6 +5,7 @@ import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.repositories.PlayerRepository;
 import com.mika.kiskotaan.services.impl.PlayerServiceImpl;
 import com.mika.kiskotaan.testdata.TestModels;
+import com.mika.kiskotaan.testdata.TestResources;
 import kiskotaan.openapi.model.PlayerResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,6 +51,17 @@ public class PlayerServiceTest {
 
     @Test
     public void shouldGetPlayer() {
+        Long id = 1L;
+        Player model = TestModels.player();
+        PlayerResource resource = TestResources.playerResource();
 
+        when(repository.findById(id)).thenReturn(Optional.of(model));
+        when(mapper.toResource(model)).thenReturn(resource);
+
+        PlayerResource player = service.getPlayer(id);
+
+        assertEquals(resource, player);
+        verify(repository, times(1)).findById(id);
+        verify(mapper, times(1)).toResource(TestModels.player());
     }
 }

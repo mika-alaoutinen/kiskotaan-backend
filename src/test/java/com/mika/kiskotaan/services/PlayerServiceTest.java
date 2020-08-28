@@ -46,4 +46,9 @@ public class PlayerServiceTest {
         verify(repository, times(1)).findAll();
         verify(mapper, times(2)).toResource(any(Player.class));
     }
+
+    @Test
+    public void shouldGetPlayer() {
+
+    }
 }

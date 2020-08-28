@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -19,12 +20,12 @@ public class PlayersController implements PlayersApi {
     }
 
     @Override
-    public ResponseEntity<Void> deletePlayer(@Size(min = 1) String id) {
+    public ResponseEntity<Void> deletePlayer(@Size(min = 1) BigDecimal id) {
         return null;
     }
 
     @Override
-    public ResponseEntity<PlayerResource> getPlayer(@Size(min = 1) String id) {
+    public ResponseEntity<PlayerResource> getPlayer(@Size(min = 1) BigDecimal id) {
         return null;
     }
 

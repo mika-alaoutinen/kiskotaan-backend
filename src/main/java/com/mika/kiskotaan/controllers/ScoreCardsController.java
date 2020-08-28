@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 
 @RestController
 public class ScoreCardsController implements ScoreCardsApi {
@@ -19,12 +20,12 @@ public class ScoreCardsController implements ScoreCardsApi {
     }
 
     @Override
-    public ResponseEntity<Void> deleteScoreCard(@Size(min = 1) String id) {
+    public ResponseEntity<Void> deleteScoreCard(@Size(min = 1) BigDecimal id) {
         return null;
     }
 
     @Override
-    public ResponseEntity<ScoreCardResource> getScoreCard(@Size(min = 1) String id) {
+    public ResponseEntity<ScoreCardResource> getScoreCard(@Size(min = 1) BigDecimal id) {
         return null;
     }
 

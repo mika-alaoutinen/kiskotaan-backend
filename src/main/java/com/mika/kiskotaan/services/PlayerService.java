@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PlayerService {
     List<PlayerResource> getPlayers();
-    PlayerResource getPlayer(String id);
+    PlayerResource getPlayer(Long id);
     PlayerResource addPlayer();
-    void deletePlayer(String id);
+    void deletePlayer(Long id);
 }

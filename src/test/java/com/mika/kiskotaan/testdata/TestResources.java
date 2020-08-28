@@ -5,6 +5,7 @@ import kiskotaan.openapi.model.HoleResource;
 import kiskotaan.openapi.model.NewCourseResource;
 import kiskotaan.openapi.model.PlayerResource;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ public abstract class TestResources {
 
     public static CourseResource courseResource() {
         return new CourseResource()
-                .id("1")
+                .id(new BigDecimal(1))
                 .name("Kuokkalan golf")
                 .holes(holeResources(18))
                 .par(54);
@@ -41,7 +42,7 @@ public abstract class TestResources {
 
     public static PlayerResource playerResource() {
         return new PlayerResource()
-                .id("1")
+                .id(new BigDecimal(1))
                 .name("Pekka Kana");
     }
 }

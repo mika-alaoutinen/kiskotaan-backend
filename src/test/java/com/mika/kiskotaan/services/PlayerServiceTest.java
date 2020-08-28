@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -35,7 +36,7 @@ public class PlayerServiceTest {
 
     @BeforeEach
     public void setup() {
-
+        when(mapper.toResource(any(Player.class))).thenReturn(TestResources.playerResource());
     }
 
     @Test
@@ -53,15 +54,29 @@ public class PlayerServiceTest {
     public void shouldGetPlayer() {
         Long id = 1L;
         Player model = TestModels.player();
-        PlayerResource resource = TestResources.playerResource();
 
         when(repository.findById(id)).thenReturn(Optional.of(model));
-        when(mapper.toResource(model)).thenReturn(resource);
 
         PlayerResource player = service.getPlayer(id);
 
-        assertEquals(resource, player);
+        assertEquals(TestResources.playerResource(), player);
         verify(repository, times(1)).findById(id);
         verify(mapper, times(1)).toResource(TestModels.player());
+    }
+
+    @Test
+    public void shouldAddPlayer() {
+        PlayerResource givenResource = new PlayerResource();
+        Player savedPlayer = new Player();
+
+        when(mapper.toModel(any(PlayerResource.class))).thenReturn(new Player());
+        when(repository.save(any(Player.class))).thenReturn(savedPlayer);
+
+        PlayerResource savedResource = service.addPlayer(givenResource);
+
+        assertNotNull(savedResource);
+        verify(mapper, times(1)).toModel(givenResource);
+        verify(repository, times(1)).save(savedPlayer);
+        verify(mapper, times(1)).toResource(savedPlayer);
     }
 }

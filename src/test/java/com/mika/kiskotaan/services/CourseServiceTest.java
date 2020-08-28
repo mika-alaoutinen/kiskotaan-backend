@@ -60,8 +60,8 @@ public class CourseServiceTest {
         CourseResource savedResource = service.addCourse(givenResource);
 
         assertNotNull(savedResource);
-        verify(repository, times(1)).save(savedCourse);
         verify(mapper, times(1)).toModel(givenResource);
+        verify(repository, times(1)).save(savedCourse);
         verify(mapper, times(1)).toResource(savedCourse);
     }
 }

@@ -5,12 +5,14 @@ import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.HoleResource;
 import kiskotaan.openapi.model.NewCourseResource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 @RequiredArgsConstructor
 public class CourseMapperImpl implements CourseMapper {
     private final CourseMapStruct mapper;

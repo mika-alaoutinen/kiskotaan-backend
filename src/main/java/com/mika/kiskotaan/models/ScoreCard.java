@@ -26,7 +26,4 @@ public class ScoreCard extends EntityModel {
 
     @OneToMany
     private Map<Integer, ScoreRow> scoreRows;
-
-    @OneToOne
-    private Game game;
 }

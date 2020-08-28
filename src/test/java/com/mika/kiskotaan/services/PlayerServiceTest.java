@@ -1,0 +1,101 @@
+package com.mika.kiskotaan.services;
+
+import com.mika.kiskotaan.errors.notfound.NotFoundException;
+import com.mika.kiskotaan.mappers.player.PlayerMapper;
+import com.mika.kiskotaan.models.Player;
+import com.mika.kiskotaan.repositories.PlayerRepository;
+import com.mika.kiskotaan.services.impl.PlayerServiceImpl;
+import com.mika.kiskotaan.testdata.TestModels;
+import com.mika.kiskotaan.testdata.TestResources;
+import kiskotaan.openapi.model.NewPlayerResource;
+import kiskotaan.openapi.model.PlayerResource;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+public class PlayerServiceTest {
+
+    @Mock
+    private PlayerMapper mapper;
+
+    @Mock
+    private PlayerRepository repository;
+
+    @InjectMocks
+    private PlayerServiceImpl service;
+
+    @Test
+    public void shouldGetPlayers() {
+        when(repository.findAll()).thenReturn(TestModels.players());
+
+        List<PlayerResource> players = service.getPlayers();
+
+        assertEquals(2, players.size());
+        verify(repository, times(1)).findAll();
+        verify(mapper, times(2)).toResource(any(Player.class));
+    }
+
+    @Test
+    public void shouldGetPlayer() {
+        Long id = 1L;
+        Player model = TestModels.player();
+
+        when(repository.findById(id)).thenReturn(Optional.of(model));
+        when(mapper.toResource(any(Player.class))).thenReturn(TestResources.playerResource());
+
+        PlayerResource player = service.getPlayer(id);
+
+        assertEquals(TestResources.playerResource(), player);
+        verify(repository, times(1)).findById(id);
+        verify(mapper, times(1)).toResource(TestModels.player());
+    }
+
+    @Test
+    public void shouldHandlePlayerNotFound() {
+        Long id = 1L;
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        NotFoundException e = assertThrows(NotFoundException.class, () ->
+                service.getPlayer(id));
+
+        assertEquals("Could not find player with id " + id, e.getMessage());
+        verify(repository, times(1)).findById(id);
+        verify(mapper, times(0)).toResource(any(Player.class));
+    }
+
+    @Test
+    public void shouldAddPlayer() {
+        NewPlayerResource givenResource = new NewPlayerResource();
+        Player savedPlayer = new Player();
+
+        when(mapper.toModel(any(NewPlayerResource.class))).thenReturn(new Player());
+        when(repository.save(any(Player.class))).thenReturn(savedPlayer);
+        when(mapper.toResource(any(Player.class))).thenReturn(TestResources.playerResource());
+
+        PlayerResource savedResource = service.addPlayer(givenResource);
+
+        assertNotNull(savedResource);
+        verify(mapper, times(1)).toModel(givenResource);
+        verify(repository, times(1)).save(savedPlayer);
+        verify(mapper, times(1)).toResource(savedPlayer);
+    }
+
+    @Test
+    public void shouldDeletePlayer() {
+        Long id = 1L;
+        service.deletePlayer(id);
+        verify(repository, times(1)).deleteById(id);
+    }
+}

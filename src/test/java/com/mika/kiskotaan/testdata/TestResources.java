@@ -1,9 +1,8 @@
 package com.mika.kiskotaan.testdata;
 
-import kiskotaan.openapi.model.CourseResource;
-import kiskotaan.openapi.model.HoleResource;
-import kiskotaan.openapi.model.NewCourseResource;
+import kiskotaan.openapi.model.*;
 
+import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,7 +12,7 @@ public abstract class TestResources {
 
     public static CourseResource courseResource() {
         return new CourseResource()
-                .id("1")
+                .id(new BigDecimal(1))
                 .name("Kuokkalan golf")
                 .holes(holeResources(18))
                 .par(54);
@@ -36,5 +35,16 @@ public abstract class TestResources {
                 .number(number)
                 .par(3)
                 .distance(80);
+    }
+
+    public static PlayerResource playerResource() {
+        return new PlayerResource()
+                .id(new BigDecimal(1))
+                .name("Pekka Kana");
+    }
+
+    public static NewPlayerResource newPlayerResource() {
+        return new NewPlayerResource()
+                .name("Kukko Pena");
     }
 }

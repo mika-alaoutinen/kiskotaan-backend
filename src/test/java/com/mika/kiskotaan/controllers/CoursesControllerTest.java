@@ -1,5 +1,6 @@
 package com.mika.kiskotaan.controllers;
 
+import com.fasterxml.jackson.databind.type.CollectionType;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.models.Hole;
 import com.mika.kiskotaan.repositories.CourseRepository;
@@ -36,7 +37,7 @@ public class CoursesControllerTest extends ControllerTest {
             .andExpect(status().isOk())
             .andReturn();
 
-        List<Course> courses = testUtils.parseModels(result, Course.class);
+        List<Course> courses = parseCourses(result);
 
         assertCoursesAreSame(courses.get(0), TestModels.courses().get(0));
         assertCoursesAreSame(courses.get(1), TestModels.courses().get(1));
@@ -51,11 +52,11 @@ public class CoursesControllerTest extends ControllerTest {
 
         MvcResult result = mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(testUtils.writeModel(courseResource)))
+                .content(writeModel(courseResource)))
             .andExpect(status().isCreated())
             .andReturn();
 
-        Course response = testUtils.parseModel(result, Course.class);
+        Course response = parseCourse(result);
         assertCoursesAreSame(course, response);
     }
 
@@ -71,5 +72,15 @@ public class CoursesControllerTest extends ControllerTest {
         assertEquals(h1.getNumber(), h2.getNumber());
         assertEquals(h1.getPar(), h2.getPar());
         assertEquals(h1.getDistance(), h2.getDistance());
+    }
+
+    private List<Course> parseCourses(MvcResult result) throws Exception {
+        CollectionType collectionType = getCollectionType(Course.class);
+        String response = parseResponseString(result);
+        return mapper.readValue(response, collectionType);
+    }
+
+    private Course parseCourse(MvcResult result) throws Exception {
+        return mapper.readValue(parseResponseString(result), Course.class);
     }
 }

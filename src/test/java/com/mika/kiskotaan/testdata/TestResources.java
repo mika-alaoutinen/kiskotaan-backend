@@ -15,7 +15,8 @@ public abstract class TestResources {
         return new CourseResource()
                 .id("1")
                 .name("Kuokkalan golf")
-                .par(30);
+                .holes(holeResources(18))
+                .par(54);
     }
 
     public static NewCourseResource newCourseResource() {

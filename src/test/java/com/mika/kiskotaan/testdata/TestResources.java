@@ -3,6 +3,7 @@ package com.mika.kiskotaan.testdata;
 import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.HoleResource;
 import kiskotaan.openapi.model.NewCourseResource;
+import kiskotaan.openapi.model.PlayerResource;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -36,5 +37,11 @@ public abstract class TestResources {
                 .number(number)
                 .par(3)
                 .distance(80);
+    }
+
+    public static PlayerResource playerResource() {
+        return new PlayerResource()
+                .id("1")
+                .name("Pekka Kana");
     }
 }

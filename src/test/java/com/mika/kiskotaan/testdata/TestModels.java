@@ -2,6 +2,7 @@ package com.mika.kiskotaan.testdata;
 
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.models.Hole;
+import com.mika.kiskotaan.models.Player;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,5 +37,12 @@ public abstract class TestModels {
         hole.setNumber(number);
         hole.setPar(3);
         return hole;
+    }
+
+    public static Player player() {
+        Player player = new Player();
+        player.setId(1L);
+        player.setName("Pekka Kana");
+        return player;
     }
 }

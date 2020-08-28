@@ -10,7 +10,6 @@ import com.mika.kiskotaan.testdata.TestResources;
 import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.HoleResource;
 import kiskotaan.openapi.model.NewCourseResource;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -20,22 +19,19 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@RequiredArgsConstructor
 public class CourseMapperTest {
     private final CourseMapper mapper = new CourseMapperImpl(Mappers.getMapper(CourseMapStruct.class));
 
     @Test
     public void shouldMapToModel() {
-        NewCourseResource resource = TestResources.newCourseResource();
-        Course course = mapper.toModel(resource);
-        assertMappingOk(course, resource);
+        Course course = mapper.toModel(TestResources.newCourseResource());
+        assertMappingOk(course, TestResources.newCourseResource());
     }
 
     @Test
     public void shouldMapToResource() {
-        Course model = TestModels.course();
-        CourseResource resource = mapper.toResource(model);
-        assertMappingOk(model, resource);
+        CourseResource resource = mapper.toResource(TestModels.course());
+        assertMappingOk(TestModels.course(), resource);
     }
 
     private void assertMappingOk(Course model, NewCourseResource resource) {

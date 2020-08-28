@@ -1,5 +1,6 @@
 package com.mika.kiskotaan.services;
 
+import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.player.PlayerMapper;
 import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.repositories.PlayerRepository;
@@ -17,8 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -33,11 +33,6 @@ public class PlayerServiceTest {
 
     @InjectMocks
     private PlayerServiceImpl service;
-
-    @BeforeEach
-    public void setup() {
-        when(mapper.toResource(any(Player.class))).thenReturn(TestResources.playerResource());
-    }
 
     @Test
     public void shouldGetPlayers() {
@@ -56,6 +51,7 @@ public class PlayerServiceTest {
         Player model = TestModels.player();
 
         when(repository.findById(id)).thenReturn(Optional.of(model));
+        when(mapper.toResource(any(Player.class))).thenReturn(TestResources.playerResource());
 
         PlayerResource player = service.getPlayer(id);
 
@@ -65,12 +61,27 @@ public class PlayerServiceTest {
     }
 
     @Test
+    public void shouldHandlePlayerNotFound() {
+        Long id = 1L;
+
+        when(repository.findById(id)).thenReturn(Optional.empty());
+
+        NotFoundException e = assertThrows(NotFoundException.class, () ->
+                service.getPlayer(id));
+
+        assertEquals("Could not find player with id " + id, e.getMessage());
+        verify(repository, times(1)).findById(id);
+        verify(mapper, times(0)).toResource(any(Player.class));
+    }
+
+    @Test
     public void shouldAddPlayer() {
         PlayerResource givenResource = new PlayerResource();
         Player savedPlayer = new Player();
 
         when(mapper.toModel(any(PlayerResource.class))).thenReturn(new Player());
         when(repository.save(any(Player.class))).thenReturn(savedPlayer);
+        when(mapper.toResource(any(Player.class))).thenReturn(TestResources.playerResource());
 
         PlayerResource savedResource = service.addPlayer(givenResource);
 

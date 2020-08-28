@@ -5,6 +5,7 @@ import com.mika.kiskotaan.mappers.player.PlayerMapper;
 import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.repositories.PlayerRepository;
 import com.mika.kiskotaan.services.PlayerService;
+import kiskotaan.openapi.model.NewPlayerResource;
 import kiskotaan.openapi.model.PlayerResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class PlayerServiceImpl implements PlayerService {
                 .orElseThrow(() -> new NotFoundException(new Player(), id));
     }
 
-    public PlayerResource addPlayer(PlayerResource resource) {
+    public PlayerResource addPlayer(NewPlayerResource resource) {
         Player newPlayer = repository.save(mapper.toModel(resource));
         return mapper.toResource(newPlayer);
     }

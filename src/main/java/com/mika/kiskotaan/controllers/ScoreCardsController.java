@@ -30,7 +30,7 @@ public class ScoreCardsController implements ScoreCardsApi {
     }
 
     @Override
-    public ResponseEntity<ScoreRowResource> updateScores(@Valid ScoreRowResource scoreRowResource) {
+    public ResponseEntity<ScoreRowResource> updateScores(BigDecimal id, @Valid ScoreRowResource scoreRowResource) {
         return null;
     }
 }

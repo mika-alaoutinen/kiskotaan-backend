@@ -27,5 +27,7 @@ public class Hole extends EntityModel {
     @Max(6)
     private int par;
 
-    private int distance;
+    @Min(1)
+    @Max(1000)
+    private int distance; // in meters
 }

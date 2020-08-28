@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -18,6 +19,12 @@ public class Course extends EntityModel {
     @NotBlank
     @Size(min = 3, max = 40)
     private String name;
+
+    @NotNull
+    @Size(min = 1, max = 30)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "hole_id")
+    private List<Hole> holes;
 
     @NotNull
     @Min(18)

@@ -7,6 +7,7 @@ import com.mika.kiskotaan.repositories.PlayerRepository;
 import com.mika.kiskotaan.services.impl.PlayerServiceImpl;
 import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
+import kiskotaan.openapi.model.NewPlayerResource;
 import kiskotaan.openapi.model.PlayerResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,10 +77,10 @@ public class PlayerServiceTest {
 
     @Test
     public void shouldAddPlayer() {
-        PlayerResource givenResource = new PlayerResource();
+        NewPlayerResource givenResource = new NewPlayerResource();
         Player savedPlayer = new Player();
 
-        when(mapper.toModel(any(PlayerResource.class))).thenReturn(new Player());
+        when(mapper.toModel(any(NewPlayerResource.class))).thenReturn(new Player());
         when(repository.save(any(Player.class))).thenReturn(savedPlayer);
         when(mapper.toResource(any(Player.class))).thenReturn(TestResources.playerResource());
 

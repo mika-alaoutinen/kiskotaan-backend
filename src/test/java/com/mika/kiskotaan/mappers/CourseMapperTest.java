@@ -41,7 +41,7 @@ public class CourseMapperTest {
     }
 
     private void assertMappingOk(Course model, CourseResource resource) {
-        assertEquals(model.getId().toString(), resource.getId());
+        assertEquals(model.getId(), resource.getId().longValue());
         assertEquals(model.getName(), resource.getName());
         assertEquals(model.getPar(), resource.getPar());
         assertMappedHolesOk(model.getHoles(), new ArrayList<>(resource.getHoles()));

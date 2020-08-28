@@ -42,9 +42,9 @@ public class CourseServiceTest {
     public void shouldGetCourses() {
         when(repository.findAll()).thenReturn(TestModels.courses());
 
-        List<CourseResource> resources = service.getCourses();
+        List<CourseResource> courses = service.getCourses();
 
-        assertEquals(2, resources.size());
+        assertEquals(2, courses.size());
         verify(repository, times(1)).findAll();
         verify(mapper, times(2)).toResource(any(Course.class));
     }

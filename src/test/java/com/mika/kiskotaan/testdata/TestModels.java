@@ -12,7 +12,6 @@ public abstract class TestModels {
 
     public static List<Course> courses() {
         Course c1 = course();
-
         Course c2 = new Course("Laajavuoren golf", holes(18), 50);
         c2.setId(2L);
 
@@ -39,10 +38,17 @@ public abstract class TestModels {
         return hole;
     }
 
+    public static List<Player> players() {
+        Player p1 = player();
+        Player p2 = new Player("Kukko Pena");
+        p2.setId(2L);
+
+        return List.of(p1, p2);
+    }
+
     public static Player player() {
-        Player player = new Player();
+        Player player = new Player("Pekka Kana");
         player.setId(1L);
-        player.setName("Pekka Kana");
         return player;
     }
 }

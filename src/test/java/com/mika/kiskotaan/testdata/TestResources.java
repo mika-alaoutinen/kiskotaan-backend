@@ -1,9 +1,6 @@
 package com.mika.kiskotaan.testdata;
 
-import kiskotaan.openapi.model.CourseResource;
-import kiskotaan.openapi.model.HoleResource;
-import kiskotaan.openapi.model.NewCourseResource;
-import kiskotaan.openapi.model.PlayerResource;
+import kiskotaan.openapi.model.*;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
@@ -44,5 +41,10 @@ public abstract class TestResources {
         return new PlayerResource()
                 .id(new BigDecimal(1))
                 .name("Pekka Kana");
+    }
+
+    public static NewPlayerResource newPlayerResource() {
+        return new NewPlayerResource()
+                .name("Kukko Pena");
     }
 }

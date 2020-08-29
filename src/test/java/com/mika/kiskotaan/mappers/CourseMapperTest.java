@@ -1,7 +1,7 @@
 package com.mika.kiskotaan.mappers;
 
-import com.mika.kiskotaan.mappers.Course.CourseMapStruct;
 import com.mika.kiskotaan.mappers.Course.CourseMapper;
+import com.mika.kiskotaan.mappers.Course.CourseMapperDecorator;
 import com.mika.kiskotaan.mappers.Course.CourseMapperImpl;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.models.Hole;
@@ -10,17 +10,25 @@ import com.mika.kiskotaan.testdata.TestResources;
 import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.HoleResource;
 import kiskotaan.openapi.model.NewCourseResource;
+import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 public class CourseMapperTest {
-    private final CourseMapper mapper = new CourseMapperImpl(Mappers.getMapper(CourseMapStruct.class));
+//    private final CourseMapper mapper = Mappers.getMapper(CourseMapper.class);
+
+    @Autowired
+    private CourseMapper mapper;
 
     @Test
     public void shouldMapToModel() {

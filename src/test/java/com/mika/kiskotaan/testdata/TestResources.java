@@ -71,10 +71,14 @@ public abstract class TestResources {
                 .players(playerResources());
     }
 
-    private static List<ScoreRowResource> rows() {
-        ScoreRowResource row1 = new ScoreRowResource()
+    public static ScoreRowResource scoreRowResource() {
+        return new ScoreRowResource()
                 .hole(1)
                 .scores(scores(3));
+    }
+
+    private static List<ScoreRowResource> rows() {
+        ScoreRowResource row1 = scoreRowResource();
 
         ScoreRowResource row2 = new ScoreRowResource()
                 .hole(2)

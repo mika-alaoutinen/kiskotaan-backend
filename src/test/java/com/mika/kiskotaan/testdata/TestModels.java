@@ -1,8 +1,6 @@
 package com.mika.kiskotaan.testdata;
 
-import com.mika.kiskotaan.models.Course;
-import com.mika.kiskotaan.models.Hole;
-import com.mika.kiskotaan.models.Player;
+import com.mika.kiskotaan.models.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,10 +29,8 @@ public abstract class TestModels {
     }
 
     public static Hole hole(int number) {
-        Hole hole = new Hole();
+        Hole hole = new Hole(number, 3, 80);
         hole.setId((long) number);
-        hole.setNumber(number);
-        hole.setPar(3);
         return hole;
     }
 
@@ -50,5 +46,15 @@ public abstract class TestModels {
         Player player = new Player("Pekka Kana");
         player.setId(1L);
         return player;
+    }
+
+    public static ScoreRow scoreRow() {
+        return new ScoreRow(1, scores());
+    }
+
+    private static List<Score> scores() {
+        Score s1 = new Score(1L, 3);
+        Score s2 = new Score(2L, 4);
+        return List.of(s1, s2);
     }
 }

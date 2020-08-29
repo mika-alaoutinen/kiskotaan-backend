@@ -24,7 +24,7 @@ public class PlayerMapperTest {
         assertMappingOk(TestModels.player(), resource);
     }
 
-    private void assertMappingOk(Player model, PlayerResource resource) {
+    public void assertMappingOk(Player model, PlayerResource resource) {
         assertEquals(model.getId(), resource.getId().longValue());
         assertEquals(model.getName(), resource.getName());
     }

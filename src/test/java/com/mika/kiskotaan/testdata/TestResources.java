@@ -4,6 +4,7 @@ import kiskotaan.openapi.model.*;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -56,9 +57,41 @@ public abstract class TestResources {
                 .name("Kukko Pena");
     }
 
+    public static ScoreCardResource scoreCardResource() {
+        return new ScoreCardResource()
+                .id(new BigDecimal(1))
+                .course(courseResource())
+                .players(playerResources())
+                .rows(rows());
+    }
+
     public static NewScoreCardResource newScoreCardResource() {
         return new NewScoreCardResource()
                 .course(courseResource())
                 .players(playerResources());
+    }
+
+    private static List<ScoreRowResource> rows() {
+        ScoreRowResource row1 = new ScoreRowResource()
+                .hole(1)
+                .scores(scores(3));
+
+        ScoreRowResource row2 = new ScoreRowResource()
+                .hole(2)
+                .scores(scores(4));
+
+        return List.of(row1, row2);
+    }
+
+    private static List<ScoreResource> scores(int score) {
+        ScoreResource score1 = new ScoreResource()
+                .playerId(new BigDecimal(1))
+                .score(score);
+
+        ScoreResource score2 = new ScoreResource()
+                .playerId(new BigDecimal(2))
+                .score(score + 1);
+
+        return List.of(score1, score2);
     }
 }

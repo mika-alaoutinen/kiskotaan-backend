@@ -1,6 +1,6 @@
 package com.mika.kiskotaan.services;
 
-import com.mika.kiskotaan.mappers.Course.CourseMapper;
+import com.mika.kiskotaan.mappers.CourseMapper;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.repositories.CourseRepository;
 import com.mika.kiskotaan.services.impl.CourseServiceImpl;

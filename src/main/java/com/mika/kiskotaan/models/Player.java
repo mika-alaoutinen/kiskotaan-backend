@@ -6,9 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -18,7 +17,6 @@ import javax.validation.constraints.NotBlank;
 public class Player extends EntityModel {
 
     @NotBlank
-    @Min(3)
-    @Max(40)
+    @Size(min = 3, max = 40)
     private String name;
 }

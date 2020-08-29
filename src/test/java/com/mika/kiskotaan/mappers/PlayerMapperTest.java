@@ -1,6 +1,5 @@
 package com.mika.kiskotaan.mappers;
 
-import com.mika.kiskotaan.mappers.player.PlayerMapper;
 import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;

@@ -1,4 +1,4 @@
-package com.mika.kiskotaan.mappers.Course;
+package com.mika.kiskotaan.mappers;
 
 import com.mika.kiskotaan.models.Course;
 import kiskotaan.openapi.model.CourseResource;

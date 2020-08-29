@@ -1,4 +1,4 @@
-package com.mika.kiskotaan.mappers.player;
+package com.mika.kiskotaan.mappers;
 
 import com.mika.kiskotaan.models.Player;
 import kiskotaan.openapi.model.NewPlayerResource;

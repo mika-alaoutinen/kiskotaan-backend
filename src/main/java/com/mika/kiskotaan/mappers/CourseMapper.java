@@ -10,5 +10,6 @@ import org.mapstruct.Mapper;
 @DecoratedWith(CourseMapperDecorator.class)
 public interface CourseMapper {
     Course toModel(NewCourseResource resource);
+    Course toModel(CourseResource resource);
     CourseResource toResource(Course model);
 }

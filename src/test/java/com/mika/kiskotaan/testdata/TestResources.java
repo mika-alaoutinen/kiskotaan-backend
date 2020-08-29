@@ -36,6 +36,15 @@ public abstract class TestResources {
                 .distance(80);
     }
 
+    public static Set<PlayerResource> playerResources() {
+        PlayerResource p1 = playerResource();
+        PlayerResource p2 = new PlayerResource()
+                .id(new BigDecimal(2))
+                .name("Kukko Pena");
+
+        return Set.of(p1, p2);
+    }
+
     public static PlayerResource playerResource() {
         return new PlayerResource()
                 .id(new BigDecimal(1))
@@ -45,5 +54,11 @@ public abstract class TestResources {
     public static NewPlayerResource newPlayerResource() {
         return new NewPlayerResource()
                 .name("Kukko Pena");
+    }
+
+    public static NewScoreCardResource newScoreCardResource() {
+        return new NewScoreCardResource()
+                .course(courseResource())
+                .players(playerResources());
     }
 }

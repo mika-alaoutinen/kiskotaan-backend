@@ -23,9 +23,15 @@ public class CourseMapperTest {
     private CourseMapper mapper;
 
     @Test
-    public void shouldMapToModel() {
-        Course course = mapper.toModel(TestResources.newCourseResource());
-        assertMappingOk(course, TestResources.newCourseResource());
+    public void shouldMapNewResourceToModel() {
+        Course model = mapper.toModel(TestResources.newCourseResource());
+        assertMappingOk(model, TestResources.newCourseResource());
+    }
+
+    @Test
+    public void shouldMapResourceToModel() {
+        Course model = mapper.toModel(TestResources.courseResource());
+        assertMappingOk(model, TestResources.courseResource());
     }
 
     @Test

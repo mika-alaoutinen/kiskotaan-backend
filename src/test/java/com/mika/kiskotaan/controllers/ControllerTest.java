@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.mika.kiskotaan.models.EntityModel;
+import com.mika.kiskotaan.utils.TestUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,15 +27,6 @@ public class ControllerTest {
     @Autowired
     protected ObjectMapper mapper;
 
-    public String parseResponseString(MvcResult result) throws UnsupportedEncodingException {
-        return result.getResponse().getContentAsString();
-    }
-
-    public String writeModel(Object model) throws JsonProcessingException {
-        return mapper.writeValueAsString(model);
-    }
-
-    public CollectionType getCollectionType(Class<? extends EntityModel> model) {
-        return mapper.getTypeFactory().constructCollectionType(List.class, model);
-    }
+    @Autowired
+    protected TestUtils testUtils;
 }

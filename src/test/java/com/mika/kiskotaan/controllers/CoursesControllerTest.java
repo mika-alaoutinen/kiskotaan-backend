@@ -52,7 +52,7 @@ public class CoursesControllerTest extends ControllerTest {
 
         MvcResult result = mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeModel(courseResource)))
+                .content(testUtils.writeModel(courseResource)))
             .andExpect(status().isCreated())
             .andReturn();
 
@@ -75,12 +75,12 @@ public class CoursesControllerTest extends ControllerTest {
     }
 
     private List<Course> parseCourses(MvcResult result) throws Exception {
-        CollectionType collectionType = getCollectionType(Course.class);
-        String response = parseResponseString(result);
+        CollectionType collectionType = testUtils.getCollectionType(Course.class);
+        String response = testUtils.parseResponseString(result);
         return mapper.readValue(response, collectionType);
     }
 
     private Course parseCourse(MvcResult result) throws Exception {
-        return mapper.readValue(parseResponseString(result), Course.class);
+        return mapper.readValue(testUtils.parseResponseString(result), Course.class);
     }
 }

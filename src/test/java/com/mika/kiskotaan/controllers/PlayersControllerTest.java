@@ -31,12 +31,9 @@ public class PlayersControllerTest extends ControllerTest {
     public void shouldGetPlayers() throws Exception {
         when(repository.findAll()).thenReturn(TestModels.players());
 
-        MvcResult result = mockMvc.perform(get(url)
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn();
-
+        MvcResult result = performGet(url);
         List<Player> players = parsePlayers(result);
+
         assertPlayersAreSame(players.get(0), TestModels.players().get(0));
         assertPlayersAreSame(players.get(1), TestModels.players().get(1));
         verify(repository, times(1)).findAll();
@@ -46,12 +43,9 @@ public class PlayersControllerTest extends ControllerTest {
     public void shouldGetPlayer() throws Exception {
         when(repository.findById(id)).thenReturn(Optional.of(TestModels.player()));
 
-        MvcResult result = mockMvc.perform(get(url + "/" + id)
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn();
-
+        MvcResult result = performGet(url + "/" + id);
         Player player = parsePlayer(result);
+
         assertPlayersAreSame(player, TestModels.player());
         verify(repository, times(1)).findById(id);
     }
@@ -65,7 +59,7 @@ public class PlayersControllerTest extends ControllerTest {
 
         MvcResult result = mockMvc.perform(post(url)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(writeModel(resource)))
+                .content(testUtils.writeModel(resource)))
             .andExpect(status().isCreated())
             .andReturn();
 
@@ -85,17 +79,24 @@ public class PlayersControllerTest extends ControllerTest {
         verify(repository, times(1)).deleteById(id);
     }
 
+    private MvcResult performGet(String url) throws Exception {
+        return mockMvc.perform(get(url)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andReturn();
+    }
+
     private void assertPlayersAreSame(Player p1, Player p2) {
         assertTrue(new ReflectionEquals(p1).matches(p2));
     }
 
     private List<Player> parsePlayers(MvcResult result) throws Exception {
-        CollectionType collectionType = getCollectionType(Player.class);
-        String response = parseResponseString(result);
+        CollectionType collectionType = testUtils.getCollectionType(Player.class);
+        String response = testUtils.parseResponseString(result);
         return mapper.readValue(response, collectionType);
     }
 
     private Player parsePlayer(MvcResult result) throws Exception {
-        return mapper.readValue(parseResponseString(result), Player.class);
+        return mapper.readValue(testUtils.parseResponseString(result), Player.class);
     }
 }

@@ -1,10 +1,12 @@
 package com.mika.kiskotaan.mappers;
 
-import com.mika.kiskotaan.models.*;
+import com.mika.kiskotaan.models.Course;
+import com.mika.kiskotaan.models.Player;
+import com.mika.kiskotaan.models.ScoreCard;
+import com.mika.kiskotaan.models.ScoreRow;
 import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
 import kiskotaan.openapi.model.*;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,9 +37,8 @@ public class ScoreCardMapperTest {
 
     @Test
     public void shouldMapScoreCardToResource() {
+        // Note that players in score card are sorted alphabetically.
         ScoreCardResource resource = mapper.toResource(TestModels.scoreCard());
-        System.out.println(TestModels.scoreCard());
-        System.out.println(resource);
         assertMappingOk(TestModels.scoreCard(), resource);
     }
 

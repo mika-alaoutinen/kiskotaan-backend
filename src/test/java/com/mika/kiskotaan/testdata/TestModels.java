@@ -35,10 +35,9 @@ public abstract class TestModels {
     }
 
     public static List<Player> players() {
-        Player p1 = player();
-        Player p2 = new Player("Kukko Pena");
-        p2.setId(2L);
-
+        Player p1 = new Player("Kukko Pena");
+        p1.setId(2L);
+        Player p2 = player();
         return List.of(p1, p2);
     }
 

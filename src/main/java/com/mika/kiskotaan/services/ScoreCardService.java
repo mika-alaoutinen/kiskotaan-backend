@@ -1,6 +1,11 @@
 package com.mika.kiskotaan.services;
 
-import org.springframework.stereotype.Service;
+import kiskotaan.openapi.model.NewScoreCardResource;
+import kiskotaan.openapi.model.ScoreCardResource;
 
 public interface ScoreCardService {
+    ScoreCardResource getScoreCard(Long id);
+    ScoreCardResource addScoreCard(NewScoreCardResource resource);
+    ScoreCardResource editScoreCard(ScoreCardResource resource);
+    void deleteScoreCard(Long id);
 }

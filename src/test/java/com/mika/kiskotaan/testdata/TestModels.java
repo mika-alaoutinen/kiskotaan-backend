@@ -12,14 +12,14 @@ public abstract class TestModels {
 
     public static List<Course> courses() {
         Course c1 = course();
-        Course c2 = new Course("Laajavuoren golf", holes(18), 50);
+        Course c2 = new Course("Laajavuoren golf", holes(18));
         c2.setId(2L);
 
         return List.of(c1, c2);
     }
 
     public static Course course() {
-        Course course = new Course("Kuokkalan golf", holes(9), 30);
+        Course course = new Course("Kuokkalan golf", holes(9));
         course.setId(1L);
         return course;
     }

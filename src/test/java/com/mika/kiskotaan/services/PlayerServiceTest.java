@@ -1,7 +1,7 @@
 package com.mika.kiskotaan.services;
 
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
-import com.mika.kiskotaan.mappers.player.PlayerMapper;
+import com.mika.kiskotaan.mappers.PlayerMapper;
 import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.repositories.PlayerRepository;
 import com.mika.kiskotaan.services.impl.PlayerServiceImpl;
@@ -9,7 +9,6 @@ import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
 import kiskotaan.openapi.model.NewPlayerResource;
 import kiskotaan.openapi.model.PlayerResource;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

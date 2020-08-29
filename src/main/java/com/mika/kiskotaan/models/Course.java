@@ -25,9 +25,4 @@ public class Course extends EntityModel {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "hole_id")
     private List<Hole> holes;
-
-    @NotNull
-    @Min(18)
-    @Max(150)
-    private int par;
 }

@@ -1,38 +1,27 @@
-package com.mika.kiskotaan.mappers.Course;
+package com.mika.kiskotaan.mappers;
 
 import com.mika.kiskotaan.models.Course;
 import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.HoleResource;
-import kiskotaan.openapi.model.NewCourseResource;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
-@RequiredArgsConstructor
-public class CourseMapperImpl implements CourseMapper {
-    private final CourseMapStruct mapper;
+public abstract class CourseMapperDecorator implements CourseMapper {
 
-    public Course toModel(NewCourseResource resource) {
-        Course course = mapper.toModel(resource);
-        course.setPar(calculateCoursePar(resource.getHoles()));
-        return course;
-    }
+    @Autowired
+    @Qualifier("delegate")
+    private CourseMapper mapper;
 
+    @Override
     public CourseResource toResource(Course model) {
         CourseResource resource = mapper.toResource(model);
         resource.setHoles(sortHoles(resource.getHoles()));
         return resource;
-    }
-
-    private int calculateCoursePar(Set<HoleResource> holes) {
-        return holes.stream()
-                .mapToInt(HoleResource::getPar)
-                .sum();
     }
 
     private Set<HoleResource> sortHoles(Set<HoleResource> holes) {

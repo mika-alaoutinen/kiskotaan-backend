@@ -1,8 +1,5 @@
 package com.mika.kiskotaan.mappers;
 
-import com.mika.kiskotaan.mappers.Course.CourseMapStruct;
-import com.mika.kiskotaan.mappers.Course.CourseMapper;
-import com.mika.kiskotaan.mappers.Course.CourseMapperImpl;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.models.Hole;
 import com.mika.kiskotaan.testdata.TestModels;
@@ -11,16 +8,19 @@ import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.HoleResource;
 import kiskotaan.openapi.model.NewCourseResource;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 public class CourseMapperTest {
-    private final CourseMapper mapper = new CourseMapperImpl(Mappers.getMapper(CourseMapStruct.class));
+
+    @Autowired
+    private CourseMapper mapper;
 
     @Test
     public void shouldMapToModel() {
@@ -36,14 +36,12 @@ public class CourseMapperTest {
 
     private void assertMappingOk(Course model, NewCourseResource resource) {
         assertEquals(model.getName(), resource.getName());
-        assertEquals(model.getPar(), calculateCoursePar(resource.getHoles()));
         assertMappedHolesOk(model.getHoles(), new ArrayList<>(resource.getHoles()));
     }
 
     private void assertMappingOk(Course model, CourseResource resource) {
         assertEquals(model.getId(), resource.getId().longValue());
         assertEquals(model.getName(), resource.getName());
-        assertEquals(model.getPar(), resource.getPar());
         assertMappedHolesOk(model.getHoles(), new ArrayList<>(resource.getHoles()));
     }
 
@@ -57,11 +55,5 @@ public class CourseMapperTest {
         assertEquals(model.getNumber(), resource.getNumber());
         assertEquals(model.getPar(), resource.getPar());
         assertEquals(model.getDistance(), resource.getDistance());
-    }
-
-    private int calculateCoursePar(Set<HoleResource> holes) {
-        return holes.stream()
-                .mapToInt(HoleResource::getPar)
-                .sum();
     }
 }

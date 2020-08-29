@@ -1,7 +1,7 @@
 package com.mika.kiskotaan.services.impl;
 
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
-import com.mika.kiskotaan.mappers.player.PlayerMapper;
+import com.mika.kiskotaan.mappers.PlayerMapper;
 import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.repositories.PlayerRepository;
 import com.mika.kiskotaan.services.PlayerService;
@@ -10,7 +10,6 @@ import kiskotaan.openapi.model.PlayerResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 

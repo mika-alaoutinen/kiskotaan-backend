@@ -8,7 +8,8 @@ import com.mika.kiskotaan.testdata.TestResources;
 import kiskotaan.openapi.model.*;
 
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +17,13 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 public class ScoreCardMapperTest {
     private final CourseMapperTest courseMapperTest = new CourseMapperTest();
     private final PlayerMapperTest playerMapperTest = new PlayerMapperTest();
 
-    private final ScoreCardMapper mapper = Mappers.getMapper(ScoreCardMapper.class);
+    @Autowired
+    private ScoreCardMapper mapper;
 
     @Test
     public void shouldMapNewScoreCardToModel() {

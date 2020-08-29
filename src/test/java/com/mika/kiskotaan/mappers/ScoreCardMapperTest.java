@@ -1,9 +1,6 @@
 package com.mika.kiskotaan.mappers;
 
-import com.mika.kiskotaan.models.Course;
-import com.mika.kiskotaan.models.Player;
-import com.mika.kiskotaan.models.ScoreCard;
-import com.mika.kiskotaan.models.ScoreRow;
+import com.mika.kiskotaan.models.*;
 import com.mika.kiskotaan.testdata.TestResources;
 import kiskotaan.openapi.model.*;
 
@@ -59,6 +56,23 @@ public class ScoreCardMapperTest {
     }
 
     private void assertScoreRowsOk(Map<Integer, ScoreRow> models, List<ScoreRowResource> resources) {
+        System.out.println(models);
+        System.out.println(resources);
 
+        for (int i = 0; i < models.size(); i++) {
+            List<Score> scores = models.get(i).getScores();
+            ScoreRowResource resource = resources.get(i);
+
+            for (int j = 0; j < scores.size(); j++) {
+                Score score = scores.get(j);
+                ScoreResource scoreResource = resource.getScores().get(j);
+                assertScoresAreSame(score, scoreResource);
+            }
+        }
+    }
+
+    private void assertScoresAreSame(Score model, ScoreResource resource) {
+        assertEquals(model.getPlayer().getId(), resource.getPlayerId().longValue());
+        assertEquals(model.getScore(), resource.getScore());
     }
 }

@@ -19,8 +19,8 @@ import javax.validation.constraints.NotNull;
 public class Score extends EntityModel {
 
     @NotNull
-    @ManyToOne
-    private Player player;
+    @Min(1)
+    private Long playerId;
 
     @Min(1)
     @Max(99)

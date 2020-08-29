@@ -42,7 +42,7 @@ public class ScoreCardMapperTest {
     private void assertMappingOk(ScoreCard model, ScoreCardResource resource) {
         assertCourseMappingOk(model.getCourse(), resource.getCourse());
         assertPlayersOk(model.getPlayers(), new ArrayList<>(resource.getPlayers()));
-        assertScoreRowsOk(model.getScoreRows(), resource.getRows());
+        assertScoreRowsOk(model.getRows(), resource.getRows());
     }
 
     private void assertCourseMappingOk(Course model, CourseResource resource) {
@@ -55,7 +55,7 @@ public class ScoreCardMapperTest {
         }
     }
 
-    private void assertScoreRowsOk(Map<Integer, ScoreRow> models, List<ScoreRowResource> resources) {
+    private void assertScoreRowsOk(List<ScoreRow> models, List<ScoreRowResource> resources) {
         System.out.println(models);
         System.out.println(resources);
 
@@ -72,7 +72,7 @@ public class ScoreCardMapperTest {
     }
 
     private void assertScoresAreSame(Score model, ScoreResource resource) {
-        assertEquals(model.getPlayer().getId(), resource.getPlayerId().longValue());
+        assertEquals(model.getPlayerId(), resource.getPlayerId().longValue());
         assertEquals(model.getScore(), resource.getScore());
     }
 }

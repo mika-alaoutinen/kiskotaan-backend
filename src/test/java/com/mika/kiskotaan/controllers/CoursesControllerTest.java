@@ -9,7 +9,6 @@ import com.mika.kiskotaan.testdata.TestResources;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
@@ -18,8 +17,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CoursesControllerTest extends ControllerTest {
     private static final String url = "/courses";
@@ -41,17 +38,11 @@ public class CoursesControllerTest extends ControllerTest {
     @Test
     public void shouldAddCourse() throws Exception {
         Course course = TestModels.courses().get(0);
-        Object courseResource = TestResources.courseResource();
-
         when(repository.save(any(Course.class))).thenReturn(course);
 
-        MvcResult result = mockMvc.perform(post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(testUtils.writeModel(courseResource)))
-            .andExpect(status().isCreated())
-            .andReturn();
-
+        MvcResult result = performPost(url, TestResources.courseResource());
         Course response = parseCourse(result);
+
         assertCoursesAreSame(course, response);
     }
 

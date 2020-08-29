@@ -8,7 +8,6 @@ import com.mika.kiskotaan.testdata.TestResources;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.apachecommons.ReflectionEquals;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
@@ -17,8 +16,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PlayersControllerTest extends ControllerTest {
     private static final String url = "/players";
@@ -54,16 +51,11 @@ public class PlayersControllerTest extends ControllerTest {
     public void shouldAddPlayer() throws Exception {
         Player player = TestModels.player();
         Object resource = TestResources.newPlayerResource();
-
         when(repository.save(any(Player.class))).thenReturn(TestModels.player());
 
-        MvcResult result = mockMvc.perform(post(url)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(testUtils.writeModel(resource)))
-            .andExpect(status().isCreated())
-            .andReturn();
-
+        MvcResult result = performPost(url, resource);
         Player response = parsePlayer(result);
+
         assertPlayersAreSame(player, response);
         verify(repository, times(1)).save(any(Player.class));
     }
@@ -71,11 +63,7 @@ public class PlayersControllerTest extends ControllerTest {
     @Test
     public void shouldDeletePlayer() throws Exception {
         doNothing().when(repository).deleteById(id);
-
-        mockMvc.perform(delete(url + "/" + id)
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isNoContent());
-
+        performDelete(url + "/" + id);
         verify(repository, times(1)).deleteById(id);
     }
 

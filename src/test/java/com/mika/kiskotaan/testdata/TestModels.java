@@ -48,8 +48,18 @@ public abstract class TestModels {
         return player;
     }
 
+    public static ScoreCard scoreCard() {
+        return new ScoreCard(course(), players(), scoreRows());
+    }
+
     public static ScoreRow scoreRow() {
         return new ScoreRow(1, scores());
+    }
+
+    private static List<ScoreRow> scoreRows() {
+        ScoreRow row1 = scoreRow();
+        ScoreRow row2 = new ScoreRow(2, scores());
+        return List.of(row1, row2);
     }
 
     private static List<Score> scores() {

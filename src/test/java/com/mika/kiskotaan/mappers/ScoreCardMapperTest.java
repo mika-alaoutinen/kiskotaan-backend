@@ -1,6 +1,7 @@
 package com.mika.kiskotaan.mappers;
 
 import com.mika.kiskotaan.models.*;
+import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
 import kiskotaan.openapi.model.*;
 
@@ -10,14 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 public class ScoreCardMapperTest {
     private final CourseMapperTest courseMapperTest = new CourseMapperTest();
     private final PlayerMapperTest playerMapperTest = new PlayerMapperTest();
+    private final ScoreMapperTest scoreMapperTest = new ScoreMapperTest();
 
     @Autowired
     private ScoreCardMapper mapper;
@@ -32,6 +31,14 @@ public class ScoreCardMapperTest {
     public void shouldMapScoreCardToModel() {
         ScoreCard model = mapper.toModel(TestResources.scoreCardResource());
         assertMappingOk(model, TestResources.scoreCardResource());
+    }
+
+    @Test
+    public void shouldMapScoreCardToResource() {
+        ScoreCardResource resource = mapper.toResource(TestModels.scoreCard());
+        System.out.println(TestModels.scoreCard());
+        System.out.println(resource);
+        assertMappingOk(TestModels.scoreCard(), resource);
     }
 
     private void assertMappingOk(ScoreCard model, NewScoreCardResource resource) {
@@ -56,23 +63,8 @@ public class ScoreCardMapperTest {
     }
 
     private void assertScoreRowsOk(List<ScoreRow> models, List<ScoreRowResource> resources) {
-        System.out.println(models);
-        System.out.println(resources);
-
         for (int i = 0; i < models.size(); i++) {
-            List<Score> scores = models.get(i).getScores();
-            ScoreRowResource resource = resources.get(i);
-
-            for (int j = 0; j < scores.size(); j++) {
-                Score score = scores.get(j);
-                ScoreResource scoreResource = resource.getScores().get(j);
-                assertScoresAreSame(score, scoreResource);
-            }
+            scoreMapperTest.assertScoreRowMappingOk(models.get(i), resources.get(i));
         }
-    }
-
-    private void assertScoresAreSame(Score model, ScoreResource resource) {
-        assertEquals(model.getPlayerId(), resource.getPlayerId().longValue());
-        assertEquals(model.getScore(), resource.getScore());
     }
 }

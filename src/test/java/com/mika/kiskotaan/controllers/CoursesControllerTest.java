@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,11 +31,7 @@ public class CoursesControllerTest extends ControllerTest {
     public void shouldGetCourses() throws Exception {
         when(repository.findAll()).thenReturn(TestModels.courses());
 
-        MvcResult result = mockMvc.perform(get(url)
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn();
-
+        MvcResult result = performGet(url);
         List<Course> courses = parseCourses(result);
 
         assertCoursesAreSame(courses.get(0), TestModels.courses().get(0));

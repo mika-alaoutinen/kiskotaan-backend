@@ -79,13 +79,6 @@ public class PlayersControllerTest extends ControllerTest {
         verify(repository, times(1)).deleteById(id);
     }
 
-    private MvcResult performGet(String url) throws Exception {
-        return mockMvc.perform(get(url)
-                .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andReturn();
-    }
-
     private void assertPlayersAreSame(Player p1, Player p2) {
         assertTrue(new ReflectionEquals(p1).matches(p2));
     }

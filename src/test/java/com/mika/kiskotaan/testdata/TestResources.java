@@ -14,8 +14,7 @@ public abstract class TestResources {
         return new CourseResource()
                 .id(new BigDecimal(1))
                 .name("Kuokkalan golf")
-                .holes(holeResources(18))
-                .par(54);
+                .holes(holeResources(18));
     }
 
     public static NewCourseResource newCourseResource() {

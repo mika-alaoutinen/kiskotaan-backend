@@ -36,14 +36,12 @@ public class CourseMapperTest {
 
     private void assertMappingOk(Course model, NewCourseResource resource) {
         assertEquals(model.getName(), resource.getName());
-        assertEquals(model.getPar(), calculateCoursePar(resource.getHoles()));
         assertMappedHolesOk(model.getHoles(), new ArrayList<>(resource.getHoles()));
     }
 
     private void assertMappingOk(Course model, CourseResource resource) {
         assertEquals(model.getId(), resource.getId().longValue());
         assertEquals(model.getName(), resource.getName());
-        assertEquals(model.getPar(), resource.getPar());
         assertMappedHolesOk(model.getHoles(), new ArrayList<>(resource.getHoles()));
     }
 
@@ -57,11 +55,5 @@ public class CourseMapperTest {
         assertEquals(model.getNumber(), resource.getNumber());
         assertEquals(model.getPar(), resource.getPar());
         assertEquals(model.getDistance(), resource.getDistance());
-    }
-
-    private int calculateCoursePar(Set<HoleResource> holes) {
-        return holes.stream()
-                .mapToInt(HoleResource::getPar)
-                .sum();
     }
 }

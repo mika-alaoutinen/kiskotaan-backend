@@ -18,8 +18,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 public class PlayersControllerTest extends ControllerTest {
-    private static final String url = "/players";
-    private static final Long id = 1L;
+    private static final String URL = "/players";
+    private static final Long ID = 1L;
 
     @MockBean
     private PlayerRepository repository;
@@ -28,7 +28,7 @@ public class PlayersControllerTest extends ControllerTest {
     public void shouldGetPlayers() throws Exception {
         when(repository.findAll()).thenReturn(TestModels.players());
 
-        MvcResult result = performGet(url);
+        MvcResult result = performGet(URL);
         List<Player> players = parsePlayers(result);
 
         assertPlayersAreSame(players.get(0), TestModels.players().get(0));
@@ -38,13 +38,13 @@ public class PlayersControllerTest extends ControllerTest {
 
     @Test
     public void shouldGetPlayer() throws Exception {
-        when(repository.findById(id)).thenReturn(Optional.of(TestModels.player()));
+        when(repository.findById(ID)).thenReturn(Optional.of(TestModels.player()));
 
-        MvcResult result = performGet(url + "/" + id);
+        MvcResult result = performGet(URL + "/" + ID);
         Player player = parsePlayer(result);
 
         assertPlayersAreSame(player, TestModels.player());
-        verify(repository, times(1)).findById(id);
+        verify(repository, times(1)).findById(ID);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class PlayersControllerTest extends ControllerTest {
         Object resource = TestResources.newPlayerResource();
         when(repository.save(any(Player.class))).thenReturn(TestModels.player());
 
-        MvcResult result = performPost(url, resource);
+        MvcResult result = performPost(URL, resource);
         Player response = parsePlayer(result);
 
         assertPlayersAreSame(player, response);
@@ -62,12 +62,12 @@ public class PlayersControllerTest extends ControllerTest {
 
     @Test
     public void shouldDeletePlayer() throws Exception {
-        doNothing().when(repository).deleteById(id);
-        performDelete(url + "/" + id);
-        verify(repository, times(1)).deleteById(id);
+        doNothing().when(repository).deleteById(ID);
+        performDelete(URL + "/" + ID);
+        verify(repository, times(1)).deleteById(ID);
     }
 
-    private void assertPlayersAreSame(Player p1, Player p2) {
+    public void assertPlayersAreSame(Player p1, Player p2) {
         assertTrue(new ReflectionEquals(p1).matches(p2));
     }
 

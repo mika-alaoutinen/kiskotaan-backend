@@ -19,7 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class CoursesControllerTest extends ControllerTest {
-    private static final String url = "/courses";
+    private static final String URL = "/courses";
 
     @MockBean
     private CourseRepository repository;
@@ -28,7 +28,7 @@ public class CoursesControllerTest extends ControllerTest {
     public void shouldGetCourses() throws Exception {
         when(repository.findAll()).thenReturn(TestModels.courses());
 
-        MvcResult result = performGet(url);
+        MvcResult result = performGet(URL);
         List<Course> courses = parseCourses(result);
 
         assertCoursesAreSame(courses.get(0), TestModels.courses().get(0));
@@ -40,13 +40,13 @@ public class CoursesControllerTest extends ControllerTest {
         Course course = TestModels.courses().get(0);
         when(repository.save(any(Course.class))).thenReturn(course);
 
-        MvcResult result = performPost(url, TestResources.courseResource());
+        MvcResult result = performPost(URL, TestResources.courseResource());
         Course response = parseCourse(result);
 
         assertCoursesAreSame(course, response);
     }
 
-    private void assertCoursesAreSame(Course c1, Course c2) {
+    public void assertCoursesAreSame(Course c1, Course c2) {
         assertTrue(new ReflectionEquals(c1, "holes").matches(c2));
 
         for (int i = 0; i < c1.getHoles().size(); i++) {

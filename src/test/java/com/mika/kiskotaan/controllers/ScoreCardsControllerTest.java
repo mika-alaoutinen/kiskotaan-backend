@@ -54,6 +54,19 @@ public class ScoreCardsControllerTest extends ControllerTest {
         verify(repository, times(1)).save(any(ScoreCard.class));
     }
 
+    @Test
+    public void shouldDeleteScoreCard() throws Exception {
+        doNothing().when(repository).deleteById(ID);
+        performDelete(URL + "/" + ID);
+        verify(repository, times(1)).deleteById(ID);
+    }
+
+    @Test
+    public void shouldUpdateScores() throws Exception {
+        ScoreCard scoreCard = TestModels.scoreCard();
+        when(repository.save(any(ScoreCard.class))).thenReturn(scoreCard);
+    }
+
     private void assertScoreCardsAreSame(ScoreCard card1, ScoreCard card2) {
         coursesTest.assertCoursesAreSame(card1.getCourse(), card2.getCourse());
         assertPlayersAreSame(card1.getPlayers(), card2.getPlayers());

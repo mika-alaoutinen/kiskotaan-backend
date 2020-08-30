@@ -31,13 +31,13 @@ public class ScoreCardServiceImpl implements ScoreCardService {
 
     @Override
     public ScoreCardResource editScoreCard(Long id, ScoreCardResource resource) {
-        ScoreCard existingCard = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException(new ScoreCard(), id));
+        ScoreCard edited = mapper.toModel(resource);
 
-        // Updates existingCard with values from resource
-        ScoreCard edited = mapper.editModel(mapper.toModel(resource), existingCard);
-        ScoreCard saved = repository.save(edited);
-        return mapper.toResource(saved);
+        return repository.findById(id)
+                .map(scoreCard -> mapper.editModel(edited, scoreCard))
+                .map(repository::save)
+                .map(mapper::toResource)
+                .orElseThrow(() -> new NotFoundException(edited, id));
     }
 
     @Override

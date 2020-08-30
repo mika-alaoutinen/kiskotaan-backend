@@ -1,21 +1,21 @@
-package com.mika.kiskotaan.services;
+package com.mika.kiskotaan.controllers;
 
 import com.mika.kiskotaan.models.Score;
 import com.mika.kiskotaan.models.ScoreRow;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-public class ScoreServiceTest {
+public class ScoreControllerTest {
 
     private static final Long ID = 1L;
 
-    @Mock
+    @MockBean
     private ScoreCardRepository repository;
 
     @Test

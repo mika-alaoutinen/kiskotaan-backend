@@ -1,6 +1,8 @@
 package com.mika.kiskotaan.services.impl;
 
+import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreCardMapper;
+import com.mika.kiskotaan.models.ScoreCard;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.services.ScoreCardService;
 import kiskotaan.openapi.model.NewScoreCardResource;
@@ -16,17 +18,26 @@ public class ScoreCardServiceImpl implements ScoreCardService {
 
     @Override
     public ScoreCardResource getScoreCard(Long id) {
-        return null;
+        return repository.findById(id)
+                .map(mapper::toResource)
+                .orElseThrow(() -> new NotFoundException(new ScoreCard(), id));
     }
 
     @Override
     public ScoreCardResource addScoreCard(NewScoreCardResource resource) {
-        return null;
+        ScoreCard newScoreCard = repository.save(mapper.toModel(resource));
+        return mapper.toResource(newScoreCard);
     }
 
     @Override
-    public ScoreCardResource editScoreCard(ScoreCardResource resource) {
-        return null;
+    public ScoreCardResource editScoreCard(Long id, ScoreCardResource resource) {
+        ScoreCard existingCard = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException(new ScoreCard(), id));
+
+        // Updates existingCard with values from resource
+        mapper.editModel(mapper.toModel(resource), existingCard);
+        ScoreCard saved = repository.save(existingCard);
+        return mapper.toResource(saved);
     }
 
     @Override

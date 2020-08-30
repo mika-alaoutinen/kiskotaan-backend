@@ -6,6 +6,7 @@ import com.mika.kiskotaan.models.ScoreCard;
 import com.mika.kiskotaan.models.ScoreRow;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.testdata.TestModels;
+import com.mika.kiskotaan.testdata.TestResources;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MvcResult;
@@ -38,6 +39,19 @@ public class ScoreCardsControllerTest extends ControllerTest {
 
         assertScoreCardsAreSame(scoreCard, TestModels.scoreCard());
         verify(repository, times(1)).findById(ID);
+    }
+
+    @Test
+    public void shouldAddScoreCard() throws Exception {
+        Object resource = TestResources.newScoreCardResource();
+        ScoreCard scoreCard = TestModels.scoreCard();
+        when(repository.save(any(ScoreCard.class))).thenReturn(scoreCard);
+
+        MvcResult result = performPost(URL, resource);
+        ScoreCard response = parseScoreCard(result);
+
+        assertScoreCardsAreSame(scoreCard, response);
+        verify(repository, times(1)).save(any(ScoreCard.class));
     }
 
     private void assertScoreCardsAreSame(ScoreCard card1, ScoreCard card2) {

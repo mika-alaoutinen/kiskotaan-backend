@@ -49,9 +49,9 @@ public class PlayersControllerTest extends ControllerTest {
 
     @Test
     public void shouldAddPlayer() throws Exception {
-        Player player = TestModels.player();
         Object resource = TestResources.newPlayerResource();
-        when(repository.save(any(Player.class))).thenReturn(TestModels.player());
+        Player player = TestModels.player();
+        when(repository.save(any(Player.class))).thenReturn(player);
 
         MvcResult result = performPost(URL, resource);
         Player response = parsePlayer(result);

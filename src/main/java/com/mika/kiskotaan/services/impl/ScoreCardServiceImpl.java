@@ -29,6 +29,7 @@ public class ScoreCardServiceImpl implements ScoreCardService {
         return mapper.toResource(newScoreCard);
     }
 
+    // Consider deleting this operation
     @Override
     public ScoreCardResource editScoreCard(Long id, ScoreCardResource resource) {
         ScoreCard edited = mapper.toModel(resource);

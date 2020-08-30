@@ -14,6 +14,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @SpringBootTest
 public class ScoreCardMapperTest {
     private final CourseMapperTest courseMapperTest = new CourseMapperTest();
@@ -40,6 +42,13 @@ public class ScoreCardMapperTest {
         // Note that players in score card are sorted alphabetically.
         ScoreCardResource resource = mapper.toResource(TestModels.scoreCard());
         assertMappingOk(TestModels.scoreCard(), resource);
+    }
+
+    @Test
+    public void shouldUpdateScoreCard() {
+        ScoreCard source = TestModels.scoreCard();
+        ScoreCard updated = mapper.editModel(source, new ScoreCard());
+        assertEquals(source, updated);
     }
 
     private void assertMappingOk(ScoreCard model, NewScoreCardResource resource) {

@@ -13,18 +13,18 @@ public class PlayerMapperTest {
     private final PlayerMapper mapper = Mappers.getMapper(PlayerMapper.class);
 
     @Test
-    public void shouldMapToModel() {
+    public void shouldMapPlayerToModel() {
         Player model = mapper.toModel(TestResources.playerResource());
         assertMappingOk(model, TestResources.playerResource());
     }
 
     @Test
-    public void shouldMapToResource() {
+    public void shouldMapPlayerToResource() {
         PlayerResource resource = mapper.toResource(TestModels.player());
         assertMappingOk(TestModels.player(), resource);
     }
 
-    private void assertMappingOk(Player model, PlayerResource resource) {
+    public void assertMappingOk(Player model, PlayerResource resource) {
         assertEquals(model.getId(), resource.getId().longValue());
         assertEquals(model.getName(), resource.getName());
     }

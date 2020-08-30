@@ -18,12 +18,14 @@ public class CourseServiceImpl implements CourseService {
     private final CourseMapper mapper;
     private final CourseRepository repository;
 
+    @Override
     public List<CourseResource> getCourses() {
         return repository.findAll().stream()
                 .map(mapper::toResource)
                 .collect(Collectors.toList());
     }
 
+    @Override
     public CourseResource addCourse(NewCourseResource resource) {
         Course newCourse = repository.save(mapper.toModel(resource));
         return mapper.toResource(newCourse);

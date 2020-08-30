@@ -1,6 +1,7 @@
 package com.mika.kiskotaan.errors.notfound;
 
 import com.mika.kiskotaan.models.Player;
+import com.mika.kiskotaan.models.ScoreCard;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -8,6 +9,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class NotFoundException extends RuntimeException {
 
     public NotFoundException(Player player, Long id) {
-        super("Could not find player with id " + id);
+        super(message("player", id));
+    }
+
+    public NotFoundException(ScoreCard scoreCard, Long id) {
+        super(message("score card", id));
+    }
+
+    private static String message(String item, Long id) {
+        return String.format("Could not find %s with ID %s", item, id);
     }
 }

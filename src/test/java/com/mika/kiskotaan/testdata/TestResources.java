@@ -4,6 +4,7 @@ import kiskotaan.openapi.model.*;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -36,6 +37,15 @@ public abstract class TestResources {
                 .distance(80);
     }
 
+    public static Set<PlayerResource> playerResources() {
+        PlayerResource p1 = playerResource();
+        PlayerResource p2 = new PlayerResource()
+                .id(new BigDecimal(2))
+                .name("Kukko Pena");
+
+        return Set.of(p1, p2);
+    }
+
     public static PlayerResource playerResource() {
         return new PlayerResource()
                 .id(new BigDecimal(1))
@@ -45,5 +55,47 @@ public abstract class TestResources {
     public static NewPlayerResource newPlayerResource() {
         return new NewPlayerResource()
                 .name("Kukko Pena");
+    }
+
+    public static ScoreCardResource scoreCardResource() {
+        return new ScoreCardResource()
+                .id(new BigDecimal(1))
+                .course(courseResource())
+                .players(playerResources())
+                .rows(rows());
+    }
+
+    public static NewScoreCardResource newScoreCardResource() {
+        return new NewScoreCardResource()
+                .course(courseResource())
+                .players(playerResources());
+    }
+
+    public static ScoreRowResource scoreRowResource() {
+        return new ScoreRowResource()
+                .hole(1)
+                .scores(scores(3));
+    }
+
+    private static List<ScoreRowResource> rows() {
+        ScoreRowResource row1 = scoreRowResource();
+
+        ScoreRowResource row2 = new ScoreRowResource()
+                .hole(2)
+                .scores(scores(4));
+
+        return List.of(row1, row2);
+    }
+
+    private static List<ScoreResource> scores(int score) {
+        ScoreResource score1 = new ScoreResource()
+                .playerId(new BigDecimal(1))
+                .score(score);
+
+        ScoreResource score2 = new ScoreResource()
+                .playerId(new BigDecimal(2))
+                .score(score + 1);
+
+        return List.of(score1, score2);
     }
 }

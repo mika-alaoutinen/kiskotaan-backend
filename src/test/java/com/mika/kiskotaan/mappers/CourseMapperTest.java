@@ -23,24 +23,30 @@ public class CourseMapperTest {
     private CourseMapper mapper;
 
     @Test
-    public void shouldMapToModel() {
-        Course course = mapper.toModel(TestResources.newCourseResource());
-        assertMappingOk(course, TestResources.newCourseResource());
+    public void shouldMapNewResourceToModel() {
+        Course model = mapper.toModel(TestResources.newCourseResource());
+        assertNewCourseMappingMappingOk(model, TestResources.newCourseResource());
     }
 
     @Test
-    public void shouldMapToResource() {
-        CourseResource resource = mapper.toResource(TestModels.course());
-        assertMappingOk(TestModels.course(), resource);
+    public void shouldMapResourceToModel() {
+        Course model = mapper.toModel(TestResources.courseResource());
+        assertCourseMappingMappingOk(model, TestResources.courseResource());
     }
 
-    private void assertMappingOk(Course model, NewCourseResource resource) {
+    @Test
+    public void shouldMapModelToResource() {
+        CourseResource resource = mapper.toResource(TestModels.course());
+        assertCourseMappingMappingOk(TestModels.course(), resource);
+    }
+
+    public void assertCourseMappingMappingOk(Course model, CourseResource resource) {
+        assertEquals(model.getId(), resource.getId().longValue());
         assertEquals(model.getName(), resource.getName());
         assertMappedHolesOk(model.getHoles(), new ArrayList<>(resource.getHoles()));
     }
 
-    private void assertMappingOk(Course model, CourseResource resource) {
-        assertEquals(model.getId(), resource.getId().longValue());
+    private void assertNewCourseMappingMappingOk(Course model, NewCourseResource resource) {
         assertEquals(model.getName(), resource.getName());
         assertMappedHolesOk(model.getHoles(), new ArrayList<>(resource.getHoles()));
     }

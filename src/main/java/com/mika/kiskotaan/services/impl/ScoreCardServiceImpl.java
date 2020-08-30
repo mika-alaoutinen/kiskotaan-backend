@@ -35,8 +35,8 @@ public class ScoreCardServiceImpl implements ScoreCardService {
                 .orElseThrow(() -> new NotFoundException(new ScoreCard(), id));
 
         // Updates existingCard with values from resource
-        mapper.editModel(mapper.toModel(resource), existingCard);
-        ScoreCard saved = repository.save(existingCard);
+        ScoreCard edited = mapper.editModel(mapper.toModel(resource), existingCard);
+        ScoreCard saved = repository.save(edited);
         return mapper.toResource(saved);
     }
 

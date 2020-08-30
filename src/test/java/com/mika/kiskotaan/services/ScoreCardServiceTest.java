@@ -77,11 +77,13 @@ public class ScoreCardServiceTest {
         ScoreCardResource givenResource = new ScoreCardResource();
         ScoreCard existingCard = new ScoreCard();
         ScoreCard mappedCard = new ScoreCard();
+        ScoreCard editedCard = new ScoreCard();
         ScoreCard savedCard = new ScoreCard();
 
         when(repository.findById(ID)).thenReturn(Optional.of(existingCard));
         when(mapper.toModel(givenResource)).thenReturn(mappedCard);
-        when(repository.save(any(ScoreCard.class))).thenReturn(savedCard);
+        when(mapper.editModel(mappedCard, existingCard)).thenReturn(editedCard);
+        when(repository.save(editedCard)).thenReturn(savedCard);
         when(mapper.toResource(savedCard)).thenReturn(TestResources.scoreCardResource());
 
         ScoreCardResource savedResource = service.editScoreCard(ID, givenResource);

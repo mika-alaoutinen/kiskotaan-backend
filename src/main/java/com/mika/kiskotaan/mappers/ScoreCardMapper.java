@@ -13,5 +13,5 @@ public interface ScoreCardMapper {
     ScoreCard toModel(ScoreCardResource resource);
     ScoreCard toModel(NewScoreCardResource resource);
     ScoreCardResource toResource(ScoreCard model);
-    void editModel(ScoreCard source, @MappingTarget ScoreCard target);
+    ScoreCard editModel(ScoreCard source, @MappingTarget ScoreCard target);
 }

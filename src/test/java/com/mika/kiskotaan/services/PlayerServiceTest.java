@@ -48,14 +48,10 @@ public class PlayerServiceTest {
     @Test
     public void shouldGetPlayer() {
         Long id = 1L;
-        Player model = TestModels.player();
-
-        when(repository.findById(id)).thenReturn(Optional.of(model));
+        when(repository.findById(id)).thenReturn(Optional.of(TestModels.player()));
         when(mapper.toResource(any(Player.class))).thenReturn(TestResources.playerResource());
 
-        PlayerResource player = service.getPlayer(id);
-
-        assertEquals(TestResources.playerResource(), player);
+        service.getPlayer(id);
         verify(repository, times(1)).findById(id);
         verify(mapper, times(1)).toResource(TestModels.player());
     }
@@ -63,13 +59,12 @@ public class PlayerServiceTest {
     @Test
     public void shouldHandlePlayerNotFound() {
         Long id = 1L;
-
         when(repository.findById(id)).thenReturn(Optional.empty());
 
         NotFoundException e = assertThrows(NotFoundException.class, () ->
                 service.getPlayer(id));
 
-        assertEquals("Could not find player with id " + id, e.getMessage());
+        assertEquals("Could not find player with ID " + id, e.getMessage());
         verify(repository, times(1)).findById(id);
         verify(mapper, times(0)).toResource(any(Player.class));
     }
@@ -79,9 +74,9 @@ public class PlayerServiceTest {
         NewPlayerResource givenResource = new NewPlayerResource();
         Player savedPlayer = new Player();
 
-        when(mapper.toModel(any(NewPlayerResource.class))).thenReturn(new Player());
+        when(mapper.toModel(givenResource)).thenReturn(new Player());
         when(repository.save(any(Player.class))).thenReturn(savedPlayer);
-        when(mapper.toResource(any(Player.class))).thenReturn(TestResources.playerResource());
+        when(mapper.toResource(savedPlayer)).thenReturn(TestResources.playerResource());
 
         PlayerResource savedResource = service.addPlayer(givenResource);
 

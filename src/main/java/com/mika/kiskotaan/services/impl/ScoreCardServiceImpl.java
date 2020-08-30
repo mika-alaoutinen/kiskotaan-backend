@@ -42,6 +42,6 @@ public class ScoreCardServiceImpl implements ScoreCardService {
 
     @Override
     public void deleteScoreCard(Long id) {
-
+        repository.deleteById(id);
     }
 }

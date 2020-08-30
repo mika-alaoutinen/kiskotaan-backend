@@ -24,6 +24,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class ScoreCardServiceTest {
 
+    private static final Long ID = 1L;
+
     @Mock
     private ScoreCardMapper mapper;
 
@@ -35,26 +37,22 @@ public class ScoreCardServiceTest {
 
     @Test
     public void shouldGetScoreCard() {
-        Long id = 1L;
-        when(repository.findById(id)).thenReturn(Optional.of(TestModels.scoreCard()));
+        when(repository.findById(ID)).thenReturn(Optional.of(TestModels.scoreCard()));
         when(mapper.toResource(any(ScoreCard.class))).thenReturn(TestResources.scoreCardResource());
 
-        service.getScoreCard(id);
-        verify(repository, times(1)).findById(id);
+        service.getScoreCard(ID);
+        verify(repository, times(1)).findById(ID);
         verify(mapper, times(1)).toResource(TestModels.scoreCard());
     }
 
     @Test
-    public void shouldHandleScoreCardNotFound() {
-        Long id = 1L;
-        when(repository.findById(id)).thenReturn(Optional.empty());
+    public void shouldHandleNotFoundOnGet() {
+        when(repository.findById(ID)).thenReturn(Optional.empty());
 
         NotFoundException e = assertThrows(NotFoundException.class, () ->
-                service.getScoreCard(id));
+                service.getScoreCard(ID));
 
-        assertEquals("Could not find score card with ID " + id, e.getMessage());
-        verify(repository, times(1)).findById(id);
-        verify(mapper, times(0)).toResource(any(ScoreCard.class));
+        assertNotFoundException(e);
     }
 
     @Test
@@ -76,18 +74,17 @@ public class ScoreCardServiceTest {
 
     @Test
     public void shouldEditScoreCards() {
-        Long id = 1L;
         ScoreCardResource givenResource = new ScoreCardResource();
         ScoreCard existingCard = new ScoreCard();
         ScoreCard mappedCard = new ScoreCard();
         ScoreCard savedCard = new ScoreCard();
 
-        when(repository.findById(id)).thenReturn(Optional.of(existingCard));
+        when(repository.findById(ID)).thenReturn(Optional.of(existingCard));
         when(mapper.toModel(givenResource)).thenReturn(mappedCard);
         when(repository.save(any(ScoreCard.class))).thenReturn(savedCard);
         when(mapper.toResource(savedCard)).thenReturn(TestResources.scoreCardResource());
 
-        ScoreCardResource savedResource = service.editScoreCard(id, givenResource);
+        ScoreCardResource savedResource = service.editScoreCard(ID, givenResource);
 
         assertNotNull(savedResource);
         verify(mapper, times(1)).toModel(givenResource);
@@ -96,8 +93,25 @@ public class ScoreCardServiceTest {
         verify(mapper, times(1)).toResource(savedCard);
     }
 
-//    @Test
-    public void shouldDeleteScoreCards() {
+    @Test
+    public void shouldHandleNotFoundOnEdit() {
+        when(repository.findById(ID)).thenReturn(Optional.empty());
 
+        NotFoundException e = assertThrows(NotFoundException.class, () ->
+                service.editScoreCard(ID, new ScoreCardResource()));
+
+        assertNotFoundException(e);
+    }
+
+    @Test
+    public void shouldDeleteScoreCards() {
+        service.deleteScoreCard(ID);
+        verify(repository, times(1)).deleteById(ID);
+    }
+
+    private void assertNotFoundException(NotFoundException e) {
+        assertEquals("Could not find score card with ID " + ID, e.getMessage());
+        verify(repository, times(1)).findById(ID);
+        verify(mapper, times(0)).toResource(any(ScoreCard.class));
     }
 }

@@ -25,6 +25,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class PlayerServiceTest {
 
+    private static final Long ID = 1L;
+
     @Mock
     private PlayerMapper mapper;
 
@@ -47,25 +49,23 @@ public class PlayerServiceTest {
 
     @Test
     public void shouldGetPlayer() {
-        Long id = 1L;
-        when(repository.findById(id)).thenReturn(Optional.of(TestModels.player()));
+        when(repository.findById(ID)).thenReturn(Optional.of(TestModels.player()));
         when(mapper.toResource(any(Player.class))).thenReturn(TestResources.playerResource());
 
-        service.getPlayer(id);
-        verify(repository, times(1)).findById(id);
+        service.getPlayer(ID);
+        verify(repository, times(1)).findById(ID);
         verify(mapper, times(1)).toResource(TestModels.player());
     }
 
     @Test
     public void shouldHandlePlayerNotFound() {
-        Long id = 1L;
-        when(repository.findById(id)).thenReturn(Optional.empty());
+        when(repository.findById(ID)).thenReturn(Optional.empty());
 
         NotFoundException e = assertThrows(NotFoundException.class, () ->
-                service.getPlayer(id));
+                service.getPlayer(ID));
 
-        assertEquals("Could not find player with ID " + id, e.getMessage());
-        verify(repository, times(1)).findById(id);
+        assertEquals("Could not find player with ID " + ID, e.getMessage());
+        verify(repository, times(1)).findById(ID);
         verify(mapper, times(0)).toResource(any(Player.class));
     }
 
@@ -88,8 +88,7 @@ public class PlayerServiceTest {
 
     @Test
     public void shouldDeletePlayer() {
-        Long id = 1L;
-        service.deletePlayer(id);
-        verify(repository, times(1)).deleteById(id);
+        service.deletePlayer(ID);
+        verify(repository, times(1)).deleteById(ID);
     }
 }

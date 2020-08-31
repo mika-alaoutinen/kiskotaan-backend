@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -15,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class Score extends EntityModel {
 
     @NotNull
@@ -25,4 +26,13 @@ public class Score extends EntityModel {
     @Min(1)
     @Max(99)
     private int score;
+
+    // Needed for Hibernate to work:
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ScoreRow scoreRow;
+
+    public Score(Long playerId, int score) {
+        this.playerId = playerId;
+        this.score = score;
+    }
 }

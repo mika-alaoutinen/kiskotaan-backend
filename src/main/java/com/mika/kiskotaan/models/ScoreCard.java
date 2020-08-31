@@ -5,10 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -19,12 +18,35 @@ import java.util.List;
 public class ScoreCard extends EntityModel {
 
     @NotNull
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
     private Course course;
 
-    @OneToMany
-    private List<Player> players;
+    @NotNull
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
+    private List<Player> players = new ArrayList<>();
 
-    @OneToMany
-    private List<ScoreRow> rows;
+    @NotNull
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
+    private List<ScoreRow> rows = new ArrayList<>();
+
+    public void addPlayer(Player player) {
+        this.players.add(player);
+        player.setScoreCard(this);
+    }
+
+    public void removePlayer(Player player) {
+        this.players.remove(player);
+        player.setScoreCard(null);
+    }
+
+    public void addRow(ScoreRow row) {
+        this.rows.add(row);
+        row.setScoreCard(this);
+    }
+
+    public void removeRow(ScoreRow row) {
+        this.rows.remove(row);
+        row.setScoreCard(null);
+    }
 }

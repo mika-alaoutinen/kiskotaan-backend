@@ -4,7 +4,6 @@ import com.mika.kiskotaan.models.Course;
 import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.NewCourseResource;
 import org.mapstruct.CollectionMappingStrategy;
-import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 
 @Mapper(
@@ -12,7 +11,6 @@ import org.mapstruct.Mapper;
         collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
         uses = HoleMapper.class
 )
-@DecoratedWith(CourseMapperDecorator.class)
 public interface CourseMapper {
     Course toModel(NewCourseResource resource);
     Course toModel(CourseResource resource);

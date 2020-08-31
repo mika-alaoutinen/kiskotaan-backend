@@ -7,7 +7,6 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface ScoreMapper {
-    ScoreRow toModel(ScoreRowResource resource);
     ScoreRowResource toResources(ScoreRow model);
     ScoreRow editRow(ScoreRowResource source, @MappingTarget ScoreRow target);
 }

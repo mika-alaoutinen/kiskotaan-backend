@@ -2,7 +2,7 @@ package com.mika.kiskotaan.services.impl;
 
 import com.mika.kiskotaan.errors.badrequest.BadRequestException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
-import com.mika.kiskotaan.mappers.ScoreMapper;
+import com.mika.kiskotaan.mappers.ScoreRowMapper;
 import com.mika.kiskotaan.models.ScoreCard;
 import com.mika.kiskotaan.models.ScoreRow;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
@@ -16,7 +16,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ScoreServiceImpl implements ScoreService {
-    private final ScoreMapper mapper;
+    private final ScoreRowMapper mapper;
     private final ScoreCardRepository repository;
 
     @Override

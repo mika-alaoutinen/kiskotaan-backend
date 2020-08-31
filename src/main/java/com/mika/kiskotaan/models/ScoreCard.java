@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -15,23 +16,25 @@ import java.util.List;
 public class ScoreCard extends EntityModel {
 
     @NotNull
-    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
     private Course course;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
-    private List<Player> players;
+    @NotNull
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
+    private List<Player> players = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
-    private List<ScoreRow> rows;
+    @NotNull
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
+    private List<ScoreRow> rows = new ArrayList<>();
 
     // Hibernate
-    @OneToOne
-    @JoinColumn(name = "game_id")
-    private Game game;
-
     public ScoreCard(Course course, List<Player> players, List<ScoreRow> rows) {
         this.course = course;
         this.players = players;
         this.rows = rows;
     }
+
+    @OneToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
 }

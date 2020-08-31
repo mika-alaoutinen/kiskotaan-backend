@@ -23,7 +23,7 @@ public class Course extends EntityModel {
 
     @NotNull
     @Size(min = 1, max = 30)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Hole> holes = new ArrayList<>();
 
     // Hibernate

@@ -33,9 +33,9 @@ public class Hole extends EntityModel {
     private int distance; // in meters
 
     // Hibernate
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
-    private Course course;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "course_id")
+//    private Course course;
 
     public Hole(int number, int par) {
         this.number = number;

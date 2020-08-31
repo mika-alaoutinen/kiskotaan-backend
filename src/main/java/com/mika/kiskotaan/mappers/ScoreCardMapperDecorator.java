@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class ScoreCardMapperDecorator implements ScoreCardMapper {
@@ -24,9 +23,9 @@ public abstract class ScoreCardMapperDecorator implements ScoreCardMapper {
         return resource;
     }
 
-    private Set<PlayerResource> sortByName(Set<PlayerResource> players) {
+    private List<PlayerResource> sortByName(List<PlayerResource> players) {
         return players.stream()
                 .sorted(Comparator.comparing(PlayerResource::getName))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .collect(Collectors.toList());
     }
 }

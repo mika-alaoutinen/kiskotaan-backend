@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class CourseMapperDecorator implements CourseMapper {
@@ -24,9 +23,9 @@ public abstract class CourseMapperDecorator implements CourseMapper {
         return resource;
     }
 
-    private Set<HoleResource> sortHoles(Set<HoleResource> holes) {
+    private List<HoleResource> sortHoles(List<HoleResource> holes) {
         return holes.stream()
                 .sorted(Comparator.comparingInt(HoleResource::getNumber))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .collect(Collectors.toList());
     }
 }

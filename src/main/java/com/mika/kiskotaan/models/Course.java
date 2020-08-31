@@ -27,9 +27,9 @@ public class Course extends EntityModel {
     private List<Hole> holes = new ArrayList<>();
 
     // Hibernate
-    @OneToOne
-    @JoinColumn(name = "scoreCard_id", referencedColumnName = "id")
-    private ScoreCard scoreCard;
+//    @OneToOne
+//    @JoinColumn(name = "scoreCard_id", referencedColumnName = "id")
+//    private ScoreCard scoreCard;
 
     public Course(String name, List<Hole> holes) {
         this.name = name;

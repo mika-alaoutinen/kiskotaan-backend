@@ -1,6 +1,5 @@
 package com.mika.kiskotaan.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -16,7 +15,6 @@ import javax.validation.constraints.NotNull;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
-//@AllArgsConstructor
 public class Hole extends EntityModel {
 
     @NotNull

@@ -1,10 +1,10 @@
 package com.mika.kiskotaan.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Max;
@@ -14,7 +14,6 @@ import javax.validation.constraints.Min;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 public class Game extends EntityModel {
 
     private boolean hasScoreChanged;
@@ -24,6 +23,13 @@ public class Game extends EntityModel {
     @Max(30)
     private int hole;
 
-    @OneToOne
+    // Hibernate
+    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "game", orphanRemoval = true)
     private ScoreCard scoreCard;
+
+    public Game(boolean hasScoreChanged, boolean isOver, int hole) {
+        this.hasScoreChanged = hasScoreChanged;
+        this.isOver = isOver;
+        this.hole = hole;
+    }
 }

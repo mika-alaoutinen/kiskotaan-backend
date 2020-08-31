@@ -1,6 +1,5 @@
 package com.mika.kiskotaan.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -13,12 +12,10 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 public class ScoreCard extends EntityModel {
 
     @NotNull
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
     private Course course;
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
@@ -26,4 +23,15 @@ public class ScoreCard extends EntityModel {
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
     private List<ScoreRow> rows;
+
+    // Hibernate
+    @OneToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
+
+    public ScoreCard(Course course, List<Player> players, List<ScoreRow> rows) {
+        this.course = course;
+        this.players = players;
+        this.rows = rows;
+    }
 }

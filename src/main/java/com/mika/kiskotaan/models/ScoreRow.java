@@ -21,7 +21,7 @@ public class ScoreRow extends EntityModel {
     @Max(30)
     private int hole;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreRow", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreRow", orphanRemoval = true)
     private List<Score> scores;
 
     // Hibernate

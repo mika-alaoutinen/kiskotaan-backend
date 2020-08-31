@@ -22,11 +22,12 @@ public class Course extends EntityModel {
 
     @NotNull
     @Size(min = 1, max = 30)
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "course", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", orphanRemoval = true)
     private List<Hole> holes;
 
     // Hibernate
-    @OneToOne(mappedBy = "course")
+    @OneToOne
+    @JoinColumn(name = "scoreCard_id")
     private ScoreCard scoreCard;
 
     public Course(String name, List<Hole> holes) {

@@ -18,16 +18,16 @@ import java.util.List;
 public class ScoreCard extends EntityModel {
 
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "course_id", referencedColumnName = "id")
     private Course course;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
     private List<Player> players = new ArrayList<>();
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
     private List<ScoreRow> rows = new ArrayList<>();
 
     public void addPlayer(Player player) {
@@ -40,12 +40,12 @@ public class ScoreCard extends EntityModel {
         player.setScoreCard(null);
     }
 
-    public void addRow(ScoreRow row) {
+    public void addScoreRow(ScoreRow row) {
         this.rows.add(row);
         row.setScoreCard(this);
     }
 
-    public void removeRow(ScoreRow row) {
+    public void removeScoreRow(ScoreRow row) {
         this.rows.remove(row);
         row.setScoreCard(null);
     }

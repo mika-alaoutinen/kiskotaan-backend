@@ -28,7 +28,7 @@ public class Course extends EntityModel {
 
     @NotNull
     @Size(min = 1, max = 30)
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "course", orphanRemoval = true)
     private List<Hole> holes = new ArrayList<>();
 
     // Needed for Hibernate to work:
@@ -41,12 +41,12 @@ public class Course extends EntityModel {
     }
 
     public void addHole(Hole hole) {
-        holes.add(hole);
+        this.holes.add(hole);
         hole.setCourse(this);
     }
 
     public void removeHole(Hole hole) {
-        holes.remove(hole);
+        this.holes.remove(hole);
         hole.setCourse(null);
     }
 }

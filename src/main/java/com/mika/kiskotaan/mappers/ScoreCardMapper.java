@@ -10,8 +10,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(
         componentModel = "spring",
-        uses = { CourseMapper.class, PlayerMapper.class, ScoreMapper.class },
-        collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED
+        uses = { CourseMapper.class, PlayerMapper.class, ScoreMapper.class }
 )
 @DecoratedWith(ScoreCardMapperDecorator.class)
 public interface ScoreCardMapper {

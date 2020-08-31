@@ -8,8 +8,7 @@ import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 
 @Mapper(
-        componentModel = "spring",
-        collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED
+        componentModel = "spring"
 )
 @DecoratedWith(CourseMapperDecorator.class)
 public interface CourseMapper {

@@ -5,13 +5,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,8 +24,8 @@ public class ScoreRow extends EntityModel {
     @Max(30)
     private int hole;
 
-    @OneToMany
-    private List<Score> scores;
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreRow", orphanRemoval = true)
+    private List<Score> scores = new ArrayList<>();
 
     // Needed for Hibernate to work:
     @ManyToOne(fetch = FetchType.LAZY)

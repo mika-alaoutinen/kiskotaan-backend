@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -23,11 +24,11 @@ public class Course extends EntityModel {
     @NotNull
     @Size(min = 1, max = 30)
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", orphanRemoval = true)
-    private List<Hole> holes;
+    private List<Hole> holes = new ArrayList<>();
 
     // Hibernate
     @OneToOne
-    @JoinColumn(name = "scoreCard_id")
+    @JoinColumn(name = "scoreCard_id", referencedColumnName = "id")
     private ScoreCard scoreCard;
 
     public Course(String name, List<Hole> holes) {

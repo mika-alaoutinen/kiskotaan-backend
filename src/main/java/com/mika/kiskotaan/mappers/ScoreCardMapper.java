@@ -9,7 +9,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(
         componentModel = "spring",
-        uses = { CourseMapper.class, PlayerMapper.class, ScoreRowMapper.class }
+        uses = { CourseMapper.class, HoleMapper.class, PlayerMapper.class, ScoreMapper.class, ScoreRowMapper.class }
 )
 @DecoratedWith(ScoreCardMapperDecorator.class)
 public interface ScoreCardMapper {

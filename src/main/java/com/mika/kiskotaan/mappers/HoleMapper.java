@@ -5,10 +5,7 @@ import kiskotaan.openapi.model.HoleResource;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 
-@Mapper(
-        componentModel = "spring",
-        collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED
-)
+@Mapper(componentModel = "spring")
 public interface HoleMapper {
     Hole toModel(HoleResource resource);
     HoleResource toResource(Hole model);

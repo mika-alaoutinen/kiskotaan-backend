@@ -3,10 +3,15 @@ package com.mika.kiskotaan.mappers;
 import com.mika.kiskotaan.models.Course;
 import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.NewCourseResource;
+import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
+        uses = HoleMapper.class
+)
 @DecoratedWith(CourseMapperDecorator.class)
 public interface CourseMapper {
     Course toModel(NewCourseResource resource);

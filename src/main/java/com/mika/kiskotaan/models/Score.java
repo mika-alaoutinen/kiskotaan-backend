@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -27,6 +28,7 @@ public class Score extends EntityModel {
 
     // Needed for Hibernate to work:
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scoreRow_id")
     private ScoreRow scoreRow;
 
     public Score(Long playerId, int score) {

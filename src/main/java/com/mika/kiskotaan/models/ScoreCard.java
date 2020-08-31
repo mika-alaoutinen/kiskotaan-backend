@@ -12,20 +12,20 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@Table
 @NoArgsConstructor
 public class ScoreCard extends EntityModel {
 
     @NotNull
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "course_id", referencedColumnName = "id")
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
     private Course course;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
     private List<Player> players = new ArrayList<>();
 
     @NotNull
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
     private List<ScoreRow> rows = new ArrayList<>();
 
     // Hibernate
@@ -44,6 +44,11 @@ public class ScoreCard extends EntityModel {
         player.setScoreCard(this);
     }
 
+    public void addPlayers(List<Player> players) {
+        this.players.addAll(players);
+        players.forEach(p -> p.setScoreCard(this));
+    }
+
     public void removePlayer(Player player) {
         this.players.remove(player);
         player.setScoreCard(null);
@@ -52,6 +57,11 @@ public class ScoreCard extends EntityModel {
     public void addScoreRow(ScoreRow row) {
         this.rows.add(row);
         row.setScoreCard(this);
+    }
+
+    public void addScoreRows(List<ScoreRow> rows) {
+        this.rows.addAll(rows);
+        rows.forEach(r -> r.setScoreCard(this));
     }
 
     public void removeScoreRow(ScoreRow row) {

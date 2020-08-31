@@ -23,7 +23,7 @@ public class Player extends EntityModel {
 
     // Needed for Hibernate to work:
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scoreCard_id")
+    @JoinColumn(name = "scoreCard_id", referencedColumnName = "id")
     private ScoreCard scoreCard;
 
     public Player(String name) {

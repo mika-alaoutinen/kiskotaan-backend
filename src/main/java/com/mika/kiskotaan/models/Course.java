@@ -4,10 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -26,11 +23,12 @@ public class Course extends EntityModel {
 
     @NotNull
     @Size(min = 1, max = 30)
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "course", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", orphanRemoval = true)
     private List<Hole> holes = new ArrayList<>();
 
     // Needed for Hibernate to work:
-    @OneToOne(mappedBy = "course")
+    @OneToOne
+    @JoinColumn(name = "scoreCard_id", referencedColumnName = "id")
     private ScoreCard scoreCard;
 
     public Course(String name, List<Hole> holes) {

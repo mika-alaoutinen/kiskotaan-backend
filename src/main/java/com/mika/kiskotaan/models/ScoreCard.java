@@ -16,15 +16,15 @@ import java.util.List;
 public class ScoreCard extends EntityModel {
 
     @NotNull
-    @OneToOne(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
     private Course course;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<Player> players = new ArrayList<>();
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreCard", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "scoreCard", orphanRemoval = true)
     private List<ScoreRow> rows = new ArrayList<>();
 
     // Hibernate

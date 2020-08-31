@@ -22,9 +22,9 @@ public class Player extends EntityModel {
     private String name;
 
     // Hibernate
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scoreCard_id")
-    private ScoreCard scoreCard;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn
+//    private ScoreCard scoreCard;
 
     public Player(String name) {
         this.name = name;

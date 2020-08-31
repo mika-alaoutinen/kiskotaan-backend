@@ -29,6 +29,12 @@ public class ScoreCard extends EntityModel {
     private List<ScoreRow> rows = new ArrayList<>();
 
     // Hibernate
+    public ScoreCard(Course course, List<Player> players, List<ScoreRow> rows) {
+        this.course = course;
+        this.players = players;
+        this.rows = rows;
+    }
+
     @OneToOne
     @JoinColumn(name = "game_id")
     private Game game;
@@ -51,11 +57,5 @@ public class ScoreCard extends EntityModel {
     public void removeScoreRow(ScoreRow row) {
         this.rows.remove(row);
         row.setScoreCard(null);
-    }
-
-    public ScoreCard(Course course, List<Player> players, List<ScoreRow> rows) {
-        this.course = course;
-        this.players = players;
-        this.rows = rows;
     }
 }

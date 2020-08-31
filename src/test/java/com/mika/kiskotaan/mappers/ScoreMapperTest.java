@@ -6,12 +6,16 @@ import com.mika.kiskotaan.testdata.TestModels;
 import kiskotaan.openapi.model.ScoreResource;
 import kiskotaan.openapi.model.ScoreRowResource;
 import org.junit.jupiter.api.Test;
-import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@SpringBootTest
 public class ScoreMapperTest {
-    private final ScoreMapper mapper = Mappers.getMapper(ScoreMapper.class);
+
+    @Autowired
+    private ScoreRowMapper mapper;
 
     @Test
     public void shouldMapScoreRowToResource() {

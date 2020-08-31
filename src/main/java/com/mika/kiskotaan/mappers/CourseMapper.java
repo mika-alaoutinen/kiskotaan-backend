@@ -8,7 +8,9 @@ import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
 
 @Mapper(
-        componentModel = "spring"
+        componentModel = "spring",
+        collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED,
+        uses = HoleMapper.class
 )
 @DecoratedWith(CourseMapperDecorator.class)
 public interface CourseMapper {

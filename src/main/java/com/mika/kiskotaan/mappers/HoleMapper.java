@@ -1,7 +1,7 @@
 package com.mika.kiskotaan.mappers;
 
-import com.mika.kiskotaan.models.Score;
-import kiskotaan.openapi.model.ScoreResource;
+import com.mika.kiskotaan.models.Hole;
+import kiskotaan.openapi.model.HoleResource;
 import org.mapstruct.CollectionMappingStrategy;
 import org.mapstruct.Mapper;
 
@@ -9,7 +9,7 @@ import org.mapstruct.Mapper;
         componentModel = "spring",
         collectionMappingStrategy = CollectionMappingStrategy.ADDER_PREFERRED
 )
-public interface ScoreMapper {
-    Score toModel(ScoreResource resource);
-    ScoreResource toResource(Score score);
+public interface HoleMapper {
+    Hole toModel(HoleResource resource);
+    HoleResource toResource(Hole model);
 }

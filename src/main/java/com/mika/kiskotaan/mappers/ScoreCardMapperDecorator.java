@@ -1,12 +1,12 @@
 package com.mika.kiskotaan.mappers;
 
-import com.mika.kiskotaan.models.ScoreCard;
-import kiskotaan.openapi.model.PlayerResource;
+import com.mika.kiskotaan.models.*;
+import kiskotaan.openapi.model.NewScoreCardResource;
 import kiskotaan.openapi.model.ScoreCardResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,15 +17,32 @@ public abstract class ScoreCardMapperDecorator implements ScoreCardMapper {
     private ScoreCardMapper mapper;
 
     @Override
-    public ScoreCardResource toResource(ScoreCard model) {
-        ScoreCardResource resource = mapper.toResource(model);
-        resource.setPlayers(sortByName(resource.getPlayers()));
-        return resource;
+    public ScoreCard toModel(NewScoreCardResource resource) {
+        ScoreCard scoreCard = mapper.toModel(resource);
+        var rows = createScoreRows(scoreCard);
+        scoreCard.setRows(rows);
+        return scoreCard;
     }
 
-    private List<PlayerResource> sortByName(List<PlayerResource> players) {
+    private List<ScoreRow> createScoreRows(ScoreCard scoreCard) {
+        List<ScoreRow> rows = new ArrayList<>();
+
+        for (Hole hole : scoreCard.getCourse().getHoles()) {
+            ScoreRow row = new ScoreRow();
+            row.setHole(hole.getNumber());
+
+            var scores = mapScores(scoreCard.getPlayers(), hole.getPar());
+            row.setScores(scores);
+            rows.add(row);
+        }
+
+        return rows;
+    }
+
+    private List<Score> mapScores(List<Player> players, int par) {
         return players.stream()
-                .sorted(Comparator.comparing(PlayerResource::getName))
+                .map(EntityModel::getId)
+                .map(id -> new Score(id, par))
                 .collect(Collectors.toList());
     }
 }

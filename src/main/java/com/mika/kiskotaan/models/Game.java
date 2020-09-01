@@ -24,7 +24,7 @@ public class Game extends EntityModel {
     private int hole;
 
     // Hibernate
-    @OneToOne(cascade = CascadeType.MERGE, mappedBy = "game", orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.MERGE, orphanRemoval = true)
     private ScoreCard scoreCard;
 
     public Game(boolean hasScoreChanged, boolean isOver, int hole) {

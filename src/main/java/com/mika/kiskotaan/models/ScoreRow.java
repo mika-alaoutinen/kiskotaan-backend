@@ -1,10 +1,13 @@
 package com.mika.kiskotaan.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -14,6 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class ScoreRow extends EntityModel {
 
     @NotNull
@@ -21,16 +25,6 @@ public class ScoreRow extends EntityModel {
     @Max(30)
     private int hole;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreRow", orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Score> scores;
-
-    // Hibernate
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scoreCard_id")
-    private ScoreCard scoreCard;
-
-    public ScoreRow(int hole, List<Score> scores) {
-        this.hole = hole;
-        this.scores = scores;
-    }
 }

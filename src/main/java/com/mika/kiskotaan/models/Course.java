@@ -14,6 +14,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@Table
 @NoArgsConstructor
 public class Course extends EntityModel {
 
@@ -27,7 +28,7 @@ public class Course extends EntityModel {
     private List<Hole> holes = new ArrayList<>();
 
     // Needed for Hibernate to work:
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scoreCard_id", referencedColumnName = "id")
     private ScoreCard scoreCard;
 

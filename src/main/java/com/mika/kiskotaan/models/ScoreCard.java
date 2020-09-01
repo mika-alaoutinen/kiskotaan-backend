@@ -12,7 +12,6 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table
 @NoArgsConstructor
 public class ScoreCard extends EntityModel {
 
@@ -44,11 +43,6 @@ public class ScoreCard extends EntityModel {
         player.setScoreCard(this);
     }
 
-    public void addPlayers(List<Player> players) {
-        this.players.addAll(players);
-        players.forEach(p -> p.setScoreCard(this));
-    }
-
     public void removePlayer(Player player) {
         this.players.remove(player);
         player.setScoreCard(null);
@@ -57,11 +51,6 @@ public class ScoreCard extends EntityModel {
     public void addScoreRow(ScoreRow row) {
         this.rows.add(row);
         row.setScoreCard(this);
-    }
-
-    public void addScoreRows(List<ScoreRow> rows) {
-        this.rows.addAll(rows);
-        rows.forEach(r -> r.setScoreCard(this));
     }
 
     public void removeScoreRow(ScoreRow row) {

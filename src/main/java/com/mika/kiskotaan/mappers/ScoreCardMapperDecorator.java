@@ -17,11 +17,11 @@ public abstract class ScoreCardMapperDecorator implements ScoreCardMapper {
     @Override
     public ScoreCard toModel(NewScoreCardResource resource) {
         ScoreCard scoreCard = mapper.toModel(resource);
-        scoreCard.setRows(createScoreRows(scoreCard));
+        scoreCard.setRows(initScoreRows(scoreCard));
         return scoreCard;
     }
 
-    private List<ScoreRow> createScoreRows(ScoreCard scoreCard) {
+    private List<ScoreRow> initScoreRows(ScoreCard scoreCard) {
         return scoreCard.getCourse().getHoles().stream()
                 .map(hole -> mapScoreRow(hole, scoreCard.getPlayers()))
                 .collect(Collectors.toList());

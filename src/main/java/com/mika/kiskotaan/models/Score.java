@@ -28,7 +28,7 @@ public class Score extends EntityModel {
 
     // Hibernate boilerplate
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scoreRow_id")
+    @JoinColumn(name = "score_row_id")
     private ScoreRow scoreRow;
 
     public Score(Long playerId, int score) {

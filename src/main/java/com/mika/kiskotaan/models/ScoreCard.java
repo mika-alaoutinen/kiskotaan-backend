@@ -29,7 +29,7 @@ public class ScoreCard extends EntityModel {
 
     // Hibernate boilerplate
     @OneToOne
-    @JoinColumn(name = "game_id")
+    @JoinColumn(name = "game_id", referencedColumnName = "id")
     private Game game;
 
     public ScoreCard(Course course, List<Player> players, List<ScoreRow> rows) {

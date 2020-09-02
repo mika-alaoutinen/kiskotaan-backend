@@ -29,7 +29,7 @@ public class Course extends EntityModel {
 
     // Hibernate boilerplate
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scoreCard_id", referencedColumnName = "id")
+    @JoinColumn(name = "score_card_id", referencedColumnName = "id")
     private ScoreCard scoreCard;
 
     public Course(String name, List<Hole> holes) {

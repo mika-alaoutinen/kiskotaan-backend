@@ -34,7 +34,7 @@ public class Hole extends EntityModel {
 
     // Hibernate boilerplate
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id", referencedColumnName = "id")
     private Course course;
 
     public Hole(int number, int par) {

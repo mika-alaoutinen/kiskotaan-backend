@@ -3,9 +3,7 @@ package com.mika.kiskotaan.testdata;
 import kiskotaan.openapi.model.*;
 
 import java.math.BigDecimal;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -24,10 +22,10 @@ public abstract class TestResources {
                 .holes(holeResources(9));
     }
 
-    public static Set<HoleResource> holeResources(int numberOfHoles) {
+    public static List<HoleResource> holeResources(int numberOfHoles) {
         return IntStream.rangeClosed(1, numberOfHoles)
                 .mapToObj(TestResources::holeResource)
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .collect(Collectors.toList());
     }
 
     public static HoleResource holeResource(int number) {
@@ -37,13 +35,13 @@ public abstract class TestResources {
                 .distance(80);
     }
 
-    public static Set<PlayerResource> playerResources() {
+    public static List<PlayerResource> playerResources() {
         PlayerResource p1 = playerResource();
         PlayerResource p2 = new PlayerResource()
                 .id(new BigDecimal(2))
                 .name("Kukko Pena");
 
-        return Set.of(p1, p2);
+        return List.of(p1, p2);
     }
 
     public static PlayerResource playerResource() {

@@ -1,11 +1,11 @@
 package com.mika.kiskotaan.mappers;
 
-import com.mika.kiskotaan.models.ScoreRow;
-import kiskotaan.openapi.model.ScoreRowResource;
+import com.mika.kiskotaan.models.Score;
+import kiskotaan.openapi.model.ScoreResource;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
 public interface ScoreMapper {
-    ScoreRow toModel(ScoreRowResource resource);
-    ScoreRowResource toResources(ScoreRow model);
+    Score toModel(ScoreResource resource);
+    ScoreResource toResource(Score score);
 }

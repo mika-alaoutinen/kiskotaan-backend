@@ -11,5 +11,5 @@ public class EntityModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, updatable = false, nullable = false)
-    private Long id;
+    protected Long id;
 }

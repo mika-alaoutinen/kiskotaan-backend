@@ -30,4 +30,9 @@ public class Hole extends EntityModel {
     @Min(1)
     @Max(1000)
     private int distance; // in meters
+
+    public Hole(int number, int par) {
+        this.number = number;
+        this.par = par;
+    }
 }

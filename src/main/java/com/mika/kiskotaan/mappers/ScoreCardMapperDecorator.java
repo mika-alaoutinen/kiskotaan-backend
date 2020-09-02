@@ -1,14 +1,11 @@
 package com.mika.kiskotaan.mappers;
 
-import com.mika.kiskotaan.models.ScoreCard;
-import kiskotaan.openapi.model.PlayerResource;
-import kiskotaan.openapi.model.ScoreCardResource;
+import com.mika.kiskotaan.models.*;
+import kiskotaan.openapi.model.NewScoreCardResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import java.util.Comparator;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class ScoreCardMapperDecorator implements ScoreCardMapper {
@@ -18,15 +15,32 @@ public abstract class ScoreCardMapperDecorator implements ScoreCardMapper {
     private ScoreCardMapper mapper;
 
     @Override
-    public ScoreCardResource toResource(ScoreCard model) {
-        ScoreCardResource resource = mapper.toResource(model);
-        resource.setPlayers(sortByName(resource.getPlayers()));
-        return resource;
+    public ScoreCard toModel(NewScoreCardResource resource) {
+        ScoreCard scoreCard = mapper.toModel(resource);
+        scoreCard.setRows(initScoreRows(scoreCard));
+        return scoreCard;
     }
 
-    private Set<PlayerResource> sortByName(Set<PlayerResource> players) {
+    private List<ScoreRow> initScoreRows(ScoreCard scoreCard) {
+        return scoreCard.getCourse().getHoles().stream()
+                .map(hole -> mapScoreRow(hole, scoreCard.getPlayers()))
+                .collect(Collectors.toList());
+    }
+
+    private ScoreRow mapScoreRow(Hole hole, List<Player> players) {
+        ScoreRow row = new ScoreRow();
+
+        var scores = mapScores(players, hole.getPar());
+        row.setScores(scores);
+        row.setHole(hole.getNumber());
+
+        return row;
+    }
+
+    private List<Score> mapScores(List<Player> players, int par) {
         return players.stream()
-                .sorted(Comparator.comparing(PlayerResource::getName))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                .map(EntityModel::getId)
+                .map(id -> new Score(id, par))
+                .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,10 @@ package com.mika.kiskotaan.models;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 
 @Data
 @MappedSuperclass

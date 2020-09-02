@@ -18,8 +18,7 @@ public class Player extends EntityModel {
     @Size(min = 3, max = 40)
     private String name;
 
-    // Needed for Hibernate to work:
-
+    // Hibernate boilerplate
     @ManyToOne
     @JoinColumn
     private ScoreCard scoreCard;

@@ -27,16 +27,16 @@ public class ScoreCard extends EntityModel {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ScoreRow> rows = new ArrayList<>();
 
-    // Hibernate
+    // Hibernate boilerplate
+    @OneToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
+
     public ScoreCard(Course course, List<Player> players, List<ScoreRow> rows) {
         this.course = course;
         this.players = players;
         this.rows = rows;
     }
-
-    @OneToOne
-    @JoinColumn(name = "game_id")
-    private Game game;
 
     public void addPlayer(Player player) {
         this.players.add(player);

@@ -27,7 +27,7 @@ public class Course extends EntityModel {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "course", orphanRemoval = true)
     private List<Hole> holes = new ArrayList<>();
 
-    // Needed for Hibernate to work:
+    // Hibernate boilerplate
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scoreCard_id", referencedColumnName = "id")
     private ScoreCard scoreCard;

@@ -25,7 +25,7 @@ public class ScoreRow extends EntityModel {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "scoreRow", orphanRemoval = true)
     private List<Score> scores = new ArrayList<>();
 
-    // Needed for Hibernate to work:
+    // Hibernate boilerplate:
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scoreCard_id", referencedColumnName = "id")
     private ScoreCard scoreCard;

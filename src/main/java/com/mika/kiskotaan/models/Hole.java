@@ -32,6 +32,7 @@ public class Hole extends EntityModel {
     @Max(1000)
     private int distance; // in meters
 
+    // Hibernate boilerplate
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;

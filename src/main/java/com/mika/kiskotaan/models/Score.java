@@ -26,7 +26,7 @@ public class Score extends EntityModel {
     @Max(99)
     private int score;
 
-    // Needed for Hibernate to work:
+    // Hibernate boilerplate
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "scoreRow_id")
     private ScoreRow scoreRow;

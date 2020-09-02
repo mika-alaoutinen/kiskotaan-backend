@@ -73,39 +73,6 @@ public class ScoreCardServiceTest {
     }
 
     @Test
-    public void shouldEditScoreCards() {
-        ScoreCardResource givenResource = new ScoreCardResource();
-        ScoreCard existingCard = new ScoreCard();
-        ScoreCard mappedCard = new ScoreCard();
-        ScoreCard editedCard = new ScoreCard();
-        ScoreCard savedCard = new ScoreCard();
-
-        when(repository.findById(ID)).thenReturn(Optional.of(existingCard));
-        when(mapper.toModel(givenResource)).thenReturn(mappedCard);
-        when(mapper.editModel(mappedCard, existingCard)).thenReturn(editedCard);
-        when(repository.save(editedCard)).thenReturn(savedCard);
-        when(mapper.toResource(savedCard)).thenReturn(TestResources.scoreCardResource());
-
-        ScoreCardResource savedResource = service.editScoreCard(ID, givenResource);
-
-        assertNotNull(savedResource);
-        verify(mapper, times(1)).toModel(givenResource);
-        verify(mapper, times(1)).editModel(mappedCard, existingCard);
-        verify(repository, times(1)).save(savedCard);
-        verify(mapper, times(1)).toResource(savedCard);
-    }
-
-    @Test
-    public void shouldHandleNotFoundOnEdit() {
-        when(repository.findById(ID)).thenReturn(Optional.empty());
-
-        NotFoundException e = assertThrows(NotFoundException.class, () ->
-                service.editScoreCard(ID, new ScoreCardResource()));
-
-        assertNotFoundException(e);
-    }
-
-    @Test
     public void shouldDeleteScoreCards() {
         service.deleteScoreCard(ID);
         verify(repository, times(1)).deleteById(ID);

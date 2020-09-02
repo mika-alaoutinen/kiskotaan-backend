@@ -29,18 +29,6 @@ public class ScoreCardServiceImpl implements ScoreCardService {
         return mapper.toResource(newScoreCard);
     }
 
-    // Consider deleting this operation
-    @Override
-    public ScoreCardResource editScoreCard(Long id, ScoreCardResource resource) {
-        ScoreCard edited = mapper.toModel(resource);
-
-        return repository.findById(id)
-                .map(scoreCard -> mapper.editModel(edited, scoreCard))
-                .map(repository::save)
-                .map(mapper::toResource)
-                .orElseThrow(() -> new NotFoundException(edited, id));
-    }
-
     @Override
     public void deleteScoreCard(Long id) {
         repository.deleteById(id);

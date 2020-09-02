@@ -20,6 +20,7 @@ import static org.mockito.Mockito.*;
 public class ScoreCardsControllerTest extends ControllerTest {
     private static final String URL = "/scoreCards";
     private static final Long ID = 1L;
+    private static final ScoreCard SCORE_CARD = TestModels.scoreCard();
 
     private final CoursesControllerTest coursesTest = new CoursesControllerTest();
     private final PlayersControllerTest playersTest = new PlayersControllerTest();
@@ -29,28 +30,22 @@ public class ScoreCardsControllerTest extends ControllerTest {
 
     @Test
     public void shouldGetScoreCard() throws Exception {
-        when(repository.findById(ID)).thenReturn(Optional.of(TestModels.scoreCard()));
+        when(repository.findById(ID)).thenReturn(Optional.of(SCORE_CARD));
 
         MvcResult result = performGet(URL + "/" + ID);
-        ScoreCard scoreCard = parseScoreCard(result);
 
-        System.out.println(TestModels.scoreCard());
-        System.out.println(scoreCard);
-
-        assertScoreCardsAreSame(scoreCard, TestModels.scoreCard());
+        assertScoreCardsAreSame(parseScoreCard(result), SCORE_CARD);
         verify(repository, times(1)).findById(ID);
     }
 
     @Test
     public void shouldAddScoreCard() throws Exception {
         Object resource = TestResources.newScoreCardResource();
-        ScoreCard scoreCard = TestModels.scoreCard();
-        when(repository.save(any(ScoreCard.class))).thenReturn(scoreCard);
+        when(repository.save(any(ScoreCard.class))).thenReturn(SCORE_CARD);
 
         MvcResult result = performPost(URL, resource);
-        ScoreCard response = parseScoreCard(result);
 
-        assertScoreCardsAreSame(scoreCard, response);
+        assertScoreCardsAreSame(SCORE_CARD, parseScoreCard(result));
         verify(repository, times(1)).save(any(ScoreCard.class));
     }
 
@@ -64,7 +59,12 @@ public class ScoreCardsControllerTest extends ControllerTest {
     @Test
     public void shouldUpdateScores() throws Exception {
         ScoreCard scoreCard = TestModels.scoreCard();
+        Object resource = TestResources.scoreRowResource(5);
+        when(repository.findById(ID)).thenReturn(Optional.of(scoreCard));
         when(repository.save(any(ScoreCard.class))).thenReturn(scoreCard);
+
+        MvcResult result = performPut(URL + "/" + ID + "/scores", resource);
+
     }
 
     private void assertScoreCardsAreSame(ScoreCard card1, ScoreCard card2) {

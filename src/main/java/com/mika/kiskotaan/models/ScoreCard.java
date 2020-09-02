@@ -27,7 +27,6 @@ public class ScoreCard extends EntityModel {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ScoreRow> rows = new ArrayList<>();
 
-    // Hibernate boilerplate
     @OneToOne
     @JoinColumn(name = "game_id", referencedColumnName = "id")
     private Game game;
@@ -36,25 +35,5 @@ public class ScoreCard extends EntityModel {
         this.course = course;
         this.players = players;
         this.rows = rows;
-    }
-
-    public void addPlayer(Player player) {
-        this.players.add(player);
-        player.setScoreCard(this);
-    }
-
-    public void removePlayer(Player player) {
-        this.players.remove(player);
-        player.setScoreCard(null);
-    }
-
-    public void addScoreRow(ScoreRow row) {
-        this.rows.add(row);
-        row.setScoreCard(this);
-    }
-
-    public void removeScoreRow(ScoreRow row) {
-        this.rows.remove(row);
-        row.setScoreCard(null);
     }
 }

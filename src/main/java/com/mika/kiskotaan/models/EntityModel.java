@@ -9,7 +9,7 @@ import javax.persistence.*;
 public class EntityModel {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(unique = true, updatable = false, nullable = false)
     protected Long id;
 }

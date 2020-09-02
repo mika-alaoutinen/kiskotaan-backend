@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Max;
@@ -23,8 +22,7 @@ public class Game extends EntityModel {
     @Max(30)
     private int hole;
 
-    // Hibernate
-    @OneToOne(cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToOne(mappedBy = "game")
     private ScoreCard scoreCard;
 
     public Game(boolean hasScoreChanged, boolean isOver, int hole) {

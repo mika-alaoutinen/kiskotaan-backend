@@ -75,7 +75,7 @@ public abstract class TestResources {
                 .scores(scores(3));
     }
 
-    private static List<ScoreRowResource> rows() {
+    public static List<ScoreRowResource> rows() {
         ScoreRowResource row1 = scoreRowResource();
 
         ScoreRowResource row2 = new ScoreRowResource()
@@ -85,7 +85,7 @@ public abstract class TestResources {
         return List.of(row1, row2);
     }
 
-    private static List<ScoreResource> scores(int score) {
+    public static List<ScoreResource> scores(int score) {
         ScoreResource score1 = new ScoreResource()
                 .playerId(new BigDecimal(1))
                 .score(score);

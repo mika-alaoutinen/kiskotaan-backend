@@ -32,7 +32,7 @@ public class ScoreServiceImpl implements ScoreService {
 
     private ScoreCard findScoreCard(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new NotFoundException(new ScoreRow(), id));
+                .orElseThrow(() -> new NotFoundException(new ScoreCard(), id));
     }
 
     private ScoreRow findRow(List<ScoreRow> rows, ScoreRowResource resource) {

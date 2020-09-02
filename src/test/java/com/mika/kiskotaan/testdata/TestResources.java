@@ -69,14 +69,14 @@ public abstract class TestResources {
                 .players(playerResources());
     }
 
-    public static ScoreRowResource scoreRowResource() {
+    public static ScoreRowResource scoreRowResource(int score) {
         return new ScoreRowResource()
                 .hole(1)
-                .scores(scores(3));
+                .scores(scores(score));
     }
 
-    private static List<ScoreRowResource> rows() {
-        ScoreRowResource row1 = scoreRowResource();
+    public static List<ScoreRowResource> rows() {
+        ScoreRowResource row1 = scoreRowResource(3);
 
         ScoreRowResource row2 = new ScoreRowResource()
                 .hole(2)
@@ -85,7 +85,7 @@ public abstract class TestResources {
         return List.of(row1, row2);
     }
 
-    private static List<ScoreResource> scores(int score) {
+    public static List<ScoreResource> scores(int score) {
         ScoreResource score1 = new ScoreResource()
                 .playerId(new BigDecimal(1))
                 .score(score);

@@ -7,6 +7,8 @@ import com.mika.kiskotaan.models.ScoreRow;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
+import kiskotaan.openapi.model.ScoreResource;
+import kiskotaan.openapi.model.ScoreRowResource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MvcResult;
@@ -20,6 +22,7 @@ import static org.mockito.Mockito.*;
 public class ScoreCardsControllerTest extends ControllerTest {
     private static final String URL = "/scoreCards";
     private static final Long ID = 1L;
+    private static final ScoreCard SCORE_CARD = TestModels.scoreCard();
 
     private final CoursesControllerTest coursesTest = new CoursesControllerTest();
     private final PlayersControllerTest playersTest = new PlayersControllerTest();
@@ -29,28 +32,22 @@ public class ScoreCardsControllerTest extends ControllerTest {
 
     @Test
     public void shouldGetScoreCard() throws Exception {
-        when(repository.findById(ID)).thenReturn(Optional.of(TestModels.scoreCard()));
+        when(repository.findById(ID)).thenReturn(Optional.of(SCORE_CARD));
 
         MvcResult result = performGet(URL + "/" + ID);
-        ScoreCard scoreCard = parseScoreCard(result);
 
-        System.out.println(TestModels.scoreCard());
-        System.out.println(scoreCard);
-
-        assertScoreCardsAreSame(scoreCard, TestModels.scoreCard());
+        assertScoreCardsAreSame(parseScoreCard(result));
         verify(repository, times(1)).findById(ID);
     }
 
     @Test
     public void shouldAddScoreCard() throws Exception {
         Object resource = TestResources.newScoreCardResource();
-        ScoreCard scoreCard = TestModels.scoreCard();
-        when(repository.save(any(ScoreCard.class))).thenReturn(scoreCard);
+        when(repository.save(any(ScoreCard.class))).thenReturn(SCORE_CARD);
 
         MvcResult result = performPost(URL, resource);
-        ScoreCard response = parseScoreCard(result);
 
-        assertScoreCardsAreSame(scoreCard, response);
+        assertScoreCardsAreSame(parseScoreCard(result));
         verify(repository, times(1)).save(any(ScoreCard.class));
     }
 
@@ -64,13 +61,33 @@ public class ScoreCardsControllerTest extends ControllerTest {
     @Test
     public void shouldUpdateScores() throws Exception {
         ScoreCard scoreCard = TestModels.scoreCard();
+        ScoreRowResource resource = TestResources.scoreRowResource(5);
+        when(repository.findById(ID)).thenReturn(Optional.of(scoreCard));
         when(repository.save(any(ScoreCard.class))).thenReturn(scoreCard);
+
+        MvcResult result = performPut(URL + "/" + ID + "/scores", resource);
+        ScoreRow row = parseScoreRow(result);
+        assertScoreRowsAreSame(row, resource);
+
+        verify(repository, times(1)).findById(ID);
+        verify(repository, times(1)).save(any(ScoreCard.class));
     }
 
-    private void assertScoreCardsAreSame(ScoreCard card1, ScoreCard card2) {
-        coursesTest.assertCoursesAreSame(card1.getCourse(), card2.getCourse());
-        assertPlayersAreSame(card1.getPlayers(), card2.getPlayers());
-        assertRowsAreSame(card1.getRows(), card2.getRows());
+    private void assertScoreCardsAreSame(ScoreCard card) {
+        coursesTest.assertCoursesAreSame(SCORE_CARD.getCourse(), card.getCourse());
+        assertPlayersAreSame(SCORE_CARD.getPlayers(), card.getPlayers());
+        assertRowsAreSame(SCORE_CARD.getRows(), card.getRows());
+    }
+
+    private void assertScoreRowsAreSame(ScoreRow model, ScoreRowResource resource) {
+        assertEquals(model.getHole(),  resource.getHole());
+
+        for (int i = 0; i < model.getScores().size(); i++) {
+            Score score = model.getScores().get(i);
+            ScoreResource scoreResource = resource.getScores().get(i);
+            assertEquals(score.getPlayerId(), scoreResource.getPlayerId().longValue());
+            assertEquals(score.getScore(), scoreResource.getScore());
+        }
     }
 
     private void assertPlayersAreSame(List<Player> players1, List<Player> players2) {
@@ -102,5 +119,9 @@ public class ScoreCardsControllerTest extends ControllerTest {
 
     private ScoreCard parseScoreCard(MvcResult result) throws Exception {
         return mapper.readValue(testUtils.parseResponseString(result), ScoreCard.class);
+    }
+
+    private ScoreRow parseScoreRow(MvcResult result) throws Exception {
+        return mapper.readValue(testUtils.parseResponseString(result), ScoreRow.class);
     }
 }

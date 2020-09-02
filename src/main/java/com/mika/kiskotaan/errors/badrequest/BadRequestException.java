@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class BadRequestException extends RuntimeException {
 
     public BadRequestException(ScoreRowResource row) {
-        super("Could not edit score row " + row);
+        super("Could not edit score row with hole number " + row.getHole());
     }
 }

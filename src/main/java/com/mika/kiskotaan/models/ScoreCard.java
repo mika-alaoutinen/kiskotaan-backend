@@ -24,7 +24,7 @@ public class ScoreCard extends EntityModel {
     private List<Player> players = new ArrayList<>();
 
     @NotNull
-    @OneToMany(cascade = CascadeType.MERGE, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ScoreRow> rows = new ArrayList<>();
 
     // Hibernate

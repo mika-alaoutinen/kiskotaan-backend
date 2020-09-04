@@ -4,6 +4,7 @@ import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.models.Hole;
 import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
+import com.mika.kiskotaan.utils.MappingAssertions;
 import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.HoleResource;
 import kiskotaan.openapi.model.NewCourseResource;
@@ -53,13 +54,7 @@ public class CourseMapperTest {
 
     private void assertMappedHolesOk(List<Hole> models, List<HoleResource> resources) {
         for (int i = 0; i < resources.size(); i++) {
-            assertMappedHoleOk(models.get(i), resources.get(i));
+            MappingAssertions.assertHoleMapping(models.get(i), resources.get(i));
         }
-    }
-
-    private void assertMappedHoleOk(Hole model, HoleResource resource) {
-        assertEquals(model.getNumber(), resource.getNumber());
-        assertEquals(model.getPar(), resource.getPar());
-        assertEquals(model.getDistance(), resource.getDistance());
     }
 }

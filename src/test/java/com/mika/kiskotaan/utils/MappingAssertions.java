@@ -37,16 +37,16 @@ public abstract class MappingAssertions {
         assertEquals(model.getName(), resource.getName());
     }
 
+    public static void assertScoreMapping(Score model, ScoreResource resource) {
+        assertEquals(model.getPlayerId(), resource.getPlayerId().longValue());
+        assertEquals(model.getScore(), resource.getScore());
+    }
+
     public static void assertScoreRowMapping(ScoreRow model, ScoreRowResource resource) {
         for (int i = 0; i < model.getScores().size(); i++) {
             Score score = model.getScores().get(i);
             ScoreResource scoreResource = resource.getScores().get(i);
             assertScoreMapping(score, scoreResource);
         }
-    }
-
-    public static void assertScoreMapping(Score model, ScoreResource resource) {
-        assertEquals(model.getPlayerId(), resource.getPlayerId().longValue());
-        assertEquals(model.getScore(), resource.getScore());
     }
 }

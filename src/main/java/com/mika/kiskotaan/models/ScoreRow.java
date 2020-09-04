@@ -27,6 +27,6 @@ public class ScoreRow extends EntityModel {
     private int hole;
 
     @NotNull
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Score> scores = new ArrayList<>();
 }

@@ -1,10 +1,7 @@
 package com.mika.kiskotaan.utils;
 
-import com.mika.kiskotaan.models.Course;
-import com.mika.kiskotaan.models.Hole;
-import kiskotaan.openapi.model.CourseResource;
-import kiskotaan.openapi.model.HoleResource;
-import kiskotaan.openapi.model.NewCourseResource;
+import com.mika.kiskotaan.models.*;
+import kiskotaan.openapi.model.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -29,5 +26,27 @@ public abstract class MappingAssertions {
         for (int i = 0; i < model.getHoles().size(); i++) {
             assertHoleMapping(model.getHoles().get(i), resource.getHoles().get(i));
         }
+    }
+
+    public static void assertNewPlayerMapping(Player model, NewPlayerResource resource) {
+        assertEquals(model.getName(), resource.getName());
+    }
+
+    public static void assertPlayerMapping(Player model, PlayerResource resource) {
+        assertEquals(model.getId(), resource.getId().longValue());
+        assertEquals(model.getName(), resource.getName());
+    }
+
+    public static void assertScoreRowMapping(ScoreRow model, ScoreRowResource resource) {
+        for (int i = 0; i < model.getScores().size(); i++) {
+            Score score = model.getScores().get(i);
+            ScoreResource scoreResource = resource.getScores().get(i);
+            assertScoreMapping(score, scoreResource);
+        }
+    }
+
+    public static void assertScoreMapping(Score model, ScoreResource resource) {
+        assertEquals(model.getPlayerId(), resource.getPlayerId().longValue());
+        assertEquals(model.getScore(), resource.getScore());
     }
 }

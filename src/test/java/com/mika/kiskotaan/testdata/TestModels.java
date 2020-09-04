@@ -51,17 +51,17 @@ public abstract class TestModels {
         return new ScoreCard(course(), players(), scoreRows());
     }
 
-    public static ScoreRow scoreRow() {
-        return new ScoreRow(1, scores());
+    public static ScoreRow scoreRow(int hole) {
+        return new ScoreRow(hole, scores());
     }
 
     private static List<ScoreRow> scoreRows() {
-        ScoreRow row1 = scoreRow();
+        ScoreRow row1 = scoreRow(1);
         ScoreRow row2 = new ScoreRow(2, scores());
         return List.of(row1, row2);
     }
 
-    private static List<Score> scores() {
+    public static List<Score> scores() {
         Score s1 = new Score(1L, 3);
         Score s2 = new Score(2L, 4);
         return List.of(s1, s2);

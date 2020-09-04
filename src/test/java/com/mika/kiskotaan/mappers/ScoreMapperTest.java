@@ -1,38 +1,29 @@
 package com.mika.kiskotaan.mappers;
 
 import com.mika.kiskotaan.models.Score;
-import com.mika.kiskotaan.models.ScoreRow;
 import com.mika.kiskotaan.testdata.TestModels;
+import com.mika.kiskotaan.testdata.TestResources;
+import com.mika.kiskotaan.utils.MappingAssertions;
 import kiskotaan.openapi.model.ScoreResource;
-import kiskotaan.openapi.model.ScoreRowResource;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mapstruct.factory.Mappers;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-@SpringBootTest
 public class ScoreMapperTest {
 
-    @Autowired
-    private ScoreRowMapper mapper;
+    private static final Score SCORE = TestModels.scores().get(0);
+    private static final ScoreResource SCORE_RESOURCE = TestResources.scores(4).get(0);
+
+    private ScoreMapper mapper = Mappers.getMapper(ScoreMapper.class);
 
     @Test
-    public void shouldMapScoreRowToResource() {
-        ScoreRowResource resource = mapper.toResources(TestModels.scoreRow());
-        assertScoreRowMappingOk(TestModels.scoreRow(), resource);
+    public void shouldMapScoreToModel() {
+        Score mapped = mapper.toModel(SCORE_RESOURCE);
+        MappingAssertions.assertScoreMapping(mapped, SCORE_RESOURCE);
     }
 
-    public void assertScoreRowMappingOk(ScoreRow model, ScoreRowResource resource) {
-        for (int i = 0; i < model.getScores().size(); i++) {
-            Score score = model.getScores().get(i);
-            ScoreResource scoreResource = resource.getScores().get(i);
-            assertScoresAreSame(score, scoreResource);
-        }
-    }
-
-    private void assertScoresAreSame(Score model, ScoreResource resource) {
-        assertEquals(model.getPlayerId(), resource.getPlayerId().longValue());
-        assertEquals(model.getScore(), resource.getScore());
+    @Test
+    public void shouldMapScoreToResource() {
+        ScoreResource mapped = mapper.toResource(SCORE);
+        MappingAssertions.assertScoreMapping(SCORE, mapped);
     }
 }

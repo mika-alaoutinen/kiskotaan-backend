@@ -13,7 +13,7 @@ public class ScoreMapperTest {
     private static final Score SCORE = TestModels.scores().get(0);
     private static final ScoreResource SCORE_RESOURCE = TestResources.scores(4).get(0);
 
-    private ScoreMapper mapper = Mappers.getMapper(ScoreMapper.class);
+    private final ScoreMapper mapper = Mappers.getMapper(ScoreMapper.class);
 
     @Test
     public void shouldMapScoreToModel() {

@@ -31,14 +31,14 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerResource getPlayer(Long id) {
+    public PlayerResource getPlayer(Long id) throws NotFoundException {
         return repository.findById(id)
                 .map(mapper::toResource)
                 .orElseThrow(() -> new NotFoundException(new Player(), id));
     }
 
     @Override
-    public PlayerResource addPlayer(NewPlayerResource resource) {
+    public PlayerResource addPlayer(NewPlayerResource resource) throws PlayerException {
         return Stream.of(validator.validateNameIsUnique(resource))
                 .map(mapper::toModel)
                 .map(repository::save)

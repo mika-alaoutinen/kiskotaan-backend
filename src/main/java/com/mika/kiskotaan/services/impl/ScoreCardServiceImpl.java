@@ -1,6 +1,5 @@
 package com.mika.kiskotaan.services.impl;
 
-import com.mika.kiskotaan.errors.badrequest.PlayerException;
 import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreCardMapper;
@@ -23,14 +22,14 @@ public class ScoreCardServiceImpl implements ScoreCardService {
     private final ScoreCardResourceValidator validator;
 
     @Override
-    public ScoreCardResource getScoreCard(Long id) {
+    public ScoreCardResource getScoreCard(Long id) throws NotFoundException {
         return repository.findById(id)
                 .map(mapper::toResource)
                 .orElseThrow(() -> new NotFoundException(new ScoreCard(), id));
     }
 
     @Override
-    public ScoreCardResource addScoreCard(final NewScoreCardResource resource) throws PlayerException {
+    public ScoreCardResource addScoreCard(final NewScoreCardResource resource) throws ScoreCardException {
         return Stream.of(validator.validateNewResource(resource))
                 .map(mapper::toModel)
                 .map(repository::save)

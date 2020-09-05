@@ -1,6 +1,5 @@
 package com.mika.kiskotaan.validators;
 
-import com.mika.kiskotaan.errors.badrequest.PlayerException;
 import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
 import com.mika.kiskotaan.services.CourseService;
 import com.mika.kiskotaan.services.PlayerService;
@@ -18,19 +17,19 @@ public class ScoreCardResourceValidator {
     private final CourseService courseService;
     private final PlayerService playerService;
 
-    public NewScoreCardResource validateNewResource(NewScoreCardResource resource) throws PlayerException {
+    public NewScoreCardResource validateNewResource(NewScoreCardResource resource) throws ScoreCardException {
         validateCourseExists(resource.getCourse());
         validatePlayersExist(resource.getPlayers());
         return resource;
     }
 
-    private void validateCourseExists(CourseResource courseResource) {
+    private void validateCourseExists(CourseResource courseResource) throws ScoreCardException {
         if (!courseService.existsById(courseResource.getId().longValue())) {
             throw new ScoreCardException(courseResource);
         }
     }
 
-    private void validatePlayersExist(List<PlayerResource> playerResources) {
+    private void validatePlayersExist(List<PlayerResource> playerResources) throws ScoreCardException {
         boolean allPlayersExistInRepository = playerResources.stream()
                 .mapToLong(player -> player.getId().longValue())
                 .allMatch(playerService::existsById);

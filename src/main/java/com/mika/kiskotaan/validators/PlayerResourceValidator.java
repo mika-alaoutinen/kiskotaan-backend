@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class PlayerResourceValidator {
     private final PlayerService service;
 
-    public NewPlayerResource validateNameIsUnique(NewPlayerResource resource) {
+    public NewPlayerResource validateNameIsUnique(NewPlayerResource resource) throws PlayerException {
         if (service.existsByName(resource.getName())) {
             throw new PlayerException(resource);
         }

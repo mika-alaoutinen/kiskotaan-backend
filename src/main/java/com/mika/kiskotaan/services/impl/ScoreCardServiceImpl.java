@@ -4,15 +4,15 @@ import com.mika.kiskotaan.errors.badrequest.BadRequestException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreCardMapper;
 import com.mika.kiskotaan.models.ScoreCard;
-import com.mika.kiskotaan.repositories.CourseRepository;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.services.ScoreCardService;
 import com.mika.kiskotaan.validators.NewResourceValidator;
-import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.NewScoreCardResource;
 import kiskotaan.openapi.model.ScoreCardResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +30,17 @@ public class ScoreCardServiceImpl implements ScoreCardService {
 
     @Override
     public ScoreCardResource addScoreCard(final NewScoreCardResource resource) throws BadRequestException {
+        return Stream.of(validator.validateNewResource(resource))
+                .map(mapper::toModel)
+                .map(repository::save)
+                .map(mapper::toResource)
+                .findAny()
+                .orElseThrow(() -> new BadRequestException(resource));
+    }
+
+    public ScoreCardResource addOld(final NewScoreCardResource resource) throws BadRequestException {
         final NewScoreCardResource validated = validator.validateNewResource(resource);
-        ScoreCard newScoreCard = repository.save(mapper.toModel(resource));
+        final ScoreCard newScoreCard = repository.save(mapper.toModel(validated));
         return mapper.toResource(newScoreCard);
     }
 

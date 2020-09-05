@@ -1,6 +1,7 @@
 package com.mika.kiskotaan.errors.badrequest;
 
 import kiskotaan.openapi.model.CourseResource;
+import kiskotaan.openapi.model.NewScoreCardResource;
 import kiskotaan.openapi.model.PlayerResource;
 import kiskotaan.openapi.model.ScoreRowResource;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,10 @@ public class BadRequestException extends RuntimeException {
 
     public BadRequestException(PlayerResource playerResource) {
         super("New score card contains one or more players that do not exist in database.");
+    }
+
+    public BadRequestException(NewScoreCardResource newScoreCardResource) {
+        super("Unknown exception occurred when trying to save resource \n" + newScoreCardResource);
     }
 
     public BadRequestException(ScoreRowResource row) {

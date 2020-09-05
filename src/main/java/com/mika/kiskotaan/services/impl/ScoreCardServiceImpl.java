@@ -5,7 +5,6 @@ import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.MapperUtils;
 import com.mika.kiskotaan.mappers.ScoreCardMapper;
 import com.mika.kiskotaan.models.Course;
-import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.models.ScoreCard;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.services.CourseService;
@@ -17,7 +16,6 @@ import kiskotaan.openapi.model.ScoreCardResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 @Service

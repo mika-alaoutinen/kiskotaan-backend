@@ -1,6 +1,6 @@
 package com.mika.kiskotaan.services.impl;
 
-import com.mika.kiskotaan.errors.badrequest.BadRequestException;
+import com.mika.kiskotaan.errors.badrequest.ScoreRowException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreRowMapper;
 import com.mika.kiskotaan.models.ScoreCard;
@@ -39,6 +39,6 @@ public class ScoreServiceImpl implements ScoreService {
         return rows.stream()
                 .filter(row -> row.getHole() == resource.getHole())
                 .findAny()
-                .orElseThrow(() -> new BadRequestException(resource));
+                .orElseThrow(() -> new ScoreRowException(resource));
     }
 }

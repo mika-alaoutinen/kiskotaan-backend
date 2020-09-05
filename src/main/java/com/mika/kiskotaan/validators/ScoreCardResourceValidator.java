@@ -1,6 +1,7 @@
 package com.mika.kiskotaan.validators;
 
-import com.mika.kiskotaan.errors.badrequest.BadRequestException;
+import com.mika.kiskotaan.errors.badrequest.PlayerException;
+import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
 import com.mika.kiskotaan.services.CourseService;
 import com.mika.kiskotaan.services.PlayerService;
 import kiskotaan.openapi.model.CourseResource;
@@ -17,7 +18,7 @@ public class ScoreCardResourceValidator {
     private final CourseService courseService;
     private final PlayerService playerService;
 
-    public NewScoreCardResource validateNewResource(NewScoreCardResource resource) throws BadRequestException {
+    public NewScoreCardResource validateNewResource(NewScoreCardResource resource) throws PlayerException {
         validateCourseExists(resource.getCourse());
         validatePlayersExist(resource.getPlayers());
         return resource;
@@ -25,7 +26,7 @@ public class ScoreCardResourceValidator {
 
     private void validateCourseExists(CourseResource courseResource) {
         if (!courseService.existsById(courseResource.getId().longValue())) {
-            throw new BadRequestException(courseResource);
+            throw new ScoreCardException(courseResource);
         }
     }
 
@@ -35,7 +36,7 @@ public class ScoreCardResourceValidator {
                 .allMatch(playerService::existsById);
 
         if (!allPlayersExistInRepository) {
-            throw new BadRequestException(new PlayerResource());
+            throw new ScoreCardException(new PlayerResource());
         }
     }
 }

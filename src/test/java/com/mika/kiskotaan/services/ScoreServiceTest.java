@@ -1,6 +1,7 @@
 package com.mika.kiskotaan.services;
 
-import com.mika.kiskotaan.errors.badrequest.BadRequestException;
+import com.mika.kiskotaan.errors.badrequest.PlayerException;
+import com.mika.kiskotaan.errors.badrequest.ScoreRowException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreRowMapper;
 import com.mika.kiskotaan.models.ScoreCard;
@@ -67,7 +68,7 @@ public class ScoreServiceTest {
         ScoreRowResource invalid = new ScoreRowResource().hole(19);
         when(repository.findById(ID)).thenReturn(Optional.of(TestModels.scoreCard()));
 
-        BadRequestException e = assertThrows(BadRequestException.class, () ->
+        ScoreRowException e = assertThrows(ScoreRowException.class, () ->
                 service.editScoreRow(ID, invalid));
 
         assertThrowsException("Could not edit score row with hole number 19", e);

@@ -1,6 +1,6 @@
 package com.mika.kiskotaan.validators;
 
-import com.mika.kiskotaan.errors.badrequest.BadRequestException;
+import com.mika.kiskotaan.errors.badrequest.PlayerException;
 import com.mika.kiskotaan.services.PlayerService;
 import kiskotaan.openapi.model.NewPlayerResource;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,7 @@ public class PlayerResourceValidator {
 
     public NewPlayerResource validateNameIsUnique(NewPlayerResource resource) {
         if (service.existsByName(resource.getName())) {
-            throw new BadRequestException(resource);
+            throw new PlayerException(resource);
         }
 
         return resource;

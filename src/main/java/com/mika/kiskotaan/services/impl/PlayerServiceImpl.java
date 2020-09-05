@@ -1,6 +1,6 @@
 package com.mika.kiskotaan.services.impl;
 
-import com.mika.kiskotaan.errors.badrequest.BadRequestException;
+import com.mika.kiskotaan.errors.badrequest.PlayerException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.PlayerMapper;
 import com.mika.kiskotaan.models.Player;
@@ -44,7 +44,7 @@ public class PlayerServiceImpl implements PlayerService {
                 .map(repository::save)
                 .map(mapper::toResource)
                 .findAny()
-                .orElseThrow(() -> new BadRequestException(resource));
+                .orElseThrow(() -> new PlayerException(resource));
     }
 
     @Override

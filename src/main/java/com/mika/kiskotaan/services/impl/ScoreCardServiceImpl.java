@@ -6,7 +6,7 @@ import com.mika.kiskotaan.mappers.ScoreCardMapper;
 import com.mika.kiskotaan.models.ScoreCard;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.services.ScoreCardService;
-import com.mika.kiskotaan.validators.NewResourceValidator;
+import com.mika.kiskotaan.validators.ScoreCardResourceValidator;
 import kiskotaan.openapi.model.NewScoreCardResource;
 import kiskotaan.openapi.model.ScoreCardResource;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 public class ScoreCardServiceImpl implements ScoreCardService {
     private final ScoreCardMapper mapper;
     private final ScoreCardRepository repository;
-    private final NewResourceValidator validator;
+    private final ScoreCardResourceValidator validator;
 
     @Override
     public ScoreCardResource getScoreCard(Long id) {
@@ -36,12 +36,6 @@ public class ScoreCardServiceImpl implements ScoreCardService {
                 .map(mapper::toResource)
                 .findAny()
                 .orElseThrow(() -> new BadRequestException(resource));
-    }
-
-    public ScoreCardResource addOld(final NewScoreCardResource resource) throws BadRequestException {
-        final NewScoreCardResource validated = validator.validateNewResource(resource);
-        final ScoreCard newScoreCard = repository.save(mapper.toModel(validated));
-        return mapper.toResource(newScoreCard);
     }
 
     @Override

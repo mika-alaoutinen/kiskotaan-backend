@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NewResourceValidator {
+public class ScoreCardResourceValidator {
     private final CourseService courseService;
     private final PlayerService playerService;
 

@@ -4,6 +4,7 @@ import com.mika.kiskotaan.models.Course;
 import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.NewCourseResource;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface CourseService {

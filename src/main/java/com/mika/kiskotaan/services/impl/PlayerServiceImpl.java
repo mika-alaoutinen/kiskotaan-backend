@@ -11,6 +11,7 @@ import kiskotaan.openapi.model.PlayerResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -55,7 +56,21 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public boolean existsByIds(Set<Long> ids) {
+    public List<Player> getPlayers(Set<BigDecimal> playerIds) {
+        var ids = mapIds(playerIds);
+        return repository.findAllById(ids);
+    }
+
+    @Override
+    public boolean existsByIds(Set<BigDecimal> playerIds) {
+        var ids = mapIds(playerIds);
         return repository.existsAllByIdIn(ids);
+    }
+
+    private List<Long> mapIds(Set<BigDecimal> playerIds) {
+        return playerIds.stream()
+                .mapToLong(BigDecimal::longValue)
+                .boxed()
+                .collect(Collectors.toList());
     }
 }

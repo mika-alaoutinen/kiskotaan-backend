@@ -4,6 +4,7 @@ import kiskotaan.openapi.model.*;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -65,8 +66,8 @@ public abstract class TestResources {
 
     public static NewScoreCardResource newScoreCardResource() {
         return new NewScoreCardResource()
-                .course(courseResource())
-                .players(playerResources());
+                .courseId(new BigDecimal(1L))
+                .playersIds(Set.of(new BigDecimal(1), new BigDecimal(2)));
     }
 
     public static ScoreRowResource scoreRowResource(int score) {

@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -35,20 +36,23 @@ public class ScoreCardServiceImpl implements ScoreCardService {
                 .orElseThrow(() -> new NotFoundException(new ScoreCard(), id));
     }
 
-    @Override
-    public ScoreCardResource addScoreCard(final NewScoreCardResource resource) throws ScoreCardException {
-        NewScoreCardResource validated = validator.validateNewResource(resource);
-
-        Course course = courseService.getCourse(validated.getCourseId().longValue());
-        List<Player> players = playerService.getPlayers(validated.getPlayersIds());
-        ScoreCard scoreCard = mapper.toScoreCard(course, players);
-
-        ScoreCard saved = repository.save(scoreCard);
-        return mapper.toResource(saved);
+    public ScoreCardResource addScoreCard(final NewScoreCardResource newScoreCard) throws ScoreCardException {
+        return Stream.of(validator.validateNewResource(newScoreCard))
+                .map(this::createScoreCard)
+                .map(repository::save)
+                .map(mapper::toResource)
+                .findAny()
+                .orElseThrow(() -> new ScoreCardException(newScoreCard));
     }
 
     @Override
     public void deleteScoreCard(Long id) {
         repository.deleteById(id);
+    }
+
+    private ScoreCard createScoreCard(NewScoreCardResource resource) {
+        Course course = courseService.getCourse(resource.getCourseId().longValue());
+        List<Player> players = playerService.getPlayers(resource.getPlayersIds());
+        return mapper.toScoreCard(course, players);
     }
 }

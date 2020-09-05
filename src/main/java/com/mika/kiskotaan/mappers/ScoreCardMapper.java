@@ -1,18 +1,45 @@
 package com.mika.kiskotaan.mappers;
 
-import com.mika.kiskotaan.models.ScoreCard;
-import kiskotaan.openapi.model.NewScoreCardResource;
+import com.mika.kiskotaan.models.*;
 import kiskotaan.openapi.model.ScoreCardResource;
-import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(
         componentModel = "spring",
         uses = { CourseMapper.class, HoleMapper.class, PlayerMapper.class, ScoreRowMapper.class, ScoreMapper.class }
 )
-@DecoratedWith(ScoreCardMapperDecorator.class)
 public interface ScoreCardMapper {
     ScoreCard toModel(ScoreCardResource resource);
-    ScoreCard toModel(NewScoreCardResource resource);
     ScoreCardResource toResource(ScoreCard model);
+
+    default ScoreCard toScoreCard(Course course, List<Player> players) {
+        List<ScoreRow> rows = initScoreRows(course, players);
+        return new ScoreCard(course, players, rows);
+    }
+
+    private List<ScoreRow> initScoreRows(final Course course, final List<Player> players) {
+        return course.getHoles().stream()
+                .map(hole -> mapScoreRow(hole, players))
+                .collect(Collectors.toList());
+    }
+
+    private ScoreRow mapScoreRow(Hole hole, List<Player> players) {
+        ScoreRow row = new ScoreRow();
+
+        var scores = mapScores(players, hole.getPar());
+        row.setScores(scores);
+        row.setHole(hole.getNumber());
+
+        return row;
+    }
+
+    private List<Score> mapScores(List<Player> players, int par) {
+        return players.stream()
+                .map(EntityModel::getId)
+                .map(id -> new Score(id, par))
+                .collect(Collectors.toList());
+    }
 }

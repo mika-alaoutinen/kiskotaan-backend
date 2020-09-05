@@ -29,14 +29,9 @@ public class ScoreServiceTest {
     private static final Long ID = 1L;
     private static final ScoreCard SCORE_CARD = TestModels.scoreCard();
 
-    @Mock
-    private ScoreRowMapper mapper;
-
-    @Mock
-    private ScoreCardRepository repository;
-
-    @InjectMocks
-    private ScoreServiceImpl service;
+    @Mock private ScoreRowMapper mapper;
+    @Mock private ScoreCardRepository repository;
+    @InjectMocks private ScoreServiceImpl service;
 
     @Test
     public void shouldEditScores() {

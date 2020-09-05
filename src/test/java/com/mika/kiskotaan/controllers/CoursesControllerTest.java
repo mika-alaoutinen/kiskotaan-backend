@@ -21,8 +21,7 @@ import static org.mockito.Mockito.when;
 public class CoursesControllerTest extends ControllerTest {
     private static final String URL = "/courses";
 
-    @MockBean
-    private CourseRepository repository;
+    @MockBean private CourseRepository repository;
 
     @Test
     public void shouldGetCourses() throws Exception {

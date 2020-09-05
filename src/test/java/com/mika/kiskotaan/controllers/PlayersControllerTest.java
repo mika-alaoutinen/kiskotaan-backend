@@ -21,8 +21,7 @@ public class PlayersControllerTest extends ControllerTest {
     private static final String URL = "/players";
     private static final Long ID = 1L;
 
-    @MockBean
-    private PlayerRepository repository;
+    @MockBean private PlayerRepository repository;
 
     @Test
     public void shouldGetPlayers() throws Exception {

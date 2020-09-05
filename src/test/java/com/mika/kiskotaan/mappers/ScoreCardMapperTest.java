@@ -29,8 +29,7 @@ public class ScoreCardMapperTest {
     private static final NewScoreCardResource NEW_SCORE_CARD_RESOURCE = TestResources.newScoreCardResource();
     private static final ScoreCardResource SCORE_CARD_RESOURCE = TestResources.scoreCardResource();
 
-    @Autowired
-    private ScoreCardMapper mapper;
+    @Autowired private ScoreCardMapper mapper;
 
     @Test
     public void shouldMapNewScoreCardToModel() {

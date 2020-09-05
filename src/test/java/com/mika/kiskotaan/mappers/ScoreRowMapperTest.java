@@ -15,8 +15,7 @@ public class ScoreRowMapperTest {
     private static final ScoreRow SCORE_ROW = TestModels.scoreRow(1);
     private static final ScoreRowResource SCORE_ROW_RESOURCE = TestResources.scoreRowResource(2);
 
-    @Autowired
-    private ScoreRowMapper mapper;
+    @Autowired private ScoreRowMapper mapper;
 
     @Test
     public void shouldMapScoreRowToModel() {

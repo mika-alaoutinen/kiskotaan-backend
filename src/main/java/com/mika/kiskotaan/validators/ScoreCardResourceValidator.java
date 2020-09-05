@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,11 +32,12 @@ public class ScoreCardResourceValidator {
     }
 
     private void validatePlayersExist(List<PlayerResource> playerResources) throws ScoreCardException {
-        boolean allPlayersExistInRepository = playerResources.stream()
+        Set<Long> playerIds = playerResources.stream()
                 .mapToLong(player -> player.getId().longValue())
-                .allMatch(playerService::existsById);
+                .boxed()
+                .collect(Collectors.toSet());
 
-        if (!allPlayersExistInRepository) {
+        if (!playerService.existsByIds(playerIds)) {
             throw new ScoreCardException(new PlayerResource());
         }
     }

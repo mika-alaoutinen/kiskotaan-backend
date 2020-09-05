@@ -61,6 +61,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public boolean existsByIds(Collection<Long> playerIds) {
-        return repository.existsAllByIdIn(playerIds);
+        return playerIds.stream()
+                .allMatch(repository::existsById);
     }
 }

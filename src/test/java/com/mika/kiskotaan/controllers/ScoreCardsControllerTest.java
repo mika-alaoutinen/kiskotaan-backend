@@ -1,9 +1,6 @@
 package com.mika.kiskotaan.controllers;
 
-import com.mika.kiskotaan.models.Player;
-import com.mika.kiskotaan.models.Score;
-import com.mika.kiskotaan.models.ScoreCard;
-import com.mika.kiskotaan.models.ScoreRow;
+import com.mika.kiskotaan.models.*;
 import com.mika.kiskotaan.repositories.CourseRepository;
 import com.mika.kiskotaan.repositories.PlayerRepository;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
@@ -46,12 +43,15 @@ public class ScoreCardsControllerTest extends ControllerTest {
 
     @Test
     public void shouldAddScoreCard() throws Exception {
-        Object resource = TestResources.newScoreCardResource();
-        Long courseId = 1L;
-        Set<Long> playerIds = Set.of(1L, 2L);
+        final Object resource = TestResources.newScoreCardResource();
+        final Long courseId = 1L;
+        final Course course = TestModels.course();
+        final List<Player> players = TestModels.players();
 
         when(courseRepository.existsById(courseId)).thenReturn(true);
-        when(playerRepository.existsAllByIdIn(playerIds)).thenReturn(true);
+        when(playerRepository.existsById(anyLong())).thenReturn(true);
+        when(courseRepository.findById(courseId)).thenReturn(Optional.of(course));
+        when(playerRepository.findAllById(anyList())).thenReturn(players);
         when(repository.save(any(ScoreCard.class))).thenReturn(SCORE_CARD);
 
         MvcResult result = performPost(URL, resource);

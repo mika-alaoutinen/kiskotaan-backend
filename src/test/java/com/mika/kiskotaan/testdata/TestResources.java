@@ -67,7 +67,7 @@ public abstract class TestResources {
     public static NewScoreCardResource newScoreCardResource() {
         return new NewScoreCardResource()
                 .courseId(new BigDecimal(1L))
-                .playersIds(Set.of(new BigDecimal(1), new BigDecimal(2)));
+                .playersIds(Set.of(new BigDecimal(2), new BigDecimal(3)));
     }
 
     public static ScoreRowResource scoreRowResource(int score) {

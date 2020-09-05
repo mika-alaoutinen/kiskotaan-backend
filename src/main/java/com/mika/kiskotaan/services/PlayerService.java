@@ -6,11 +6,12 @@ import kiskotaan.openapi.model.NewPlayerResource;
 import kiskotaan.openapi.model.PlayerResource;
 
 import java.util.List;
+import java.util.Set;
 
 public interface PlayerService {
     List<PlayerResource> getPlayers();
     PlayerResource getPlayer(Long id) throws NotFoundException;
     PlayerResource addPlayer(NewPlayerResource resource) throws PlayerException;
     void deletePlayer(Long id);
-    boolean existsById(Long id);
+    boolean existsByIds(Set<Long> ids);
 }

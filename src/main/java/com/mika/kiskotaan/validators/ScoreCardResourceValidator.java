@@ -1,6 +1,7 @@
 package com.mika.kiskotaan.validators;
 
 import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
+import com.mika.kiskotaan.mappers.MapperUtils;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.services.CourseService;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Set;
 
 @Service
@@ -31,7 +33,9 @@ public class ScoreCardResourceValidator {
     }
 
     private void validatePlayersExist(Set<BigDecimal> playerIds) throws ScoreCardException {
-        if (!playerService.existsByIds(playerIds)) {
+        Collection<Long> ids = MapperUtils.mapIds(playerIds);
+
+        if (!playerService.existsByIds(ids)) {
             throw new ScoreCardException(new Player());
         }
     }

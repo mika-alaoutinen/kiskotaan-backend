@@ -7,5 +7,5 @@ import java.util.Set;
 
 public interface PlayerRepository extends JpaRepository<Player, Long> {
     boolean existsByNameIgnoreCase(String name);
-    boolean existsAllById(Set<Long> playerIds);
+    boolean existsAllByIdIn(Set<Long> playerIds);
 }

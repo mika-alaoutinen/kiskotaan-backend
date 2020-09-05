@@ -56,6 +56,6 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public boolean existsByIds(Set<Long> ids) {
-        return repository.existsAllById(ids);
+        return repository.existsAllByIdIn(ids);
     }
 }

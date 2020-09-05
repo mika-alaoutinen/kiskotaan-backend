@@ -51,7 +51,7 @@ public class ScoreCardsControllerTest extends ControllerTest {
         Set<Long> playerIds = Set.of(1L, 2L);
 
         when(courseRepository.existsById(courseId)).thenReturn(true);
-        when(playerRepository.existsAllById(playerIds)).thenReturn(true);
+        when(playerRepository.existsAllByIdIn(playerIds)).thenReturn(true);
         when(repository.save(any(ScoreCard.class))).thenReturn(SCORE_CARD);
 
         MvcResult result = performPost(URL, resource);

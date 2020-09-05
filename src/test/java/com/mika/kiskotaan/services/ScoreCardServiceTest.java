@@ -61,29 +61,18 @@ public class ScoreCardServiceTest {
 
     @Test
     public void shouldAddScoreCards() {
-        Long courseId = 1L;
-        Course course = new Course();
-
-        List<Long> playerIds = List.of(2L, 3L);
-
-        Player p1 = new Player();
-        p1.setId(playerIds.get(0));
-
-        Player p2 = new Player();
-        p2.setId(playerIds.get(1));
-
-        List<Player> players = List.of(p1, p2);
-
+        final Long courseId = 1L;
+        final Course course = new Course();
+        final List<Player> players = List.of(new Player(), new Player());
         final NewScoreCardResource givenResource = TestResources.newScoreCardResource();
-        final ScoreCard savedCard = new ScoreCard();
+        final ScoreCard scoreCard = new ScoreCard();
 
         when(validator.validateNewResource(givenResource)).thenReturn(givenResource);
         when(courseService.getCourse(courseId)).thenReturn(course);
         when(playerService.getPlayers(anyList())).thenReturn(players);
-        when(mapper.toScoreCard(course, players)).thenReturn(savedCard);
-
-        when(repository.save(savedCard)).thenReturn(savedCard);
-        when(mapper.toResource(savedCard)).thenReturn(SCORE_CARD_RESOURCE);
+        when(mapper.toScoreCard(course, players)).thenReturn(scoreCard);
+        when(repository.save(scoreCard)).thenReturn(scoreCard);
+        when(mapper.toResource(scoreCard)).thenReturn(SCORE_CARD_RESOURCE);
 
         ScoreCardResource savedResource = service.addScoreCard(givenResource);
         assertNotNull(savedResource);
@@ -92,9 +81,8 @@ public class ScoreCardServiceTest {
         verify(courseService, times(1)).getCourse(courseId);
         verify(playerService, times(1)).getPlayers(anyList());
         verify(mapper, times(1)).toScoreCard(course, players);
-
-        verify(repository, times(1)).save(savedCard);
-        verify(mapper, times(1)).toResource(savedCard);
+        verify(repository, times(1)).save(scoreCard);
+        verify(mapper, times(1)).toResource(scoreCard);
     }
 
     @Test

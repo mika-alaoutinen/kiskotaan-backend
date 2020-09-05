@@ -1,17 +1,18 @@
 package com.mika.kiskotaan.validators;
 
 import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
+import com.mika.kiskotaan.mappers.MapperUtils;
+import com.mika.kiskotaan.models.Course;
+import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.services.CourseService;
 import com.mika.kiskotaan.services.PlayerService;
-import kiskotaan.openapi.model.CourseResource;
 import kiskotaan.openapi.model.NewScoreCardResource;
-import kiskotaan.openapi.model.PlayerResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,25 +21,22 @@ public class ScoreCardResourceValidator {
     private final PlayerService playerService;
 
     public NewScoreCardResource validateNewResource(NewScoreCardResource resource) throws ScoreCardException {
-        validateCourseExists(resource.getCourse());
-        validatePlayersExist(resource.getPlayers());
+        validateCourseExists(resource.getCourseId());
+        validatePlayersExist(resource.getPlayersIds());
         return resource;
     }
 
-    private void validateCourseExists(CourseResource courseResource) throws ScoreCardException {
-        if (!courseService.existsById(courseResource.getId().longValue())) {
-            throw new ScoreCardException(courseResource);
+    private void validateCourseExists(BigDecimal courseId) throws ScoreCardException {
+        if (!courseService.existsById(courseId.longValue())) {
+            throw new ScoreCardException(new Course());
         }
     }
 
-    private void validatePlayersExist(List<PlayerResource> playerResources) throws ScoreCardException {
-        Set<Long> playerIds = playerResources.stream()
-                .mapToLong(player -> player.getId().longValue())
-                .boxed()
-                .collect(Collectors.toSet());
+    private void validatePlayersExist(Set<BigDecimal> playerIds) throws ScoreCardException {
+        Collection<Long> ids = MapperUtils.mapIds(playerIds);
 
-        if (!playerService.existsByIds(playerIds)) {
-            throw new ScoreCardException(new PlayerResource());
+        if (!playerService.existsByIds(ids)) {
+            throw new ScoreCardException(new Player());
         }
     }
 }

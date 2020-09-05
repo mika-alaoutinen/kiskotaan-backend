@@ -1,5 +1,6 @@
 package com.mika.kiskotaan.services.impl;
 
+import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
 import com.mika.kiskotaan.mappers.CourseMapper;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.repositories.CourseRepository;
@@ -23,6 +24,12 @@ public class CourseServiceImpl implements CourseService {
         return repository.findAll().stream()
                 .map(mapper::toResource)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Course getCourse(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ScoreCardException(new Course()));
     }
 
     @Override

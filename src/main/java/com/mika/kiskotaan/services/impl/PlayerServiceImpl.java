@@ -11,8 +11,8 @@ import kiskotaan.openapi.model.PlayerResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -55,7 +55,13 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public boolean existsByIds(Set<Long> ids) {
-        return repository.existsAllByIdIn(ids);
+    public List<Player> getPlayers(Collection<Long> playerIds) {
+        return repository.findAllById(playerIds);
+    }
+
+    @Override
+    public boolean existsByIds(Collection<Long> playerIds) {
+        return playerIds.stream()
+                .allMatch(repository::existsById);
     }
 }

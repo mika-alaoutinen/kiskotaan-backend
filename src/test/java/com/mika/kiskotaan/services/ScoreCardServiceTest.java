@@ -2,6 +2,8 @@ package com.mika.kiskotaan.services;
 
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreCardMapper;
+import com.mika.kiskotaan.models.Course;
+import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.models.ScoreCard;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.services.impl.ScoreCardServiceImpl;
@@ -16,6 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,6 +32,8 @@ public class ScoreCardServiceTest {
     private static final ScoreCard SCORE_CARD = TestModels.scoreCard();
     private static final ScoreCardResource SCORE_CARD_RESOURCE = TestResources.scoreCardResource();
 
+    @Mock private CourseService courseService;
+    @Mock private PlayerService playerService;
     @Mock private ScoreCardMapper mapper;
     @Mock private ScoreCardRepository repository;
     @Mock private ScoreCardResourceValidator validator;
@@ -56,20 +61,28 @@ public class ScoreCardServiceTest {
 
     @Test
     public void shouldAddScoreCards() {
-        NewScoreCardResource givenResource = new NewScoreCardResource();
-        ScoreCard savedCard = new ScoreCard();
+        final Long courseId = 1L;
+        final Course course = new Course();
+        final List<Player> players = List.of(new Player(), new Player());
+        final NewScoreCardResource givenResource = TestResources.newScoreCardResource();
+        final ScoreCard scoreCard = new ScoreCard();
 
         when(validator.validateNewResource(givenResource)).thenReturn(givenResource);
-        when(mapper.toModel(givenResource)).thenReturn(new ScoreCard());
-        when(repository.save(any(ScoreCard.class))).thenReturn(savedCard);
-        when(mapper.toResource(any(ScoreCard.class))).thenReturn(TestResources.scoreCardResource());
+        when(courseService.getCourse(courseId)).thenReturn(course);
+        when(playerService.getPlayers(anyList())).thenReturn(players);
+        when(mapper.toScoreCard(course, players)).thenReturn(scoreCard);
+        when(repository.save(scoreCard)).thenReturn(scoreCard);
+        when(mapper.toResource(scoreCard)).thenReturn(SCORE_CARD_RESOURCE);
 
         ScoreCardResource savedResource = service.addScoreCard(givenResource);
-
         assertNotNull(savedResource);
-        verify(mapper, times(1)).toModel(givenResource);
-        verify(repository, times(1)).save(savedCard);
-        verify(mapper, times(1)).toResource(savedCard);
+
+        verify(validator, times(1)).validateNewResource(givenResource);
+        verify(courseService, times(1)).getCourse(courseId);
+        verify(playerService, times(1)).getPlayers(anyList());
+        verify(mapper, times(1)).toScoreCard(course, players);
+        verify(repository, times(1)).save(scoreCard);
+        verify(mapper, times(1)).toResource(scoreCard);
     }
 
     @Test

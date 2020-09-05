@@ -32,12 +32,6 @@ public class ScoreCardMapperTest {
     @Autowired private ScoreCardMapper mapper;
 
     @Test
-    public void shouldMapNewScoreCardToModel() {
-        ScoreCard mapped = mapper.toModel(NEW_SCORE_CARD_RESOURCE);
-        assertMappingOk(mapped);
-    }
-
-    @Test
     public void shouldMapScoreCardToModel() {
         ScoreCard mapped = mapper.toModel(SCORE_CARD_RESOURCE);
         assertMappingOk(mapped, SCORE_CARD_RESOURCE);
@@ -48,12 +42,6 @@ public class ScoreCardMapperTest {
         // Note that players in score card are sorted alphabetically.
         ScoreCardResource mapped = mapper.toResource(SCORE_CARD);
         assertMappingOk(SCORE_CARD, mapped);
-    }
-
-    private void assertMappingOk(ScoreCard model) {
-        MappingAssertions.assertCourseMapping(model.getCourse(), NEW_SCORE_CARD_RESOURCE.getCourse());
-        assertPlayersOk(model.getPlayers(), NEW_SCORE_CARD_RESOURCE.getPlayers());
-        assertScoreRowsInitiated(model.getRows());
     }
 
     private void assertMappingOk(ScoreCard model, ScoreCardResource resource) {
@@ -74,6 +62,7 @@ public class ScoreCardMapperTest {
         }
     }
 
+    // TODO test for row initialization
     private void assertScoreRowsInitiated(List<ScoreRow> rows) {
         // Tests ScoreCardMapperDecorator
         List<ScoreRow> expected = IntStream.rangeClosed(1, 18)

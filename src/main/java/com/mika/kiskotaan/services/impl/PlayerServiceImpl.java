@@ -6,7 +6,6 @@ import com.mika.kiskotaan.mappers.PlayerMapper;
 import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.repositories.PlayerRepository;
 import com.mika.kiskotaan.services.PlayerService;
-import com.mika.kiskotaan.validators.PlayerResourceValidator;
 import kiskotaan.openapi.model.NewPlayerResource;
 import kiskotaan.openapi.model.PlayerResource;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,6 @@ import java.util.stream.Stream;
 public class PlayerServiceImpl implements PlayerService {
     private final PlayerMapper mapper;
     private final PlayerRepository repository;
-    private final PlayerResourceValidator validator;
 
     @Override
     public List<PlayerResource> getPlayers() {
@@ -39,8 +37,11 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     public PlayerResource addPlayer(NewPlayerResource resource) throws PlayerException {
-        return Stream.of(validator.validateNameIsUnique(resource))
-                .map(mapper::toModel)
+        if (repository.existsByNameIgnoreCase(resource.getName())) {
+            throw new PlayerException(resource);
+        }
+
+        return Stream.of(mapper.toModel(resource))
                 .map(repository::save)
                 .map(mapper::toResource)
                 .findAny()
@@ -55,10 +56,5 @@ public class PlayerServiceImpl implements PlayerService {
     @Override
     public boolean existsById(Long id) {
         return repository.existsById(id);
-    }
-
-    @Override
-    public boolean existsByName(String name) {
-        return repository.existsByNameIgnoreCase(name);
     }
 }

@@ -13,5 +13,4 @@ public interface PlayerService {
     PlayerResource addPlayer(NewPlayerResource resource) throws PlayerException;
     void deletePlayer(Long id);
     boolean existsById(Long id);
-    boolean existsByName(String name);
 }

@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class PlayerException extends RuntimeException {
 
     public PlayerException(NewPlayerResource newPlayerResource) {
-        super("Could not save resource \n" + newPlayerResource);
+        super(String.format("Player with name %s already exists.", newPlayerResource.getName()));
     }
 }

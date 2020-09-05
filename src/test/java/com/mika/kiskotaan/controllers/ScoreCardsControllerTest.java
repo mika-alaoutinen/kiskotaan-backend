@@ -4,6 +4,8 @@ import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.models.Score;
 import com.mika.kiskotaan.models.ScoreCard;
 import com.mika.kiskotaan.models.ScoreRow;
+import com.mika.kiskotaan.repositories.CourseRepository;
+import com.mika.kiskotaan.repositories.PlayerRepository;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
@@ -15,6 +17,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -27,8 +30,9 @@ public class ScoreCardsControllerTest extends ControllerTest {
     private final CoursesControllerTest coursesTest = new CoursesControllerTest();
     private final PlayersControllerTest playersTest = new PlayersControllerTest();
 
-    @MockBean
-    private ScoreCardRepository repository;
+    @MockBean private ScoreCardRepository repository;
+    @MockBean private CourseRepository courseRepository;
+    @MockBean private PlayerRepository playerRepository;
 
     @Test
     public void shouldGetScoreCard() throws Exception {
@@ -43,6 +47,11 @@ public class ScoreCardsControllerTest extends ControllerTest {
     @Test
     public void shouldAddScoreCard() throws Exception {
         Object resource = TestResources.newScoreCardResource();
+        Long courseId = 1L;
+        Set<Long> playerIds = Set.of(1L, 2L);
+
+        when(courseRepository.existsById(courseId)).thenReturn(true);
+        when(playerRepository.existsAllByIdIn(playerIds)).thenReturn(true);
         when(repository.save(any(ScoreCard.class))).thenReturn(SCORE_CARD);
 
         MvcResult result = performPost(URL, resource);

@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class BadRequestException extends RuntimeException {
+public class ScoreRowException extends RuntimeException {
 
-    public BadRequestException(ScoreRowResource row) {
+    public ScoreRowException(ScoreRowResource row) {
         super("Could not edit score row with hole number " + row.getHole());
     }
 }

@@ -17,8 +17,7 @@ public class CourseMapperTest {
     private static final CourseResource COURSE_RESOURCE = TestResources.courseResource();
     private static final NewCourseResource NEW_COURSE_RESOURCE = TestResources.newCourseResource();
 
-    @Autowired
-    private CourseMapper mapper;
+    @Autowired private CourseMapper mapper;
 
     @Test
     public void shouldMapNewResourceToModel() {

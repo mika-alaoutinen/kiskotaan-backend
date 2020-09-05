@@ -1,6 +1,6 @@
 package com.mika.kiskotaan.services.impl;
 
-import com.mika.kiskotaan.errors.badrequest.BadRequestException;
+import com.mika.kiskotaan.errors.badrequest.ScoreRowException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreRowMapper;
 import com.mika.kiskotaan.models.ScoreCard;
@@ -20,7 +20,9 @@ public class ScoreServiceImpl implements ScoreService {
     private final ScoreCardRepository repository;
 
     @Override
-    public ScoreRowResource editScoreRow(Long scoreCardId, ScoreRowResource resource) {
+    public ScoreRowResource editScoreRow(Long scoreCardId, ScoreRowResource resource)
+            throws NotFoundException, ScoreRowException {
+
         ScoreCard scoreCard = findScoreCard(scoreCardId);
         ScoreRow rowToUpdate = findRow(scoreCard.getRows(), resource);
 
@@ -30,15 +32,15 @@ public class ScoreServiceImpl implements ScoreService {
         return mapper.toResources(rowToUpdate);
     }
 
-    private ScoreCard findScoreCard(Long id) {
+    private ScoreCard findScoreCard(Long id) throws NotFoundException {
         return repository.findById(id)
                 .orElseThrow(() -> new NotFoundException(new ScoreCard(), id));
     }
 
-    private ScoreRow findRow(List<ScoreRow> rows, ScoreRowResource resource) {
+    private ScoreRow findRow(List<ScoreRow> rows, ScoreRowResource resource) throws ScoreRowException {
         return rows.stream()
                 .filter(row -> row.getHole() == resource.getHole())
                 .findAny()
-                .orElseThrow(() -> new BadRequestException(resource));
+                .orElseThrow(() -> new ScoreRowException(resource));
     }
 }

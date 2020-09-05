@@ -7,6 +7,7 @@ import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.services.impl.ScoreCardServiceImpl;
 import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
+import com.mika.kiskotaan.validators.ScoreCardResourceValidator;
 import kiskotaan.openapi.model.NewScoreCardResource;
 import kiskotaan.openapi.model.ScoreCardResource;
 import org.junit.jupiter.api.Test;
@@ -25,24 +26,22 @@ import static org.mockito.Mockito.*;
 public class ScoreCardServiceTest {
 
     private static final Long ID = 1L;
+    private static final ScoreCard SCORE_CARD = TestModels.scoreCard();
+    private static final ScoreCardResource SCORE_CARD_RESOURCE = TestResources.scoreCardResource();
 
-    @Mock
-    private ScoreCardMapper mapper;
-
-    @Mock
-    private ScoreCardRepository repository;
-
-    @InjectMocks
-    private ScoreCardServiceImpl service;
+    @Mock private ScoreCardMapper mapper;
+    @Mock private ScoreCardRepository repository;
+    @Mock private ScoreCardResourceValidator validator;
+    @InjectMocks private ScoreCardServiceImpl service;
 
     @Test
     public void shouldGetScoreCard() {
-        when(repository.findById(ID)).thenReturn(Optional.of(TestModels.scoreCard()));
-        when(mapper.toResource(any(ScoreCard.class))).thenReturn(TestResources.scoreCardResource());
+        when(repository.findById(ID)).thenReturn(Optional.of(SCORE_CARD));
+        when(mapper.toResource(SCORE_CARD)).thenReturn(SCORE_CARD_RESOURCE);
 
         service.getScoreCard(ID);
         verify(repository, times(1)).findById(ID);
-        verify(mapper, times(1)).toResource(TestModels.scoreCard());
+        verify(mapper, times(1)).toResource(SCORE_CARD);
     }
 
     @Test
@@ -60,6 +59,7 @@ public class ScoreCardServiceTest {
         NewScoreCardResource givenResource = new NewScoreCardResource();
         ScoreCard savedCard = new ScoreCard();
 
+        when(validator.validateNewResource(givenResource)).thenReturn(givenResource);
         when(mapper.toModel(givenResource)).thenReturn(new ScoreCard());
         when(repository.save(any(ScoreCard.class))).thenReturn(savedCard);
         when(mapper.toResource(any(ScoreCard.class))).thenReturn(TestResources.scoreCardResource());

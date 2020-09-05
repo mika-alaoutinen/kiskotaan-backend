@@ -27,14 +27,9 @@ public class PlayerServiceTest {
 
     private static final Long ID = 1L;
 
-    @Mock
-    private PlayerMapper mapper;
-
-    @Mock
-    private PlayerRepository repository;
-
-    @InjectMocks
-    private PlayerServiceImpl service;
+    @Mock private PlayerMapper mapper;
+    @Mock private PlayerRepository repository;
+    @InjectMocks private PlayerServiceImpl service;
 
     @Test
     public void shouldGetPlayers() {

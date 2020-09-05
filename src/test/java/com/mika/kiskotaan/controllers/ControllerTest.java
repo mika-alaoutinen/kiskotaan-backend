@@ -19,14 +19,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class ControllerTest {
 
-    @Autowired
-    protected MockMvc mockMvc;
-
-    @Autowired
-    protected ObjectMapper mapper;
-
-    @Autowired
-    protected TestUtils testUtils;
+    @Autowired protected MockMvc mockMvc;
+    @Autowired protected ObjectMapper mapper;
+    @Autowired protected TestUtils testUtils;
 
     public MvcResult performGet(String url) throws Exception {
         return mockMvc.perform(get(url)

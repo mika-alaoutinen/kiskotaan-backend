@@ -24,14 +24,9 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CourseServiceTest {
 
-    @Mock
-    private CourseMapper mapper;
-
-    @Mock
-    private CourseRepository repository;
-
-    @InjectMocks
-    private CourseServiceImpl service;
+    @Mock private CourseMapper mapper;
+    @Mock private CourseRepository repository;
+    @InjectMocks private CourseServiceImpl service;
 
     @BeforeEach
     public void setup() {

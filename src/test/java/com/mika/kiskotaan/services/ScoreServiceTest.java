@@ -1,6 +1,7 @@
 package com.mika.kiskotaan.services;
 
-import com.mika.kiskotaan.errors.badrequest.BadRequestException;
+import com.mika.kiskotaan.errors.badrequest.PlayerException;
+import com.mika.kiskotaan.errors.badrequest.ScoreRowException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreRowMapper;
 import com.mika.kiskotaan.models.ScoreCard;
@@ -28,14 +29,9 @@ public class ScoreServiceTest {
     private static final Long ID = 1L;
     private static final ScoreCard SCORE_CARD = TestModels.scoreCard();
 
-    @Mock
-    private ScoreRowMapper mapper;
-
-    @Mock
-    private ScoreCardRepository repository;
-
-    @InjectMocks
-    private ScoreServiceImpl service;
+    @Mock private ScoreRowMapper mapper;
+    @Mock private ScoreCardRepository repository;
+    @InjectMocks private ScoreServiceImpl service;
 
     @Test
     public void shouldEditScores() {
@@ -67,7 +63,7 @@ public class ScoreServiceTest {
         ScoreRowResource invalid = new ScoreRowResource().hole(19);
         when(repository.findById(ID)).thenReturn(Optional.of(TestModels.scoreCard()));
 
-        BadRequestException e = assertThrows(BadRequestException.class, () ->
+        ScoreRowException e = assertThrows(ScoreRowException.class, () ->
                 service.editScoreRow(ID, invalid));
 
         assertThrowsException("Could not edit score row with hole number 19", e);

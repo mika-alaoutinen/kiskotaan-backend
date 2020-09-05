@@ -1,5 +1,6 @@
 package com.mika.kiskotaan.services.impl;
 
+import com.mika.kiskotaan.errors.badrequest.PlayerException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.PlayerMapper;
 import com.mika.kiskotaan.models.Player;
@@ -11,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -27,20 +30,32 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerResource getPlayer(Long id) {
+    public PlayerResource getPlayer(Long id) throws NotFoundException {
         return repository.findById(id)
                 .map(mapper::toResource)
                 .orElseThrow(() -> new NotFoundException(new Player(), id));
     }
 
     @Override
-    public PlayerResource addPlayer(NewPlayerResource resource) {
-        Player newPlayer = repository.save(mapper.toModel(resource));
-        return mapper.toResource(newPlayer);
+    public PlayerResource addPlayer(NewPlayerResource resource) throws PlayerException {
+        if (repository.existsByNameIgnoreCase(resource.getName())) {
+            throw new PlayerException(resource);
+        }
+
+        return Stream.of(mapper.toModel(resource))
+                .map(repository::save)
+                .map(mapper::toResource)
+                .findAny()
+                .orElseThrow(() -> new PlayerException(resource));
     }
 
     @Override
     public void deletePlayer(Long id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsByIds(Set<Long> ids) {
+        return repository.existsAllByIdIn(ids);
     }
 }

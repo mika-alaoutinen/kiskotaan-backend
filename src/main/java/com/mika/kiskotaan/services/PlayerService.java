@@ -10,4 +10,5 @@ public interface PlayerService {
     PlayerResource getPlayer(Long id);
     PlayerResource addPlayer(NewPlayerResource resource);
     void deletePlayer(Long id);
+    boolean existsById(Long id);
 }

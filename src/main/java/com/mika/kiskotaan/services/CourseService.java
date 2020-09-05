@@ -8,4 +8,5 @@ import java.util.List;
 public interface CourseService {
     List<CourseResource> getCourses();
     CourseResource addCourse(NewCourseResource resource);
+    boolean existsById(Long id);
 }

@@ -30,4 +30,9 @@ public class CourseServiceImpl implements CourseService {
         Course newCourse = repository.save(mapper.toModel(resource));
         return mapper.toResource(newCourse);
     }
+
+    @Override
+    public boolean existsById(Long id) {
+        return repository.existsById(id);
+    }
 }

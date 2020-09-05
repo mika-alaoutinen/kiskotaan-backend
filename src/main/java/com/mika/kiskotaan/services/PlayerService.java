@@ -6,9 +6,8 @@ import com.mika.kiskotaan.models.Player;
 import kiskotaan.openapi.model.NewPlayerResource;
 import kiskotaan.openapi.model.PlayerResource;
 
-import java.math.BigDecimal;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 public interface PlayerService {
     List<PlayerResource> getPlayers();
@@ -16,6 +15,6 @@ public interface PlayerService {
     PlayerResource addPlayer(NewPlayerResource resource) throws PlayerException;
     void deletePlayer(Long id);
 
-    List<Player> getPlayers(Set<BigDecimal> playerIds);
-    boolean existsByIds(Set<BigDecimal> playerIds);
+    List<Player> getPlayers(Collection<Long> playerIds);
+    boolean existsByIds(Collection<Long> playerIds);
 }

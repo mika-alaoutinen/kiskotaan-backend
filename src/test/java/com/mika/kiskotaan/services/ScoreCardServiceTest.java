@@ -2,13 +2,13 @@ package com.mika.kiskotaan.services;
 
 import com.mika.kiskotaan.dao.CourseDao;
 import com.mika.kiskotaan.dao.PlayerDao;
+import com.mika.kiskotaan.dao.ScoreCardDao;
 import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreCardMapper;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.models.Player;
 import com.mika.kiskotaan.models.ScoreCard;
-import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.services.impl.ScoreCardServiceImpl;
 import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
@@ -37,24 +37,24 @@ public class ScoreCardServiceTest {
 
     @Mock private CourseDao courseDao;
     @Mock private PlayerDao playerDao;
+    @Mock private ScoreCardDao dao;
     @Mock private ScoreCardMapper mapper;
-    @Mock private ScoreCardRepository repository;
     @Mock private ScoreCardResourceValidatorImpl validator;
     @InjectMocks private ScoreCardServiceImpl service;
 
     @Test
     public void shouldGetScoreCard() {
-        when(repository.findById(ID)).thenReturn(Optional.of(SCORE_CARD));
+        when(dao.getScoreCard(ID)).thenReturn(Optional.of(SCORE_CARD));
         when(mapper.toResource(SCORE_CARD)).thenReturn(SCORE_CARD_RESOURCE);
 
         service.getScoreCard(ID);
-        verify(repository, times(1)).findById(ID);
+        verify(dao, times(1)).getScoreCard(ID);
         verify(mapper, times(1)).toResource(SCORE_CARD);
     }
 
     @Test
     public void shouldHandleNotFoundOnGet() {
-        when(repository.findById(ID)).thenReturn(Optional.empty());
+        when(dao.getScoreCard(ID)).thenReturn(Optional.empty());
 
         NotFoundException e = assertThrows(NotFoundException.class, () ->
                 service.getScoreCard(ID));
@@ -73,8 +73,7 @@ public class ScoreCardServiceTest {
         when(validator.validateNewResource(givenResource)).thenReturn(givenResource);
         when(courseDao.getCourse(courseId)).thenReturn(Optional.of(course));
         when(playerDao.getPlayersByIds(anyList())).thenReturn(players);
-        when(mapper.toScoreCard(course, players)).thenReturn(scoreCard);
-        when(repository.save(scoreCard)).thenReturn(scoreCard);
+        when(dao.addScoreCard(any(ScoreCard.class))).thenReturn(scoreCard);
         when(mapper.toResource(scoreCard)).thenReturn(SCORE_CARD_RESOURCE);
 
         ScoreCardResource savedResource = service.addScoreCard(givenResource);
@@ -83,8 +82,7 @@ public class ScoreCardServiceTest {
         verify(validator, times(1)).validateNewResource(givenResource);
         verify(courseDao, times(1)).getCourse(courseId);
         verify(playerDao, times(1)).getPlayersByIds(anyList());
-        verify(mapper, times(1)).toScoreCard(course, players);
-        verify(repository, times(1)).save(scoreCard);
+        verify(dao, times(1)).addScoreCard(any(ScoreCard.class));
         verify(mapper, times(1)).toResource(scoreCard);
     }
 
@@ -115,12 +113,12 @@ public class ScoreCardServiceTest {
     @Test
     public void shouldDeleteScoreCards() {
         service.deleteScoreCard(ID);
-        verify(repository, times(1)).deleteById(ID);
+        verify(dao, times(1)).deleteScoreCard(ID);
     }
 
     private void assertNotFoundException(NotFoundException e) {
         assertEquals("Could not find score card with ID " + ID, e.getMessage());
-        verify(repository, times(1)).findById(ID);
+        verify(dao, times(1)).getScoreCard(ID);
         verify(mapper, times(0)).toResource(any(ScoreCard.class));
     }
 
@@ -128,8 +126,7 @@ public class ScoreCardServiceTest {
         verify(validator, times(1)).validateNewResource(resource);
         verify(courseDao, times(0)).getCourse(anyLong());
         verify(playerDao, times(0)).getPlayersByIds(anyList());
-        verify(mapper, times(0)).toScoreCard(any(Course.class), anyList());
-        verify(repository, times(0)).save(any(ScoreCard.class));
+        verify(dao, times(0)).addScoreCard(any(ScoreCard.class));
         verify(mapper, times(0)).toResource(any(ScoreCard.class));
     }
 }

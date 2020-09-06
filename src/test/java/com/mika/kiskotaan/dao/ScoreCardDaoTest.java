@@ -46,18 +46,18 @@ public class ScoreCardDaoTest {
     }
 
     @Test
-    public void shouldDeleteScoreCard() {
-        doNothing().when(repository).deleteById(ID);
-        dao.deleteScoreCard(ID);
-        verify(repository, times(1)).deleteById(ID);
-    }
-
-    @Test
     public void shouldAddScoreCard() {
         when(repository.save(any(ScoreCard.class))).thenReturn(SCORE_CARD);
         ScoreCard saved = dao.addScoreCard(SCORE_CARD);
         assertEquals(SCORE_CARD, saved);
         verify(repository, times(1)).save(any(ScoreCard.class));
+    }
+
+    @Test
+    public void shouldDeleteScoreCard() {
+        doNothing().when(repository).deleteById(ID);
+        dao.deleteScoreCard(ID);
+        verify(repository, times(1)).deleteById(ID);
     }
 
     @Test

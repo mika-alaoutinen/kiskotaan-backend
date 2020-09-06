@@ -3,6 +3,7 @@ package com.mika.kiskotaan.dao;
 import com.mika.kiskotaan.dao.impl.CourseDaoImpl;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.repositories.CourseRepository;
+import com.mika.kiskotaan.testdata.TestModels;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,13 +19,21 @@ import static org.mockito.Mockito.*;
 public class CourseDaoTest {
 
     private static final Long ID = 10L;
+    private static final Course COURSE = new Course();
 
     @Mock private CourseRepository repository;
     @InjectMocks private CourseDaoImpl dao;
 
     @Test
+    public void shouldGetCourses() {
+        when(repository.findAll()).thenReturn(TestModels.courses());
+        assertEquals(2, dao.getCourses().size());
+        verify(repository, times(1)).findAll();
+    }
+
+    @Test
     public void shouldGetCourse() {
-        when(repository.findById(ID)).thenReturn(Optional.of(new Course()));
+        when(repository.findById(ID)).thenReturn(Optional.of(COURSE));
         Course course = dao.getCourse(ID).orElse(null);
         assertNotNull(course);
         verify(repository, times(1)).findById(ID);
@@ -35,6 +44,13 @@ public class CourseDaoTest {
         when(repository.findById(ID)).thenReturn(Optional.empty());
         assertTrue(dao.getCourse(ID).isEmpty());
         verify(repository, times(1)).findById(ID);
+    }
+
+    @Test
+    public void shouldAddCourse() {
+        when(repository.save(COURSE)).thenReturn(COURSE);
+        assertEquals(COURSE, dao.addCourse(COURSE));
+        verify(repository, times(1)).save(COURSE);
     }
 
     @Test

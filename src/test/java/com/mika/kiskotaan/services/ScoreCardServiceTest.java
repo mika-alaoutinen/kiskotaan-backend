@@ -10,7 +10,7 @@ import com.mika.kiskotaan.repositories.ScoreCardRepository;
 import com.mika.kiskotaan.services.impl.ScoreCardServiceImpl;
 import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
-import com.mika.kiskotaan.validators.ScoreCardResourceValidator;
+import com.mika.kiskotaan.validators.impl.ScoreCardResourceValidatorImpl;
 import kiskotaan.openapi.model.NewScoreCardResource;
 import kiskotaan.openapi.model.ScoreCardResource;
 import org.junit.jupiter.api.Test;
@@ -37,7 +37,7 @@ public class ScoreCardServiceTest {
     @Mock private PlayerService playerService;
     @Mock private ScoreCardMapper mapper;
     @Mock private ScoreCardRepository repository;
-    @Mock private ScoreCardResourceValidator validator;
+    @Mock private ScoreCardResourceValidatorImpl validator;
     @InjectMocks private ScoreCardServiceImpl service;
 
     @Test

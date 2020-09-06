@@ -10,6 +10,7 @@ public abstract class MapperUtils {
     public static List<Long> mapIds(Collection<BigDecimal> ids) {
         return ids.stream()
                 .mapToLong(BigDecimal::longValue)
+                .sorted()
                 .boxed()
                 .collect(Collectors.toList());
     }

@@ -1,5 +1,6 @@
 package com.mika.kiskotaan.services;
 
+import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreCardMapper;
 import com.mika.kiskotaan.models.Course;
@@ -86,6 +87,30 @@ public class ScoreCardServiceTest {
     }
 
     @Test
+    public void shouldNotAddScoreCardWithInvalidCourse() {
+        final NewScoreCardResource invalid = new NewScoreCardResource();
+        when(validator.validateNewResource(invalid)).thenThrow(new ScoreCardException(new Course()));
+
+        ScoreCardException e = assertThrows(ScoreCardException.class, () ->
+                service.addScoreCard(invalid));
+
+        assertEquals("New score card contains a course that does not exist in database.", e.getMessage());
+        assertNewScoreCardNotAdded(invalid);
+    }
+
+    @Test
+    public void shouldNotAddScoreCardWithInvalidPlayers() {
+        final NewScoreCardResource invalid = new NewScoreCardResource();
+        when(validator.validateNewResource(invalid)).thenThrow(new ScoreCardException(new Player()));
+
+        ScoreCardException e = assertThrows(ScoreCardException.class, () ->
+                service.addScoreCard(invalid));
+
+        assertEquals("New score card contains one or more players that do not exist in database.", e.getMessage());
+        assertNewScoreCardNotAdded(invalid);
+    }
+
+    @Test
     public void shouldDeleteScoreCards() {
         service.deleteScoreCard(ID);
         verify(repository, times(1)).deleteById(ID);
@@ -94,6 +119,15 @@ public class ScoreCardServiceTest {
     private void assertNotFoundException(NotFoundException e) {
         assertEquals("Could not find score card with ID " + ID, e.getMessage());
         verify(repository, times(1)).findById(ID);
+        verify(mapper, times(0)).toResource(any(ScoreCard.class));
+    }
+
+    private void assertNewScoreCardNotAdded(NewScoreCardResource resource) {
+        verify(validator, times(1)).validateNewResource(resource);
+        verify(courseService, times(0)).getCourse(anyLong());
+        verify(playerService, times(0)).getPlayers(anyList());
+        verify(mapper, times(0)).toScoreCard(any(Course.class), anyList());
+        verify(repository, times(0)).save(any(ScoreCard.class));
         verify(mapper, times(0)).toResource(any(ScoreCard.class));
     }
 }

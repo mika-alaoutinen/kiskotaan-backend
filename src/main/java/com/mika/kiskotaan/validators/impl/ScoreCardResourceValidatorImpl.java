@@ -1,10 +1,10 @@
 package com.mika.kiskotaan.validators.impl;
 
+import com.mika.kiskotaan.dao.CourseDao;
 import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
 import com.mika.kiskotaan.mappers.MapperUtils;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.models.Player;
-import com.mika.kiskotaan.services.CourseService;
 import com.mika.kiskotaan.services.PlayerService;
 import com.mika.kiskotaan.validators.ScoreCardResourceValidator;
 import kiskotaan.openapi.model.NewScoreCardResource;
@@ -18,7 +18,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class ScoreCardResourceValidatorImpl implements ScoreCardResourceValidator {
-    private final CourseService courseService;
+    private final CourseDao courseDao;
     private final PlayerService playerService;
 
     public NewScoreCardResource validateNewResource(NewScoreCardResource resource) throws ScoreCardException {
@@ -28,7 +28,7 @@ public class ScoreCardResourceValidatorImpl implements ScoreCardResourceValidato
     }
 
     private void validateCourseExists(BigDecimal courseId) throws ScoreCardException {
-        if (!courseService.existsById(courseId.longValue())) {
+        if (!courseDao.existsById(courseId.longValue())) {
             throw new ScoreCardException(new Course());
         }
     }

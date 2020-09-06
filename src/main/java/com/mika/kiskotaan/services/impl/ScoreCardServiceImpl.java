@@ -1,6 +1,7 @@
 package com.mika.kiskotaan.services.impl;
 
 import com.mika.kiskotaan.dao.CourseDao;
+import com.mika.kiskotaan.dao.PlayerDao;
 import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.MapperUtils;
@@ -8,7 +9,6 @@ import com.mika.kiskotaan.mappers.ScoreCardMapper;
 import com.mika.kiskotaan.models.Course;
 import com.mika.kiskotaan.models.ScoreCard;
 import com.mika.kiskotaan.repositories.ScoreCardRepository;
-import com.mika.kiskotaan.services.PlayerService;
 import com.mika.kiskotaan.services.ScoreCardService;
 import com.mika.kiskotaan.validators.ScoreCardResourceValidator;
 import kiskotaan.openapi.model.NewScoreCardResource;
@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class ScoreCardServiceImpl implements ScoreCardService {
     private final CourseDao courseDao;
-    private final PlayerService playerService;
+    private final PlayerDao playerDao;
     private final ScoreCardMapper mapper;
     private final ScoreCardRepository repository;
     private final ScoreCardResourceValidator validator;
@@ -53,7 +53,7 @@ public class ScoreCardServiceImpl implements ScoreCardService {
                 .orElseThrow(() -> new ScoreCardException(new Course()));
 
         var playerIds = MapperUtils.mapIds(resource.getPlayersIds());
-        var players = playerService.getPlayers(playerIds);
+        var players = playerDao.getPlayersByIds(playerIds);
 
         return mapper.toScoreCard(course, players);
     }

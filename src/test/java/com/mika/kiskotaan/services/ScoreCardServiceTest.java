@@ -1,6 +1,7 @@
 package com.mika.kiskotaan.services;
 
 import com.mika.kiskotaan.dao.CourseDao;
+import com.mika.kiskotaan.dao.PlayerDao;
 import com.mika.kiskotaan.errors.badrequest.ScoreCardException;
 import com.mika.kiskotaan.errors.notfound.NotFoundException;
 import com.mika.kiskotaan.mappers.ScoreCardMapper;
@@ -35,7 +36,7 @@ public class ScoreCardServiceTest {
     private static final ScoreCardResource SCORE_CARD_RESOURCE = TestResources.scoreCardResource();
 
     @Mock private CourseDao courseDao;
-    @Mock private PlayerService playerService;
+    @Mock private PlayerDao playerDao;
     @Mock private ScoreCardMapper mapper;
     @Mock private ScoreCardRepository repository;
     @Mock private ScoreCardResourceValidatorImpl validator;
@@ -71,7 +72,7 @@ public class ScoreCardServiceTest {
 
         when(validator.validateNewResource(givenResource)).thenReturn(givenResource);
         when(courseDao.getCourse(courseId)).thenReturn(Optional.of(course));
-        when(playerService.getPlayers(anyList())).thenReturn(players);
+        when(playerDao.getPlayersByIds(anyList())).thenReturn(players);
         when(mapper.toScoreCard(course, players)).thenReturn(scoreCard);
         when(repository.save(scoreCard)).thenReturn(scoreCard);
         when(mapper.toResource(scoreCard)).thenReturn(SCORE_CARD_RESOURCE);
@@ -81,7 +82,7 @@ public class ScoreCardServiceTest {
 
         verify(validator, times(1)).validateNewResource(givenResource);
         verify(courseDao, times(1)).getCourse(courseId);
-        verify(playerService, times(1)).getPlayers(anyList());
+        verify(playerDao, times(1)).getPlayersByIds(anyList());
         verify(mapper, times(1)).toScoreCard(course, players);
         verify(repository, times(1)).save(scoreCard);
         verify(mapper, times(1)).toResource(scoreCard);
@@ -126,7 +127,7 @@ public class ScoreCardServiceTest {
     private void assertNewScoreCardNotAdded(NewScoreCardResource resource) {
         verify(validator, times(1)).validateNewResource(resource);
         verify(courseDao, times(0)).getCourse(anyLong());
-        verify(playerService, times(0)).getPlayers(anyList());
+        verify(playerDao, times(0)).getPlayersByIds(anyList());
         verify(mapper, times(0)).toScoreCard(any(Course.class), anyList());
         verify(repository, times(0)).save(any(ScoreCard.class));
         verify(mapper, times(0)).toResource(any(ScoreCard.class));

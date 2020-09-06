@@ -28,8 +28,8 @@ public class PlayerServiceTest {
 
     private static final Long ID = 1L;
 
-    @Mock private PlayerMapper mapper;
     @Mock private PlayerDao dao;
+    @Mock private PlayerMapper mapper;
     @InjectMocks private PlayerServiceImpl service;
 
     @Test

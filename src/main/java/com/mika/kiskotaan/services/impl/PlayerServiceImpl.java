@@ -18,8 +18,8 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class PlayerServiceImpl implements PlayerService {
-    private final PlayerMapper mapper;
     private final PlayerDao dao;
+    private final PlayerMapper mapper;
 
     @Override
     public List<PlayerResource> getPlayers() {

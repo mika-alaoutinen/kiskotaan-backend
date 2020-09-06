@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CourseServiceImpl implements CourseService {
-    private final CourseMapper mapper;
     private final CourseDao courseDao;
+    private final CourseMapper mapper;
 
     @Override
     public List<CourseResource> getCourses() {

@@ -23,8 +23,8 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CourseServiceTest {
 
-    @Mock private CourseMapper mapper;
     @Mock private CourseDao dao;
+    @Mock private CourseMapper mapper;
     @InjectMocks private CourseServiceImpl service;
 
     @Test

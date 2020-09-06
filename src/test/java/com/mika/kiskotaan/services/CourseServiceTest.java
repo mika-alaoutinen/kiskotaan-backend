@@ -66,7 +66,7 @@ public class CourseServiceTest {
     }
 
     @Test
-    public void shouldThrowExceptionWhenCourseNotFound() {
+    public void shouldHandleCourseNotFound() {
         when(repository.findById(ID)).thenReturn(Optional.empty());
         ScoreCardException e = assertThrows(ScoreCardException.class, () -> service.getCourse(ID));
         assertEquals("New score card contains a course that does not exist in database.", e.getMessage());

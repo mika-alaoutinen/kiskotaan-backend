@@ -35,9 +35,9 @@ public abstract class TestModels {
     }
 
     public static List<Player> players() {
-        Player p1 = new Player("Kukko Pena");
-        p1.setId(2L);
-        Player p2 = player();
+        Player p1 = player();
+        Player p2 = new Player("Kukko Pena");
+        p2.setId(2L);
         return List.of(p1, p2);
     }
 
@@ -55,15 +55,15 @@ public abstract class TestModels {
         return new ScoreRow(hole, scores());
     }
 
-    private static List<ScoreRow> scoreRows() {
-        ScoreRow row1 = scoreRow(1);
-        ScoreRow row2 = new ScoreRow(2, scores());
-        return List.of(row1, row2);
-    }
-
     public static List<Score> scores() {
         Score s1 = new Score(1L, 3);
-        Score s2 = new Score(2L, 4);
+        Score s2 = new Score(2L, 3);
         return List.of(s1, s2);
+    }
+
+    private static List<ScoreRow> scoreRows() {
+        return IntStream.rangeClosed(1, 9)
+                .mapToObj(TestModels::scoreRow)
+                .collect(Collectors.toList());
     }
 }

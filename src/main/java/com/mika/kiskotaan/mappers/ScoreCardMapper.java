@@ -27,13 +27,8 @@ public interface ScoreCardMapper {
     }
 
     private ScoreRow mapScoreRow(Hole hole, List<Player> players) {
-        ScoreRow row = new ScoreRow();
-
         var scores = mapScores(players, hole.getPar());
-        row.setScores(scores);
-        row.setHole(hole.getNumber());
-
-        return row;
+        return new ScoreRow(hole.getNumber(), scores);
     }
 
     private List<Score> mapScores(List<Player> players, int par) {

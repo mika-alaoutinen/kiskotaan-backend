@@ -54,6 +54,13 @@ public class ScoreCardDaoTest {
     }
 
     @Test
+    public void shouldUpdateScoreCard() {
+        when(repository.save(SCORE_CARD)).thenReturn(SCORE_CARD);
+        assertEquals(SCORE_CARD, dao.updateScoreCard(SCORE_CARD));
+        verify(repository, times(1)).save(SCORE_CARD);
+    }
+
+    @Test
     public void shouldDeleteScoreCard() {
         doNothing().when(repository).deleteById(ID);
         dao.deleteScoreCard(ID);

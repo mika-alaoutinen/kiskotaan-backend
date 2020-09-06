@@ -38,12 +38,12 @@ public class ScoreServiceTest {
         final ScoreRow row = SCORE_CARD.getRows().get(0);
 
         when(dao.getScoreCard(ID)).thenReturn(Optional.of(SCORE_CARD));
-        when(dao.addScoreCard(SCORE_CARD)).thenReturn(SCORE_CARD);
+        when(dao.updateScoreCard(SCORE_CARD)).thenReturn(SCORE_CARD);
 
         service.editScoreRow(ID, scoreRowResource);
         verify(dao, times(1)).getScoreCard(ID);
         verify(mapper, times(1)).editScoreRow(scoreRowResource, row);
-        verify(dao, times(1)).addScoreCard(SCORE_CARD);
+        verify(dao, times(1)).updateScoreCard(SCORE_CARD);
         verify(mapper, times(1)).toResources(row);
     }
 

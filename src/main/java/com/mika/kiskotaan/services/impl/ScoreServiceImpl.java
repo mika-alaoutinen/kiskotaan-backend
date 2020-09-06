@@ -27,7 +27,7 @@ public class ScoreServiceImpl implements ScoreService {
         ScoreRow rowToUpdate = findRow(scoreCard.getRows(), resource);
 
         mapper.editScoreRow(resource, rowToUpdate);
-        dao.addScoreCard(scoreCard);
+        dao.updateScoreCard(scoreCard);
 
         return mapper.toResources(rowToUpdate);
     }

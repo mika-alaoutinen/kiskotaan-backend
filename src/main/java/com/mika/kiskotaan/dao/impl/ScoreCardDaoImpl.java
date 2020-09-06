@@ -27,6 +27,11 @@ public class ScoreCardDaoImpl implements ScoreCardDao {
     }
 
     @Override
+    public ScoreCard updateScoreCard(ScoreCard scoreCard) {
+        return repository.save(scoreCard);
+    }
+
+    @Override
     public void deleteScoreCard(Long id) {
         repository.deleteById(id);
     }

@@ -5,6 +5,7 @@ import com.mika.kiskotaan.testdata.TestModels;
 import com.mika.kiskotaan.testdata.TestResources;
 import com.mika.kiskotaan.utils.MappingAssertions;
 import kiskotaan.openapi.model.GameResource;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -24,5 +25,6 @@ public class GameMapperTest {
     public void shouldMapToResource() {
         GameResource mapped = mapper.toResource(GAME);
         MappingAssertions.assertGameMapping(GAME, mapped);
+        Assertions.assertEquals(mapped.getScoreCardId().longValue(), GAME.getScoreCard().getId());
     }
 }

@@ -11,6 +11,6 @@ public interface GameMapper {
     @Mapping(source = "resource.scoreCardId", target = "scoreCard.id", ignore = true)
     Game toModel(GameResource resource);
 
-    @Mapping(source = "model.scoreCard.id", target = "id", ignore = true)
+    @Mapping(source = "model.scoreCard.id", target = "scoreCardId")
     GameResource toResource(Game model);
 }

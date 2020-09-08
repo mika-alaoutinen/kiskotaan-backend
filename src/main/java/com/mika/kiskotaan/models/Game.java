@@ -15,8 +15,8 @@ import javax.validation.constraints.Min;
 @NoArgsConstructor
 public class Game extends EntityModel {
 
-    private boolean hasScoreChanged;
-    private boolean isOver;
+    private boolean scoreChanged;
+    private boolean gameOver;
 
     @Min(1)
     @Max(30)
@@ -25,9 +25,9 @@ public class Game extends EntityModel {
     @OneToOne(mappedBy = "game")
     private ScoreCard scoreCard;
 
-    public Game(boolean hasScoreChanged, boolean isOver, int hole) {
-        this.hasScoreChanged = hasScoreChanged;
-        this.isOver = isOver;
+    public Game(boolean scoreChanged, boolean gameOver, int hole) {
+        this.scoreChanged = scoreChanged;
+        this.gameOver = gameOver;
         this.hole = hole;
     }
 }

@@ -2,7 +2,7 @@ package com.mika.kiskotaan.controllers;
 
 import kiskotaan.openapi.api.GamesApi;
 import kiskotaan.openapi.model.GameResource;
-import kiskotaan.openapi.model.ScoreCardIdResource;
+import kiskotaan.openapi.model.NewGameResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +18,7 @@ public class GamesController implements GamesApi {
     }
 
     @Override
-    public ResponseEntity<GameResource> startGame(@Valid ScoreCardIdResource scoreCardIdResource) {
+    public ResponseEntity<GameResource> startGame(@Valid NewGameResource newGameResource) {
         return null;
     }
 }

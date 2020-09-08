@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class GameException extends RuntimeException {
 
     public GameException(Long scoreCardId) {
-        super(String.format("Could not start new game with given score card ID: %s", scoreCardId));
+        super(String.format("Could not start new game with given score card ID %s", scoreCardId));
     }
 }

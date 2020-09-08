@@ -41,10 +41,8 @@ public class GameServiceTest {
         when(mapper.toResource(savedGame)).thenReturn(new GameResource());
 
         GameResource game = service.startGame(SCORE_CARD_ID);
-        assertNotNull(game);
-        verify(scoreCardDao, times(1)).getScoreCard(SCORE_CARD_ID);
+        verifySuccessCase(game);
         verify(dao, times(1)).addGame(any(Game.class));
-        verify(mapper, times(1)).toResource(savedGame);
     }
 
     @Test
@@ -52,10 +50,8 @@ public class GameServiceTest {
         when(scoreCardDao.getScoreCard(SCORE_CARD_ID)).thenReturn(Optional.empty());
 
         GameException e = assertThrows(GameException.class, () -> service.startGame(SCORE_CARD_ID));
-        assertEquals("Could not start new game with given score card ID: 30", e.getMessage());
-        verify(scoreCardDao, times(1)).getScoreCard(SCORE_CARD_ID);
+        verifyFailureCase("Could not start new game with given score card ID 30", e);
         verify(dao, never()).addGame(any(Game.class));
-        verify(mapper, never()).toResource(any(Game.class));
     }
 
     @Test
@@ -64,10 +60,8 @@ public class GameServiceTest {
         when(mapper.toResource(any(Game.class))).thenReturn(new GameResource());
 
         GameResource ended = service.endGame(GAME_ID, SCORE_CARD_ID);
-        assertNotNull(ended);
-        verify(scoreCardDao, times(1)).getScoreCard(SCORE_CARD_ID);
+        verifySuccessCase(ended);
         verify(dao, times(1)).deleteGame(GAME_ID);
-        verify(mapper, times(1)).toResource(any(Game.class));
     }
 
     @Test
@@ -77,9 +71,19 @@ public class GameServiceTest {
         NotFoundException e = assertThrows(NotFoundException.class, () ->
                 service.endGame(GAME_ID, SCORE_CARD_ID));
 
-        assertEquals("Could not find score card with ID 30", e.getMessage());
-        verify(scoreCardDao, times(1)).getScoreCard(SCORE_CARD_ID);
+        verifyFailureCase("Could not find score card with ID 30", e);
         verify(dao, never()).deleteGame(anyLong());
+    }
+
+    private void verifySuccessCase(GameResource game) {
+        assertNotNull(game);
+        verify(scoreCardDao, times(1)).getScoreCard(SCORE_CARD_ID);
+        verify(mapper, times(1)).toResource(any(Game.class));
+    }
+
+    private void verifyFailureCase(String errorMessage, Exception e) {
+        assertEquals(errorMessage, e.getMessage());
+        verify(scoreCardDao, times(1)).getScoreCard(SCORE_CARD_ID);
         verify(mapper, never()).toResource(any(Game.class));
     }
 }

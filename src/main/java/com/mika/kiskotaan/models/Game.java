@@ -1,5 +1,6 @@
 package com.mika.kiskotaan.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Min;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class Game extends EntityModel {
 
     private boolean scoreChanged;

@@ -12,12 +12,12 @@ public class GameDaoImpl implements GameDao {
     private final GameRepository repository;
 
     @Override
-    public Game startGame(Long scoreCardId) {
-        return null;
+    public Game addGame(Game game) {
+        return repository.save(game);
     }
 
     @Override
-    public Game endGame(Long screCardId) {
-        return null;
+    public void deleteGame(Long id) {
+        repository.deleteById(id);
     }
 }

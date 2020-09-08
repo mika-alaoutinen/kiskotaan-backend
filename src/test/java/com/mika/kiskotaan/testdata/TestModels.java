@@ -23,8 +23,8 @@ public abstract class TestModels {
     }
 
     public static Game game() {
-        Game game = new Game(false, false, 1);
-        game.setScoreCard(TestModels.scoreCard());
+        Game game = new Game(false, false, 1, TestModels.scoreCard());
+        game.setId(33L);
         return game;
     }
 
@@ -54,7 +54,9 @@ public abstract class TestModels {
     }
 
     public static ScoreCard scoreCard() {
-        return new ScoreCard(course(), players(), scoreRows());
+        ScoreCard scoreCard = new ScoreCard(course(), players(), scoreRows());
+        scoreCard.setId(22L);
+        return scoreCard;
     }
 
     public static ScoreRow scoreRow(int hole) {

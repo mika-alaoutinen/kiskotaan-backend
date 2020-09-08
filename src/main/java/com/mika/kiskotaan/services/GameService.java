@@ -5,5 +5,5 @@ import kiskotaan.openapi.model.GameResource;
 
 public interface GameService {
     GameResource startGame(Long scoreCardId);
-    GameResource endGame(Long scoreCardId) throws NotFoundException;
+    GameResource endGame(Long gameId, Long scoreCardId) throws NotFoundException;
 }

@@ -22,7 +22,7 @@ public class GameServiceImpl implements GameService {
     private final GameMapper mapper;
 
     @Override
-    public GameResource startGame(Long scoreCardId) {
+    public GameResource startGame(Long scoreCardId) throws GameException {
         ScoreCard scoreCard = scoreCardDao.getScoreCard(scoreCardId)
                 .orElseThrow(() -> new GameException(scoreCardId));
 
@@ -39,7 +39,7 @@ public class GameServiceImpl implements GameService {
         ScoreCard scoreCard = scoreCardDao.getScoreCard(scoreCardId)
                 .orElseThrow(() -> new NotFoundException(new ScoreCard(), scoreCardId));
 
-        dao.deleteGame(scoreCardId);
+        dao.deleteGame(gameId);
 
         Game endedGame = new Game(false, true, 1, scoreCard);
         endedGame.setId(gameId);

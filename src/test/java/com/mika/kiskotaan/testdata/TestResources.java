@@ -31,6 +31,11 @@ public abstract class TestResources {
                 .scoreCardId(new BigDecimal(1));
     }
 
+    public static NewGameResource newGameResource() {
+        return new NewGameResource()
+                .scoreCardId(new BigDecimal(22));
+    }
+
     public static List<HoleResource> holeResources(int numberOfHoles) {
         return IntStream.rangeClosed(1, numberOfHoles)
                 .mapToObj(TestResources::holeResource)

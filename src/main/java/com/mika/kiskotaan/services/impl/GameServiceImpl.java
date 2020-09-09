@@ -45,8 +45,6 @@ public class GameServiceImpl implements GameService {
 
     @Override
     public void endGame(Long id) {
-        dao.getGame(id)
-                .map(Game::getId)
-                .ifPresent(dao::deleteGame);
+        dao.deleteGame(id);
     }
 }

@@ -87,21 +87,7 @@ public class GameServiceTest {
 
     @Test
     public void shouldEndGame() {
-        Game game = new Game();
-        game.setId(GAME_ID);
-        when(dao.getGame(GAME_ID)).thenReturn(Optional.of(game));
-
         service.endGame(GAME_ID);
-        verify(dao, times(1)).getGame(GAME_ID);
         verify(dao, times(1)).deleteGame(GAME_ID);
-    }
-
-    @Test
-    public void shouldHandleInvalidGameIdOnEndGame() {
-        when(dao.getGame(GAME_ID)).thenReturn(Optional.empty());
-
-        service.endGame(GAME_ID);
-        verify(dao, times(1)).getGame(GAME_ID);
-        verify(dao, never()).deleteGame(anyLong());
     }
 }

@@ -6,18 +6,25 @@ import com.mika.kiskotaan.repositories.GameRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class GameDaoImpl implements GameDao {
     private final GameRepository repository;
 
     @Override
-    public Game startGame(Long scoreCardId) {
-        return null;
+    public Optional<Game> getGame(Long id) {
+        return repository.findById(id);
     }
 
     @Override
-    public Game endGame(Long screCardId) {
-        return null;
+    public Game addGame(Game game) {
+        return repository.save(game);
+    }
+
+    @Override
+    public void deleteGame(Long id) {
+        repository.deleteById(id);
     }
 }

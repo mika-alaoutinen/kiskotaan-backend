@@ -23,6 +23,19 @@ public abstract class TestResources {
                 .holes(holeResources(9));
     }
 
+    public static GameResource gameResource() {
+        return new GameResource()
+                .scoreChanged(false)
+                .gameOver(false)
+                .hole(1)
+                .scoreCardId(new BigDecimal(1));
+    }
+
+    public static NewGameResource newGameResource() {
+        return new NewGameResource()
+                .scoreCardId(new BigDecimal(22));
+    }
+
     public static List<HoleResource> holeResources(int numberOfHoles) {
         return IntStream.rangeClosed(1, numberOfHoles)
                 .mapToObj(TestResources::holeResource)

@@ -22,6 +22,12 @@ public abstract class TestModels {
         return course;
     }
 
+    public static Game game() {
+        Game game = new Game(false, false, 1, TestModels.scoreCard());
+        game.setId(33L);
+        return game;
+    }
+
     public static List<Hole> holes(int numberOfHoles) {
         return IntStream.rangeClosed(1, numberOfHoles)
                 .mapToObj(TestModels::hole)
@@ -48,7 +54,9 @@ public abstract class TestModels {
     }
 
     public static ScoreCard scoreCard() {
-        return new ScoreCard(course(), players(), scoreRows());
+        ScoreCard scoreCard = new ScoreCard(course(), players(), scoreRows());
+        scoreCard.setId(22L);
+        return scoreCard;
     }
 
     public static ScoreRow scoreRow(int hole) {

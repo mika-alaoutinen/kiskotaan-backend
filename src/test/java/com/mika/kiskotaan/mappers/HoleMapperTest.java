@@ -9,20 +9,20 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
 public class HoleMapperTest {
-    private static final Hole model = TestModels.hole(1);
-    private static final HoleResource resource = TestResources.holeResource(2);
+    private static final Hole MODEL = TestModels.hole(1);
+    private static final HoleResource RESOURCE = TestResources.holeResource(2);
 
     private final HoleMapper mapper = Mappers.getMapper(HoleMapper.class);
 
     @Test
     public void shouldMapToModel() {
-        Hole mapped = mapper.toModel(resource);
-        MappingAssertions.assertHoleMapping(mapped, resource);
+        Hole mapped = mapper.toModel(RESOURCE);
+        MappingAssertions.assertHoleMapping(mapped, RESOURCE);
     }
 
     @Test
     public void shouldMapToResource() {
-        HoleResource mapped = mapper.toResource(model);
-        MappingAssertions.assertHoleMapping(model, mapped);
+        HoleResource mapped = mapper.toResource(MODEL);
+        MappingAssertions.assertHoleMapping(MODEL, mapped);
     }
 }

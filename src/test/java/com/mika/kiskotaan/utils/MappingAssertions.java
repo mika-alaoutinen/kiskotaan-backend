@@ -15,6 +15,12 @@ public abstract class MappingAssertions {
         }
     }
 
+    public static void assertGameMapping(Game model, GameResource resource) {
+        assertEquals(model.isGameOver(), resource.isGameOver());
+        assertEquals(model.isScoreChanged(), resource.isScoreChanged());
+        assertEquals(model.getHole(), resource.getHole());
+    }
+
     public static void assertHoleMapping(Hole model, HoleResource resource) {
         assertEquals(model.getNumber(), resource.getNumber());
         assertEquals(model.getPar(), resource.getPar());

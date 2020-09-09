@@ -9,6 +9,7 @@ import com.mika.kiskotaan.models.Game;
 import com.mika.kiskotaan.models.ScoreCard;
 import com.mika.kiskotaan.services.impl.GameServiceImpl;
 import com.mika.kiskotaan.testdata.TestModels;
+import com.mika.kiskotaan.testdata.TestResources;
 import kiskotaan.openapi.model.GameResource;
 import kiskotaan.openapi.model.NewGameResource;
 import org.junit.jupiter.api.Test;
@@ -41,10 +42,12 @@ public class GameServiceTest {
     public void shouldGetGame() {
         Game game = new Game();
         when(dao.getGame(GAME_ID)).thenReturn(Optional.of(game));
+        when(mapper.toResource(game)).thenReturn(TestResources.gameResource());
 
-        Game found = service.getGame(GAME_ID);
-        assertEquals(game, found);
+        GameResource gameResource = service.getGame(GAME_ID);
+        assertNotNull(gameResource);
         verify(dao, times(1)).getGame(GAME_ID);
+        verify(mapper, times(1)).toResource(game);
     }
 
     @Test
@@ -85,26 +88,20 @@ public class GameServiceTest {
     @Test
     public void shouldEndGame() {
         Game game = new Game();
+        game.setId(GAME_ID);
         when(dao.getGame(GAME_ID)).thenReturn(Optional.of(game));
-        when(mapper.toResource(any(Game.class))).thenReturn(new GameResource());
 
-        GameResource ended = service.endGame(GAME_ID);
-        assertNotNull(ended);
+        service.endGame(GAME_ID);
         verify(dao, times(1)).getGame(GAME_ID);
         verify(dao, times(1)).deleteGame(GAME_ID);
-        verify(mapper, times(1)).toResource(any(Game.class));
     }
 
     @Test
-    public void shouldHandleInvalidScoreCardIdOnEndGame() {
+    public void shouldHandleInvalidGameIdOnEndGame() {
         when(dao.getGame(GAME_ID)).thenReturn(Optional.empty());
 
-        NotFoundException e = assertThrows(NotFoundException.class, () ->
-                service.endGame(GAME_ID));
-
-        assertEquals("Could not find game with ID 20", e.getMessage());
+        service.endGame(GAME_ID);
         verify(dao, times(1)).getGame(GAME_ID);
         verify(dao, never()).deleteGame(anyLong());
-        verify(mapper, never()).toResource(any(Game.class));
     }
 }

@@ -23,8 +23,9 @@ public class GameServiceImpl implements GameService {
     private final GameMapper mapper;
 
     @Override
-    public Game getGame(Long id) throws NotFoundException {
+    public GameResource getGame(Long id) throws NotFoundException {
         return dao.getGame(id)
+                .map(mapper::toResource)
                 .orElseThrow(() -> new NotFoundException(new Game(), id));
     }
 
@@ -43,10 +44,9 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameResource endGame(Long id) throws NotFoundException {
-        Game game = getGame(id);
-        game.setGameOver(true);
-        dao.deleteGame(id);
-        return mapper.toResource(game);
+    public void endGame(Long id) {
+        dao.getGame(id)
+                .map(Game::getId)
+                .ifPresent(dao::deleteGame);
     }
 }

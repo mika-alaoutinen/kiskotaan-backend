@@ -23,6 +23,12 @@ public class GameServiceImpl implements GameService {
     private final GameMapper mapper;
 
     @Override
+    public Game getGame(Long id) throws NotFoundException {
+        return dao.getGame(id)
+                .orElseThrow(() -> new NotFoundException(new Game(), id));
+    }
+
+    @Override
     public GameResource startGame(NewGameResource newGameResource) throws GameException {
         Long scoreCardId = newGameResource.getScoreCardId().longValue();
         ScoreCard scoreCard = scoreCardDao.getScoreCard(scoreCardId)
@@ -42,11 +48,5 @@ public class GameServiceImpl implements GameService {
         game.setGameOver(true);
         dao.deleteGame(id);
         return mapper.toResource(game);
-    }
-
-    @Override
-    public Game getGame(Long id) throws NotFoundException {
-        return dao.getGame(id)
-                .orElseThrow(() -> new NotFoundException(new Game(), id));
     }
 }

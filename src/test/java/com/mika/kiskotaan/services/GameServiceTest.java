@@ -38,9 +38,28 @@ public class GameServiceTest {
     @InjectMocks private GameServiceImpl service;
 
     @Test
+    public void shouldGetGame() {
+        Game game = new Game();
+        when(dao.getGame(GAME_ID)).thenReturn(Optional.of(game));
+
+        Game found = service.getGame(GAME_ID);
+        assertEquals(game, found);
+        verify(dao, times(1)).getGame(GAME_ID);
+    }
+
+    @Test
+    public void shouldHandleGameNotFound() {
+        when(dao.getGame(GAME_ID)).thenReturn(Optional.empty());
+        NotFoundException e = assertThrows(NotFoundException.class, () ->
+                service.getGame(GAME_ID));
+
+        assertEquals("Could not find game with ID 20", e.getMessage());
+        verify(dao, times(1)).getGame(GAME_ID);
+    }
+
+    @Test
     public void shouldStartGame() {
         final Game savedGame = new Game();
-
         when(scoreCardDao.getScoreCard(SCORE_CARD_ID)).thenReturn(Optional.of(SCORE_CARD));
         when(dao.addGame(any(Game.class))).thenReturn(savedGame);
         when(mapper.toResource(savedGame)).thenReturn(new GameResource());
@@ -59,8 +78,8 @@ public class GameServiceTest {
         GameException e = assertThrows(GameException.class, () -> service.startGame(NEW_GAME_RESOURCE));
         assertEquals("Could not start new game with given score card ID 30", e.getMessage());
         verify(scoreCardDao, times(1)).getScoreCard(SCORE_CARD_ID);
-        verify(mapper, never()).toResource(any(Game.class));
         verify(dao, never()).addGame(any(Game.class));
+        verify(mapper, never()).toResource(any(Game.class));
     }
 
     @Test
@@ -84,6 +103,7 @@ public class GameServiceTest {
                 service.endGame(GAME_ID));
 
         assertEquals("Could not find game with ID 20", e.getMessage());
+        verify(dao, times(1)).getGame(GAME_ID);
         verify(dao, never()).deleteGame(anyLong());
         verify(mapper, never()).toResource(any(Game.class));
     }

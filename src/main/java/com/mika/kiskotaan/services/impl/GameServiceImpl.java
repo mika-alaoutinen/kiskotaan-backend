@@ -9,6 +9,7 @@ import com.mika.kiskotaan.models.Game;
 import com.mika.kiskotaan.models.ScoreCard;
 import com.mika.kiskotaan.services.GameService;
 import kiskotaan.openapi.model.GameResource;
+import kiskotaan.openapi.model.NewGameResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,8 @@ public class GameServiceImpl implements GameService {
     private final GameMapper mapper;
 
     @Override
-    public GameResource startGame(Long scoreCardId) throws GameException {
+    public GameResource startGame(NewGameResource newGameResource) throws GameException {
+        Long scoreCardId = newGameResource.getScoreCardId().longValue();
         ScoreCard scoreCard = scoreCardDao.getScoreCard(scoreCardId)
                 .orElseThrow(() -> new GameException(scoreCardId));
 
@@ -35,15 +37,16 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public GameResource endGame(Long gameId, Long scoreCardId) throws NotFoundException {
-        ScoreCard scoreCard = scoreCardDao.getScoreCard(scoreCardId)
-                .orElseThrow(() -> new NotFoundException(new ScoreCard(), scoreCardId));
+    public GameResource endGame(Long id) throws NotFoundException {
+        Game game = getGame(id);
+        game.setGameOver(true);
+        dao.deleteGame(id);
+        return mapper.toResource(game);
+    }
 
-        dao.deleteGame(gameId);
-
-        Game endedGame = new Game(false, true, 1, scoreCard);
-        endedGame.setId(gameId);
-
-        return mapper.toResource(endedGame);
+    @Override
+    public Game getGame(Long id) throws NotFoundException {
+        return dao.getGame(id)
+                .orElseThrow(() -> new NotFoundException(new Game(), id));
     }
 }

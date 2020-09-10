@@ -13,7 +13,7 @@
 
 	<groupId>com.mika</groupId>
 	<artifactId>kiskotaan-backend</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>kiskotaan-backend</name>
 	<description>The backend application for Kiskotaan</description>
 
@@ -33,7 +33,7 @@
 		<connection>scm:git:${github.url}.git</connection>
 		<developerConnection>scm:git:${github.url}.git</developerConnection>
 		<url>${github.url}</url>
-		<tag>1.0.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 
 	<dependencies>

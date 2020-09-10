@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    environment:
+      POSTGRES_DATABASE: kiskotaan
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    expose:
+      - 5432
+    image: postgres:12.4
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    volumes:
+      - pg_data:/var/lib/postgres
+
+  kiskotaan-backend:
+    container_name: kiskotaan-backend
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+    expose:
+      - 8080
+    image: mikaalaoutinen/kiskotaan-backend:latest
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    
+volumes:
+  pg_data:

@@ -8,14 +8,17 @@
 		<version>3.0.0-RC1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	
 	<groupId>mikaa</groupId>
 	<artifactId>players</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>players</name>
 	<description>Players microservice</description>
+
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

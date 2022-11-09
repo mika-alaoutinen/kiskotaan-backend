@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: postgres
+    environment:
+      POSTGRES_DATABASE: players_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - pg_data:/var/lib/postgres
+      - ./scripts:/docker-entrypoint-initdb.d
+
+volumes:
+  pg_data:

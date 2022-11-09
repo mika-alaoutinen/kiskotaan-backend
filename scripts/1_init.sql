@@ -11,5 +11,5 @@ CREATE DATABASE player_db WITH
 CREATE TABLE IF NOT EXISTS player (
     id          SERIAL PRIMARY KEY,
     firstName   varchar(50) NOT NULL,
-    lastName    varchar(50) NOT NULL,
+    lastName    varchar(50) NOT NULL
 );

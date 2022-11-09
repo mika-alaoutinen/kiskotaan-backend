@@ -13,6 +13,7 @@ services:
     restart: unless-stopped
     volumes:
       - pg_data:/var/lib/postgres
+      - ./scripts/data.csv:/data/data.csv
       - ./scripts:/docker-entrypoint-initdb.d
 
 volumes:

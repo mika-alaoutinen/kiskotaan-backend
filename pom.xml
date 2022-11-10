@@ -132,12 +132,15 @@
               <goal>generate</goal>
             </goals>
             <configuration>
-              <configurationFile>${project.basedir}/src/main/resources/generatorConfig.yaml</configurationFile>
+              <configurationFile>
+								${project.basedir}/src/main/resources/openapi/generatorConfig.yaml
+							</configurationFile>
               <inputSpec>
-                https://raw.githubusercontent.com/mika-alaoutinen/kiskotaan-openapi/master/openapi.json
-              </inputSpec>
+								${project.basedir}/src/main/resources/openapi/openapi.yaml
+							</inputSpec>
               <generatorName>spring</generatorName>
               <library>spring-boot</library>
+							<generateSupportingFiles>false</generateSupportingFiles>
             </configuration>
           </execution>
         </executions>

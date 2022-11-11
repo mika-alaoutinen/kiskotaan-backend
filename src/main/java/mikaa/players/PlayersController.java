@@ -14,7 +14,7 @@ import mikaa.model.PlayerDTO;
 class PlayersController implements PlayersApi {
 
   @Override
-  public ResponseEntity<PlayerDTO> addPlayer(@Valid NewPlayerDTO newPlayerDTO) {
+  public ResponseEntity<PlayerDTO> addPlayer(@Valid NewPlayerDTO newPlayer) {
     throw new UnsupportedOperationException("TODO");
   }
 
@@ -34,7 +34,7 @@ class PlayersController implements PlayersApi {
   }
 
   @Override
-  public ResponseEntity<PlayerDTO> updatePlayer(Integer id, @Valid NewPlayerDTO newPlayerDTO) {
+  public ResponseEntity<PlayerDTO> updatePlayer(Integer id, @Valid NewPlayerDTO newPlayer) {
     throw new UnsupportedOperationException("TODO");
   }
 

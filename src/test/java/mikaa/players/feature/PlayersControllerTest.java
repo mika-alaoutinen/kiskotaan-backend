@@ -20,7 +20,7 @@ import java.util.List;
 
 @ContextConfiguration(classes = { PlayersController.class, PlayersService.class })
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(value = PlayersController.class)
+@WebMvcTest
 class PlayersControllerTest {
 
   private static final String ENDPOINT = "/players";
@@ -33,11 +33,12 @@ class PlayersControllerTest {
 
   @Test
   void should_get_all_players() throws Exception {
-    when(repository.findAll()).thenReturn(List.of(new Player("Pekka", "Kana")));
+    var pekka = new Player(1L, "Pekka", "Kana");
+    when(repository.findAll()).thenReturn(List.of(pekka));
 
     mvc
-      .perform(get(ENDPOINT))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$", hasSize(1)));
+        .perform(get(ENDPOINT))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)));
   }
 }

@@ -31,7 +31,8 @@ class PlayersController implements PlayersApi {
 
   @Override
   public ResponseEntity<PlayerDTO> getPlayer(Integer id) {
-    throw new UnsupportedOperationException("TODO");
+    var playerOpt = service.findOne(id).map(p -> MAPPER.map(p, PlayerDTO.class));
+    return ResponseEntity.of(playerOpt);
   }
 
   @Override

@@ -10,6 +10,6 @@ CREATE DATABASE player_db WITH
 -- Create a new table
 CREATE TABLE IF NOT EXISTS player (
     id          SERIAL PRIMARY KEY,
-    firstName   varchar(50) NOT NULL,
-    lastName    varchar(50) NOT NULL
+    first_name   varchar(50) NOT NULL,
+    last_name    varchar(50) NOT NULL
 );

@@ -1,3 +1,3 @@
 @url = http://localhost:8081/api
 
-GET {{url}}/hello HTTP/1.1
+GET {{url}}/players HTTP/1.1

@@ -2,7 +2,7 @@
 \c player_db;
 
 -- Copy the data from CSV to the 'player' table
-COPY player(firstName, lastName)
+COPY player(first_name, last_name)
 FROM '/data/data.csv'
 DELIMITER ','
 CSV HEADER;

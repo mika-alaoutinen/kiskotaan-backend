@@ -3,8 +3,10 @@ package mikaa.players.feature;
 import java.util.List;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -31,8 +33,11 @@ class PlayersController implements PlayersApi {
 
   @Override
   public ResponseEntity<PlayerDTO> getPlayer(Integer id) {
-    var playerOpt = service.findOne(id).map(p -> MAPPER.map(p, PlayerDTO.class));
-    return ResponseEntity.of(playerOpt);
+    var player = service.findOne(id)
+        .map(p -> MAPPER.map(p, PlayerDTO.class))
+        .orElseThrow(() -> PlayersController.notFound(id));
+
+    return ResponseEntity.ok(player);
   }
 
   @Override
@@ -46,4 +51,8 @@ class PlayersController implements PlayersApi {
     throw new UnsupportedOperationException("TODO");
   }
 
+  private static ResponseStatusException notFound(int id) {
+    String msg = "Player with ID %s not found".formatted(id);
+    return new ResponseStatusException(HttpStatus.NOT_FOUND, msg);
+  }
 }

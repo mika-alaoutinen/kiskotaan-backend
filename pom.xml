@@ -136,7 +136,7 @@
 								${project.basedir}/src/main/resources/openapi/generatorConfig.yaml
 							</configurationFile>
               <inputSpec>
-								${project.basedir}/src/main/resources/openapi/openapi.yaml
+								https://raw.githubusercontent.com/mika-alaoutinen/kiskotaan-openapi/master/apidoc_players.json
 							</inputSpec>
               <generatorName>spring</generatorName>
               <library>spring-boot</library>

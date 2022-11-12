@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@Entity
+@Entity(name = "player")
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-class Player {
+class PlayerEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ class Player {
   @Column(nullable = false)
   private String lastName;
 
-  Player(String firstName, String lastName) {
+  PlayerEntity(String firstName, String lastName) {
     this.firstName = Objects.requireNonNull(firstName);
     this.lastName = Objects.requireNonNull(lastName);
   }

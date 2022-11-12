@@ -40,7 +40,7 @@ class PlayersControllerTest {
 
   private static final String ENDPOINT = "/players";
   private static final ObjectMapper MAPPER = new ObjectMapper();
-  private static final Player PLAYER = new Player(1L, "Pekka", "Kana");
+  private static final PlayerEntity PLAYER = new PlayerEntity(1L, "Pekka", "Kana");
 
   @MockBean
   private PlayersRepository repository;
@@ -81,7 +81,7 @@ class PlayersControllerTest {
 
   @Test
   void should_add_new_player() throws Exception {
-    when(repository.save(any(Player.class))).thenReturn(PLAYER);
+    when(repository.save(any(PlayerEntity.class))).thenReturn(PLAYER);
 
     var newPlayer = new NewPlayerDTO().firstName("Pekka").lastName("Kana");
 
@@ -105,13 +105,13 @@ class PlayersControllerTest {
             .content(asJson(invalidPlayer)))
         .andExpect(status().isBadRequest());
 
-    verify(repository, never()).save(any(Player.class));
+    verify(repository, never()).save(any(PlayerEntity.class));
   }
 
   @Test
   void should_update_player() throws Exception {
     when(repository.findById(anyLong())).thenReturn(Optional.of(PLAYER));
-    when(repository.save(any(Player.class))).thenReturn(new Player(1L, "Edited", "Edited"));
+    when(repository.save(any(PlayerEntity.class))).thenReturn(new PlayerEntity(1L, "Edited", "Edited"));
 
     var editedPlayer = new NewPlayerDTO().firstName("Edited").lastName("Edited");
 
@@ -168,7 +168,7 @@ class PlayersControllerTest {
         .perform(delete(ENDPOINT + "/1"))
         .andExpect(status().isNoContent());
     
-    verify(repository, never()).delete(any(Player.class));
+    verify(repository, never()).delete(any(PlayerEntity.class));
   }
 
   private static Stream<NewPlayerDTO> invalidNewPlayers() {

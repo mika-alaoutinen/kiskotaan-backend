@@ -23,7 +23,7 @@ class PlayersController implements PlayersApi {
 
   @Override
   public ResponseEntity<PlayerDTO> addPlayer(@Valid NewPlayerDTO newPlayer) {
-    var savedPlayer = service.add(MAPPER.map(newPlayer, Player.class));
+    var savedPlayer = service.add(MAPPER.map(newPlayer, PlayerEntity.class));
     var response = MAPPER.map(savedPlayer, PlayerDTO.class);
     return new ResponseEntity<PlayerDTO>(response, HttpStatus.CREATED);
   }
@@ -50,7 +50,7 @@ class PlayersController implements PlayersApi {
 
   @Override
   public ResponseEntity<PlayerDTO> updatePlayer(Integer id, @Valid NewPlayerDTO editedPlayer) {
-    var edited = MAPPER.map(editedPlayer, Player.class);
+    var edited = MAPPER.map(editedPlayer, PlayerEntity.class);
 
     return service.update(id, edited)
         .map(PlayersController::toDto)
@@ -58,7 +58,7 @@ class PlayersController implements PlayersApi {
         .orElseThrow(() -> PlayersController.notFound(id));
   }
 
-  private static PlayerDTO toDto(Player player) {
+  private static PlayerDTO toDto(PlayerEntity player) {
     return MAPPER.map(player, PlayerDTO.class);
   }
 

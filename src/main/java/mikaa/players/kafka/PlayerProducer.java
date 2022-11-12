@@ -8,7 +8,7 @@ import mikaa.players.events.Player;
 
 @Component
 @RequiredArgsConstructor
-class PlayersSender {
+class PlayerProducer {
 
   private final KafkaTemplate<String, Player> template;
 

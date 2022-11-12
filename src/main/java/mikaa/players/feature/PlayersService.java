@@ -21,6 +21,10 @@ class PlayersService {
     return repository.findById(id);
   }
 
+  Player add(Player newPlayer) {
+    return repository.save(newPlayer);
+  }
+
   void delete(long id) {
     repository.findById(id).ifPresent(repository::delete);
   }

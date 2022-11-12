@@ -4,11 +4,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import jakarta.inject.Inject;
+import mikaa.model.NewPlayerDTO;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -30,6 +35,7 @@ import java.util.Optional;
 class PlayersControllerTest {
 
   private static final String ENDPOINT = "/players";
+  private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final Player PLAYER = new Player(1L, "Pekka", "Kana");
 
   @MockBean
@@ -43,9 +49,9 @@ class PlayersControllerTest {
     when(repository.findAll()).thenReturn(List.of(PLAYER));
 
     mvc
-        .perform(get(ENDPOINT))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$", hasSize(1)));
+      .perform(get(ENDPOINT))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$", hasSize(1)));
   }
 
   @Test
@@ -53,11 +59,11 @@ class PlayersControllerTest {
     when(repository.findById(anyLong())).thenReturn(Optional.of(PLAYER));
 
     mvc
-        .perform(get(ENDPOINT + "/1"))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(1L))
-        .andExpect(jsonPath("$.firstName").value("Pekka"))
-        .andExpect(jsonPath("$.lastName").value("Kana"));
+      .perform(get(ENDPOINT + "/1"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.id").value(1L))
+      .andExpect(jsonPath("$.firstName").value("Pekka"))
+      .andExpect(jsonPath("$.lastName").value("Kana"));
   }
 
   @Test
@@ -65,8 +71,25 @@ class PlayersControllerTest {
     when(repository.findById(anyLong())).thenReturn(Optional.empty());
 
     mvc
-        .perform(get(ENDPOINT + "/1"))
-        .andExpect(status().isNotFound());
+      .perform(get(ENDPOINT + "/1"))
+      .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void should_add_new_player() throws Exception {
+    when(repository.save(any(Player.class))).thenReturn(PLAYER);
+
+    var newPlayer = new NewPlayerDTO().firstName("Pekka").lastName("Kana");
+
+    mvc
+      .perform(post(ENDPOINT)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(asJson(newPlayer))
+      )
+      .andExpect(status().isCreated())
+      .andExpect(jsonPath("$.id").value(1))
+      .andExpect(jsonPath("$.firstName").value("Pekka"))
+      .andExpect(jsonPath("$.lastName").value("Kana"));
   }
 
   @Test
@@ -74,8 +97,8 @@ class PlayersControllerTest {
     when(repository.findById(anyLong())).thenReturn(Optional.of(PLAYER));
     
     mvc
-        .perform(delete(ENDPOINT + "/1"))
-        .andExpect(status().isNoContent());
+      .perform(delete(ENDPOINT + "/1"))
+      .andExpect(status().isNoContent());
     
     verify(repository, atLeastOnce()).delete(PLAYER);
   }
@@ -85,9 +108,13 @@ class PlayersControllerTest {
     when(repository.findById(anyLong())).thenReturn(Optional.empty());
     
     mvc
-        .perform(delete(ENDPOINT + "/1"))
-        .andExpect(status().isNoContent());
+      .perform(delete(ENDPOINT + "/1"))
+      .andExpect(status().isNoContent());
     
     verify(repository, never()).delete(any(Player.class));
+  }
+
+  private static String asJson(NewPlayerDTO dto) throws JsonProcessingException {
+    return MAPPER.writeValueAsString(dto);
   }
 }

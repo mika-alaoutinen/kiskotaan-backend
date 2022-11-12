@@ -23,7 +23,9 @@ class PlayersController implements PlayersApi {
 
   @Override
   public ResponseEntity<PlayerDTO> addPlayer(@Valid NewPlayerDTO newPlayer) {
-    throw new UnsupportedOperationException("TODO");
+    var savedPlayer = service.add(MAPPER.map(newPlayer, Player.class));
+    var response = MAPPER.map(savedPlayer, PlayerDTO.class);
+    return new ResponseEntity<PlayerDTO>(response, HttpStatus.CREATED);
   }
 
   @Override

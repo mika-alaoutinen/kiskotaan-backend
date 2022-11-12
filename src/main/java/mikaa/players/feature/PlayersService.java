@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 class PlayersService {
 
   private final PlayersRepository repository;

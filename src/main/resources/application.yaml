@@ -23,7 +23,3 @@ spring:
       client-id: players-producer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer
-
-# Kafka topic name used in Kafka configuration
-kafka:
-  topic-name: players

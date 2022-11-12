@@ -14,8 +14,8 @@ import mikaa.api.PlayersApi;
 import mikaa.model.NewPlayerDTO;
 import mikaa.model.PlayerDTO;
 
-@RequiredArgsConstructor
 @RestController
+@RequiredArgsConstructor
 class PlayersController implements PlayersApi {
 
   private static final ModelMapper MAPPER = new ModelMapper();

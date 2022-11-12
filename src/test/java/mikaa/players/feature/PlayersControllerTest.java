@@ -71,7 +71,7 @@ class PlayersControllerTest {
   }
 
   @Test
-  void should_return_404_when_player_not_found() throws Exception {
+  void get_should_return_404_when_player_not_found() throws Exception {
     when(repository.findById(anyLong())).thenReturn(Optional.empty());
 
     mvc
@@ -101,6 +101,49 @@ class PlayersControllerTest {
   void should_not_add_player_if_validation_errors(NewPlayerDTO invalidPlayer) throws Exception {
     mvc
         .perform(post(ENDPOINT)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJson(invalidPlayer)))
+        .andExpect(status().isBadRequest());
+
+    verify(repository, never()).save(any(Player.class));
+  }
+
+  @Test
+  void should_update_player() throws Exception {
+    when(repository.findById(anyLong())).thenReturn(Optional.of(PLAYER));
+    when(repository.save(any(Player.class))).thenReturn(new Player(1L, "Edited", "Edited"));
+
+    var editedPlayer = new NewPlayerDTO().firstName("Edited").lastName("Edited");
+
+    mvc
+        .perform(put(ENDPOINT + "/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJson(editedPlayer)))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1))
+        .andExpect(jsonPath("$.firstName").value("Edited"))
+        .andExpect(jsonPath("$.lastName").value("Edited"));
+  }
+
+  @Test
+  void put_should_return_404_when_player_not_found() throws Exception {
+    when(repository.findById(anyLong())).thenReturn(Optional.empty());
+    
+    var editedPlayer = new NewPlayerDTO().firstName("Pekka").lastName("Kana");
+
+    mvc
+        .perform(put(ENDPOINT + "/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJson(editedPlayer)))
+        .andExpect(status().isNotFound());
+  }
+
+  @MethodSource("invalidNewPlayers")
+  @NullSource
+  @ParameterizedTest
+  void should_not_update_player_if_validation_errors(NewPlayerDTO invalidPlayer) throws Exception {
+    mvc
+        .perform(put(ENDPOINT + "/1")
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJson(invalidPlayer)))
         .andExpect(status().isBadRequest());

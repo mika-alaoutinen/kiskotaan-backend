@@ -25,6 +25,15 @@ class PlayersService {
     return repository.save(newPlayer);
   }
 
+  Optional<Player> update(long id, Player edited) {
+    return repository.findById(id)
+        .map(player -> {
+          player.setFirstName(edited.getFirstName());
+          player.setLastName(edited.getLastName());
+          return player;
+        }).map(repository::save);
+  }
+
   void delete(long id) {
     repository.findById(id).ifPresent(repository::delete);
   }

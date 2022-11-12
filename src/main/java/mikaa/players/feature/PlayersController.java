@@ -36,22 +36,30 @@ class PlayersController implements PlayersApi {
 
   @Override
   public ResponseEntity<PlayerDTO> getPlayer(Integer id) {
-    var player = service.findOne(id)
-        .map(p -> MAPPER.map(p, PlayerDTO.class))
+    return service.findOne(id)
+        .map(PlayersController::toDto)
+        .map(ResponseEntity::ok)
         .orElseThrow(() -> PlayersController.notFound(id));
-
-    return ResponseEntity.ok(player);
   }
 
   @Override
   public ResponseEntity<List<PlayerDTO>> getPlayers() {
-    var players = service.findAll().stream().map(p -> MAPPER.map(p, PlayerDTO.class)).toList();
+    var players = service.findAll().stream().map(PlayersController::toDto).toList();
     return ResponseEntity.ok(players);
   }
 
   @Override
-  public ResponseEntity<PlayerDTO> updatePlayer(Integer id, @Valid NewPlayerDTO newPlayer) {
-    throw new UnsupportedOperationException("TODO");
+  public ResponseEntity<PlayerDTO> updatePlayer(Integer id, @Valid NewPlayerDTO editedPlayer) {
+    var edited = MAPPER.map(editedPlayer, Player.class);
+
+    return service.update(id, edited)
+        .map(PlayersController::toDto)
+        .map(ResponseEntity::ok)
+        .orElseThrow(() -> PlayersController.notFound(id));
+  }
+
+  private static PlayerDTO toDto(Player player) {
+    return MAPPER.map(player, PlayerDTO.class);
   }
 
   private static ResponseStatusException notFound(int id) {

@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import mikaa.players.events.Player;
+import mikaa.players.events.PlayerEvents;
 import mikaa.players.kafka.PlayerProducer;
 
 @Service
@@ -26,7 +28,10 @@ class PlayersService {
 
   @Transactional
   PlayerEntity add(PlayerEntity newPlayer) {
-    return repository.save(newPlayer);
+    var saved = repository.save(newPlayer);
+    var player = new Player(saved.getId(), saved.getFirstName(), saved.getLastName());
+    producer.send(PlayerEvents.add(player));
+    return saved;
   }
 
   Optional<PlayerEntity> update(long id, PlayerEntity edited) {

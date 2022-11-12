@@ -2,6 +2,9 @@ package mikaa.players.feature;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -28,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @ContextConfiguration(classes = { PlayersController.class, PlayersService.class })
 @ExtendWith(SpringExtension.class)
@@ -49,9 +53,9 @@ class PlayersControllerTest {
     when(repository.findAll()).thenReturn(List.of(PLAYER));
 
     mvc
-      .perform(get(ENDPOINT))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$", hasSize(1)));
+        .perform(get(ENDPOINT))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(1)));
   }
 
   @Test
@@ -59,11 +63,11 @@ class PlayersControllerTest {
     when(repository.findById(anyLong())).thenReturn(Optional.of(PLAYER));
 
     mvc
-      .perform(get(ENDPOINT + "/1"))
-      .andExpect(status().isOk())
-      .andExpect(jsonPath("$.id").value(1L))
-      .andExpect(jsonPath("$.firstName").value("Pekka"))
-      .andExpect(jsonPath("$.lastName").value("Kana"));
+        .perform(get(ENDPOINT + "/1"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.id").value(1L))
+        .andExpect(jsonPath("$.firstName").value("Pekka"))
+        .andExpect(jsonPath("$.lastName").value("Kana"));
   }
 
   @Test
@@ -71,8 +75,8 @@ class PlayersControllerTest {
     when(repository.findById(anyLong())).thenReturn(Optional.empty());
 
     mvc
-      .perform(get(ENDPOINT + "/1"))
-      .andExpect(status().isNotFound());
+        .perform(get(ENDPOINT + "/1"))
+        .andExpect(status().isNotFound());
   }
 
   @Test
@@ -82,14 +86,24 @@ class PlayersControllerTest {
     var newPlayer = new NewPlayerDTO().firstName("Pekka").lastName("Kana");
 
     mvc
-      .perform(post(ENDPOINT)
-        .contentType(MediaType.APPLICATION_JSON)
-        .content(asJson(newPlayer))
-      )
-      .andExpect(status().isCreated())
-      .andExpect(jsonPath("$.id").value(1))
-      .andExpect(jsonPath("$.firstName").value("Pekka"))
-      .andExpect(jsonPath("$.lastName").value("Kana"));
+        .perform(post(ENDPOINT)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJson(newPlayer)))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.id").value(1))
+        .andExpect(jsonPath("$.firstName").value("Pekka"))
+        .andExpect(jsonPath("$.lastName").value("Kana"));
+  }
+
+  @MethodSource("invalidNewPlayers")
+  @NullSource
+  @ParameterizedTest
+  void should_not_add_player_if_validation_errors(NewPlayerDTO invalidPlayer) throws Exception {
+    mvc
+        .perform(post(ENDPOINT)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJson(invalidPlayer)))
+        .andExpect(status().isBadRequest());
   }
 
   @Test
@@ -97,8 +111,8 @@ class PlayersControllerTest {
     when(repository.findById(anyLong())).thenReturn(Optional.of(PLAYER));
     
     mvc
-      .perform(delete(ENDPOINT + "/1"))
-      .andExpect(status().isNoContent());
+        .perform(delete(ENDPOINT + "/1"))
+        .andExpect(status().isNoContent());
     
     verify(repository, atLeastOnce()).delete(PLAYER);
   }
@@ -108,10 +122,16 @@ class PlayersControllerTest {
     when(repository.findById(anyLong())).thenReturn(Optional.empty());
     
     mvc
-      .perform(delete(ENDPOINT + "/1"))
-      .andExpect(status().isNoContent());
+        .perform(delete(ENDPOINT + "/1"))
+        .andExpect(status().isNoContent());
     
     verify(repository, never()).delete(any(Player.class));
+  }
+
+  private static Stream<NewPlayerDTO> invalidNewPlayers() {
+    return Stream.of(
+        new NewPlayerDTO().firstName("Kalle"),
+        new NewPlayerDTO().firstName("Kalle").lastName(""));
   }
 
   private static String asJson(NewPlayerDTO dto) throws JsonProcessingException {

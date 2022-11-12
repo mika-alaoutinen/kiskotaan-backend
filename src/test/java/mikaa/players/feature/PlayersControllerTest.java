@@ -11,7 +11,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import jakarta.inject.Inject;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -63,5 +67,27 @@ class PlayersControllerTest {
     mvc
         .perform(get(ENDPOINT + "/1"))
         .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void should_delete_player_by_id() throws Exception {
+    when(repository.findById(anyLong())).thenReturn(Optional.of(PLAYER));
+    
+    mvc
+        .perform(delete(ENDPOINT + "/1"))
+        .andExpect(status().isNoContent());
+    
+    verify(repository, atLeastOnce()).delete(PLAYER);
+  }
+
+  @Test
+  void should_do_nothing_on_delete_when_id_not_found() throws Exception {
+    when(repository.findById(anyLong())).thenReturn(Optional.empty());
+    
+    mvc
+        .perform(delete(ENDPOINT + "/1"))
+        .andExpect(status().isNoContent());
+    
+    verify(repository, never()).delete(any(Player.class));
   }
 }

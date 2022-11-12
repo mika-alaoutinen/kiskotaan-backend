@@ -13,11 +13,15 @@ class PlayersService {
 
   private final PlayersRepository repository;
 
-  List<Player> getAll() {
+  List<Player> findAll() {
     return repository.findAll();
   }
 
   Optional<Player> findOne(long id) {
     return repository.findById(id);
+  }
+
+  void delete(long id) {
+    repository.findById(id).ifPresent(repository::delete);
   }
 }

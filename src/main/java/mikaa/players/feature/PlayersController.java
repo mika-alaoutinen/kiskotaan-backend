@@ -28,7 +28,8 @@ class PlayersController implements PlayersApi {
 
   @Override
   public ResponseEntity<Void> deletePlayer(Integer id) {
-    throw new UnsupportedOperationException("TODO");
+    service.delete(id);
+    return ResponseEntity.noContent().build();
   }
 
   @Override
@@ -42,7 +43,7 @@ class PlayersController implements PlayersApi {
 
   @Override
   public ResponseEntity<List<PlayerDTO>> getPlayers() {
-    var players = service.getAll().stream().map(p -> MAPPER.map(p, PlayerDTO.class)).toList();
+    var players = service.findAll().stream().map(p -> MAPPER.map(p, PlayerDTO.class)).toList();
     return ResponseEntity.ok(players);
   }
 

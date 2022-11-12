@@ -1,0 +1,27 @@
+@url = http://localhost:8081/api/players
+
+### add new
+POST {{url}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "firstName": "New",
+  "lastName": "Player"
+}
+
+### add with missing field
+POST {{url}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "firstName": "New"
+}
+
+### add with validation constraint violation
+POST {{url}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "firstName": "New",
+  "lastName": ""
+}

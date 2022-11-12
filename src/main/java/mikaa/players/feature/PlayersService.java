@@ -50,8 +50,15 @@ class PlayersService {
     return saved;
   }
 
+  @Transactional
   void delete(long id) {
-    repository.findById(id).ifPresent(repository::delete);
+    repository.findById(id)
+        .map(PlayersService::toPlayer)
+        .map(PlayerEvents::delete)
+        .ifPresent(event -> {
+          repository.deleteById(id);
+          producer.send(event);
+        });
   }
 
   private static Player toPlayer(PlayerEntity entity) {

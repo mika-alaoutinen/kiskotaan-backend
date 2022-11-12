@@ -6,7 +6,7 @@ public interface PlayerEvents {
   }
 
   enum EventType {
-    PLAYER_ADDED, PLAYER_UPDATED
+    PLAYER_ADDED, PLAYER_DELETED, PLAYER_UPDATED
   }
 
   public static PlayerEvent add(Player player) {
@@ -15,6 +15,10 @@ public interface PlayerEvents {
 
   public static PlayerEvent update(Player player) {
     return new PlayerEvent(EventType.PLAYER_UPDATED, player);
+  }
+
+  public static PlayerEvent delete(Player player) {
+    return new PlayerEvent(EventType.PLAYER_DELETED, player);
   }
 
 }

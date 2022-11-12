@@ -157,7 +157,7 @@ class PlayersControllerTest {
         .perform(delete(ENDPOINT + "/1"))
         .andExpect(status().isNoContent());
     
-    verify(repository, atLeastOnce()).delete(PLAYER);
+    verify(repository, atLeastOnce()).deleteById(1L);
   }
 
   @Test
@@ -168,7 +168,7 @@ class PlayersControllerTest {
         .perform(delete(ENDPOINT + "/1"))
         .andExpect(status().isNoContent());
     
-    verify(repository, never()).delete(any(PlayerEntity.class));
+    verify(repository, never()).deleteById(anyLong());
   }
 
   private static Stream<NewPlayerDTO> invalidNewPlayers() {

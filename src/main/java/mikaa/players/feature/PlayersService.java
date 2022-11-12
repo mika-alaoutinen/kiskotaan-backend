@@ -29,21 +29,33 @@ class PlayersService {
   @Transactional
   PlayerEntity add(PlayerEntity newPlayer) {
     var saved = repository.save(newPlayer);
-    var player = new Player(saved.getId(), saved.getFirstName(), saved.getLastName());
+    var player = toPlayer(newPlayer);
     producer.send(PlayerEvents.add(player));
     return saved;
   }
 
+  @Transactional
   Optional<PlayerEntity> update(long id, PlayerEntity edited) {
-    return repository.findById(id)
+    var saved = repository.findById(id)
         .map(player -> {
           player.setFirstName(edited.getFirstName());
           player.setLastName(edited.getLastName());
           return player;
         }).map(repository::save);
+
+    saved.map(PlayersService::toPlayer)
+        .map(PlayerEvents::update)
+        .ifPresent(producer::send);
+
+    return saved;
   }
 
   void delete(long id) {
     repository.findById(id).ifPresent(repository::delete);
   }
+
+  private static Player toPlayer(PlayerEntity entity) {
+    return new Player(entity.getId(), entity.getFirstName(), entity.getLastName());
+  }
+
 }

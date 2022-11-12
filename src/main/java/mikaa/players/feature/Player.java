@@ -1,5 +1,7 @@
 package mikaa.players.feature;
 
+import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +33,7 @@ class Player {
   private String lastName;
 
   Player(String firstName, String lastName) {
-    this.firstName = firstName;
-    this.lastName = lastName;
+    this.firstName = Objects.requireNonNull(firstName);
+    this.lastName = Objects.requireNonNull(lastName);
   }
 }

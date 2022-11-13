@@ -6,35 +6,59 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.players.events.Player;
+import mikaa.players.events.PlayerEvents;
+import mikaa.players.kafka.PlayerProducer;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 class PlayersService {
 
+  private final PlayerProducer producer;
   private final PlayersRepository repository;
 
-  List<Player> findAll() {
+  List<PlayerEntity> findAll() {
     return repository.findAll();
   }
 
-  Optional<Player> findOne(long id) {
+  Optional<PlayerEntity> findOne(long id) {
     return repository.findById(id);
   }
 
-  Player add(Player newPlayer) {
-    return repository.save(newPlayer);
+  PlayerEntity add(PlayerEntity newPlayer) {
+    var saved = repository.save(newPlayer);
+    var player = toPlayer(saved);
+    producer.send(PlayerEvents.add(player));
+    return saved;
   }
 
-  Optional<Player> update(long id, Player edited) {
-    return repository.findById(id)
+  Optional<PlayerEntity> update(long id, PlayerEntity edited) {
+    var saved = repository.findById(id)
         .map(player -> {
           player.setFirstName(edited.getFirstName());
           player.setLastName(edited.getLastName());
           return player;
         }).map(repository::save);
+
+    saved.map(PlayersService::toPlayer)
+        .map(PlayerEvents::update)
+        .ifPresent(producer::send);
+
+    return saved;
   }
 
   void delete(long id) {
-    repository.findById(id).ifPresent(repository::delete);
+    repository.findById(id)
+        .map(PlayersService::toPlayer)
+        .map(PlayerEvents::delete)
+        .ifPresent(event -> {
+          repository.deleteById(id);
+          producer.send(event);
+        });
   }
+
+  private static Player toPlayer(PlayerEntity entity) {
+    return new Player(entity.getId(), entity.getFirstName(), entity.getLastName());
+  }
+
 }

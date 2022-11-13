@@ -5,6 +5,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -15,8 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jakarta.inject.Inject;
 import mikaa.model.NewPlayerDTO;
+import mikaa.players.kafka.PlayerProducer;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -43,9 +44,12 @@ class PlayersControllerTest {
   private static final PlayerEntity PLAYER = new PlayerEntity(1L, "Pekka", "Kana");
 
   @MockBean
+  private PlayerProducer producer;
+
+  @MockBean
   private PlayersRepository repository;
 
-  @Inject
+  @Autowired
   private MockMvc mvc;
 
   @Test

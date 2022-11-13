@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mikaa.players.events.Player;
 import mikaa.players.events.PlayerEvents;
@@ -26,15 +25,13 @@ class PlayersService {
     return repository.findById(id);
   }
 
-  @Transactional
   PlayerEntity add(PlayerEntity newPlayer) {
     var saved = repository.save(newPlayer);
-    var player = toPlayer(newPlayer);
+    var player = toPlayer(saved);
     producer.send(PlayerEvents.add(player));
     return saved;
   }
 
-  @Transactional
   Optional<PlayerEntity> update(long id, PlayerEntity edited) {
     var saved = repository.findById(id)
         .map(player -> {
@@ -50,7 +47,6 @@ class PlayersService {
     return saved;
   }
 
-  @Transactional
   void delete(long id) {
     repository.findById(id)
         .map(PlayersService::toPlayer)

@@ -2,13 +2,14 @@ package mikaa.players.feature;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import mikaa.api.PlayersApi;
 import mikaa.model.NewPlayerDTO;

@@ -29,7 +29,7 @@ class PlayersService {
   @Transactional
   PlayerEntity add(PlayerEntity newPlayer) {
     var saved = repository.save(newPlayer);
-    var player = toPlayer(newPlayer);
+    var player = toPlayer(saved);
     producer.send(PlayerEvents.add(player));
     return saved;
   }

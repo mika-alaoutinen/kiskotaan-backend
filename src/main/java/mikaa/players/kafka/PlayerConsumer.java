@@ -8,10 +8,10 @@ import mikaa.players.events.PlayerEvents.PlayerEvent;
 
 @Component
 @Slf4j
-class PlayerConsumer {
+class PlayerConsumer implements KafkaConsumer {
 
   @KafkaListener(topics = KafkaTopic.PLAYERS, groupId = "players-group")
-  void consume(PlayerEvent event) {
+  public void consume(PlayerEvent event) {
     log.info("consumed event " + event);
   }
 

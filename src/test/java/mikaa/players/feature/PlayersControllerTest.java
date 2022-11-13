@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mikaa.model.NewPlayerDTO;
 import mikaa.players.events.PlayerEvents.PlayerEvent;
-import mikaa.players.kafka.PlayerProducer;
+import mikaa.players.kafka.KafkaProducer;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,7 +45,7 @@ class PlayersControllerTest {
   private static final PlayerEntity PLAYER = new PlayerEntity(1L, "Pekka", "Kana");
 
   @MockBean
-  private PlayerProducer producer;
+  private KafkaProducer producer;
 
   @MockBean
   private PlayersRepository repository;

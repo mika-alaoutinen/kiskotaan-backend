@@ -14,6 +14,18 @@ spring:
       ddl-auto: update
 
   kafka:
+    bootstrap-servers: localhost:9092
     consumer:
-      auto-offset-reset: earliest
-      group-id: players-consumer
+      client-id: players-consumer
+      group-id: players-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
+    producer:
+      client-id: players-producer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

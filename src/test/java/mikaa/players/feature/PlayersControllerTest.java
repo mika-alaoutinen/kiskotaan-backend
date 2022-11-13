@@ -17,7 +17,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mikaa.model.NewPlayerDTO;
-import mikaa.players.kafka.PlayerProducer;
+import mikaa.players.events.PlayerEvents.PlayerEvent;
+import mikaa.players.kafka.KafkaProducer;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,7 +45,7 @@ class PlayersControllerTest {
   private static final PlayerEntity PLAYER = new PlayerEntity(1L, "Pekka", "Kana");
 
   @MockBean
-  private PlayerProducer producer;
+  private KafkaProducer producer;
 
   @MockBean
   private PlayersRepository repository;
@@ -97,6 +98,8 @@ class PlayersControllerTest {
         .andExpect(jsonPath("$.id").value(1))
         .andExpect(jsonPath("$.firstName").value("Pekka"))
         .andExpect(jsonPath("$.lastName").value("Kana"));
+
+    verify(producer, atLeastOnce()).send(any(PlayerEvent.class));
   }
 
   @MethodSource("invalidNewPlayers")
@@ -109,7 +112,8 @@ class PlayersControllerTest {
             .content(asJson(invalidPlayer)))
         .andExpect(status().isBadRequest());
 
-    verify(repository, never()).save(any(PlayerEntity.class));
+    verify(repository, never()).save(any());
+    verify(producer, never()).send(any());
   }
 
   @Test
@@ -127,6 +131,8 @@ class PlayersControllerTest {
         .andExpect(jsonPath("$.id").value(1))
         .andExpect(jsonPath("$.firstName").value("Edited"))
         .andExpect(jsonPath("$.lastName").value("Edited"));
+
+    verify(producer, atLeastOnce()).send(any(PlayerEvent.class));
   }
 
   @Test
@@ -140,6 +146,9 @@ class PlayersControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJson(editedPlayer)))
         .andExpect(status().isNotFound());
+
+    verify(repository, never()).save(any());
+    verify(producer, never()).send(any());
   }
 
   @MethodSource("invalidNewPlayers")
@@ -151,6 +160,9 @@ class PlayersControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJson(invalidPlayer)))
         .andExpect(status().isBadRequest());
+
+    verify(repository, never()).save(any());
+    verify(producer, never()).send(any());
   }
 
   @Test
@@ -162,6 +174,7 @@ class PlayersControllerTest {
         .andExpect(status().isNoContent());
     
     verify(repository, atLeastOnce()).deleteById(1L);
+    verify(producer, atLeastOnce()).send(any(PlayerEvent.class));
   }
 
   @Test
@@ -173,6 +186,7 @@ class PlayersControllerTest {
         .andExpect(status().isNoContent());
     
     verify(repository, never()).deleteById(anyLong());
+    verify(producer, never()).send(any());
   }
 
   private static Stream<NewPlayerDTO> invalidNewPlayers() {

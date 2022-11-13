@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import mikaa.players.events.Player;
 import mikaa.players.events.PlayerEvents;
-import mikaa.players.kafka.PlayerProducer;
+import mikaa.players.kafka.KafkaProducer;
 
 @Service
 @RequiredArgsConstructor
 class PlayersService {
 
-  private final PlayerProducer producer;
+  private final KafkaProducer producer;
   private final PlayersRepository repository;
 
   List<PlayerEntity> findAll() {

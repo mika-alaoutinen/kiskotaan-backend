@@ -10,9 +10,9 @@
 	</parent>
 	
 	<groupId>mikaa</groupId>
-	<artifactId>players</artifactId>
+	<artifactId>players-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>players</name>
+	<name>players-service</name>
 	<description>Players microservice</description>
 
 	<properties>

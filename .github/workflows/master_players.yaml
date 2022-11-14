@@ -1,13 +1,11 @@
-# Workflow for feature branches.
-# Compiles the code and runs tests on push.
-
-name: Feature branch
+name: Players service Master branch
 
 on:
   push:
-    branches-ignore:
+    branches:
       - master
-      - release*
+    paths:
+      - players-service/**
 
 jobs:
   build:
@@ -20,4 +18,4 @@ jobs:
           distribution: "adopt"
           java-version: "17"
       - name: Build and test with Maven
-        run: mvn -B clean verify --file pom.xml
+        run: mvn -B clean install --file ./players-service/pom.xml

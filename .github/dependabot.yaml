@@ -7,6 +7,6 @@ updates:
       interval: weekly
 
   - package-ecosystem: maven
-    directory: /
+    directory: players-service
     schedule:
       interval: weekly

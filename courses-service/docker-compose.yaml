@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  postgres:
+    container_name: course_db
+    environment:
+      POSTGRES_DATABASE: course_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    image: postgres
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - pg_data:/var/lib/postgres
+      - ./scripts/courses.csv:/data/courses.csv
+      - ./scripts/holes.csv:/data/holes.csv
+      - ./scripts:/docker-entrypoint-initdb.d
+
+volumes:
+  pg_data:

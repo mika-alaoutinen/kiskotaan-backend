@@ -1,0 +1,23 @@
+-- Create a new database where the data from CSV will be saved
+CREATE DATABASE course_db WITH
+    ENCODING = 'UTF-8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+\c course_db;
+
+CREATE TABLE IF NOT EXISTS course (
+    id          SERIAL PRIMARY KEY,
+    name        varchar(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS hole (
+    id          SERIAL PRIMARY KEY,
+    course_id   SERIAL,
+    hole_number integer NOT NULL,
+    par         integer NOT NULL,
+    distance    integer NOT NULL,
+    CONSTRAINT fk_course
+        FOREIGN KEY(course_id)
+            REFERENCES course(id)
+);

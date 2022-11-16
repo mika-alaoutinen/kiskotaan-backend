@@ -10,10 +10,16 @@ import javax.ws.rs.core.MediaType;
 @Path("/courses")
 public class CourseResource {
 
+  private final CourseService service;
+
+  public CourseResource(CourseService service) {
+    this.service = service;
+  }
+
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public List<CourseEntity> findCourses() {
-    return CourseEntity.listAll();
+  public List<CourseSummary> findCourses() {
+    return service.findAll();
   }
 
 }

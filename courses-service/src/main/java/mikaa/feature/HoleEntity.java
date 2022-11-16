@@ -7,14 +7,14 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Data
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @AllArgsConstructor
@@ -36,6 +36,7 @@ public class HoleEntity extends PanacheEntity {
   @Column
   public int distance;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   public CourseEntity course;
 

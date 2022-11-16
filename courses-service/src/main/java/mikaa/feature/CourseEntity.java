@@ -1,5 +1,6 @@
 package mikaa.feature;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,12 +14,10 @@ import javax.validation.constraints.Size;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@Data
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @AllArgsConstructor
@@ -33,16 +32,16 @@ public class CourseEntity extends PanacheEntity {
 
   @Size(min = 1, max = 30, message = "Course can haven 1-30 holes")
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
-  public List<HoleEntity> holes;
+  public List<HoleEntity> holes = new ArrayList<>();
 
   public void addHole(HoleEntity hole) {
     holes.add(hole);
-    hole.setCourse(this);
+    hole.course = this;
   }
 
   public void removeHole(HoleEntity hole) {
     holes.remove(hole);
-    hole.setCourse(null);
+    hole.course = null;
   }
 
   public static Optional<CourseEntity> findByName(String name) {

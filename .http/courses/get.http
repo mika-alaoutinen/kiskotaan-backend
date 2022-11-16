@@ -1,0 +1,10 @@
+@url = http://localhost:8082/api
+
+### get all courses
+GET {{url}}/courses HTTP/1.1
+
+### get one course
+GET {{url}}/courses/1 HTTP/1.1
+
+### get course that doesn't exist
+GET {{url}}/courses/99 HTTP/1.1

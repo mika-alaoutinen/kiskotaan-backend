@@ -8,7 +8,7 @@ DELIMITER ','
 CSV HEADER;
 
 -- Copy the data from CSV to the 'hole' table
-COPY hole(course_id, hole_number, par, distance)
+COPY hole(id, course_id, hole_number, par, distance)
 FROM '/data/holes.csv'
 DELIMITER ','
 CSV HEADER;

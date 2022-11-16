@@ -24,13 +24,16 @@ public class HoleEntity extends PanacheEntity {
 
   @Min(1)
   @Max(30)
+  @Column(name = "hole_number")
   public int holeNumber;
 
   @Min(2)
   @Max(6)
+  @Column
   public int par;
 
   @Min(1)
+  @Column
   public int distance;
 
   @ManyToOne(fetch = FetchType.LAZY)

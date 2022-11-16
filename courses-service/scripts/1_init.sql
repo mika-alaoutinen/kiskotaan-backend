@@ -7,13 +7,13 @@ CREATE DATABASE course_db WITH
 \c course_db;
 
 CREATE TABLE IF NOT EXISTS course (
-    id          SERIAL PRIMARY KEY,
+    id          bigint PRIMARY KEY,
     name        varchar(50) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS hole (
-    id          SERIAL PRIMARY KEY,
-    course_id   SERIAL,
+    id          bigint PRIMARY KEY,
+    course_id   bigint NOT NULL,
     hole_number integer NOT NULL,
     par         integer NOT NULL,
     distance    integer NOT NULL,
@@ -21,3 +21,6 @@ CREATE TABLE IF NOT EXISTS hole (
         FOREIGN KEY(course_id)
             REFERENCES course(id)
 );
+
+-- Hibernate sequence starts from 37 because holes.csv test data has 36 entries
+CREATE SEQUENCE hibernate_sequence START 37;

@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.course;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import mikaa.hole.HoleEntity;
 
 @EqualsAndHashCode(callSuper = false)
 @ToString

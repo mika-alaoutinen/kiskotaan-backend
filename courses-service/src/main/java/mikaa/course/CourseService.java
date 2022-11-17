@@ -1,10 +1,10 @@
-package mikaa.feature;
+package mikaa.course;
 
 import java.util.List;
 
-import javax.inject.Singleton;
+import javax.enterprise.context.ApplicationScoped;
 
-@Singleton
+@ApplicationScoped
 class CourseService {
 
   List<CourseSummary> findAll() {

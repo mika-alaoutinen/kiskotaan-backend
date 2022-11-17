@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseSummaryDTO;
+import mikaa.dto.HoleDTO;
 
 @ApplicationScoped
 class CourseService {
@@ -17,7 +18,11 @@ class CourseService {
   }
 
   Optional<CourseDTO> findOne(long id) {
-    return Optional.empty();
+    Optional<CourseEntity> courseOpt = CourseEntity.findByIdOptional(id);
+    return courseOpt.map(course -> {
+      var holes = course.holes.stream().map(HoleDTO::new).toList();
+      return new CourseDTO(course.id, course.name, holes);
+    });
   }
 
   private static CourseSummaryDTO toSummary(CourseEntity entity) {

@@ -1,7 +1,9 @@
 package mikaa.dto;
 
+import java.util.List;
+
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection
-public record CourseDTO(long id, String name, HoleDTO hole) {
+public record CourseDTO(Long id, String name, List<HoleDTO> hole) {
 }

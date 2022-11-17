@@ -7,6 +7,8 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 
 import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,14 @@ public class CourseResource {
   @GET
   @Path("/{id}")
   public Response getCourse(@PathParam("id") long id) {
-    return Response.noContent().build();
+    return service.findOne(id)
+        .map(Response::ok)
+        .orElseGet(() -> notFound(id))
+        .build();
+  }
+
+  private static ResponseBuilder notFound(long id) {
+    String errorMsg = "Could not find course with id " + id;
+    return Response.status(Status.NOT_FOUND).entity(errorMsg);
   }
 }

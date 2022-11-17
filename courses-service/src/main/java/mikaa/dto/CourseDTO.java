@@ -6,7 +6,7 @@ import io.quarkus.runtime.annotations.RegisterForReflection;
 import mikaa.course.CourseEntity;
 
 @RegisterForReflection
-public record CourseDTO(Long id, String name, List<HoleDTO> hole) {
+public record CourseDTO(Long id, String name, List<HoleDTO> holes) {
 
   public CourseDTO(CourseEntity entity) {
     this(entity.id, entity.name, holes(entity));

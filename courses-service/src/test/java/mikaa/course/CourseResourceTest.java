@@ -8,11 +8,13 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import mikaa.hole.HoleEntity;
 
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.CoreMatchers.is;
 import static io.restassured.RestAssured.given;
 
 import java.util.List;
+import java.util.Optional;
 
 @QuarkusTest
 class CourseResourceTest {
@@ -21,15 +23,8 @@ class CourseResourceTest {
 
   @Test
   void should_get_all_courses() {
-    PanacheMock.mock(CourseEntity.class);
-
-    List<HoleEntity> holes = List.of(
-        new HoleEntity(1, 3, 80),
-        new HoleEntity(2, 4, 120));
-
-    List<PanacheEntityBase> courses = List.of(new CourseEntity(1, "DG Course", holes));
-
-    when(CourseEntity.listAll()).thenReturn(courses);
+    var course = courseMock();
+    when(CourseEntity.listAll()).thenReturn(List.of(course));
 
     given()
         .when()
@@ -42,5 +37,44 @@ class CourseResourceTest {
             "[0].name", is("DG Course"),
             "[0].holes", is(2),
             "[0].par", is(7));
+  }
+
+  @Test
+  void should_get_course_by_id() {
+    var course = courseMock();
+    when(CourseEntity.findByIdOptional(anyLong())).thenReturn(Optional.of(course));
+
+    given()
+        .when()
+        .get(ENDPOINT + "/1")
+        .then()
+        .statusCode(200)
+        .contentType(ContentType.JSON)
+        .body(
+            "id", is(1),
+            "name", is("DG Course"),
+            "holes.size()", is(2));
+  }
+
+  @Test
+  void get_returns_404() {
+    PanacheMock.mock(CourseEntity.class);
+    when(CourseEntity.findByIdOptional(anyLong())).thenReturn(Optional.empty());
+
+    given()
+        .when()
+        .get(ENDPOINT + "/1")
+        .then()
+        .statusCode(404);
+  }
+
+  private static PanacheEntityBase courseMock() {
+    PanacheMock.mock(CourseEntity.class);
+
+    List<HoleEntity> holes = List.of(
+        new HoleEntity(1, 1, 3, 80),
+        new HoleEntity(2, 2, 4, 120));
+
+    return new CourseEntity(1, "DG Course", holes);
   }
 }

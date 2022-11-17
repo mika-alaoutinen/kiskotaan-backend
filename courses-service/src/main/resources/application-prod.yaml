@@ -1,8 +1,13 @@
-greeting:
-  message: "hello"
-
-# Don't configure DB connection and let Quarkus dev mode handle it
+# A "production" profile that uses an existing Postgres DB.
 quarkus:
+  datasource:
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/course_db
+    username: admin
+    password: admin
+  hibernate-orm:
+    validate-in-dev-mode: true
+
   http:
     port: 8082
     root-path: /api

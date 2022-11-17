@@ -5,11 +5,11 @@ import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Liveness;
 
 @Liveness
-public class MyLivenessCheck implements HealthCheck {
+class MyLivenessCheck implements HealthCheck {
 
     @Override
     public HealthCheckResponse call() {
-        return HealthCheckResponse.up("alive");
+        return HealthCheckResponse.up("UP");
     }
 
 }

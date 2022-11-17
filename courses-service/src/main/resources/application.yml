@@ -1,6 +1,3 @@
-greeting:
-  message: "hello"
-
 # Don't configure DB connection and let Quarkus dev mode handle it
 quarkus:
   http:

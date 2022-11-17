@@ -38,4 +38,18 @@ public class HoleEntity extends PanacheEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   public CourseEntity course;
 
+  public HoleEntity(int holeNumber, int par, int distance) {
+    this.holeNumber = holeNumber;
+    this.par = par;
+    this.distance = distance;
+  }
+
+  // For tests
+  public HoleEntity(long id, int holeNumber, int par, int distance) {
+    this.id = id;
+    this.holeNumber = holeNumber;
+    this.par = par;
+    this.distance = distance;
+  }
+
 }

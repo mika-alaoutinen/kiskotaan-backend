@@ -1,11 +1,11 @@
-package mikaa;
+package mikaa.infra;
 
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;
 import org.eclipse.microprofile.health.Liveness;
 
 @Liveness
-class MyLivenessCheck implements HealthCheck {
+class LivenessCheck implements HealthCheck {
 
     @Override
     public HealthCheckResponse call() {

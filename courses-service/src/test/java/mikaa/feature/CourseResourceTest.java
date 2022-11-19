@@ -1,4 +1,4 @@
-package mikaa.course;
+package mikaa.feature;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import mikaa.dto.NewCourseDTO;
 import mikaa.dto.NewHoleDTO;
-import mikaa.hole.HoleEntity;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;

@@ -1,7 +1,7 @@
 package mikaa.dto;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import mikaa.course.CourseEntity;
+import mikaa.feature.CourseEntity;
 
 @RegisterForReflection
 public record CourseSummaryDTO(long id, String name, int holes, int par) {

@@ -1,4 +1,4 @@
-package mikaa.hole;
+package mikaa.feature;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +11,6 @@ import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import mikaa.course.CourseEntity;
 import mikaa.dto.HoleDTO;
 import mikaa.dto.NewHoleDTO;
 

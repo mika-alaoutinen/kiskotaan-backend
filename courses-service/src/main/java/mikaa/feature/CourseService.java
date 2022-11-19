@@ -1,4 +1,4 @@
-package mikaa.course;
+package mikaa.feature;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,6 @@ import javax.enterprise.context.ApplicationScoped;
 import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseSummaryDTO;
 import mikaa.dto.NewCourseDTO;
-import mikaa.hole.HoleEntity;
 
 @ApplicationScoped
 class CourseService {

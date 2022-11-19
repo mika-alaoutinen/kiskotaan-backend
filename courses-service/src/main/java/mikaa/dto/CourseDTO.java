@@ -3,7 +3,7 @@ package mikaa.dto;
 import java.util.List;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
-import mikaa.course.CourseEntity;
+import mikaa.feature.CourseEntity;
 
 @RegisterForReflection
 public record CourseDTO(Long id, String name, List<HoleDTO> holes) {

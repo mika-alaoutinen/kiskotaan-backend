@@ -1,7 +1,5 @@
 package mikaa.infra;
 
-import java.time.LocalDateTime;
-
 import javax.ws.rs.core.Response;
 
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
@@ -15,16 +13,15 @@ class GlobalErrorHandler {
 
   @ServerExceptionMapper(NotFoundException.class)
   Response handleNotFound(NotFoundException ex) {
-    log.info("Resource not found " + ex.getMessage());
+    String msg = ex.getMessage();
+    String path = ex.getPath();
 
-    var body = new ErrorBody(
-        LocalDateTime.now(),
-        404,
-        "Not Found",
-        ex.getMessage(),
-        "path");
+    log.info(msg);
 
-    return Response.status(404).entity(body).build();
+    return Response
+        .status(404)
+        .entity(new ErrorBody(404, "Not Found", msg, path))
+        .build();
   }
 
 }

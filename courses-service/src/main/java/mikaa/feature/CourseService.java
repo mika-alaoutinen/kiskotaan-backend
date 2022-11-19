@@ -13,25 +13,30 @@ import mikaa.dto.NewCourseDTO;
 @ApplicationScoped
 @RequiredArgsConstructor
 class CourseService {
-  
+
   private final CourseRepository repository;
 
   List<CourseSummaryDTO> findAll() {
     return repository.listAll()
         .stream()
-        .map(CourseSummaryDTO::new)
+        .map(CourseMapper::courseSummary)
         .toList();
   }
 
   Optional<CourseDTO> findOne(long id) {
-    return repository.findByIdOptional(id).map(CourseDTO::new);
+    return repository.findByIdOptional(id).map(CourseMapper::course);
   }
 
   CourseDTO add(NewCourseDTO newCourse) {
     CourseEntity entity = new CourseEntity(newCourse.name());
-    newCourse.holes().stream().map(HoleEntity::new).forEach(entity::addHole);
+
+    newCourse.holes()
+        .stream()
+        .map(HoleMapper::entity)
+        .forEach(entity::addHole);
+
     repository.persist(entity);
-    return new CourseDTO(entity);
+    return CourseMapper.course(entity);
   }
 
   Optional<String> updateCourseName(long id, String name) {

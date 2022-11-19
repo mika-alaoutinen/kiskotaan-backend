@@ -29,7 +29,7 @@ class CourseEntity {
 
   @Id
   @GeneratedValue
-  private long id;
+  private Long id;
 
   @NotBlank(message = "Course name is required")
   @Size(min = 3, max = 40, message = "Course name must be 3-40 chars long")
@@ -40,9 +40,8 @@ class CourseEntity {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
   private List<HoleEntity> holes = new ArrayList<>();
 
-  CourseEntity(String name) {
-    this.name = name;
-    this.holes = new ArrayList<>();
+  static CourseEntity fromName(String name) {
+    return new CourseEntity(null, name, new ArrayList<>());
   }
 
   void addHole(HoleEntity hole) {

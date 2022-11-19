@@ -10,7 +10,7 @@ interface HoleMapper {
   }
 
   static HoleEntity entity(NewHoleDTO newHole) {
-    return new HoleEntity(newHole.number(), newHole.par(), newHole.distance());
+    return HoleEntity.from(newHole.number(), newHole.par(), newHole.distance());
   }
 
 }

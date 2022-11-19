@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -17,13 +18,14 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ToString
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "hole")
 class HoleEntity {
 
   @Id
   @GeneratedValue
-  private long id;
+  private Long id;
 
   @Min(1)
   @Max(30)
@@ -42,17 +44,8 @@ class HoleEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private CourseEntity course;
 
-  HoleEntity(int holeNumber, int par, int distance) {
-    this.holeNumber = holeNumber;
-    this.par = par;
-    this.distance = distance;
-  }
-
-  HoleEntity(long id, int holeNumber, int par, int distance) {
-    this.id = id;
-    this.holeNumber = holeNumber;
-    this.par = par;
-    this.distance = distance;
+  static HoleEntity from(int holeNumber, int par, int distance) {
+    return new HoleEntity(null, holeNumber, par, distance, null);
   }
 
 }

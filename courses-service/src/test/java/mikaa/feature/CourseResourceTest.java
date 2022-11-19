@@ -88,9 +88,9 @@ class CourseResourceTest {
 
   private static CourseEntity courseMock() {
     List<HoleEntity> holes = List.of(
-        new HoleEntity(1, 1, 3, 80),
-        new HoleEntity(2, 2, 4, 120));
+        new HoleEntity(1L, 1, 3, 80, null),
+        new HoleEntity(2L, 2, 4, 120, null));
 
-    return new CourseEntity(1, "DG Course", holes);
+    return new CourseEntity(1L, "DG Course", holes);
   }
 }

@@ -28,7 +28,7 @@ class CourseService {
   }
 
   CourseDTO add(NewCourseDTO newCourse) {
-    CourseEntity entity = new CourseEntity(newCourse.name());
+    CourseEntity entity = CourseEntity.fromName(newCourse.name());
 
     newCourse.holes()
         .stream()

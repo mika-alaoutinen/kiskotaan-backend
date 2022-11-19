@@ -38,4 +38,8 @@ class CourseService {
     });
   }
 
+  void delete(long id) {
+    CourseEntity.deleteById(id);
+  }
+
 }

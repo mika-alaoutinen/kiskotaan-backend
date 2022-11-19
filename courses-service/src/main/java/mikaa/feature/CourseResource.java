@@ -5,6 +5,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
@@ -56,6 +57,14 @@ public class CourseResource {
   public Response updateCourseName(@PathParam("id") long id, @NotBlank String name) {
     String updatedName = service.updateCourseName(id, name).orElseThrow(() -> notFound(id));
     return Response.ok(updatedName).build();
+  }
+
+  @DELETE
+  @Path("/{id}")
+  @Transactional
+  public Response delete(@PathParam("id") long id) {
+    service.delete(id);
+    return Response.noContent().build();
   }
 
   private static NotFoundException notFound(long id) {

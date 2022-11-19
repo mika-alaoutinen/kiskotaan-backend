@@ -1,45 +1,52 @@
 package mikaa.feature;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import lombok.RequiredArgsConstructor;
 import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseSummaryDTO;
 import mikaa.dto.NewCourseDTO;
 
 @ApplicationScoped
+@RequiredArgsConstructor
 class CourseService {
+  
+  private final CourseRepository repository;
 
   List<CourseSummaryDTO> findAll() {
-    List<CourseEntity> entities = CourseEntity.listAll();
-    return entities.stream().map(CourseSummaryDTO::new).toList();
+    return repository.listAll()
+        .stream()
+        .map(CourseSummaryDTO::new)
+        .toList();
   }
 
   Optional<CourseDTO> findOne(long id) {
-    Optional<CourseEntity> courseOpt = CourseEntity.findByIdOptional(id);
-    return courseOpt.map(CourseDTO::new);
+    return repository.findByIdOptional(id).map(CourseDTO::new);
   }
 
   CourseDTO add(NewCourseDTO newCourse) {
-    CourseEntity entity = new CourseEntity(newCourse.name(), new ArrayList<>());
+    CourseEntity entity = new CourseEntity(newCourse.name());
     newCourse.holes().stream().map(HoleEntity::new).forEach(entity::addHole);
-    entity.persist();
+    repository.persist(entity);
     return new CourseDTO(entity);
   }
 
   Optional<String> updateCourseName(long id, String name) {
-    Optional<CourseEntity> entity = CourseEntity.findByIdOptional(id);
-    return entity.map(e -> {
-      e.name = name;
-      return name;
+    var maybeCourse = repository.findByIdOptional(id);
+
+    maybeCourse.ifPresent(course -> {
+      course.setName(name);
+      repository.persist(course);
     });
+
+    return maybeCourse.map(CourseEntity::getName);
   }
 
   void delete(long id) {
-    CourseEntity.deleteById(id);
+    repository.deleteById(id);
   }
 
 }

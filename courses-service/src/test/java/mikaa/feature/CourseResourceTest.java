@@ -3,9 +3,9 @@ package mikaa.feature;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.mock.PanacheMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import mikaa.dto.NewCourseDTO;
 import mikaa.dto.NewHoleDTO;
@@ -23,10 +23,13 @@ class CourseResourceTest {
 
   private static final String ENDPOINT = "/courses";
 
+  @InjectMock
+  private CourseRepository repository;
+
   @Test
   void should_get_all_courses() {
     var course = courseMock();
-    when(CourseEntity.listAll()).thenReturn(List.of(course));
+    when(repository.listAll()).thenReturn(List.of(course));
 
     given()
         .when()
@@ -44,7 +47,7 @@ class CourseResourceTest {
   @Test
   void should_get_course_by_id() {
     var course = courseMock();
-    when(CourseEntity.findByIdOptional(anyLong())).thenReturn(Optional.of(course));
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(course));
 
     given()
         .when()
@@ -60,8 +63,7 @@ class CourseResourceTest {
 
   @Test
   void get_returns_404() {
-    PanacheMock.mock(CourseEntity.class);
-    when(CourseEntity.findByIdOptional(anyLong())).thenReturn(Optional.empty());
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
 
     given()
         .when()
@@ -73,8 +75,6 @@ class CourseResourceTest {
   @Disabled("Cannot get PanacheMock to work")
   @Test
   void should_add_new_course() {
-    PanacheMock.mock(CourseEntity.class);
-
     var holes = List.of(new NewHoleDTO(1, 3, 85));
     var newCourse = new NewCourseDTO("New Course", holes);
 
@@ -89,7 +89,7 @@ class CourseResourceTest {
         .body("name", is("New Course"));
   }
 
-  private static PanacheEntityBase courseMock() {
+  private static CourseEntity courseMock() {
     PanacheMock.mock(CourseEntity.class);
 
     List<HoleEntity> holes = List.of(

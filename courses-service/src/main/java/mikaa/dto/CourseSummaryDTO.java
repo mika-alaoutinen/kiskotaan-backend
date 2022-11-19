@@ -8,17 +8,17 @@ public record CourseSummaryDTO(long id, String name, int holes, int par) {
 
   public CourseSummaryDTO(CourseEntity entity) {
     this(
-        entity.id,
-        entity.name,
+        entity.getId(),
+        entity.getName(),
         courseHoleCount(entity),
         coursePar(entity));
   }
 
   private static int courseHoleCount(CourseEntity entity) {
-    return entity.holes.size();
+    return entity.getHoles().size();
   }
 
   private static int coursePar(CourseEntity entity) {
-    return entity.holes.stream().mapToInt(h -> h.par).sum();
+    return entity.getHoles().stream().mapToInt(h -> h.par).sum();
   }
 }

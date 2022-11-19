@@ -47,12 +47,12 @@ public class CourseEntity {
 
   public void addHole(HoleEntity hole) {
     holes.add(hole);
-    hole.course = this;
+    hole.setCourse(this);
   }
 
   public void removeHole(HoleEntity hole) {
     holes.remove(hole);
-    hole.course = null;
+    hole.setCourse(null);
   }
 
 }

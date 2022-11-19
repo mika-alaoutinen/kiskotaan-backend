@@ -1,9 +1,7 @@
 package mikaa.feature;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.panache.mock.PanacheMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
@@ -72,7 +70,6 @@ class CourseResourceTest {
         .statusCode(404);
   }
 
-  @Disabled("Cannot get PanacheMock to work")
   @Test
   void should_add_new_course() {
     var holes = List.of(new NewHoleDTO(1, 3, 85));
@@ -90,8 +87,6 @@ class CourseResourceTest {
   }
 
   private static CourseEntity courseMock() {
-    PanacheMock.mock(CourseEntity.class);
-
     List<HoleEntity> holes = List.of(
         new HoleEntity(1, 1, 3, 80),
         new HoleEntity(2, 2, 4, 120));

@@ -7,11 +7,10 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.Response.Status;
 
 import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
+import mikaa.errors.NotFoundException;
 
 @ApplicationScoped
 @Blocking
@@ -30,14 +29,13 @@ public class CourseResource {
   @GET
   @Path("/{id}")
   public Response getCourse(@PathParam("id") long id) {
-    return service.findOne(id)
-        .map(Response::ok)
-        .orElseGet(() -> notFound(id))
-        .build();
+    var course = service.findOne(id).orElseThrow(() -> notFound(id));
+    return Response.ok(course).build();
   }
 
-  private static ResponseBuilder notFound(long id) {
-    String errorMsg = "Could not find course with id " + id;
-    return Response.status(Status.NOT_FOUND).entity(errorMsg);
+  private static NotFoundException notFound(long id) {
+    String msg = "Could not find course with id " + id;
+    String path = "/courses/" + id;
+    return new NotFoundException(msg, path);
   }
 }

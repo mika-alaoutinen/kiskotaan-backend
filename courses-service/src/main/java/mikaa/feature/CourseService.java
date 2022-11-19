@@ -30,4 +30,12 @@ class CourseService {
     return new CourseDTO(entity);
   }
 
+  Optional<String> updateCourseName(long id, String name) {
+    Optional<CourseEntity> entity = CourseEntity.findByIdOptional(id);
+    return entity.map(e -> {
+      e.name = name;
+      return name;
+    });
+  }
+
 }

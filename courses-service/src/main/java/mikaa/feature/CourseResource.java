@@ -3,8 +3,10 @@ package mikaa.feature;
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -45,6 +47,15 @@ public class CourseResource {
   public Response addCourse(@Valid NewCourseDTO newCourse) {
     var savedCourse = service.add(newCourse);
     return Response.status(Status.CREATED).entity(savedCourse).build();
+  }
+
+  @PATCH
+  @Path("/{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Transactional
+  public Response updateCourseName(@PathParam("id") long id, @NotBlank String name) {
+    String updatedName = service.updateCourseName(id, name).orElseThrow(() -> notFound(id));
+    return Response.ok(updatedName).build();
   }
 
   private static NotFoundException notFound(long id) {

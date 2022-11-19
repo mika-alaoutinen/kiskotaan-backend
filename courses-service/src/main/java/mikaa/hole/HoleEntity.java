@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import mikaa.course.CourseEntity;
 import mikaa.dto.HoleDTO;
+import mikaa.dto.NewHoleDTO;
 
 @EqualsAndHashCode(callSuper = false)
 @ToString
@@ -45,6 +46,11 @@ public class HoleEntity extends PanacheEntity {
 
   public HoleEntity(HoleDTO hole) {
     this(hole.number(), hole.par(), hole.distance());
+    this.id = hole.id();
+  }
+
+  public HoleEntity(NewHoleDTO newHole) {
+    this(newHole.number(), newHole.par(), newHole.distance());
   }
 
   // For tests

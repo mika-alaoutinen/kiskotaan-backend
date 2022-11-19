@@ -1,11 +1,14 @@
 package mikaa.course;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.panache.mock.PanacheMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
+import mikaa.dto.NewCourseDTO;
+import mikaa.dto.NewHoleDTO;
 import mikaa.hole.HoleEntity;
 
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -66,6 +69,25 @@ class CourseResourceTest {
         .get(ENDPOINT + "/1")
         .then()
         .statusCode(404);
+  }
+
+  @Disabled("Cannot get PanacheMock to work")
+  @Test
+  void should_add_new_course() {
+    PanacheMock.mock(CourseEntity.class);
+
+    var holes = List.of(new NewHoleDTO(1, 3, 85));
+    var newCourse = new NewCourseDTO("New Course", holes);
+
+    given()
+        .when()
+        .contentType(ContentType.JSON)
+        .body(newCourse)
+        .post(ENDPOINT)
+        .then()
+        .statusCode(201)
+        .contentType(ContentType.JSON)
+        .body("name", is("New Course"));
   }
 
   private static PanacheEntityBase courseMock() {

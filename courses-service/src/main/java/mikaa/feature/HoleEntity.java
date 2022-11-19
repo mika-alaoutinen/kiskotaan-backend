@@ -19,7 +19,7 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @Entity(name = "hole")
-public class HoleEntity {
+class HoleEntity {
 
   @Id
   @GeneratedValue
@@ -42,13 +42,13 @@ public class HoleEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private CourseEntity course;
 
-  public HoleEntity(int holeNumber, int par, int distance) {
+  HoleEntity(int holeNumber, int par, int distance) {
     this.holeNumber = holeNumber;
     this.par = par;
     this.distance = distance;
   }
 
-  public HoleEntity(long id, int holeNumber, int par, int distance) {
+  HoleEntity(long id, int holeNumber, int par, int distance) {
     this.id = id;
     this.holeNumber = holeNumber;
     this.par = par;

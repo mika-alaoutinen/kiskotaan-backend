@@ -25,7 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "course")
-public class CourseEntity {
+class CourseEntity {
 
   @Id
   @GeneratedValue
@@ -45,12 +45,12 @@ public class CourseEntity {
     this.holes = new ArrayList<>();
   }
 
-  public void addHole(HoleEntity hole) {
+  void addHole(HoleEntity hole) {
     holes.add(hole);
     hole.setCourse(this);
   }
 
-  public void removeHole(HoleEntity hole) {
+  void removeHole(HoleEntity hole) {
     holes.remove(hole);
     hole.setCourse(null);
   }

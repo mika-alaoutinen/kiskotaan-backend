@@ -1,10 +1,12 @@
-# Don't configure DB connection and let Quarkus dev mode handle it
+# A "production" profile that uses an existing Postgres DB.
 quarkus:
-  # https://stackoverflow.com/questions/74470327/how-can-i-set-hibernate-orm-database-generation-and-create-schemas-in-applicatio
+  datasource:
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/course_db
+    username: admin
+    password: admin
   hibernate-orm:
-    database:
-      generation:
-        ~: drop-and-create
+    validate-in-dev-mode: true
 
   http:
     port: 8082

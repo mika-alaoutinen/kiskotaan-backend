@@ -1,19 +1,45 @@
 package mikaa.feature;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-import javax.inject.Singleton;
+import javax.enterprise.context.ApplicationScoped;
 
-@Singleton
+import mikaa.dto.CourseDTO;
+import mikaa.dto.CourseSummaryDTO;
+import mikaa.dto.NewCourseDTO;
+
+@ApplicationScoped
 class CourseService {
 
-  List<CourseSummary> findAll() {
+  List<CourseSummaryDTO> findAll() {
     List<CourseEntity> entities = CourseEntity.listAll();
-    return entities.stream().map(CourseService::toSummary).toList();
+    return entities.stream().map(CourseSummaryDTO::new).toList();
   }
 
-  private static CourseSummary toSummary(CourseEntity entity) {
-    var coursePar = entity.holes.stream().mapToInt(h -> h.par).sum();
-    return new CourseSummary(entity.id, entity.name, entity.holes.size(), coursePar);
+  Optional<CourseDTO> findOne(long id) {
+    Optional<CourseEntity> courseOpt = CourseEntity.findByIdOptional(id);
+    return courseOpt.map(CourseDTO::new);
   }
+
+  CourseDTO add(NewCourseDTO newCourse) {
+    CourseEntity entity = new CourseEntity(newCourse.name(), new ArrayList<>());
+    newCourse.holes().stream().map(HoleEntity::new).forEach(entity::addHole);
+    entity.persist();
+    return new CourseDTO(entity);
+  }
+
+  Optional<String> updateCourseName(long id, String name) {
+    Optional<CourseEntity> entity = CourseEntity.findByIdOptional(id);
+    return entity.map(e -> {
+      e.name = name;
+      return name;
+    });
+  }
+
+  void delete(long id) {
+    CourseEntity.deleteById(id);
+  }
+
 }

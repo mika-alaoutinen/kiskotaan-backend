@@ -34,6 +34,13 @@ public class CourseEntity extends PanacheEntity {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
   public List<HoleEntity> holes = new ArrayList<>();
 
+  // For tests
+  CourseEntity(long id, String name, List<HoleEntity> holes) {
+    this.id = id;
+    this.name = name;
+    this.holes = holes;
+  }
+
   public void addHole(HoleEntity hole) {
     holes.add(hole);
     hole.course = this;

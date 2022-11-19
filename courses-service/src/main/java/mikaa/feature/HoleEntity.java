@@ -7,17 +7,15 @@ import javax.persistence.ManyToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import mikaa.dto.HoleDTO;
+import mikaa.dto.NewHoleDTO;
 
 @EqualsAndHashCode(callSuper = false)
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "hole")
 public class HoleEntity extends PanacheEntity {
@@ -36,8 +34,30 @@ public class HoleEntity extends PanacheEntity {
   @Column
   public int distance;
 
-  @JsonIgnore
   @ManyToOne(fetch = FetchType.LAZY)
   public CourseEntity course;
+
+  public HoleEntity(int holeNumber, int par, int distance) {
+    this.holeNumber = holeNumber;
+    this.par = par;
+    this.distance = distance;
+  }
+
+  public HoleEntity(HoleDTO hole) {
+    this(hole.number(), hole.par(), hole.distance());
+    this.id = hole.id();
+  }
+
+  public HoleEntity(NewHoleDTO newHole) {
+    this(newHole.number(), newHole.par(), newHole.distance());
+  }
+
+  // For tests
+  public HoleEntity(long id, int holeNumber, int par, int distance) {
+    this.id = id;
+    this.holeNumber = holeNumber;
+    this.par = par;
+    this.distance = distance;
+  }
 
 }

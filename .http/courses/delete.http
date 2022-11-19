@@ -1,0 +1,4 @@
+@url = http://localhost:8082/api/courses
+
+### delete course
+DELETE {{url}}/1 HTTP/1.1

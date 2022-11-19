@@ -8,7 +8,6 @@ import javax.enterprise.context.ApplicationScoped;
 
 import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseSummaryDTO;
-import mikaa.dto.HoleDTO;
 import mikaa.dto.NewCourseDTO;
 import mikaa.hole.HoleEntity;
 
@@ -27,13 +26,9 @@ class CourseService {
 
   CourseDTO add(NewCourseDTO newCourse) {
     CourseEntity entity = new CourseEntity(newCourse.name(), new ArrayList<>());
-    newCourse.holes().stream().map(CourseService::from).forEach(entity::addHole);
+    newCourse.holes().stream().map(HoleEntity::new).forEach(entity::addHole);
     entity.persist();
     return new CourseDTO(entity);
-  }
-
-  private static HoleEntity from(HoleDTO dto) {
-    return new HoleEntity(dto.number(), dto.par(), dto.distance());
   }
 
 }

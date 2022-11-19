@@ -8,15 +8,14 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import mikaa.course.CourseEntity;
+import mikaa.dto.HoleDTO;
 
 @EqualsAndHashCode(callSuper = false)
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "hole")
 public class HoleEntity extends PanacheEntity {
@@ -42,6 +41,10 @@ public class HoleEntity extends PanacheEntity {
     this.holeNumber = holeNumber;
     this.par = par;
     this.distance = distance;
+  }
+
+  public HoleEntity(HoleDTO hole) {
+    this(hole.number(), hole.par(), hole.distance());
   }
 
   // For tests

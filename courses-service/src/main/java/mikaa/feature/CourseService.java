@@ -48,7 +48,7 @@ class CourseService {
       repository.persist(course);
     });
 
-    return maybeCourse.map(CourseEntity::getName).map(CourseNameDTO::new);
+    return maybeCourse.map(CourseMapper::courseName);
   }
 
   void delete(long id) {

@@ -40,7 +40,7 @@ class PlayersController implements PlayersApi {
     return service.findOne(id)
         .map(PlayersController::toDto)
         .map(ResponseEntity::ok)
-        .orElseThrow(() -> PlayersController.notFound(id));
+        .orElseThrow(() -> notFound(id));
   }
 
   @Override
@@ -56,7 +56,7 @@ class PlayersController implements PlayersApi {
     return service.update(id, edited)
         .map(PlayersController::toDto)
         .map(ResponseEntity::ok)
-        .orElseThrow(() -> PlayersController.notFound(id));
+        .orElseThrow(() -> notFound(id));
   }
 
   private static PlayerDTO toDto(PlayerEntity player) {

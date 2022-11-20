@@ -1,45 +1,58 @@
 package mikaa.feature;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 
+import lombok.RequiredArgsConstructor;
 import mikaa.dto.CourseDTO;
+import mikaa.dto.CourseNameDTO;
 import mikaa.dto.CourseSummaryDTO;
 import mikaa.dto.NewCourseDTO;
 
 @ApplicationScoped
+@RequiredArgsConstructor
 class CourseService {
 
+  private final CourseRepository repository;
+
   List<CourseSummaryDTO> findAll() {
-    List<CourseEntity> entities = CourseEntity.listAll();
-    return entities.stream().map(CourseSummaryDTO::new).toList();
+    return repository.listAll()
+        .stream()
+        .map(CourseMapper::courseSummary)
+        .toList();
   }
 
   Optional<CourseDTO> findOne(long id) {
-    Optional<CourseEntity> courseOpt = CourseEntity.findByIdOptional(id);
-    return courseOpt.map(CourseDTO::new);
+    return repository.findByIdOptional(id).map(CourseMapper::course);
   }
 
   CourseDTO add(NewCourseDTO newCourse) {
-    CourseEntity entity = new CourseEntity(newCourse.name(), new ArrayList<>());
-    newCourse.holes().stream().map(HoleEntity::new).forEach(entity::addHole);
-    entity.persist();
-    return new CourseDTO(entity);
+    CourseEntity entity = CourseEntity.fromName(newCourse.name());
+
+    newCourse.holes()
+        .stream()
+        .map(HoleMapper::entity)
+        .forEach(entity::addHole);
+
+    repository.persist(entity);
+    return CourseMapper.course(entity);
   }
 
-  Optional<String> updateCourseName(long id, String name) {
-    Optional<CourseEntity> entity = CourseEntity.findByIdOptional(id);
-    return entity.map(e -> {
-      e.name = name;
-      return name;
+  Optional<CourseNameDTO> updateCourseName(long id, String name) {
+    var maybeCourse = repository.findByIdOptional(id);
+
+    maybeCourse.ifPresent(course -> {
+      course.setName(name);
+      repository.persist(course);
     });
+
+    return maybeCourse.map(CourseEntity::getName).map(CourseNameDTO::new);
   }
 
   void delete(long id) {
-    CourseEntity.deleteById(id);
+    repository.deleteById(id);
   }
 
 }

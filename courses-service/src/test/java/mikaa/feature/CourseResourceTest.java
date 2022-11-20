@@ -1,18 +1,23 @@
 package mikaa.feature;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-import io.quarkus.panache.mock.PanacheMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
+import io.restassured.response.ValidatableResponse;
+import mikaa.dto.CourseNameDTO;
 import mikaa.dto.NewCourseDTO;
 import mikaa.dto.NewHoleDTO;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static io.restassured.RestAssured.given;
 
 import java.util.List;
@@ -23,10 +28,13 @@ class CourseResourceTest {
 
   private static final String ENDPOINT = "/courses";
 
+  @InjectMock
+  private CourseRepository repository;
+
   @Test
   void should_get_all_courses() {
     var course = courseMock();
-    when(CourseEntity.listAll()).thenReturn(List.of(course));
+    when(repository.listAll()).thenReturn(List.of(course));
 
     given()
         .when()
@@ -44,7 +52,7 @@ class CourseResourceTest {
   @Test
   void should_get_course_by_id() {
     var course = courseMock();
-    when(CourseEntity.findByIdOptional(anyLong())).thenReturn(Optional.of(course));
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(course));
 
     given()
         .when()
@@ -60,42 +68,125 @@ class CourseResourceTest {
 
   @Test
   void get_returns_404() {
-    PanacheMock.mock(CourseEntity.class);
-    when(CourseEntity.findByIdOptional(anyLong())).thenReturn(Optional.empty());
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
 
-    given()
+    var response = given()
         .when()
         .get(ENDPOINT + "/1")
-        .then()
-        .statusCode(404);
+        .then();
+
+    assertNotFoundResponse(response, 1);
   }
 
-  @Disabled("Cannot get PanacheMock to work")
   @Test
   void should_add_new_course() {
-    PanacheMock.mock(CourseEntity.class);
-
     var holes = List.of(new NewHoleDTO(1, 3, 85));
     var newCourse = new NewCourseDTO("New Course", holes);
 
     given()
-        .when()
         .contentType(ContentType.JSON)
         .body(newCourse)
+        .when()
         .post(ENDPOINT)
         .then()
         .statusCode(201)
         .contentType(ContentType.JSON)
-        .body("name", is("New Course"));
+        .body(
+            "name", is("New Course"),
+            "holes.size()", is(1));
+
+    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
   }
 
-  private static PanacheEntityBase courseMock() {
-    PanacheMock.mock(CourseEntity.class);
+  @Test
+  void should_reject_invalid_new_course() {
+    var invalidCourse = new NewCourseDTO("New Course", List.of());
 
-    List<HoleEntity> holes = List.of(
-        new HoleEntity(1, 1, 3, 80),
-        new HoleEntity(2, 2, 4, 120));
+    given()
+        .contentType(ContentType.JSON)
+        .body(invalidCourse)
+        .when()
+        .post(ENDPOINT)
+        .then()
+        .statusCode(400);
 
-    return new CourseEntity(1, "DG Course", holes);
+    verify(repository, never()).persist(any(CourseEntity.class));
   }
+
+  @Test
+  void should_update_course_name() {
+    when(repository.findByIdOptional(anyLong()))
+        .thenReturn(Optional.of(new CourseEntity(1L, "Course 1", List.of())));
+
+    given()
+        .contentType(ContentType.JSON)
+        .body(new CourseNameDTO("Updated name"))
+        .when()
+        .patch(ENDPOINT + "/1")
+        .then()
+        .statusCode(200)
+        .contentType(ContentType.JSON)
+        .body("name", is("Updated name"));
+
+    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
+  }
+
+  @Test
+  void should_reject_invalid_course_name() {
+    given()
+        .contentType(ContentType.JSON)
+        .body(new CourseNameDTO(""))
+        .when()
+        .patch(ENDPOINT + "/1")
+        .then()
+        .statusCode(400);
+
+    verify(repository, never()).persist(any(CourseEntity.class));
+  }
+
+  @Test
+  void patch_returns_404() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
+
+    var response = given()
+        .contentType(ContentType.JSON)
+        .body(new CourseNameDTO("Updated name"))
+        .when()
+        .patch(ENDPOINT + "/1")
+        .then();
+    
+    assertNotFoundResponse(response, 1);
+    verify(repository, never()).persist(any(CourseEntity.class));
+  }
+
+  @Test
+  void should_delete_course() {
+    given()
+        .when()
+        .delete(ENDPOINT + "/1")
+        .then()
+        .statusCode(204);
+
+    verify(repository, atLeastOnce()).deleteById(1L);
+  }
+
+  private static void assertNotFoundResponse(ValidatableResponse response, int id) {
+    response.statusCode(404)
+        .contentType(ContentType.JSON)
+        .body(
+            "timestamp", notNullValue(),
+            "status", is(404),
+            "error", is("Not Found"),
+            "message", is("Could not find course with id " + id),
+            "path", is("/courses/" + id));
+  }
+
+  private static CourseEntity courseMock() {
+    var holes = List.of(
+        new HoleEntity(1L, 1, 3, 80, null),
+        new HoleEntity(2L, 2, 4, 120, null));
+
+    return new CourseEntity(1L, "DG Course", holes);
+  }
+
 }

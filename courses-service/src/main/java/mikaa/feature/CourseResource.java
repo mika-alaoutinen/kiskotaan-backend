@@ -1,9 +1,10 @@
 package mikaa.feature;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,12 +14,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.jboss.resteasy.reactive.RestResponse;
 
 import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
+import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseNameDTO;
+import mikaa.dto.CourseSummaryDTO;
 import mikaa.dto.NewCourseDTO;
 import mikaa.errors.NotFoundException;
 
@@ -32,41 +36,41 @@ public class CourseResource {
   private final CourseService service;
 
   @GET
-  public Response getCourses() {
-    return Response.ok(service.findAll()).build();
+  public RestResponse<List<CourseSummaryDTO>> getCourses() {
+    return RestResponse.ok(service.findAll());
   }
 
   @GET
   @Path("/{id}")
-  public Response getCourse(@PathParam("id") long id) {
+  public RestResponse<CourseDTO> getCourse(@PathParam("id") long id) {
     var course = service.findOne(id).orElseThrow(() -> notFound(id));
-    return Response.ok(course).build();
+    return RestResponse.ok(course);
   }
 
   @POST
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
-  public Response addCourse(@Valid NewCourseDTO newCourse) {
+  public RestResponse<CourseDTO> addCourse(@Valid NewCourseDTO newCourse) {
     var savedCourse = service.add(newCourse);
-    return Response.status(Status.CREATED).entity(savedCourse).build();
+    return RestResponse.status(Status.CREATED, savedCourse);
   }
 
   @PATCH
   @Path("/{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
-  public Response updateCourseName(@PathParam("id") long id, @Valid CourseNameDTO courseName) {
+  public RestResponse<CourseNameDTO> updateCourseName(@PathParam("id") long id, @Valid CourseNameDTO courseName) {
     var updatedName = service.updateCourseName(id, courseName.name())
         .orElseThrow(() -> notFound(id));
-    return Response.ok(updatedName).build();
+    return RestResponse.ok(updatedName);
   }
 
   @DELETE
   @Path("/{id}")
   @Transactional
-  public Response delete(@PathParam("id") long id) {
+  public RestResponse<Void> delete(@PathParam("id") long id) {
     service.delete(id);
-    return Response.noContent().build();
+    return RestResponse.noContent();
   }
 
   private static NotFoundException notFound(long id) {

@@ -178,7 +178,7 @@ class CourseResourceTest {
             "status", is(404),
             "error", is("Not Found"),
             "message", is("Could not find course with id " + id),
-            "path", is("/courses/" + id));
+            "path", is("/api/courses/" + id));
   }
 
   private static CourseEntity courseMock() {

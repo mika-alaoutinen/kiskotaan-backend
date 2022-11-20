@@ -10,10 +10,11 @@ public record ValidationErrorBody(
     LocalDateTime timestamp,
     int status,
     String error,
+    String path,
     List<ValidationError> validationErrors) {
 
-  public ValidationErrorBody(List<ValidationError> validationErrors) {
-    this(LocalDateTime.now(), 400, "Bad Request", validationErrors);
+  public ValidationErrorBody(String path, List<ValidationError> validationErrors) {
+    this(LocalDateTime.now(), 400, "Bad Request", path, validationErrors);
   }
 
 }

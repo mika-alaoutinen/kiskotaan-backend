@@ -75,8 +75,7 @@ public class CourseResource {
 
   private static NotFoundException notFound(long id) {
     String msg = "Could not find course with id " + id;
-    String path = "/courses/" + id;
-    return new NotFoundException(msg, path);
+    return new NotFoundException(msg);
   }
 
 }

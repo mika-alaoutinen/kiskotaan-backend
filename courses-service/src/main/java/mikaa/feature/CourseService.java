@@ -7,6 +7,7 @@ import javax.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.dto.CourseDTO;
+import mikaa.dto.CourseNameDTO;
 import mikaa.dto.CourseSummaryDTO;
 import mikaa.dto.NewCourseDTO;
 
@@ -39,7 +40,7 @@ class CourseService {
     return CourseMapper.course(entity);
   }
 
-  Optional<String> updateCourseName(long id, String name) {
+  Optional<CourseNameDTO> updateCourseName(long id, String name) {
     var maybeCourse = repository.findByIdOptional(id);
 
     maybeCourse.ifPresent(course -> {
@@ -47,7 +48,7 @@ class CourseService {
       repository.persist(course);
     });
 
-    return maybeCourse.map(CourseEntity::getName);
+    return maybeCourse.map(CourseEntity::getName).map(CourseNameDTO::new);
   }
 
   void delete(long id) {

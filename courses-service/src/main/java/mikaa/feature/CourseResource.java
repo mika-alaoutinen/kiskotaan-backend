@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response.Status;
 
 import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
+import mikaa.dto.CourseNameDTO;
 import mikaa.dto.NewCourseDTO;
 import mikaa.errors.NotFoundException;
 
@@ -54,8 +55,9 @@ public class CourseResource {
   @Path("/{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
-  public Response updateCourseName(@PathParam("id") long id, @NotBlank String name) {
-    String updatedName = service.updateCourseName(id, name).orElseThrow(() -> notFound(id));
+  public Response updateCourseName(@PathParam("id") long id, @Valid CourseNameDTO courseName) {
+    var updatedName = service.updateCourseName(id, courseName.name())
+        .orElseThrow(() -> notFound(id));
     return Response.ok(updatedName).build();
   }
 

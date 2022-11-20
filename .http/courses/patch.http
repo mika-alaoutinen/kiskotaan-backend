@@ -4,4 +4,6 @@
 PATCH {{url}}/2 HTTP/1.1
 Content-Type: application/json
 
-Updated name
+{
+  "name": "Updated name"
+}

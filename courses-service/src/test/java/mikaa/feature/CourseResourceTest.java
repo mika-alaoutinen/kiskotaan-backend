@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
+import io.restassured.response.ValidatableResponse;
 import mikaa.dto.CourseNameDTO;
 import mikaa.dto.NewCourseDTO;
 import mikaa.dto.NewHoleDTO;
@@ -12,6 +13,7 @@ import mikaa.dto.NewHoleDTO;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.CoreMatchers.is;
@@ -68,18 +70,12 @@ class CourseResourceTest {
   void get_returns_404() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
 
-    given()
+    var response = given()
         .when()
         .get(ENDPOINT + "/1")
-        .then()
-        .statusCode(404)
-        .contentType(ContentType.JSON)
-        .body(
-          "timestamp", notNullValue(),
-          "status", is(404),
-          "error", is("Not Found"),
-          "message", is("Could not find course with id 1"),
-          "path", is("/courses/1"));
+        .then();
+
+    assertNotFoundResponse(response, 1);
   }
 
   @Test
@@ -103,6 +99,21 @@ class CourseResourceTest {
   }
 
   @Test
+  void should_reject_invalid_new_course() {
+    var invalidCourse = new NewCourseDTO("New Course", List.of());
+
+    given()
+        .contentType(ContentType.JSON)
+        .body(invalidCourse)
+        .when()
+        .post(ENDPOINT)
+        .then()
+        .statusCode(400);
+
+    verify(repository, never()).persist(any(CourseEntity.class));
+  }
+
+  @Test
   void should_update_course_name() {
     when(repository.findByIdOptional(anyLong()))
         .thenReturn(Optional.of(new CourseEntity(1L, "Course 1", List.of())));
@@ -116,6 +127,58 @@ class CourseResourceTest {
         .statusCode(200)
         .contentType(ContentType.JSON)
         .body("name", is("Updated name"));
+
+    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
+  }
+
+  @Test
+  void should_reject_invalid_course_name() {
+    given()
+        .contentType(ContentType.JSON)
+        .body(new CourseNameDTO(""))
+        .when()
+        .patch(ENDPOINT + "/1")
+        .then()
+        .statusCode(400);
+
+    verify(repository, never()).persist(any(CourseEntity.class));
+  }
+
+  @Test
+  void patch_returns_404() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
+
+    var response = given()
+        .contentType(ContentType.JSON)
+        .body(new CourseNameDTO("Updated name"))
+        .when()
+        .patch(ENDPOINT + "/1")
+        .then();
+    
+    assertNotFoundResponse(response, 1);
+    verify(repository, never()).persist(any(CourseEntity.class));
+  }
+
+  @Test
+  void should_delete_course() {
+    given()
+        .when()
+        .delete(ENDPOINT + "/1")
+        .then()
+        .statusCode(204);
+
+    verify(repository, atLeastOnce()).deleteById(1L);
+  }
+
+  private static void assertNotFoundResponse(ValidatableResponse response, int id) {
+    response.statusCode(404)
+        .contentType(ContentType.JSON)
+        .body(
+            "timestamp", notNullValue(),
+            "status", is(404),
+            "error", is("Not Found"),
+            "message", is("Could not find course with id " + id),
+            "path", is("/courses/" + id));
   }
 
   private static CourseEntity courseMock() {

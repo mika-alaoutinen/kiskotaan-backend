@@ -3,6 +3,7 @@ package mikaa.feature;
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,6 +29,7 @@ public class HoleResource {
 
   @PUT
   @Path("/{id}")
+  @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
   public RestResponse<HoleDTO> updateHole(@PathParam("id") Long id, @Valid NewHoleDTO hole) {
     var updatedHole = service.update(id, hole).orElseThrow(() -> notFound(id));

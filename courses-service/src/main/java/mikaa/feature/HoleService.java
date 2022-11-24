@@ -20,32 +20,29 @@ class HoleService {
   }
 
   Optional<HoleDTO> add(long courseId, NewHoleDTO newHole) {
-    return courseRepository.findByIdOptional(courseId)
-        .map(course -> {
-          HoleEntity hole = HoleMapper.entity(newHole);
-          hole.setCourse(course);
-          return hole;
-        }).map(hole -> {
-          repository.persist(hole);
-          return hole;
-        }).map(HoleMapper::dto);
+    return courseRepository.findByIdOptional(courseId).map(course -> {
+      HoleEntity hole = HoleMapper.entity(newHole);
+      hole.setCourse(course);
+      return hole;
+    }).map(this::save);
   }
 
   Optional<HoleDTO> update(long id, NewHoleDTO updatedHole) {
-    return repository.findByIdOptional(id)
-        .map(hole -> {
-          hole.setDistance(updatedHole.distance());
-          hole.setHoleNumber(updatedHole.number());
-          hole.setPar(updatedHole.par());
-          return hole;
-        }).map(hole -> {
-          repository.persist(hole);
-          return hole;
-        }).map(HoleMapper::dto);
+    return repository.findByIdOptional(id).map(hole -> {
+      hole.setDistance(updatedHole.distance());
+      hole.setHoleNumber(updatedHole.number());
+      hole.setPar(updatedHole.par());
+      return hole;
+    }).map(this::save);
   }
 
   void delete(long id) {
     repository.deleteById(id);
+  }
+
+  private HoleDTO save(HoleEntity hole) {
+    repository.persist(hole);
+    return HoleMapper.dto(hole);
   }
 
 }

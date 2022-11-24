@@ -12,10 +12,23 @@ import mikaa.dto.NewHoleDTO;
 @RequiredArgsConstructor
 class HoleService {
 
+  private final CourseRepository courseRepository;
   private final HoleRepository repository;
 
   Optional<HoleDTO> findOne(long id) {
     return repository.findByIdOptional(id).map(HoleMapper::dto);
+  }
+
+  Optional<HoleDTO> add(long courseId, NewHoleDTO newHole) {
+    return courseRepository.findByIdOptional(courseId)
+        .map(course -> {
+          HoleEntity hole = HoleMapper.entity(newHole);
+          course.addHole(hole);
+          return hole;
+        }).map(hole -> {
+          repository.persist(hole);
+          return hole;
+        }).map(HoleMapper::dto);
   }
 
   Optional<HoleDTO> update(long id, NewHoleDTO updatedHole) {

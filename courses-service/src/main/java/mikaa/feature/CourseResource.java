@@ -23,7 +23,9 @@ import lombok.RequiredArgsConstructor;
 import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseNameDTO;
 import mikaa.dto.CourseSummaryDTO;
+import mikaa.dto.HoleDTO;
 import mikaa.dto.NewCourseDTO;
+import mikaa.dto.NewHoleDTO;
 import mikaa.errors.NotFoundException;
 
 @ApplicationScoped
@@ -34,6 +36,7 @@ import mikaa.errors.NotFoundException;
 public class CourseResource {
 
   private final CourseService service;
+  private final HoleService holeService;
 
   @GET
   public RestResponse<List<CourseSummaryDTO>> getCourses() {
@@ -54,6 +57,16 @@ public class CourseResource {
   public RestResponse<CourseDTO> addCourse(@Valid NewCourseDTO newCourse) {
     var savedCourse = service.add(newCourse);
     return RestResponse.status(Status.CREATED, savedCourse);
+  }
+
+  @POST
+  @Path("/{id}/holes")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Transactional
+  public RestResponse<HoleDTO> addHole(@PathParam("id") Long id, @Valid NewHoleDTO newHole) {
+    return holeService.add(id, newHole)
+        .map(RestResponse::ok)
+        .orElseThrow(() -> notFound(id));
   }
 
   @PATCH

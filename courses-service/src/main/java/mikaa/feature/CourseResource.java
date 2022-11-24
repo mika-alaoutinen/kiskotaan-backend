@@ -57,7 +57,7 @@ public class CourseResource {
   }
 
   @PATCH
-  @Path("/{id}")
+  @Path("/{id}/name")
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
   public RestResponse<CourseNameDTO> updateCourseName(@PathParam("id") long id, @Valid CourseNameDTO courseName) {

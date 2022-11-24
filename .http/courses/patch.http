@@ -1,7 +1,7 @@
 @url = http://localhost:8082/api/courses
 
 ### Update course name
-PATCH {{url}}/2 HTTP/1.1
+PATCH {{url}}/2/name HTTP/1.1
 Content-Type: application/json
 
 {

@@ -43,8 +43,9 @@ public class CourseResource {
   @GET
   @Path("/{id}")
   public RestResponse<CourseDTO> getCourse(@PathParam("id") long id) {
-    var course = service.findOne(id).orElseThrow(() -> notFound(id));
-    return RestResponse.ok(course);
+    return service.findOne(id)
+        .map(RestResponse::ok)
+        .orElseThrow(() -> notFound(id));
   }
 
   @POST
@@ -60,9 +61,9 @@ public class CourseResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
   public RestResponse<CourseNameDTO> updateCourseName(@PathParam("id") long id, @Valid CourseNameDTO courseName) {
-    var updatedName = service.updateCourseName(id, courseName.name())
+    return service.updateCourseName(id, courseName.name())
+        .map(RestResponse::ok)
         .orElseThrow(() -> notFound(id));
-    return RestResponse.ok(updatedName);
   }
 
   @DELETE

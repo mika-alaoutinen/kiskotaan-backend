@@ -23,7 +23,7 @@ class HoleService {
     return courseRepository.findByIdOptional(courseId)
         .map(course -> {
           HoleEntity hole = HoleMapper.entity(newHole);
-          course.addHole(hole);
+          hole.setCourse(course);
           return hole;
         }).map(hole -> {
           repository.persist(hole);

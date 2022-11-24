@@ -64,13 +64,12 @@ public class CourseResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
   public RestResponse<HoleDTO> addHole(@PathParam("id") Long id, @Valid NewHoleDTO newHole) {
-    return holeService.add(id, newHole)
-        .map(RestResponse::ok)
-        .orElseThrow(() -> notFound(id));
+    var savedHole = holeService.add(id, newHole).orElseThrow(() -> notFound(id));
+    return RestResponse.status(Status.CREATED, savedHole);
   }
 
   @PATCH
-  @Path("/{id}/name")
+  @Path("/{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
   public RestResponse<CourseNameDTO> updateCourseName(@PathParam("id") long id, @Valid CourseNameDTO courseName) {

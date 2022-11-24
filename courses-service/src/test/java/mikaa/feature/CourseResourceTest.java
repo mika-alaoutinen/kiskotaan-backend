@@ -17,6 +17,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static io.restassured.RestAssured.given;
 
@@ -30,6 +31,9 @@ class CourseResourceTest {
 
   @InjectMock
   private CourseRepository repository;
+
+  @InjectMock
+  private HoleRepository holeRepository;
 
   @Test
   void should_get_all_courses() {
@@ -108,9 +112,59 @@ class CourseResourceTest {
         .when()
         .post(ENDPOINT)
         .then()
-        .statusCode(400);
+        .statusCode(400)
+        .contentType(ContentType.JSON);
 
     verify(repository, never()).persist(any(CourseEntity.class));
+  }
+
+  @Test
+  void should_add_hole_for_a_course() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
+    
+    given()
+        .contentType(ContentType.JSON)
+        .body(new NewHoleDTO(2, 3, 90))
+        .when()
+        .post(ENDPOINT + "/1/holes")
+        .then()
+        .statusCode(201)
+        .contentType(ContentType.JSON)
+        .body(
+          "number", is(2),
+          "par", is(3),
+          "distance", is(90));
+
+    verify(holeRepository, atLeastOnce()).persist(any(HoleEntity.class));
+  }
+
+  @Test
+  void should_reject_invalid_hole() {
+    given()
+        .contentType(ContentType.JSON)
+        .body(new NewHoleDTO(0, 3, 120))
+        .when()
+        .post(ENDPOINT + "/1/holes")
+        .then()
+        .statusCode(400)
+        .contentType(ContentType.JSON);
+
+    verify(holeRepository, never()).persist(any(HoleEntity.class));
+  }
+
+  @Test
+  void add_hole_returns_404_if_course_not_found() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
+
+    var response = given()
+        .contentType(ContentType.JSON)
+        .body(new NewHoleDTO(2, 3, 120))
+        .when()
+        .post(ENDPOINT + "/1/holes")
+        .then();
+
+    assertNotFoundResponse(response, 1);
+    verify(holeRepository, never()).persist(any(HoleEntity.class));
   }
 
   @Test
@@ -139,7 +193,8 @@ class CourseResourceTest {
         .when()
         .patch(ENDPOINT + "/1")
         .then()
-        .statusCode(400);
+        .statusCode(400)
+        .contentType(ContentType.JSON);
 
     verify(repository, never()).persist(any(CourseEntity.class));
   }
@@ -178,7 +233,7 @@ class CourseResourceTest {
             "status", is(404),
             "error", is("Not Found"),
             "message", is("Could not find course with id " + id),
-            "path", is("/api/courses/" + id));
+            "path", containsString("/api/courses/" + id));
   }
 
   private static CourseEntity courseMock() {

@@ -54,6 +54,7 @@ class HoleResourceTest {
         .when()
         .get(ENDPOINT + "/1")
         .then();
+        
     assertNotFoundResponse(response, 1);
   }
 

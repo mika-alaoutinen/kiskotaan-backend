@@ -40,8 +40,9 @@ public class HoleResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
   public RestResponse<HoleDTO> updateHole(@PathParam("id") Long id, @Valid NewHoleDTO hole) {
-    var updatedHole = service.update(id, hole).orElseThrow(() -> notFound(id));
-    return RestResponse.ok(updatedHole);
+    return service.update(id, hole)
+        .map(RestResponse::ok)
+        .orElseThrow(() -> notFound(id));
   }
 
   @DELETE

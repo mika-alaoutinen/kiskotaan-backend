@@ -30,9 +30,36 @@ class HoleResourceTest {
   private HoleRepository repository;
 
   @Test
+  void should_find_hole_by_id() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
+    
+    given()
+        .when()
+        .get(ENDPOINT + "/1")
+        .then()
+        .statusCode(200)
+        .contentType(ContentType.JSON)
+        .body(
+            "id", is(1),
+            "number", is(1),
+            "par", is(3),
+            "distance", is(90));
+  }
+
+  @Test
+  void get_returns_404() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
+    
+    var response = given()
+        .when()
+        .get(ENDPOINT + "/1")
+        .then();
+    assertNotFoundResponse(response, 1);
+  }
+
+  @Test
   void should_update_hole() {
-    HoleEntity hole = new HoleEntity(1L, 1, 3, 90, null);
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(hole));
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
 
     given()
         .contentType(ContentType.JSON)
@@ -75,7 +102,7 @@ class HoleResourceTest {
         .put(ENDPOINT + "/1")
         .then();
 
-        assertNotFoundResponse(response, 1);
+    assertNotFoundResponse(response, 1);
     verify(repository, never()).persist(any(HoleEntity.class));
   }
 
@@ -88,6 +115,10 @@ class HoleResourceTest {
             "error", is("Not Found"),
             "message", is("Could not find hole with id " + id),
             "path", is("/api/holes/" + id));
+  }
+
+  private static HoleEntity holeMock() {
+    return new HoleEntity(1L, 1, 3, 90, null);
   }
 
 }

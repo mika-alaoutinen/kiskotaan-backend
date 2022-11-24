@@ -14,6 +14,10 @@ class HoleService {
 
   private final HoleRepository repository;
 
+  Optional<HoleDTO> findOne(long id) {
+    return repository.findByIdOptional(id).map(HoleMapper::dto);
+  }
+
   Optional<HoleDTO> update(long id, NewHoleDTO updatedHole) {
     return repository.findByIdOptional(id)
         .map(hole -> {

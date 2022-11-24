@@ -31,4 +31,8 @@ class HoleService {
         }).map(HoleMapper::dto);
   }
 
+  void delete(long id) {
+    repository.deleteById(id);
+  }
+
 }

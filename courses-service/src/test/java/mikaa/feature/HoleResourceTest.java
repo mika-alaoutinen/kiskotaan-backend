@@ -106,6 +106,17 @@ class HoleResourceTest {
     verify(repository, never()).persist(any(HoleEntity.class));
   }
 
+  @Test
+  void should_delete_hole() {
+    given()
+        .when()
+        .delete(ENDPOINT + "/1")
+        .then()
+        .statusCode(204);
+
+    verify(repository, atLeastOnce()).deleteById(1L);
+  }
+
   private static void assertNotFoundResponse(ValidatableResponse response, int id) {
     response.statusCode(404)
         .contentType(ContentType.JSON)

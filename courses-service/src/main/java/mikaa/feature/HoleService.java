@@ -1,0 +1,30 @@
+package mikaa.feature;
+
+import java.util.Optional;
+
+import javax.enterprise.context.ApplicationScoped;
+
+import lombok.RequiredArgsConstructor;
+import mikaa.dto.HoleDTO;
+import mikaa.dto.NewHoleDTO;
+
+@ApplicationScoped
+@RequiredArgsConstructor
+class HoleService {
+
+  private final HoleRepository repository;
+
+  Optional<HoleDTO> update(long id, NewHoleDTO updatedHole) {
+    return repository.findByIdOptional(id)
+        .map(hole -> {
+          hole.setDistance(updatedHole.distance());
+          hole.setHoleNumber(updatedHole.number());
+          hole.setPar(updatedHole.par());
+          return hole;
+        }).map(hole -> {
+          repository.persist(hole);
+          return hole;
+        }).map(HoleMapper::dto);
+  }
+
+}

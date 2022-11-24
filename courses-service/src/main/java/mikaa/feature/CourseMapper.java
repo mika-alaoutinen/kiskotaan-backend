@@ -14,7 +14,7 @@ interface CourseMapper {
   }
 
   private static List<HoleDTO> holes(CourseEntity entity) {
-    return entity.getHoles().stream().map(HoleMapper::hole).toList();
+    return entity.getHoles().stream().map(HoleMapper::dto).toList();
   }
 
   static CourseSummaryDTO courseSummary(CourseEntity entity) {

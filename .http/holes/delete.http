@@ -1,0 +1,3 @@
+@url = http://localhost:8082/api/holes
+
+DELETE {{url}}/3 HTTP/1.1

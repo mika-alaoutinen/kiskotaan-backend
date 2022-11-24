@@ -5,8 +5,8 @@ import mikaa.dto.NewHoleDTO;
 
 interface HoleMapper {
 
-  static HoleDTO hole(HoleEntity entity) {
-    return new HoleDTO(entity.getId(), entity.getPar(), entity.getPar(), entity.getDistance());
+  static HoleDTO dto(HoleEntity entity) {
+    return new HoleDTO(entity.getId(), entity.getHoleNumber(), entity.getPar(), entity.getDistance());
   }
 
   static HoleEntity entity(NewHoleDTO newHole) {

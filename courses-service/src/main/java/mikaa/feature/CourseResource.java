@@ -23,7 +23,9 @@ import lombok.RequiredArgsConstructor;
 import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseNameDTO;
 import mikaa.dto.CourseSummaryDTO;
+import mikaa.dto.HoleDTO;
 import mikaa.dto.NewCourseDTO;
+import mikaa.dto.NewHoleDTO;
 import mikaa.errors.NotFoundException;
 
 @ApplicationScoped
@@ -34,6 +36,7 @@ import mikaa.errors.NotFoundException;
 public class CourseResource {
 
   private final CourseService service;
+  private final HoleService holeService;
 
   @GET
   public RestResponse<List<CourseSummaryDTO>> getCourses() {
@@ -43,8 +46,9 @@ public class CourseResource {
   @GET
   @Path("/{id}")
   public RestResponse<CourseDTO> getCourse(@PathParam("id") long id) {
-    var course = service.findOne(id).orElseThrow(() -> notFound(id));
-    return RestResponse.ok(course);
+    return service.findOne(id)
+        .map(RestResponse::ok)
+        .orElseThrow(() -> notFound(id));
   }
 
   @POST
@@ -55,14 +59,23 @@ public class CourseResource {
     return RestResponse.status(Status.CREATED, savedCourse);
   }
 
+  @POST
+  @Path("/{id}/holes")
+  @Consumes(MediaType.APPLICATION_JSON)
+  @Transactional
+  public RestResponse<HoleDTO> addHole(@PathParam("id") Long id, @Valid NewHoleDTO newHole) {
+    var savedHole = holeService.add(id, newHole).orElseThrow(() -> notFound(id));
+    return RestResponse.status(Status.CREATED, savedHole);
+  }
+
   @PATCH
   @Path("/{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
   public RestResponse<CourseNameDTO> updateCourseName(@PathParam("id") long id, @Valid CourseNameDTO courseName) {
-    var updatedName = service.updateCourseName(id, courseName.name())
+    return service.updateCourseName(id, courseName.name())
+        .map(RestResponse::ok)
         .orElseThrow(() -> notFound(id));
-    return RestResponse.ok(updatedName);
   }
 
   @DELETE

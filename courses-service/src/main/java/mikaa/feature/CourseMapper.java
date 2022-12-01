@@ -34,7 +34,7 @@ interface CourseMapper {
   }
 
   static CourseNameDTO courseName(CourseEntity entity) {
-    return new CourseNameDTO(entity.getName());
+    return new CourseNameDTO(entity.getId(), entity.getName());
   }
 
 }

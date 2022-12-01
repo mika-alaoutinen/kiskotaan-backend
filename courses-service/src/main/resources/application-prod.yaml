@@ -12,6 +12,10 @@ quarkus:
     port: 8082
     root-path: /api
 
+kafka:
+  bootstrap:
+    servers: localhost:9092
+
 mp:
   messaging:
     outgoing:

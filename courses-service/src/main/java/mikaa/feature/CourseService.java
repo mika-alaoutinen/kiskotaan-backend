@@ -10,11 +10,14 @@ import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseNameDTO;
 import mikaa.dto.CourseSummaryDTO;
 import mikaa.dto.NewCourseDTO;
+import mikaa.events.CourseEvents;
+import mikaa.kafka.CourseProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 class CourseService {
 
+  private final CourseProducer producer;
   private final CourseRepository repository;
 
   List<CourseSummaryDTO> findAll() {
@@ -37,7 +40,11 @@ class CourseService {
         .forEach(entity::addHole);
 
     repository.persist(entity);
-    return CourseMapper.course(entity);
+
+    var savedCourse = CourseMapper.course(entity);
+    producer.send(CourseEvents.add(savedCourse));
+
+    return savedCourse;
   }
 
   Optional<CourseNameDTO> updateCourseName(long id, String name) {

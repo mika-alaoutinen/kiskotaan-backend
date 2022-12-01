@@ -1,0 +1,20 @@
+package mikaa.kafka;
+
+import javax.enterprise.context.ApplicationScoped;
+
+import org.eclipse.microprofile.reactive.messaging.Incoming;
+import org.eclipse.microprofile.reactive.messaging.Message;
+
+import lombok.extern.slf4j.Slf4j;
+import mikaa.events.CourseEvents.CourseEvent;
+
+@Slf4j
+@ApplicationScoped
+class CourseConsumer {
+
+  @Incoming("courses-in")
+  void consume(CourseEvent event) {
+    log.info("consumed event " + event);
+  }
+
+}

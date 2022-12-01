@@ -59,7 +59,13 @@ class CourseService {
   }
 
   void delete(long id) {
-    repository.deleteById(id);
+    repository.findByIdOptional(id)
+        .map(CourseMapper::course)
+        .map(CourseEvents::delete)
+        .ifPresent(event -> {
+          repository.deleteById(id);
+          producer.send(event);
+        });
   }
 
 }

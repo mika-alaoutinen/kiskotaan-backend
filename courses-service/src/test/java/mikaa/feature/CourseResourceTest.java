@@ -216,6 +216,8 @@ class CourseResourceTest {
 
   @Test
   void should_delete_course() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
+    
     given()
         .when()
         .delete(ENDPOINT + "/1")

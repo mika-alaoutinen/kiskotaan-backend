@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import javax.enterprise.inject.Any;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +26,6 @@ import mikaa.events.CourseEvents.CourseEvent;
 import mikaa.kafka.CourseProducer;
 
 @QuarkusTest
-@Transactional
 class CourseEventsTest {
 
   @Any

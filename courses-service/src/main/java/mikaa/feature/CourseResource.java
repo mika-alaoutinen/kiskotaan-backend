@@ -25,6 +25,7 @@ import mikaa.dto.CourseNameDTO;
 import mikaa.dto.CourseSummaryDTO;
 import mikaa.dto.HoleDTO;
 import mikaa.dto.NewCourseDTO;
+import mikaa.dto.NewCourseNameDTO;
 import mikaa.dto.NewHoleDTO;
 import mikaa.errors.NotFoundException;
 
@@ -72,8 +73,8 @@ public class CourseResource {
   @Path("/{id}")
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
-  public RestResponse<CourseNameDTO> updateCourseName(@PathParam("id") long id, @Valid CourseNameDTO courseName) {
-    return service.updateCourseName(id, courseName.name())
+  public RestResponse<CourseNameDTO> updateCourseName(@PathParam("id") long id, @Valid NewCourseNameDTO newName) {
+    return service.updateCourseName(id, newName.name())
         .map(RestResponse::ok)
         .orElseThrow(() -> notFound(id));
   }

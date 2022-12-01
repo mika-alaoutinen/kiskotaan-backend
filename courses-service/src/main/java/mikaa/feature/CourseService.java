@@ -10,11 +10,14 @@ import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseNameDTO;
 import mikaa.dto.CourseSummaryDTO;
 import mikaa.dto.NewCourseDTO;
+import mikaa.events.CourseEvents;
+import mikaa.kafka.CourseProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 class CourseService {
 
+  private final CourseProducer producer;
   private final CourseRepository repository;
 
   List<CourseSummaryDTO> findAll() {
@@ -37,22 +40,37 @@ class CourseService {
         .forEach(entity::addHole);
 
     repository.persist(entity);
-    return CourseMapper.course(entity);
+
+    var savedCourse = CourseMapper.course(entity);
+    producer.send(CourseEvents.add(savedCourse));
+
+    return savedCourse;
   }
 
   Optional<CourseNameDTO> updateCourseName(long id, String name) {
-    var maybeCourse = repository.findByIdOptional(id);
+    var maybeCourse = repository.findByIdOptional(id)
+        .map(course -> {
+          course.setName(name);
+          return course;
+        });
 
-    maybeCourse.ifPresent(course -> {
-      course.setName(name);
-      repository.persist(course);
-    });
+    maybeCourse.ifPresent(repository::persist);
+
+    maybeCourse.map(CourseMapper::course)
+        .map(CourseEvents::update)
+        .ifPresent(producer::send);
 
     return maybeCourse.map(CourseMapper::courseName);
   }
 
   void delete(long id) {
-    repository.deleteById(id);
+    repository.findByIdOptional(id)
+        .map(CourseMapper::course)
+        .map(CourseEvents::delete)
+        .ifPresent(event -> {
+          repository.deleteById(id);
+          producer.send(event);
+        });
   }
 
 }

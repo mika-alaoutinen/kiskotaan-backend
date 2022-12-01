@@ -4,3 +4,14 @@ quarkus:
     root-path: /api
   log:
     level: WARN
+
+mp:
+  messaging:
+    outgoing:
+      courses-out:
+        connector: smallrye-in-memory
+        topic: "courses"
+    incoming:
+      courses-in:
+        connector: smallrye-in-memory
+        topic: "courses"

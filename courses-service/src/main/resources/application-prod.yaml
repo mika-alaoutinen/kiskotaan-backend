@@ -12,14 +12,18 @@ quarkus:
     port: 8082
     root-path: /api
 
+kafka:
+  bootstrap:
+    servers: localhost:9092
+
 mp:
   messaging:
     outgoing:
-      words-out:
-        topic: "words"
+      courses-out:
+        topic: "courses"
     incoming:
-      words-in:
+      courses-in:
         auto:
           offset:
             reset: "earliest"
-        topic: "words"
+        topic: "courses"

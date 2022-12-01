@@ -6,8 +6,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.dto.CourseNameDTO;
 import mikaa.dto.NewCourseDTO;
+import mikaa.dto.NewCourseNameDTO;
 import mikaa.dto.NewHoleDTO;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -174,7 +174,7 @@ class CourseResourceTest {
 
     given()
         .contentType(ContentType.JSON)
-        .body(new CourseNameDTO("Updated name"))
+        .body(new NewCourseNameDTO("Updated name"))
         .when()
         .patch(ENDPOINT + "/1")
         .then()
@@ -189,7 +189,7 @@ class CourseResourceTest {
   void should_reject_invalid_course_name() {
     given()
         .contentType(ContentType.JSON)
-        .body(new CourseNameDTO(""))
+        .body(new NewCourseNameDTO(""))
         .when()
         .patch(ENDPOINT + "/1")
         .then()
@@ -205,7 +205,7 @@ class CourseResourceTest {
 
     var response = given()
         .contentType(ContentType.JSON)
-        .body(new CourseNameDTO("Updated name"))
+        .body(new NewCourseNameDTO("Updated name"))
         .when()
         .patch(ENDPOINT + "/1")
         .then();
@@ -216,6 +216,8 @@ class CourseResourceTest {
 
   @Test
   void should_delete_course() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
+    
     given()
         .when()
         .delete(ENDPOINT + "/1")

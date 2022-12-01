@@ -48,15 +48,17 @@ class CourseService {
   }
 
   Optional<CourseNameDTO> updateCourseName(long id, String name) {
-    var maybeCourse = repository.findByIdOptional(id);
+    var maybeCourse = repository.findByIdOptional(id)
+        .map(course -> {
+          course.setName(name);
+          return course;
+        });
 
-    maybeCourse.map(course -> {
-      course.setName(name);
-      return course;
-    }).ifPresent(course -> {
-      repository.persist(course);
-      producer.send(CourseEvents.update(CourseMapper.course(course)));
-    });
+    maybeCourse.ifPresent(repository::persist);
+
+    maybeCourse.map(CourseMapper::course)
+        .map(CourseEvents::update)
+        .ifPresent(producer::send);
 
     return maybeCourse.map(CourseMapper::courseName);
   }

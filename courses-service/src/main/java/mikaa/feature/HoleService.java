@@ -27,7 +27,7 @@ class HoleService {
       HoleEntity hole = HoleMapper.entity(newHole);
       course.addHole(hole);
       return hole;
-    }).map(this::save);
+    }).map(hole -> save(hole, EventType.HOLE_ADDED));
   }
 
   Optional<HoleDTO> update(long id, NewHoleDTO updatedHole) {
@@ -36,16 +36,18 @@ class HoleService {
       hole.setHoleNumber(updatedHole.number());
       hole.setPar(updatedHole.par());
       return hole;
-    }).map(this::save);
+    }).map(hole -> save(hole, EventType.HOLE_UPDATED));
   }
 
   void delete(long id) {
     repository.deleteById(id);
   }
 
-  private HoleDTO save(HoleEntity hole) {
+  private HoleDTO save(HoleEntity hole, EventType type) {
     repository.persist(hole);
     var dto = HoleMapper.dto(hole);
+    var course = CourseMapper.course(hole.getCourse());
+    producer.send(type, course);
     return dto;
   }
 

@@ -1,5 +1,5 @@
 package mikaa.kafka;
 
-public enum EventType {
+public enum CourseEventType {
   COURSE_ADDED, COURSE_DELETED, COURSE_UPDATED
 }

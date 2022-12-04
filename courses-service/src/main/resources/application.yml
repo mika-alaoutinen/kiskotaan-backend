@@ -14,6 +14,7 @@ mp:
   messaging:
     outgoing:
       courses-out:
+        merge: true
         topic: "courses"
     incoming:
       courses-in:

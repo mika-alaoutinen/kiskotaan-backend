@@ -21,6 +21,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static io.restassured.RestAssured.given;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -239,11 +240,10 @@ class CourseResourceTest {
   }
 
   private static CourseEntity courseMock() {
-    var holes = List.of(
-        new HoleEntity(1L, 1, 3, 80, null),
-        new HoleEntity(2L, 2, 4, 120, null));
-
-    return new CourseEntity(1L, "DG Course", holes);
+    var course = new CourseEntity(1L, "DG Course", new ArrayList<>());
+    course.addHole(HoleEntity.from(1, 3, 80));
+    course.addHole(HoleEntity.from(2, 4, 120));
+    return course;
   }
 
 }

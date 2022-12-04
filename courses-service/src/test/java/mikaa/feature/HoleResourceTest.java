@@ -15,6 +15,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -130,7 +131,8 @@ class HoleResourceTest {
   }
 
   private static HoleEntity holeMock() {
-    return new HoleEntity(1L, 1, 3, 90, null);
+    var course = new CourseEntity(1L, "DG Course", List.of());
+    return new HoleEntity(1L, 1, 3, 90, course);
   }
 
 }

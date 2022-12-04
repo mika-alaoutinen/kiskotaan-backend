@@ -110,6 +110,8 @@ class HoleResourceTest {
 
   @Test
   void should_delete_hole() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
+
     given()
         .when()
         .delete(ENDPOINT + "/1")

@@ -40,7 +40,13 @@ class HoleService {
   }
 
   void delete(long id) {
-    repository.deleteById(id);
+    repository.findByIdOptional(id)
+        .map(HoleEntity::getCourse)
+        .map(CourseMapper::course)
+        .ifPresent(course -> {
+          repository.deleteById(id);
+          producer.send(EventType.HOLE_DELETED, course);
+        });
   }
 
   private HoleDTO save(HoleEntity hole, EventType type) {

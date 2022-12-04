@@ -22,8 +22,8 @@ import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
 import io.smallrye.reactive.messaging.providers.connectors.InMemorySink;
 import mikaa.dto.NewHoleDTO;
-import mikaa.kafka.CourseProducer;
-import mikaa.kafka.HoleEvent;
+import mikaa.kafka.CourseEvent;
+import mikaa.kafka.KafkaProducer;
 
 @QuarkusTest
 class HoleEventsTest {
@@ -33,7 +33,7 @@ class HoleEventsTest {
   private InMemoryConnector connector;
 
   @Inject
-  private CourseProducer producer;
+  private KafkaProducer producer;
 
   @InjectMock
   private CourseRepository courseRepository;
@@ -41,7 +41,7 @@ class HoleEventsTest {
   @InjectMock
   private HoleRepository repository;
 
-  private InMemorySink<HoleEvent> sink;
+  private InMemorySink<CourseEvent> sink;
   private HoleService service;
 
   @BeforeEach
@@ -68,7 +68,7 @@ class HoleEventsTest {
     assertEquals(1, sink.received().size());
     var event = sink.received().get(0).getPayload();
     assertEquals(eventName, event.type().toString());
-    assertEquals(courseId, event.hole().courseId());
+    assertEquals(courseId, event.course().id());
   }
 
   private static CourseEntity courseMock() {

@@ -7,14 +7,14 @@ import javax.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import mikaa.dto.HoleDTO;
 import mikaa.dto.NewHoleDTO;
-import mikaa.kafka.CourseProducer;
-import mikaa.kafka.HoleEventType;
+import mikaa.kafka.KafkaProducer;
+import mikaa.kafka.EventType;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 class HoleService {
 
-  private final CourseProducer producer;
+  private final KafkaProducer producer;
   private final CourseRepository courseRepository;
   private final HoleRepository repository;
 
@@ -46,7 +46,6 @@ class HoleService {
   private HoleDTO save(HoleEntity hole) {
     repository.persist(hole);
     var dto = HoleMapper.dto(hole);
-    producer.send(HoleEventType.HOLE_ADDED, dto);
     return dto;
   }
 

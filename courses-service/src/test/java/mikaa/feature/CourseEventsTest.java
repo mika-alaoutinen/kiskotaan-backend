@@ -23,7 +23,7 @@ import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
 import io.smallrye.reactive.messaging.providers.connectors.InMemorySink;
 import mikaa.dto.NewCourseDTO;
 import mikaa.kafka.CourseEvent;
-import mikaa.kafka.CourseProducer;
+import mikaa.kafka.KafkaProducer;
 
 @QuarkusTest
 class CourseEventsTest {
@@ -33,7 +33,7 @@ class CourseEventsTest {
   private InMemoryConnector connector;
 
   @Inject
-  private CourseProducer producer;
+  private KafkaProducer producer;
 
   @InjectMock
   private CourseRepository repository;

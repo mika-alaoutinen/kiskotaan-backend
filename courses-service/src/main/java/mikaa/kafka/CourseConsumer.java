@@ -5,7 +5,6 @@ import javax.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import lombok.extern.slf4j.Slf4j;
-import mikaa.events.CourseEvents.CourseEvent;
 
 @Slf4j
 @ApplicationScoped

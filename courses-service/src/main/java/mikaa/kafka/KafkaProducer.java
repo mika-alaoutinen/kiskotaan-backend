@@ -6,17 +6,18 @@ import javax.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
-import mikaa.events.CourseEvents.CourseEvent;
+import mikaa.dto.CourseDTO;
 
 @ApplicationScoped
-public class CourseProducer {
+public class KafkaProducer {
 
   @Inject
   @Channel("courses-out")
   Emitter<CourseEvent> emitter;
 
-  public void send(CourseEvent event) {
-    emitter.send(event);
+  public void send(EventType type, CourseDTO course) {
+    var acked = emitter.send(new CourseEvent(type, course));
+    acked.toCompletableFuture().join();
   }
 
 }

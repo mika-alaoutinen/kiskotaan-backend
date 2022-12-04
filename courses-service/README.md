@@ -85,3 +85,9 @@ Easily start your Reactive RESTful Web Services
 Monitor your application's health using SmallRye Health
 
 [Related guide section...](https://quarkus.io/guides/smallrye-health)
+
+## TODO list
+
+### Validation logic
+- Course names should be unique.
+- Should not be able to add a hole with duplicate number to a course.

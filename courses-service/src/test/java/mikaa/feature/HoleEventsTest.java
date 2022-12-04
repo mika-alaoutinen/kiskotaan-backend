@@ -7,7 +7,7 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import javax.enterprise.inject.Any;
@@ -21,12 +21,12 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
 import io.smallrye.reactive.messaging.providers.connectors.InMemorySink;
-import mikaa.dto.NewCourseDTO;
+import mikaa.dto.NewHoleDTO;
 import mikaa.kafka.CourseEvent;
 import mikaa.kafka.KafkaProducer;
 
 @QuarkusTest
-class CourseEventsTest {
+class HoleEventsTest {
 
   @Any
   @Inject
@@ -36,16 +36,19 @@ class CourseEventsTest {
   private KafkaProducer producer;
 
   @InjectMock
-  private CourseRepository repository;
+  private CourseRepository courseRepository;
+
+  @InjectMock
+  private HoleRepository repository;
 
   private InMemorySink<CourseEvent> sink;
-  private CourseService service;
+  private HoleService service;
 
   @BeforeEach
   void setup() {
     sink = connector.sink("courses-out");
     sink.clear();
-    service = new CourseService(producer, repository);
+    service = new HoleService(producer, courseRepository, repository);
   }
 
   @AfterEach
@@ -55,36 +58,44 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    service.add(new NewCourseDTO("New Course", List.of()));
-    assertEvent("COURSE_ADDED", "New Course");
-    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
+    when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
+    service.add(1L, new NewHoleDTO(1, 3, 100));
+    assertEvent("HOLE_ADDED", 1L);
+    verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
   @Test
-  void should_send_event_on_course_name_update() {
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
-    service.updateCourseName(1, "Updated Name");
-    assertEvent("COURSE_UPDATED", "Updated Name");
-    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
+  void should_send_event_on_update() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
+    service.update(1L, new NewHoleDTO(1, 3, 100));
+    assertEvent("HOLE_UPDATED", 1L);
+    verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
   @Test
   void should_send_event_on_delete() {
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));    
-    service.delete(1);
-    assertEvent("COURSE_DELETED", "DG Course");
-    verify(repository, atLeastOnce()).deleteById(1L);
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
+    service.delete(1L);
+    assertEvent("HOLE_DELETED", 1L);
+    verify(repository, atLeastOnce()).deleteById(anyLong());
   }
 
-  private void assertEvent(String eventName, String courseName) {
+  private void assertEvent(String eventName, Long courseId) {
     assertEquals(1, sink.received().size());
     var event = sink.received().get(0).getPayload();
     assertEquals(eventName, event.type().toString());
-    assertEquals(courseName, event.course().name());
+    assertEquals(courseId, event.course().id());
   }
 
   private static CourseEntity courseMock() {
-    return new CourseEntity(1L, "DG Course", List.of());
+    return new CourseEntity(1L, "DG Course", new ArrayList<>());
+  }
+
+  private static HoleEntity holeMock() {
+    var course = courseMock();
+    var hole = new HoleEntity(1L, 2, 3, 123, course);
+    course.addHole(hole);
+    return hole;
   }
 
 }

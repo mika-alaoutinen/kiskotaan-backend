@@ -7,11 +7,14 @@ import javax.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import mikaa.dto.HoleDTO;
 import mikaa.dto.NewHoleDTO;
+import mikaa.kafka.KafkaProducer;
+import mikaa.kafka.EventType;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 class HoleService {
 
+  private final KafkaProducer producer;
   private final CourseRepository courseRepository;
   private final HoleRepository repository;
 
@@ -22,9 +25,9 @@ class HoleService {
   Optional<HoleDTO> add(long courseId, NewHoleDTO newHole) {
     return courseRepository.findByIdOptional(courseId).map(course -> {
       HoleEntity hole = HoleMapper.entity(newHole);
-      hole.setCourse(course);
+      course.addHole(hole);
       return hole;
-    }).map(this::save);
+    }).map(hole -> save(hole, EventType.HOLE_ADDED));
   }
 
   Optional<HoleDTO> update(long id, NewHoleDTO updatedHole) {
@@ -33,16 +36,25 @@ class HoleService {
       hole.setHoleNumber(updatedHole.number());
       hole.setPar(updatedHole.par());
       return hole;
-    }).map(this::save);
+    }).map(hole -> save(hole, EventType.HOLE_UPDATED));
   }
 
   void delete(long id) {
-    repository.deleteById(id);
+    repository.findByIdOptional(id)
+        .map(HoleEntity::getCourse)
+        .map(CourseMapper::course)
+        .ifPresent(course -> {
+          repository.deleteById(id);
+          producer.send(EventType.HOLE_DELETED, course);
+        });
   }
 
-  private HoleDTO save(HoleEntity hole) {
+  private HoleDTO save(HoleEntity hole, EventType type) {
     repository.persist(hole);
-    return HoleMapper.dto(hole);
+    var dto = HoleMapper.dto(hole);
+    var course = CourseMapper.course(hole.getCourse());
+    producer.send(type, course);
+    return dto;
   }
 
 }

@@ -16,7 +16,8 @@ public class KafkaProducer {
   Emitter<CourseEvent> emitter;
 
   public void send(EventType type, CourseDTO course) {
-    emitter.send(new CourseEvent(type, course));
+    var acked = emitter.send(new CourseEvent(type, course));
+    acked.toCompletableFuture().join();
   }
 
 }

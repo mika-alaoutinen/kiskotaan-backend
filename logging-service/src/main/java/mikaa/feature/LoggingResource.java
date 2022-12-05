@@ -17,7 +17,7 @@ public class LoggingResource {
   @GET
   @Produces(MediaType.TEXT_PLAIN)
   public String logLevel() {
-    return service.test();
+    return service.getLogSettings();
   }
 
 }

@@ -10,6 +10,6 @@ interface LoggingConfig {
     boolean enabled();
 
     @WithDefault("warn")
-    String level();
+    LogLevel level();
 
 }

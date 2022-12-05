@@ -11,8 +11,9 @@ class LogService {
     this.config = config;
   }
 
-  String test() {
-    return "logs enabled " + config.enabled() + ", log level " + config.level();
+  String getLogSettings() {
+    String logsEnabled = config.enabled() ? "Logging enabled" : "Logging disabled";
+    return String.format("%s, log level %s", logsEnabled, config.level());
   }
 
 }

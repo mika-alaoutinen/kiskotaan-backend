@@ -1,5 +1,7 @@
-greeting:
-  message: "hello"
+quarkus:
+  http:
+    port: 8085
+    root-path: /api
 
 log:
   enabled: true
@@ -7,12 +9,14 @@ log:
 
 mp:
   messaging:
-    outgoing:
-      words-out:
-        topic: "words"
     incoming:
-      words-in:
+      courses-in:
         auto:
           offset:
             reset: "earliest"
-        topic: "words"
+        topic: "courses"
+      players-in:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "players"

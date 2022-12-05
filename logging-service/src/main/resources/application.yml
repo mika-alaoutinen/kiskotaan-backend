@@ -1,5 +1,10 @@
 greeting:
   message: "hello"
+
+log:
+  enabled: true
+  level: info
+
 mp:
   messaging:
     outgoing:

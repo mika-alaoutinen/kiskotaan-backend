@@ -20,7 +20,6 @@ services:
     ports:
       - 9092:9092
 
-  # Courses service
   postgres:
     container_name: postgres
     environment:
@@ -55,6 +54,25 @@ services:
       - kafka
     ports:
       - 8082:8082
+
+  players_service:
+    container_name: players_service
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      kafka_url: kafka:9092
+      db_url: jdbc:postgresql://postgres:5432/testdb
+      db_username: admin
+      db_password: admin
+    expose:
+      - 8081
+    image: mikaalaoutinen/players-service
+    networks:
+      - db
+      - kafka
+    ports:
+      - 8081:8081
 
 networks:
   db:

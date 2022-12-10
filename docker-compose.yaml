@@ -43,10 +43,10 @@ services:
       - kafka
       - postgres
     environment:
-      db_url: jdbc:postgresql://postgres:5432/testdb
-      db_username: admin
-      db_password: admin
       KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/testdb
+      QUARKUS_DATASOURCE_USERNAME: admin
+      QUARKUS_DATASOURCE_PASSWORD: admin
     expose:
       - 8082
     image: mikaalaoutinen/courses-service

@@ -5,6 +5,7 @@ quarkus:
     database:
       generation:
         ~: drop-and-create
+    validate-in-dev-mode: true
 
   http:
     port: 8082

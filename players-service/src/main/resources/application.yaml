@@ -6,16 +6,16 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/player_db
-    username: admin
-    password: admin
+    url: ${db_url:jdbc:postgresql://localhost:5432/player_db}
+    username: ${db_username:admin}
+    password: ${db_password:admin}
 
   jpa:
     hibernate:
       ddl-auto: none
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${kafka_url:localhost:9092}
     consumer:
       client-id: players-consumer
       group-id: players-group

@@ -1,0 +1,85 @@
+version: '3.8'
+
+services:
+  # Kafka message broker using KRaft instead of ZooKeeper for simpler development experience.
+  kafka:
+    container_name: kafka
+    environment:
+      ALLOW_PLAINTEXT_LISTENER: yes
+      KAFKA_BROKER_ID: 1
+      KAFKA_ENABLE_KRAFT: yes
+      KAFKA_CFG_PROCESS_ROLES: broker,controller
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9091,CONTROLLER://:9093,LOCALHOST://:9092
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,LOCALHOST:PLAINTEXT
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091,LOCALHOST://localhost:9092
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@127.0.0.1:9093
+    image: bitnami/kafka
+    networks:
+      - kafka
+    ports:
+      - 9091:9091
+      - 9092:9092
+
+  postgres:
+    container_name: postgres
+    environment:
+      POSTGRES_DATABASE: testdb
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    image: postgres
+    networks:
+      - db
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    volumes:
+      - pg_data:/var/lib/postgres
+      - ./db:/docker-entrypoint-initdb.d
+
+  courses_service:
+    container_name: courses_service
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9091
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/testdb
+      QUARKUS_DATASOURCE_USERNAME: admin
+      QUARKUS_DATASOURCE_PASSWORD: admin
+    expose:
+      - 8082
+    image: mikaalaoutinen/courses-service
+    networks:
+      - db
+      - kafka
+    ports:
+      - 8082:8082
+
+  players_service:
+    container_name: players_service
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      kafka_url: kafka:9091
+      db_url: jdbc:postgresql://postgres:5432/testdb
+      db_username: admin
+      db_password: admin
+    expose:
+      - 8081
+    image: mikaalaoutinen/players-service
+    networks:
+      - db
+      - kafka
+    ports:
+      - 8081:8081
+
+networks:
+  db:
+    driver: bridge
+  kafka:
+    driver: bridge
+
+volumes:
+  pg_data:

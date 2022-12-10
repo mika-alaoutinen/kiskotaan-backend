@@ -31,13 +31,11 @@ services:
     networks:
       - db
     ports:
-      - "5432:5432"
+      - 5432:5432
     restart: unless-stopped
     volumes:
       - pg_data:/var/lib/postgres
-      - ./scripts/courses.csv:/data/courses.csv
-      - ./scripts/holes.csv:/data/holes.csv
-      - ./scripts:/docker-entrypoint-initdb.d
+      - ./db:/docker-entrypoint-initdb.d
 
   courses_service:
     container_name: courses_service
@@ -45,9 +43,11 @@ services:
       - kafka
       - postgres
     environment:
-      db_url: jdbc:postgresql://localhost:5432/testdb
+      db_url: jdbc:postgresql://postgres:5432/testdb
       db_username: admin
       db_password: admin
+    expose:
+      - 8082
     image: mikaalaoutinen/courses-service
     networks:
       - db

@@ -1,9 +1,3 @@
--- Create a new database where the data from CSV will be saved
-CREATE DATABASE testdb WITH
-    ENCODING = 'UTF-8'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1;
-
 \c testdb;
 
 CREATE TABLE IF NOT EXISTS course (
@@ -21,6 +15,3 @@ CREATE TABLE IF NOT EXISTS hole (
         FOREIGN KEY(course_id)
             REFERENCES course(id)
 );
-
--- Hibernate sequence starts from 37 because holes.csv test data has 36 entries
--- CREATE SEQUENCE hibernate_sequence START 37;

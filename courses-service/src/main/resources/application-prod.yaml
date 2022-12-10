@@ -2,9 +2,9 @@
 quarkus:
   datasource:
     jdbc:
-      url: jdbc:postgresql://localhost:5432/course_db
-    username: admin
-    password: admin
+      url: ${db_url:jdbc:postgresql://localhost:5432/course_db}
+    username: ${db_username:admin}
+    password: ${db_password:admin}
   hibernate-orm:
     validate-in-dev-mode: true
 

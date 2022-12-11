@@ -1,5 +1,5 @@
 # Kiskotaan backend
-`Kiskotaan` backend is a disc golf scorekeeping application that consists of several microservices. The services are written in `Java` using `Quarkus` and `Spring Boot` frameworks.
+Kiskotaan backend is a disc golf scorekeeping application that consists of several microservices. The services are written in Java using Quarkus and Spring Boot frameworks.
 
 ## Microservices
 - `Players` service on port `8081`.
@@ -35,3 +35,12 @@ The database is loaded up with a few rows of test data per service. See the sql 
 
 ## Calling the services
 Folder `.http` has http-files that contain example payloads that can be used to test the different services.
+
+## TODO list
+
+### Courses service validation logic
+- [ ] Course names should be unique.
+- [ ] Should not be able to add a hole with duplicate number to a course.
+
+### Players service validation logic
+- [ ] Player names should be unique.

@@ -1,5 +1,4 @@
--- Create a new database where the data from CSV will be saved
-CREATE DATABASE course_db WITH
+CREATE DATABASE IF NOT EXISTS course_db WITH
     ENCODING = 'UTF-8'
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;

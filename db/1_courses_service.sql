@@ -24,8 +24,8 @@ CREATE TABLE IF NOT EXISTS hole (
 
 -- Insert test data
 INSERT INTO course (id, name) VALUES
-    (1, Frisbeegolf Laajis),
-    (2, Keljonkankaan frisbeegolfrata);
+    (1, 'Frisbeegolf Laajis'),
+    (2, 'Keljonkankaan frisbeegolfrata');
 
 INSERT INTO hole (id, course_id, hole_number, par, distance) VALUES
     (1, 1, 1, 3, 107),
@@ -46,7 +46,6 @@ INSERT INTO hole (id, course_id, hole_number, par, distance) VALUES
     (16, 1, 16, 3, 107),
     (17, 1, 17, 4, 183),
     (18, 1, 18, 3, 164),
-
     (19, 2, 1, 3, 92),
     (20, 2, 2, 4, 158),
     (21, 2, 3, 3, 95),

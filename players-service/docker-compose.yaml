@@ -29,7 +29,7 @@ services:
       - "5432:5432"
     restart: unless-stopped
     volumes:
-      - pg_data:/var/lib/postgres
+      - ./pg_data:/var/lib/postgresql/data
       - ./scripts/data.csv:/data/data.csv
       - ./scripts:/docker-entrypoint-initdb.d
 

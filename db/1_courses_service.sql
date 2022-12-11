@@ -1,4 +1,9 @@
-\c kiskotaandb;
+CREATE DATABASE courses_db WITH
+    ENCODING = 'UTF-8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+\c courses_db;
 
 CREATE TABLE IF NOT EXISTS course (
     id          bigint PRIMARY KEY,

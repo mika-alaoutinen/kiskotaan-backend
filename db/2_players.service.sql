@@ -1,4 +1,9 @@
-\c kiskotaandb;
+CREATE DATABASE players_db WITH
+    ENCODING = 'UTF-8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+
+\c players_db;
 
 CREATE TABLE IF NOT EXISTS player (
     id          SERIAL PRIMARY KEY,

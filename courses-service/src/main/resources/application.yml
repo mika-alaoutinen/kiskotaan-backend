@@ -1,10 +1,6 @@
 # Don't configure DB connection and let Quarkus dev mode handle it
 quarkus:
-  # https://stackoverflow.com/questions/74470327/how-can-i-set-hibernate-orm-database-generation-and-create-schemas-in-applicatio
   hibernate-orm:
-    database:
-      generation:
-        ~: drop-and-create
     validate-in-dev-mode: true
 
   http:
@@ -15,10 +11,4 @@ mp:
   messaging:
     outgoing:
       courses-out:
-        topic: "courses"
-    incoming:
-      courses-in:
-        auto:
-          offset:
-            reset: "earliest"
         topic: "courses"

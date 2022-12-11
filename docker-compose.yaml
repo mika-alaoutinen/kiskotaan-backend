@@ -16,7 +16,7 @@ services:
       KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@127.0.0.1:9093
     image: bitnami/kafka
     networks:
-      - kafka
+      - kafka_network
     ports:
       - 9091:9091
       - 9092:9092
@@ -24,37 +24,15 @@ services:
   postgres:
     container_name: postgres
     environment:
-      POSTGRES_DATABASE: testdb
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
     image: postgres
     networks:
-      - db
+      - postgres_network
     ports:
       - 5432:5432
-    restart: unless-stopped
     volumes:
-      - pg_data:/var/lib/postgres
       - ./db:/docker-entrypoint-initdb.d
-
-  courses_service:
-    container_name: courses_service
-    depends_on:
-      - kafka
-      - postgres
-    environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9091
-      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/testdb
-      QUARKUS_DATASOURCE_USERNAME: admin
-      QUARKUS_DATASOURCE_PASSWORD: admin
-    expose:
-      - 8082
-    image: mikaalaoutinen/courses-service
-    networks:
-      - db
-      - kafka
-    ports:
-      - 8082:8082
 
   players_service:
     container_name: players_service
@@ -63,23 +41,53 @@ services:
       - postgres
     environment:
       kafka_url: kafka:9091
-      db_url: jdbc:postgresql://postgres:5432/testdb
+      db_url: jdbc:postgresql://postgres:5432/players_db
       db_username: admin
       db_password: admin
     expose:
       - 8081
     image: mikaalaoutinen/players-service
     networks:
-      - db
-      - kafka
+      - kafka_network
+      - postgres_network
     ports:
       - 8081:8081
 
-networks:
-  db:
-    driver: bridge
-  kafka:
-    driver: bridge
+  courses_service:
+    container_name: courses_service
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9091
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/courses_db
+      QUARKUS_DATASOURCE_USERNAME: admin
+      QUARKUS_DATASOURCE_PASSWORD: admin
+    expose:
+      - 8082
+    image: mikaalaoutinen/courses-service
+    networks:
+      - kafka_network
+      - postgres_network
+    ports:
+      - 8082:8082
 
-volumes:
-  pg_data:
+  logging_service:
+    container_name: logging_service
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9091
+    expose:
+      - 8085
+    image: mikaalaoutinen/logging-service
+    networks:
+      - kafka_network
+    ports:
+      - 8085:8085
+
+networks:
+  kafka_network:
+    driver: bridge
+  postgres_network:
+    driver: bridge

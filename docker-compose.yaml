@@ -34,6 +34,25 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d
 
+  players_service:
+    container_name: players_service
+    depends_on:
+      - kafka
+      - postgres
+    environment:
+      kafka_url: kafka:9091
+      db_url: jdbc:postgresql://postgres:5432/players_db
+      db_username: admin
+      db_password: admin
+    expose:
+      - 8081
+    image: mikaalaoutinen/players-service
+    networks:
+      - kafka_network
+      - postgres_network
+    ports:
+      - 8081:8081
+
   courses_service:
     container_name: courses_service
     depends_on:
@@ -53,24 +72,19 @@ services:
     ports:
       - 8082:8082
 
-  players_service:
-    container_name: players_service
+  logging_service:
+    container_name: logging_service
     depends_on:
       - kafka
-      - postgres
     environment:
-      kafka_url: kafka:9091
-      db_url: jdbc:postgresql://postgres:5432/players_db
-      db_username: admin
-      db_password: admin
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9091
     expose:
-      - 8081
-    image: mikaalaoutinen/players-service
+      - 8085
+    image: mikaalaoutinen/logging-service
     networks:
       - kafka_network
-      - postgres_network
     ports:
-      - 8081:8081
+      - 8085:8085
 
 networks:
   kafka_network:

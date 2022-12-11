@@ -10,3 +10,9 @@ CREATE TABLE IF NOT EXISTS player (
     first_name   varchar(50) NOT NULL,
     last_name    varchar(50) NOT NULL
 );
+
+INSERT INTO player (first_name, last_name) VALUES
+    ('Pekka', 'Kana'),
+    ('Kalle', 'Kukko'),
+    ('Aku', 'Ankka'),
+    ('Iines', 'Ankka');

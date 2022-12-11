@@ -1,4 +1,4 @@
-\c testdb;
+\c kiskotaandb;
 
 CREATE TABLE IF NOT EXISTS player (
     id          SERIAL PRIMARY KEY,

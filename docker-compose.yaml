@@ -24,7 +24,7 @@ services:
   postgres:
     container_name: postgres
     environment:
-      POSTGRES_DATABASE: testdb
+      POSTGRES_DATABASE: kiskotaandb
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
     image: postgres
@@ -44,7 +44,7 @@ services:
       - postgres
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9091
-      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/testdb
+      QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/kiskotaandb
       QUARKUS_DATASOURCE_USERNAME: admin
       QUARKUS_DATASOURCE_PASSWORD: admin
     expose:
@@ -63,7 +63,7 @@ services:
       - postgres
     environment:
       kafka_url: kafka:9091
-      db_url: jdbc:postgresql://postgres:5432/testdb
+      db_url: jdbc:postgresql://postgres:5432/kiskotaandb
       db_username: admin
       db_password: admin
     expose:

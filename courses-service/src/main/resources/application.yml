@@ -16,9 +16,3 @@ mp:
     outgoing:
       courses-out:
         topic: "courses"
-    incoming:
-      courses-in:
-        auto:
-          offset:
-            reset: "earliest"
-        topic: "courses"

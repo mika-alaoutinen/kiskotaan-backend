@@ -16,16 +16,6 @@ spring:
 
   kafka:
     bootstrap-servers: ${kafka_url:localhost:9092}
-    consumer:
-      client-id: players-consumer
-      group-id: players-group
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring:
-          json:
-            trusted:
-              packages: "*"
     producer:
       client-id: players-producer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer

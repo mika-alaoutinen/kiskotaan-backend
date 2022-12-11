@@ -1,0 +1,4 @@
+@url = http://localhost:8083/api/scorecards
+
+### get all
+GET {{url}} HTTP/1.1

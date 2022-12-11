@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.infra;
 
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -8,16 +8,15 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
-class LoggingResourceTest {
+class LivenessCheckTest {
 
   @Test
-  void exposes_logging_settings_via_endpoint() {
+  void has_liveness_endpoint() {
     given()
-        .when()
-        .get("/logging")
+        .when().get("/q/health/live")
         .then()
         .statusCode(200)
-        .body(is("Logging enabled, log level info"));
+        .body("status", is("UP"));
   }
 
 }

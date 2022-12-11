@@ -4,7 +4,7 @@
 GET {{url}} HTTP/1.1
 
 ### get one course
-GET {{url}}/1 HTTP/1.1
+GET {{url}}/37 HTTP/1.1
 
 ### get course that doesn't exist
 GET {{url}}/99 HTTP/1.1

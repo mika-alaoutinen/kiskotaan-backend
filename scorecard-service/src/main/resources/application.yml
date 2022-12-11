@@ -1,1 +1,24 @@
-{}
+quarkus:
+  hibernate-orm:
+    validate-in-dev-mode: true
+
+  http:
+    port: 8083
+    root-path: /api
+
+mp:
+  messaging:
+    outgoing:
+      scorecards-out:
+        topic: "scorecards"
+    incoming:
+      courses-in:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "courses"
+      players-in:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "players"

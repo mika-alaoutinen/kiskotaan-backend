@@ -1,0 +1,13 @@
+mp:
+  messaging:
+    outgoing:
+      scorecards-out:
+        connector: smallrye-in-memory
+        topic: "scorecards"
+    incoming:
+      courses-in:
+        connector: smallrye-in-memory
+        topic: "courses"
+      players-in:
+        connector: smallrye-in-memory
+        topic: "players"

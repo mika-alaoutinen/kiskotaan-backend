@@ -89,6 +89,14 @@
       <artifactId>smallrye-reactive-messaging-in-memory</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <!-- misc -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.24</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -146,6 +154,25 @@
                 <maven.home>${maven.home}</maven.home>
               </systemPropertyVariables>
             </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>6.2.1</version>
+        <executions>
+          <execution>
+          <goals>
+            <goal>generate</goal>
+          </goals>
+          <configuration>
+            <configurationFile>${project.basedir}/src/main/resources/generatorConfig.yaml</configurationFile>
+            <inputSpec>${project.basedir}/src/main/resources/openapi.json</inputSpec>
+            <generatorName>jaxrs-spec</generatorName>
+            <library>quarkus</library>
+          </configuration>
           </execution>
         </executions>
       </plugin>

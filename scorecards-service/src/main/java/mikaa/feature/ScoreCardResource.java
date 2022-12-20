@@ -1,13 +1,15 @@
 package mikaa.feature;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.Response;
 
 import io.smallrye.common.annotation.Blocking;
 import mikaa.api.ScoreCardsApi;
 import mikaa.model.NewScoreCardDTO;
+import mikaa.model.ScoreCardDTO;
 import mikaa.model.ScoreRowDTO;
 
 @ApplicationScoped
@@ -15,27 +17,26 @@ import mikaa.model.ScoreRowDTO;
 class ScoreCardResource implements ScoreCardsApi {
 
   @Override
-  public Response addScoreCard(@Valid @NotNull NewScoreCardDTO newScoreCardDTO) {
+  public ScoreCardDTO addScoreCard(@Valid @NotNull NewScoreCardDTO newScoreCardDTO) {
     return null;
   }
 
   @Override
-  public Response deleteScoreCard(Integer id) {
+  public void deleteScoreCard(Integer id) {
+  }
+
+  @Override
+  public ScoreCardDTO getScoreCard(Integer id) {
     return null;
   }
 
   @Override
-  public Response getScoreCard(Integer id) {
+  public List<ScoreCardDTO> getScoreCards() {
     return null;
   }
 
   @Override
-  public Response getScoreCards() {
-    return null;
-  }
-
-  @Override
-  public Response updateScores(Integer id, @Valid @NotNull ScoreRowDTO scoreRowDTO) {
+  public ScoreRowDTO updateScores(Integer id, @Valid @NotNull ScoreRowDTO scoreRowDTO) {
     return null;
   }
 

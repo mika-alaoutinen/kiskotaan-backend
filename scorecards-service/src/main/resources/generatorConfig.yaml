@@ -16,6 +16,5 @@ interfaceOnly: true
 modelNameSuffix: DTO
 openApiNullable: false
 performBeanValidation: true
-returnResponse: true
 skipDefaultInterface: true
 useTags: true

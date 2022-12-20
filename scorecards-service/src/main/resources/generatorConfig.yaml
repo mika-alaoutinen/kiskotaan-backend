@@ -1,0 +1,16 @@
+developerName: Mika Alaoutinen
+
+# Package settings
+apiPackage: mikaa.api
+modelPackage: mikaa.model
+sourceFolder: src/main/java
+
+# code generation settings
+documentationProvider: none
+implicitHeaders: true
+interfaceOnly: true
+modelNameSuffix: DTO
+openApiNullable: false
+performBeanValidation: true
+skipDefaultInterface: true
+useTags: true

@@ -6,6 +6,9 @@ Kiskotaan backend is a disc golf scorekeeping application that consists of sever
   - CRUD operations for players.
 - `Courses` service on port `8082`.
   - CRUD operations for courses and holes.
+- `Score cards` service on port `8083`.
+  - CRUD operations for score cards.
+  - A score card is always for a single course and a single score card can have many players.
 - `Logging` service on port `8085`.
   - Log aggregation service that listens for all Kafka events and logs them to stdout.
   - Realistically the logs should be stored into some external system, such as Kibana or Prometheus.
@@ -23,6 +26,7 @@ Messages will be sent to the following topics when resources are modified. Modif
 
 - "courses"
 - "players"
+- "scorecards"
 
 ## Running the services
 The entire stack, including Kafka and a Postgres database, can be spun up with Docker compose:

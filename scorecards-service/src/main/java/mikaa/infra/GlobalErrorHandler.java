@@ -26,7 +26,7 @@ class GlobalErrorHandler {
     String msg = ex.getMessage();
     String path = getPath(uri);
     var body = new ErrorBodyDTO()
-        .error("Not found")
+        .error("Not Found")
         .message(msg)
         .path(path)
         .status(404)

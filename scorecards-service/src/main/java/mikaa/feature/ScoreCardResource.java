@@ -6,6 +6,8 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.modelmapper.ModelMapper;
+
 import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoreCardsApi;
@@ -19,6 +21,7 @@ import mikaa.model.ScoreRowDTO;
 @RequiredArgsConstructor
 class ScoreCardResource implements ScoreCardsApi {
 
+  private static final ModelMapper MAPPER = new ModelMapper();
   private final ScoreCardService service;
 
   @Override
@@ -33,18 +36,28 @@ class ScoreCardResource implements ScoreCardsApi {
   @Override
   public ScoreCardDTO getScoreCard(Integer id) {
     return service.findOne(id)
-        .map(ScoreCardMapper::dto)
+        .map(ScoreCardResource::mapScoreCard)
         .orElseThrow(() -> notFound(id));
   }
 
   @Override
   public List<ScoreCardDTO> getScoreCards() {
-    return List.of();
+    var card = service.findAll().get(0);
+    System.out.println(card);
+
+    return service.findAll()
+        .stream()
+        .map(ScoreCardResource::mapScoreCard)
+        .toList();
   }
 
   @Override
   public ScoreRowDTO updateScores(Integer id, @Valid @NotNull ScoreRowDTO scoreRowDTO) {
     return null;
+  }
+
+  private static ScoreCardDTO mapScoreCard(ScoreCardEntity scoreCard) {
+    return MAPPER.map(scoreCard, ScoreCardDTO.class);
   }
 
   private static NotFoundException notFound(int id) {

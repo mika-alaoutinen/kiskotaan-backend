@@ -41,7 +41,7 @@ class ScoreCardEntity {
   @ElementCollection
   @CollectionTable(name = "player", joinColumns = @JoinColumn(name = "scorecard_id"))
   @Column(name = "player_id", nullable = false)
-  private List<Long> playersIds = new ArrayList<>();
+  private List<Long> playerIds = new ArrayList<>();
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scorecard", orphanRemoval = true)
   private List<ScoreEntity> scores = new ArrayList<>();

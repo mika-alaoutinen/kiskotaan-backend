@@ -42,9 +42,6 @@ class ScoreCardResource implements ScoreCardsApi {
 
   @Override
   public List<ScoreCardDTO> getScoreCards() {
-    var card = service.findAll().get(0);
-    System.out.println(card);
-
     return service.findAll()
         .stream()
         .map(ScoreCardResource::mapScoreCard)

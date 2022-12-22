@@ -169,7 +169,9 @@
           </goals>
           <configuration>
             <configurationFile>${project.basedir}/src/main/resources/generatorConfig.yaml</configurationFile>
-            <inputSpec>${project.basedir}/src/main/resources/openapi.json</inputSpec>
+            <inputSpec>
+              https://raw.githubusercontent.com/mika-alaoutinen/kiskotaan-openapi/master/apidoc_scorecards.json
+            </inputSpec>
             <generatorName>jaxrs-spec</generatorName>
             <library>quarkus</library>
           </configuration>

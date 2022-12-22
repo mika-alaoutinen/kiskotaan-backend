@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,8 +39,9 @@ class ScoreCardEntity {
 
   @Size(min = 1, max = 5, message = "Score card can have 1-5 players")
   @ElementCollection
-  @CollectionTable(name = "player_id", joinColumns = @JoinColumn(name = "scorecard_id"))
-  private List<Long> player = new ArrayList<>();
+  @CollectionTable(name = "player", joinColumns = @JoinColumn(name = "scorecard_id"))
+  @Column(name = "player_id", nullable = false)
+  private List<Long> playersIds = new ArrayList<>();
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scorecard", orphanRemoval = true)
   private List<ScoreEntity> scores = new ArrayList<>();

@@ -14,7 +14,7 @@ INSERT INTO course (id, scorecard_id, holes) VALUES
   (nextval('hibernate_sequence'), 1, 18),
   (nextval('hibernate_sequence'), 2, 9);
 
-INSERT INTO player_id (scorecard_id, player) VALUES
+INSERT INTO player (scorecard_id, player_id) VALUES
   (1, 111),
   (2, 222),
   (2, 333);

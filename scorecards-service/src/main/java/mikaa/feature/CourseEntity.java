@@ -1,10 +1,10 @@
 package mikaa.feature;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 import lombok.AllArgsConstructor;
@@ -27,8 +27,7 @@ class CourseEntity {
 
   private int holes;
 
-  @OneToOne
-  @MapsId
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "scorecard_id")
   private ScoreCardEntity scorecard;
 

@@ -27,7 +27,7 @@ class ScoreEntity {
   @GeneratedValue
   private Long id;
 
-  @Column(nullable = false)
+  @Column(name = "player_id", nullable = false)
   private Long playerId;
 
   @Min(1)

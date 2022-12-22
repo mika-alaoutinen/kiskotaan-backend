@@ -92,6 +92,11 @@
 
     <!-- misc -->
     <dependency>
+      <groupId>org.modelmapper</groupId>
+      <artifactId>modelmapper</artifactId>
+      <version>3.1.1</version>
+    </dependency>
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.24</version>
@@ -169,7 +174,9 @@
           </goals>
           <configuration>
             <configurationFile>${project.basedir}/src/main/resources/generatorConfig.yaml</configurationFile>
-            <inputSpec>${project.basedir}/src/main/resources/openapi.json</inputSpec>
+            <inputSpec>
+              https://raw.githubusercontent.com/mika-alaoutinen/kiskotaan-openapi/master/apidoc_scorecards.json
+            </inputSpec>
             <generatorName>jaxrs-spec</generatorName>
             <library>quarkus</library>
           </configuration>

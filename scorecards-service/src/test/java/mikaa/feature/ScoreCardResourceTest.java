@@ -6,17 +6,20 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.model.NewScoreCardDTO;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @QuarkusTest
 class ScoreCardResourceTest {
@@ -62,13 +65,37 @@ class ScoreCardResourceTest {
   }
 
   @Test
-  void get_course_returns_404() {
+  void get_score_card_returns_404() {
     var response = given()
         .when()
         .get(ENDPOINT + "/1")
         .then();
 
     assertNotFoundResponse(response, 1);
+  }
+
+  @Test
+  void should_add_new_score_card() {
+    var newScoreCard = new NewScoreCardDTO()
+        .courseId(BigDecimal.valueOf(1))
+        .playersIds(Set.of(BigDecimal.valueOf(2), BigDecimal.valueOf(3)));
+
+    given()
+        .contentType(ContentType.JSON)
+        .body(newScoreCard)
+        .when()
+        .post(ENDPOINT)
+        .then()
+        .statusCode(201)
+        .contentType(ContentType.JSON)
+        .body(
+            "id", notNullValue(),
+            "course.id", is(1),
+            "course.holes", is(18),
+            "playerIds", hasItems(2, 3),
+            "scores", empty());
+
+    verify(repository, atLeastOnce()).persist(any(ScoreCardEntity.class));
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, int id) {

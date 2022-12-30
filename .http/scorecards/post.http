@@ -1,0 +1,19 @@
+@url = http://localhost:8083/api/scorecards
+
+### Add new score card
+POST {{url}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "courseId": 1,
+  "playersIds": [ 111 ]
+}
+
+### Try to add new score card for course that doesn't exist
+POST {{url}} HTTP/1.1
+Content-Type: application/json
+
+{
+  "courseId": 99,
+  "playersIds": [ 111 ]
+}

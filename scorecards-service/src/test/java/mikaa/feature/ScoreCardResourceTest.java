@@ -6,6 +6,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.feature.course.CourseEntity;
+import mikaa.feature.course.CourseReadRepository;
 import mikaa.model.NewScoreCardDTO;
 
 import static io.restassured.RestAssured.given;
@@ -31,7 +33,7 @@ class ScoreCardResourceTest {
   private ScoreCardRepository repository;
 
   @InjectMock
-  private CourseRepository courseRepository;
+  private CourseReadRepository courseRepository;
 
   @Test
   void should_get_all_score_cards() {

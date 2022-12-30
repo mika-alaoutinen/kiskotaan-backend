@@ -21,6 +21,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import mikaa.feature.course.CourseEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -28,7 +29,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "scorecard")
-class ScoreCardEntity {
+public class ScoreCardEntity {
 
   @Id
   @GeneratedValue

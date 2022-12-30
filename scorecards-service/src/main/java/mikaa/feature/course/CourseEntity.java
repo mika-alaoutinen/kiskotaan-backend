@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import mikaa.feature.ScoreCardEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -19,7 +20,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "course")
-class CourseEntity {
+public class CourseEntity {
 
   @Id
   @GeneratedValue

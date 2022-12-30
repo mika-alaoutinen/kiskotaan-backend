@@ -7,6 +7,7 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.feature.course.CourseService;
 import mikaa.model.NewScoreCardDTO;
 
 @ApplicationScoped

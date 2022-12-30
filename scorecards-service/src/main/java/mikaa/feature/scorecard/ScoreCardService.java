@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.scorecard;
 
 import java.math.BigDecimal;
 import java.util.List;

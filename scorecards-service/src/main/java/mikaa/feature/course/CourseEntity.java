@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import mikaa.feature.ScoreCardEntity;
+import mikaa.feature.scorecard.ScoreCardEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

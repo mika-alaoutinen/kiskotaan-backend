@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.scorecard;
 
 import javax.enterprise.context.ApplicationScoped;
 

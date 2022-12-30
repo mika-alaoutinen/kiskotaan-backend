@@ -3,6 +3,7 @@ package mikaa.feature;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -25,8 +26,9 @@ class ScoreCardResource implements ScoreCardsApi {
   private final ScoreCardService service;
 
   @Override
+  @Transactional
   public ScoreCardDTO addScoreCard(@Valid @NotNull NewScoreCardDTO newScoreCardDTO) {
-    return null;
+    return MAPPER.map(service.add(newScoreCardDTO), ScoreCardDTO.class);
   }
 
   @Override

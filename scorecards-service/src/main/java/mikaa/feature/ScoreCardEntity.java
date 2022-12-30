@@ -46,6 +46,11 @@ class ScoreCardEntity {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scorecard", orphanRemoval = true)
   private List<ScoreEntity> scores = new ArrayList<>();
 
+  ScoreCardEntity(CourseEntity course, List<Long> playersIds) {
+    this.course = course;
+    this.playerIds = playersIds;
+  }
+
   void setCourse(CourseEntity course) {
     this.course = course;
     course.setScorecard(this);

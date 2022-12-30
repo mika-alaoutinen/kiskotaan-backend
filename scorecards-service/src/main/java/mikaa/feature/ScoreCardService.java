@@ -7,15 +7,14 @@ import java.util.Optional;
 import javax.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.errors.NotFoundException;
 import mikaa.model.NewScoreCardDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 class ScoreCardService {
 
+  private final CourseService courseService;
   private final ScoreCardRepository repository;
-  private final CourseRepository courseRepository;
 
   List<ScoreCardEntity> findAll() {
     return repository.listAll();
@@ -26,9 +25,7 @@ class ScoreCardService {
   }
 
   ScoreCardEntity add(NewScoreCardDTO newScoreCard) {
-    var courseId = newScoreCard.getCourseId().longValue();
-    var course = courseRepository.findByIdOptional(courseId)
-        .orElseThrow(() -> courseNotFound(courseId));
+    var course = courseService.findOrThrow(newScoreCard.getCourseId());
 
     var playerIds = newScoreCard.getPlayersIds()
         .stream()
@@ -38,10 +35,6 @@ class ScoreCardService {
     ScoreCardEntity entity = new ScoreCardEntity(course, playerIds);
     repository.persist(entity);
     return entity;
-  }
-
-  private static NotFoundException courseNotFound(long id) {
-    return new NotFoundException("Could not find course with id " + id);
   }
 
 }

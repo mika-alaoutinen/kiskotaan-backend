@@ -7,7 +7,8 @@ import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import mikaa.feature.course.CourseEntity;
-import mikaa.feature.course.CourseReadRepository;
+import mikaa.feature.course.CourseRepository;
+import mikaa.feature.player.PlayerEntity;
 import mikaa.model.NewScoreCardDTO;
 
 import static io.restassured.RestAssured.given;
@@ -33,7 +34,7 @@ class ScoreCardResourceTest {
   private ScoreCardRepository repository;
 
   @InjectMock
-  private CourseReadRepository courseRepository;
+  private CourseRepository courseRepository;
 
   @Test
   void should_get_all_score_cards() {
@@ -139,9 +140,10 @@ class ScoreCardResourceTest {
 
   private static ScoreCardEntity scoreCardMock() {
     var course = new CourseEntity();
+    var players = List.of(new PlayerEntity(123L, "Pekka", "Kana", null));
     course.setHoles(18);
     var score = new ScoreEntity(2L, 123L, 1, 3, null);
-    return new ScoreCardEntity(1L, course, List.of(123L), List.of(score));
+    return new ScoreCardEntity(1L, course, players, List.of(score));
   }
 
 }

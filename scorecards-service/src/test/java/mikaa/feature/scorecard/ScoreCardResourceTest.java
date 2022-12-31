@@ -10,6 +10,7 @@ import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseRepository;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerRepository;
+import mikaa.feature.score.ScoreEntity;
 import mikaa.model.NewScoreCardDTO;
 
 import static io.restassured.RestAssured.given;
@@ -157,6 +158,17 @@ class ScoreCardResourceTest {
         .body("message", is("Could not find player with id 999"));
     
     verify(repository, never()).persist(any(ScoreCardEntity.class));
+  }
+
+  @Test
+  void should_delete_score_card() {
+    given()
+        .when()
+        .delete(ENDPOINT + "/1")
+        .then()
+        .statusCode(204);
+
+    verify(repository, atLeastOnce()).deleteById(1L);
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, int id) {

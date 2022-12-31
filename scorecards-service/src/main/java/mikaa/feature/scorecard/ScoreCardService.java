@@ -12,7 +12,7 @@ import mikaa.model.NewScoreCardDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-public class ScoreCardService {
+class ScoreCardService {
 
   private final CourseService courseService;
   private final PlayerService playerService;
@@ -37,6 +37,10 @@ public class ScoreCardService {
     var entity = new ScoreCardEntity(course, players);
     repository.persist(entity);
     return entity;
+  }
+
+  void delete(long id) {
+    repository.deleteById(id);
   }
 
 }

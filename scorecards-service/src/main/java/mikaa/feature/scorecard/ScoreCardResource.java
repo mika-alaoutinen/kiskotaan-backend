@@ -15,7 +15,6 @@ import mikaa.api.ScoreCardsApi;
 import mikaa.errors.NotFoundException;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.model.ScoreCardDTO;
-import mikaa.model.ScoreRowDTO;
 
 @ApplicationScoped
 @Blocking
@@ -28,11 +27,12 @@ class ScoreCardResource implements ScoreCardsApi {
   @Override
   @Transactional
   public ScoreCardDTO addScoreCard(@Valid @NotNull NewScoreCardDTO newScoreCardDTO) {
-    return MAPPER.map(service.add(newScoreCardDTO), ScoreCardDTO.class);
+    return mapScoreCard(service.add(newScoreCardDTO));
   }
 
   @Override
   public void deleteScoreCard(Integer id) {
+    service.delete(id);
   }
 
   @Override
@@ -48,11 +48,6 @@ class ScoreCardResource implements ScoreCardsApi {
         .stream()
         .map(ScoreCardResource::mapScoreCard)
         .toList();
-  }
-
-  @Override
-  public ScoreRowDTO updateScores(Integer id, @Valid @NotNull ScoreRowDTO scoreRowDTO) {
-    return null;
   }
 
   private static ScoreCardDTO mapScoreCard(ScoreCardEntity scoreCard) {

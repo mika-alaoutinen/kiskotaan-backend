@@ -9,6 +9,7 @@ import io.restassured.response.ValidatableResponse;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseRepository;
 import mikaa.feature.player.PlayerEntity;
+import mikaa.feature.player.PlayerRepository;
 import mikaa.model.NewScoreCardDTO;
 
 import static io.restassured.RestAssured.given;
@@ -29,12 +30,17 @@ import java.util.Set;
 class ScoreCardResourceTest {
 
   private static final String ENDPOINT = "/scorecards";
+  private static final CourseEntity COURSE = new CourseEntity(321L, 18, null);
+  private static final PlayerEntity PEKKA_KANA = new PlayerEntity(123L, "Pekka", "Kana", null);
 
   @InjectMock
   private ScoreCardRepository repository;
 
   @InjectMock
   private CourseRepository courseRepository;
+
+  @InjectMock
+  private PlayerRepository playerRepository;
 
   @Test
   void should_get_all_score_cards() {
@@ -85,11 +91,12 @@ class ScoreCardResourceTest {
 
   @Test
   void should_add_new_score_card() {
-    when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(new CourseEntity(1L, 18, null)));
+    when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(COURSE));
+    when(playerRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(PEKKA_KANA));
     
     var newScoreCard = new NewScoreCardDTO()
         .courseId(BigDecimal.valueOf(1))
-        .playersIds(Set.of(BigDecimal.valueOf(2), BigDecimal.valueOf(3)));
+        .playersIds(Set.of(BigDecimal.valueOf(123)));
 
     given()
         .contentType(ContentType.JSON)
@@ -100,9 +107,10 @@ class ScoreCardResourceTest {
         .statusCode(200) // see readme for problem description
         .contentType(ContentType.JSON)
         .body(
-            "course.id", is(1),
+            "course.id", is(321),
             "course.holes", is(18),
-            "playerIds", hasItems(2, 3),
+            "players.size()", is(1),
+            "players[0].id", is(123),
             "scores", empty());
 
     verify(repository, atLeastOnce()).persist(any(ScoreCardEntity.class));
@@ -141,11 +149,8 @@ class ScoreCardResourceTest {
   }
 
   private static ScoreCardEntity scoreCardMock() {
-    var course = new CourseEntity();
-    var players = List.of(new PlayerEntity(123L, "Pekka", "Kana", null));
-    course.setHoles(18);
     var score = new ScoreEntity(2L, 123L, 1, 3, null);
-    return new ScoreCardEntity(1L, course, players, List.of(score));
+    return new ScoreCardEntity(1L, COURSE, List.of(PEKKA_KANA), List.of(score));
   }
 
 }

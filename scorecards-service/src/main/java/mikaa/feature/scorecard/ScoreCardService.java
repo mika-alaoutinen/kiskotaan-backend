@@ -39,4 +39,8 @@ class ScoreCardService {
     return entity;
   }
 
+  void delete(long id) {
+    repository.deleteById(id);
+  }
+
 }

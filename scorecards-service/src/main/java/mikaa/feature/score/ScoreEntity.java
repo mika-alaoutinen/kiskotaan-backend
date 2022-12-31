@@ -1,4 +1,4 @@
-package mikaa.feature.scorecard;
+package mikaa.feature.score;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import mikaa.feature.scorecard.ScoreCardEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -21,7 +22,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "score")
-class ScoreEntity {
+public class ScoreEntity {
 
   @Id
   @GeneratedValue

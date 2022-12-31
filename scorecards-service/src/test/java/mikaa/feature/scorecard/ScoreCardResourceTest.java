@@ -10,6 +10,7 @@ import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseRepository;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerRepository;
+import mikaa.feature.score.ScoreEntity;
 import mikaa.model.NewScoreCardDTO;
 
 import static io.restassured.RestAssured.given;

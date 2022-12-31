@@ -1,19 +1,21 @@
-package mikaa.feature;
+package mikaa.feature.scorecard;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.feature.course.CourseService;
+import mikaa.feature.player.PlayerService;
 import mikaa.model.NewScoreCardDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class ScoreCardService {
+public class ScoreCardService {
 
   private final CourseService courseService;
+  private final PlayerService playerService;
   private final ScoreCardRepository repository;
 
   List<ScoreCardEntity> findAll() {
@@ -27,12 +29,12 @@ class ScoreCardService {
   ScoreCardEntity add(NewScoreCardDTO newScoreCard) {
     var course = courseService.findOrThrow(newScoreCard.getCourseId());
 
-    var playerIds = newScoreCard.getPlayersIds()
+    var players = newScoreCard.getPlayersIds()
         .stream()
-        .map(BigDecimal::longValue)
+        .map(playerService::findOrThrow)
         .toList();
 
-    ScoreCardEntity entity = new ScoreCardEntity(course, playerIds);
+    var entity = new ScoreCardEntity(course, players);
     repository.persist(entity);
     return entity;
   }

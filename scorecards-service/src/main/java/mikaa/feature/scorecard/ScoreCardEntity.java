@@ -1,17 +1,13 @@
-package mikaa.feature;
+package mikaa.feature.scorecard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Size;
@@ -21,6 +17,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import mikaa.feature.course.CourseEntity;
+import mikaa.feature.player.PlayerEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -28,7 +26,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "scorecard")
-class ScoreCardEntity {
+public class ScoreCardEntity {
 
   @Id
   @GeneratedValue
@@ -38,22 +36,30 @@ class ScoreCardEntity {
   private CourseEntity course;
 
   @Size(min = 1, max = 5, message = "Score card can have 1-5 players")
-  @ElementCollection
-  @CollectionTable(name = "player", joinColumns = @JoinColumn(name = "scorecard_id"))
-  @Column(name = "player_id", nullable = false)
-  private List<Long> playerIds = new ArrayList<>();
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scorecard", orphanRemoval = true)
+  private List<PlayerEntity> players = new ArrayList<>();
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scorecard", orphanRemoval = true)
   private List<ScoreEntity> scores = new ArrayList<>();
 
-  ScoreCardEntity(CourseEntity course, List<Long> playersIds) {
+  ScoreCardEntity(CourseEntity course, List<PlayerEntity> players) {
     this.course = course;
-    this.playerIds = playersIds;
+    this.players = players;
   }
 
   void setCourse(CourseEntity course) {
     this.course = course;
     course.setScorecard(this);
+  }
+
+  void addPlayer(PlayerEntity player) {
+    players.add(player);
+    player.setScorecard(this);
+  }
+
+  void removePlayer(PlayerEntity player) {
+    players.remove(player);
+    player.setScorecard(null);
   }
 
   void addScore(ScoreEntity score) {

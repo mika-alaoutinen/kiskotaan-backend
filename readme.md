@@ -49,9 +49,6 @@ Folder `.http` has http-files that contain example payloads that can be used to 
 ### Players service validation logic
 - [ ] Player names should be unique.
 
-### Score card service
-- [ ] Players should probably be entities. Now it's difficult to verify that given player IDs exist when creating a new score card.
-
 ## Discovered problems
 
 ### Score card service

@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import java.math.BigDecimal;
 
@@ -9,11 +9,11 @@ import mikaa.errors.NotFoundException;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class CourseService {
+public class CourseService {
 
   private final CourseRepository repository;
 
-  CourseEntity findOrThrow(BigDecimal id) {
+  public CourseEntity findOrThrow(BigDecimal id) {
     long courseId = id.longValue();
     return repository.findByIdOptional(courseId).orElseThrow(() -> notFound(courseId));
   }

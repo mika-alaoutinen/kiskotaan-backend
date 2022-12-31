@@ -26,10 +26,10 @@ public class PlayerEntity {
   @GeneratedValue
   private Long id;
 
-  @Column(nullable = false)
+  @Column(name = "first_name", nullable = false)
   private String firstName;
 
-  @Column(nullable = false)
+  @Column(name = "last_name", nullable = false)
   private String lastName;
 
   @ManyToOne(fetch = FetchType.LAZY)

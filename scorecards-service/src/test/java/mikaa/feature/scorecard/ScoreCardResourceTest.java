@@ -122,7 +122,7 @@ class ScoreCardResourceTest {
 
     var newScoreCard = new NewScoreCardDTO()
         .courseId(BigDecimal.valueOf(1))
-        .playersIds(Set.of(BigDecimal.valueOf(2), BigDecimal.valueOf(3)));
+        .playersIds(Set.of(BigDecimal.valueOf(321)));
 
     given()
         .contentType(ContentType.JSON)
@@ -133,6 +133,28 @@ class ScoreCardResourceTest {
         .statusCode(404)
         .contentType(ContentType.JSON)
         .body("message", is("Could not find course with id 1"));
+    
+    verify(repository, never()).persist(any(ScoreCardEntity.class));
+  }
+
+  @Test
+  void post_score_card_should_throw_404_when_player_not_found() {
+    when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(COURSE));
+    when(playerRepository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
+
+    var newScoreCard = new NewScoreCardDTO()
+        .courseId(BigDecimal.valueOf(1))
+        .playersIds(Set.of(BigDecimal.valueOf(999)));
+
+    given()
+        .contentType(ContentType.JSON)
+        .body(newScoreCard)
+        .when()
+        .post(ENDPOINT)
+        .then()
+        .statusCode(404)
+        .contentType(ContentType.JSON)
+        .body("message", is("Could not find player with id 999"));
     
     verify(repository, never()).persist(any(ScoreCardEntity.class));
   }

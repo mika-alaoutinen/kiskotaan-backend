@@ -7,7 +7,6 @@ import javax.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.course.CourseService;
-import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerService;
 import mikaa.model.NewScoreCardDTO;
 
@@ -30,12 +29,12 @@ public class ScoreCardService {
   ScoreCardEntity add(NewScoreCardDTO newScoreCard) {
     var course = courseService.findOrThrow(newScoreCard.getCourseId());
 
-    List<PlayerEntity> players = newScoreCard.getPlayersIds()
+    var players = newScoreCard.getPlayersIds()
         .stream()
         .map(playerService::findOrThrow)
         .toList();
 
-    ScoreCardEntity entity = new ScoreCardEntity(course, players);
+    var entity = new ScoreCardEntity(course, players);
     repository.persist(entity);
     return entity;
   }

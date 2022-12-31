@@ -28,7 +28,7 @@ class ScoreCardResource implements ScoreCardsApi {
   @Override
   @Transactional
   public ScoreCardDTO addScoreCard(@Valid @NotNull NewScoreCardDTO newScoreCardDTO) {
-    return MAPPER.map(service.add(newScoreCardDTO), ScoreCardDTO.class);
+    return mapScoreCard(service.add(newScoreCardDTO));
   }
 
   @Override

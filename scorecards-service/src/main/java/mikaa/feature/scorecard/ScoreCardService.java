@@ -12,7 +12,7 @@ import mikaa.model.NewScoreCardDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-public class ScoreCardService {
+class ScoreCardService {
 
   private final CourseService courseService;
   private final PlayerService playerService;

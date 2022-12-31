@@ -66,7 +66,9 @@ class ScoreCardResourceTest {
         .body(
             "id", is(1),
             "course.holes", is(18),
-            "playerIds", hasItem(123),
+            "players[0].id", is(123),
+            "players[0].firstName", is("Pekka"),
+            "players[0].lastName", is("Kana"),
             "scores[0].hole", is(1),
             "scores[0].score", is(3));
   }

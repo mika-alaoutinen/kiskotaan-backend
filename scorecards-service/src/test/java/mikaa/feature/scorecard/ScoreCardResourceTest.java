@@ -9,7 +9,7 @@ import io.restassured.response.ValidatableResponse;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseRepository;
 import mikaa.feature.player.PlayerEntity;
-import mikaa.feature.player.PlayerRepository;
+import mikaa.feature.player.PlayerService;
 import mikaa.feature.score.ScoreEntity;
 import mikaa.model.NewScoreCardDTO;
 
@@ -27,6 +27,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.ws.rs.NotFoundException;
+
 @QuarkusTest
 class ScoreCardResourceTest {
 
@@ -41,7 +43,7 @@ class ScoreCardResourceTest {
   private CourseRepository courseRepository;
 
   @InjectMock
-  private PlayerRepository playerRepository;
+  private PlayerService playerService;
 
   @Test
   void should_get_all_score_cards() {
@@ -95,7 +97,7 @@ class ScoreCardResourceTest {
   @Test
   void should_add_new_score_card() {
     when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(COURSE));
-    when(playerRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(PEKKA_KANA));
+    when(playerService.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
     
     var newScoreCard = new NewScoreCardDTO()
         .courseId(BigDecimal.valueOf(1))
@@ -143,7 +145,7 @@ class ScoreCardResourceTest {
   @Test
   void post_score_card_should_throw_404_when_player_not_found() {
     when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(COURSE));
-    when(playerRepository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
+    when(playerService.findOrThrow(anyLong())).thenThrow(new NotFoundException("Could not find player with id 999"));
 
     var newScoreCard = new NewScoreCardDTO()
         .courseId(BigDecimal.valueOf(1))

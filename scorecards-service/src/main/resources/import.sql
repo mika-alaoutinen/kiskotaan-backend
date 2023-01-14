@@ -3,29 +3,31 @@
 -- at the correct number after test data insertion.
 -- See https://stackoverflow.com/questions/37511719/hibernate-duplicate-key-value-violates-unique-constraint
 
-INSERT INTO scorecard (id) VALUES
-  (nextval('hibernate_sequence')),
-  (nextval('hibernate_sequence'));
-
 INSERT INTO player (id, first_name, last_name) VALUES
-  ((nextval('hibernate_sequence')), 'Pekka', 'Kana'),
-  ((nextval('hibernate_sequence')), 'Kalle', 'Kukko'),
-  ((nextval('hibernate_sequence')), 'Riki', 'Sorsa');
+  (101, 'Pekka', 'Kana'),
+  (102, 'Kalle', 'Kukko'),
+  (103, 'Riki', 'Sorsa');
+
+INSERT INTO course (id, holes, name) VALUES
+  (201, 18, 'Frisbeegolf Laajis'),
+  (202, 9, 'Keljonkankaan frisbeegolfrata');
+
+INSERT INTO scorecard (id, course_id) VALUES
+  (1, 201),
+  (2, 202);
 
 INSERT INTO scorecard_player (scorecard_id, player_id) VALUES
-  (1, 3),
-  (2, 4),
-  (2, 5);
-
-INSERT INTO course (id, scorecard_id, holes, name) VALUES
-  (nextval('hibernate_sequence'), 1, 18, 'Frisbeegolf Laajis'),
-  (nextval('hibernate_sequence'), 2, 9, 'Keljonkankaan frisbeegolfrata');
+  (1, 101),
+  (2, 102),
+  (2, 103);
 
 INSERT INTO score (id, scorecard_id, player_id, hole, score) VALUES
-  (nextval('hibernate_sequence'), 1, 3, 1, 3),
-  (nextval('hibernate_sequence'), 1, 3, 2, 3),
-  (nextval('hibernate_sequence'), 1, 3, 3, 4),
-  (nextval('hibernate_sequence'), 1, 3, 4, 5),
-  (nextval('hibernate_sequence'), 2, 4, 1, 2),
-  (nextval('hibernate_sequence'), 2, 4, 1, 3),
-  (nextval('hibernate_sequence'), 2, 4, 2, 5);
+  (301, 1, 101, 1, 3),
+  (302, 1, 101, 2, 3),
+  (303, 1, 101, 3, 4),
+  (304, 1, 101, 4, 5),
+  (305, 2, 102, 1, 2),
+  (306, 2, 102, 1, 3),
+  (307, 2, 102, 2, 5);
+
+CREATE SEQUENCE IF NOT EXISTS hibernate_sequence START 3;

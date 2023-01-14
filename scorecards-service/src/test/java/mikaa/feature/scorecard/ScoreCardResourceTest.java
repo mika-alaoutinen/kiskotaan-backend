@@ -31,8 +31,8 @@ import java.util.Set;
 class ScoreCardResourceTest {
 
   private static final String ENDPOINT = "/scorecards";
-  private static final CourseEntity COURSE = new CourseEntity(321L, 18, null);
-  private static final PlayerEntity PEKKA_KANA = new PlayerEntity(123L, "Pekka", "Kana", null);
+  private static final CourseEntity COURSE = new CourseEntity(321L, 18, "Laajis", null);
+  private static final PlayerEntity PEKKA_KANA = new PlayerEntity(123L, "Pekka", "Kana");
 
   @InjectMock
   private ScoreCardRepository repository;
@@ -56,7 +56,8 @@ class ScoreCardResourceTest {
         .contentType(ContentType.JSON)
         .body(
             "[0].id", is(1),
-            "[0].course.holes", is(18));
+            "[0].course.holes", is(18),
+            "[0].course.name", is("Laajis"));
   }
 
   @Test
@@ -73,6 +74,7 @@ class ScoreCardResourceTest {
         .body(
             "id", is(1),
             "course.holes", is(18),
+            "course.name", is("Laajis"),
             "players[0].id", is(123),
             "players[0].firstName", is("Pekka"),
             "players[0].lastName", is("Kana"),
@@ -183,8 +185,8 @@ class ScoreCardResourceTest {
   }
 
   private static ScoreCardEntity scoreCardMock() {
-    var score = new ScoreEntity(2L, 123L, 1, 3, null);
-    return new ScoreCardEntity(1L, COURSE, List.of(PEKKA_KANA), List.of(score));
+    var score = new ScoreEntity(2L, 1, 3, PEKKA_KANA, null);
+    return new ScoreCardEntity(1L, COURSE, Set.of(PEKKA_KANA), List.of(score));
   }
 
 }

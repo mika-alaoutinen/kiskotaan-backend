@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
   "courseId": 1,
-  "playersIds": [ 111 ]
+  "playerIds": [ 111 ]
 }
 
 ### Try to add new score card for course that doesn't exist
@@ -15,5 +15,5 @@ Content-Type: application/json
 
 {
   "courseId": 99,
-  "playersIds": [ 111 ]
+  "playerIds": [ 111 ]
 }

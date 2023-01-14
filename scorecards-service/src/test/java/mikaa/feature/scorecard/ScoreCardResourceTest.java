@@ -97,7 +97,7 @@ class ScoreCardResourceTest {
     
     var newScoreCard = new NewScoreCardDTO()
         .courseId(BigDecimal.valueOf(1))
-        .playersIds(Set.of(BigDecimal.valueOf(123)));
+        .playerIds(Set.of(BigDecimal.valueOf(123)));
 
     given()
         .contentType(ContentType.JSON)
@@ -123,7 +123,7 @@ class ScoreCardResourceTest {
 
     var newScoreCard = new NewScoreCardDTO()
         .courseId(BigDecimal.valueOf(1))
-        .playersIds(Set.of(BigDecimal.valueOf(321)));
+        .playerIds(Set.of(BigDecimal.valueOf(321)));
 
     given()
         .contentType(ContentType.JSON)
@@ -145,7 +145,7 @@ class ScoreCardResourceTest {
 
     var newScoreCard = new NewScoreCardDTO()
         .courseId(BigDecimal.valueOf(1))
-        .playersIds(Set.of(BigDecimal.valueOf(999)));
+        .playerIds(Set.of(BigDecimal.valueOf(999)));
 
     given()
         .contentType(ContentType.JSON)

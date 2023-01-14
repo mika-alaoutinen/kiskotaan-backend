@@ -1,5 +1,6 @@
 package mikaa.feature.scorecard;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,10 +29,11 @@ public class ScoreCardService {
   }
 
   ScoreCardEntity add(NewScoreCardDTO newScoreCard) {
-    var course = courseService.findOrThrow(newScoreCard.getCourseId());
+    var course = courseService.findOrThrow(newScoreCard.getCourseId().longValue());
 
     var players = newScoreCard.getPlayerIds()
         .stream()
+        .map(BigDecimal::longValue)
         .map(playerService::findOrThrow)
         .collect(Collectors.toSet());
 

@@ -17,7 +17,7 @@ class ScoreService {
 
   ScoreEntity addScore(long scoreCardId, ScoreDTO newScore) {
     var scoreCard = scoreCardService.findOrThrow(scoreCardId);
-    var player = playerService.findOrThrow(newScore.getPlayerId());
+    var player = playerService.findOrThrow(newScore.getPlayerId().longValue());
 
     ScoreEntity score = new ScoreEntity(newScore.getHole(), newScore.getScore());
     scoreCard.addScore(score);

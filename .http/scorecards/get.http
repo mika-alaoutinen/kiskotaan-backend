@@ -1,7 +1,10 @@
 @url = http://localhost:8083/api/scorecards
 
-### get all
+### Get all
 GET {{url}} HTTP/1.1
 
-### get one
+### Get one
 GET {{url}}/1 HTTP/1.1
+
+### Try to get one that doesn't exist
+GET {{url}}/404 HTTP/1.1

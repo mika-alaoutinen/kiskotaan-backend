@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import javax.enterprise.context.RequestScoped;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
@@ -13,7 +14,6 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.errors.NotFoundException;
 import mikaa.model.ErrorBodyDTO;
 import mikaa.model.ValidationErrorBodyDTO;
 import mikaa.model.ValidationErrorDTO;

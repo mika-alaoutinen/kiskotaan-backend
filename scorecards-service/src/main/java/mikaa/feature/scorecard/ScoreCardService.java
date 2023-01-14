@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.errors.NotFoundException;
 import mikaa.feature.course.CourseService;
 import mikaa.feature.player.PlayerService;
 import mikaa.model.NewScoreCardDTO;

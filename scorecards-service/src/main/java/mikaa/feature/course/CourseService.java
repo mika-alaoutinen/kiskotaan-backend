@@ -3,9 +3,9 @@ package mikaa.feature.course;
 import java.math.BigDecimal;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.errors.NotFoundException;
 
 @ApplicationScoped
 @RequiredArgsConstructor

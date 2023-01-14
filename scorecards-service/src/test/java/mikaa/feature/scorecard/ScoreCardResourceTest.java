@@ -184,7 +184,7 @@ class ScoreCardResourceTest {
 
   private static ScoreCardEntity scoreCardMock() {
     var score = new ScoreEntity(2L, 123L, 1, 3, null);
-    return new ScoreCardEntity(1L, COURSE, List.of(PEKKA_KANA), List.of(score));
+    return new ScoreCardEntity(1L, COURSE, Set.of(PEKKA_KANA), List.of(score));
   }
 
 }

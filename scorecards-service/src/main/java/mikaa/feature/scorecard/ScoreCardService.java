@@ -2,6 +2,7 @@ package mikaa.feature.scorecard;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -32,7 +33,7 @@ class ScoreCardService {
     var players = newScoreCard.getPlayersIds()
         .stream()
         .map(playerService::findOrThrow)
-        .toList();
+        .collect(Collectors.toSet());
 
     var entity = new ScoreCardEntity(course, players);
     repository.persist(entity);

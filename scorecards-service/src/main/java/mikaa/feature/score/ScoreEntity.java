@@ -17,8 +17,8 @@ import lombok.ToString;
 import mikaa.feature.scorecard.ScoreCardEntity;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-@ToString
+@EqualsAndHashCode(callSuper = false, exclude = "scorecard")
+@ToString(exclude = "scorecard")
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "score")

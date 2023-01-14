@@ -17,9 +17,9 @@ INSERT INTO scorecard_player (scorecard_id, player_id) VALUES
   (2, 4),
   (2, 5);
 
-INSERT INTO course (id, scorecard_id, holes) VALUES
-  (nextval('hibernate_sequence'), 1, 18),
-  (nextval('hibernate_sequence'), 2, 9);
+INSERT INTO course (id, scorecard_id, holes, name) VALUES
+  (nextval('hibernate_sequence'), 1, 18, 'Frisbeegolf Laajis'),
+  (nextval('hibernate_sequence'), 2, 9, 'Keljonkankaan frisbeegolfrata');
 
 INSERT INTO score (id, scorecard_id, player_id, hole, score) VALUES
   (nextval('hibernate_sequence'), 1, 3, 1, 3),

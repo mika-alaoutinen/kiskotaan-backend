@@ -27,6 +27,7 @@ public class CourseEntity {
   private Long id;
 
   private int holes;
+  private String name;
 
   @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "scorecard_id")

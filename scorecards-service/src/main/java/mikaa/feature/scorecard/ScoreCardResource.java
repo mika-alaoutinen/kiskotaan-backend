@@ -12,7 +12,6 @@ import org.modelmapper.ModelMapper;
 import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoreCardsApi;
-import mikaa.errors.NotFoundException;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.model.ScoreCardDTO;
 
@@ -38,9 +37,7 @@ class ScoreCardResource implements ScoreCardsApi {
 
   @Override
   public ScoreCardDTO getScoreCard(Integer id) {
-    return service.findOne(id)
-        .map(ScoreCardResource::mapScoreCard)
-        .orElseThrow(() -> notFound(id));
+    return mapScoreCard(service.findOrThrow(id));
   }
 
   @Override
@@ -53,10 +50,6 @@ class ScoreCardResource implements ScoreCardsApi {
 
   private static ScoreCardDTO mapScoreCard(ScoreCardEntity scoreCard) {
     return MAPPER.map(scoreCard, ScoreCardDTO.class);
-  }
-
-  private static NotFoundException notFound(int id) {
-    return new NotFoundException("Could not find score card with id " + id);
   }
 
 }

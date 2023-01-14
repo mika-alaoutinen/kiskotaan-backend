@@ -1,7 +1,6 @@
 package mikaa.feature.scorecard;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -21,16 +20,11 @@ public class ScoreCardService {
   private final ScoreCardRepository repository;
 
   public ScoreCardEntity findOrThrow(long id) {
-    String errorMsg = "Could not find score card with id " + id;
-    return repository.findByIdOptional(id).orElseThrow(() -> new NotFoundException(errorMsg));
+    return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }
 
   List<ScoreCardEntity> findAll() {
     return repository.listAll();
-  }
-
-  Optional<ScoreCardEntity> findOne(long id) {
-    return repository.findByIdOptional(id);
   }
 
   ScoreCardEntity add(NewScoreCardDTO newScoreCard) {
@@ -48,6 +42,10 @@ public class ScoreCardService {
 
   void delete(long id) {
     repository.deleteById(id);
+  }
+
+  private static NotFoundException notFound(long id) {
+    return new NotFoundException("Could not find score card with id " + id);
   }
 
 }

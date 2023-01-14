@@ -59,22 +59,22 @@ public class ScoreCardEntity {
     course.setScorecard(this);
   }
 
-  void addPlayer(PlayerEntity player) {
+  public void addPlayer(PlayerEntity player) {
     players.add(player);
     player.getScorecards().add(this);
   }
 
-  void removePlayer(PlayerEntity player) {
+  public void removePlayer(PlayerEntity player) {
     players.remove(player);
     player.getScorecards().remove(this);
   }
 
-  void addScore(ScoreEntity score) {
+  public void addScore(ScoreEntity score) {
     scores.add(score);
     score.setScorecard(this);
   }
 
-  void removeScore(ScoreEntity score) {
+  public void removeScore(ScoreEntity score) {
     scores.remove(score);
     score.setScorecard(null);
   }

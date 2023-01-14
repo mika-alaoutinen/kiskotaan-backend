@@ -42,4 +42,9 @@ public class ScoreEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private ScoreCardEntity scorecard;
 
+  public ScoreEntity(int hole, int score) {
+    this.hole = hole;
+    this.score = score;
+  }
+
 }

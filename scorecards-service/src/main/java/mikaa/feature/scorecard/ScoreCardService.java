@@ -7,17 +7,23 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.errors.NotFoundException;
 import mikaa.feature.course.CourseService;
 import mikaa.feature.player.PlayerService;
 import mikaa.model.NewScoreCardDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class ScoreCardService {
+public class ScoreCardService {
 
   private final CourseService courseService;
   private final PlayerService playerService;
   private final ScoreCardRepository repository;
+
+  public ScoreCardEntity findOrThrow(long id) {
+    String errorMsg = "Could not find score card with id " + id;
+    return repository.findByIdOptional(id).orElseThrow(() -> new NotFoundException(errorMsg));
+  }
 
   List<ScoreCardEntity> findAll() {
     return repository.listAll();

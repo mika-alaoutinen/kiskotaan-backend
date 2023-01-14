@@ -31,6 +31,7 @@ class ScoreCardResource implements ScoreCardsApi {
   }
 
   @Override
+  @Transactional
   public void deleteScoreCard(Integer id) {
     service.delete(id);
   }

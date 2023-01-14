@@ -30,7 +30,7 @@ class ScoreCardService {
   ScoreCardEntity add(NewScoreCardDTO newScoreCard) {
     var course = courseService.findOrThrow(newScoreCard.getCourseId());
 
-    var players = newScoreCard.getPlayersIds()
+    var players = newScoreCard.getPlayerIds()
         .stream()
         .map(playerService::findOrThrow)
         .collect(Collectors.toSet());

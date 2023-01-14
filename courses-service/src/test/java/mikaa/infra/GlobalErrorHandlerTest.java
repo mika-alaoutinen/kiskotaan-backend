@@ -68,7 +68,7 @@ class GlobalErrorHandlerTest {
     assertEquals("/api/courses/1", body.path());
 
     var validationErrors = body.validationErrors();
-    assertEquals(1, body.validationErrors().size());
+    assertEquals(1, validationErrors.size());
 
     assertEquals(new ValidationError("obj.field.test", "Test validation error"), validationErrors.get(0));
   }

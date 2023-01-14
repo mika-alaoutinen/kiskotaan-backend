@@ -3,6 +3,8 @@ package mikaa.infra;
 import java.time.OffsetDateTime;
 
 import javax.enterprise.context.RequestScoped;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
@@ -13,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.errors.NotFoundException;
 import mikaa.model.ErrorBodyDTO;
+import mikaa.model.ValidationErrorBodyDTO;
+import mikaa.model.ValidationErrorDTO;
 
 @RequestScoped
 @RequiredArgsConstructor
@@ -20,6 +24,14 @@ import mikaa.model.ErrorBodyDTO;
 class GlobalErrorHandler {
 
   private final UriInfo uri;
+
+  @ServerExceptionMapper(ConstraintViolationException.class)
+  RestResponse<ValidationErrorBodyDTO> handleConstraintViolation(ConstraintViolationException ex) {
+    var body = fromException(ex, uri);
+    log.info(ex.getMessage());
+
+    return RestResponse.status(Status.BAD_REQUEST, body);
+  }
 
   @ServerExceptionMapper(NotFoundException.class)
   RestResponse<ErrorBodyDTO> handleNotFound(NotFoundException ex) {
@@ -35,6 +47,26 @@ class GlobalErrorHandler {
     log.info(msg);
 
     return RestResponse.status(Status.NOT_FOUND, body);
+  }
+
+  private static ValidationErrorBodyDTO fromException(ConstraintViolationException ex, UriInfo uri) {
+    var errors = ex.getConstraintViolations()
+        .stream()
+        .map(GlobalErrorHandler::fromConstraintViolation)
+        .toList();
+
+    return new ValidationErrorBodyDTO()
+        .timestamp(OffsetDateTime.now())
+        .status(400)
+        .error("Bad Request")
+        .path(getPath(uri))
+        .validationErrors(errors);
+  }
+
+  private static ValidationErrorDTO fromConstraintViolation(ConstraintViolation<?> violation) {
+    return new ValidationErrorDTO()
+        .field(violation.getPropertyPath().toString())
+        .message(violation.getMessage());
   }
 
   private static String getPath(UriInfo uri) {

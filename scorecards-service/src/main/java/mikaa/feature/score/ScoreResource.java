@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoresApi;
+import mikaa.model.NewScoreDTO;
 import mikaa.model.ScoreDTO;
 
 @ApplicationScoped
@@ -22,7 +23,7 @@ public class ScoreResource implements ScoresApi {
 
   @Override
   @Transactional
-  public ScoreDTO addScore(Integer id, @Valid @NotNull ScoreDTO scoreDTO) {
+  public ScoreDTO addScore(Integer id, @Valid @NotNull NewScoreDTO scoreDTO) {
     return mapScore(service.addScore(id, scoreDTO));
   }
 

@@ -1,11 +1,13 @@
 package mikaa.feature.course;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +17,8 @@ import lombok.ToString;
 import mikaa.feature.scorecard.ScoreCardEntity;
 
 @Data
-@EqualsAndHashCode(callSuper = false, exclude = "scorecard")
-@ToString(exclude = "scorecard")
+@EqualsAndHashCode(callSuper = false, exclude = "scorecards")
+@ToString(exclude = "scorecards")
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "course")
@@ -29,8 +31,17 @@ public class CourseEntity {
   private int holes;
   private String name;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "scorecard_id")
-  private ScoreCardEntity scorecard;
+  @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
+  private Set<ScoreCardEntity> scorecards;
+
+  public void addScoreCard(ScoreCardEntity scoreCard) {
+    scorecards.add(scoreCard);
+    scoreCard.setCourse(this);
+  }
+
+  public void removeScoreCard(ScoreCardEntity scoreCard) {
+    scorecards.remove(scoreCard);
+    scoreCard.setCourse(null);
+  }
 
 }

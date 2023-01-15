@@ -1,6 +1,7 @@
 package mikaa.feature.score;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.player.PlayerService;
@@ -14,6 +15,11 @@ class ScoreService {
   private final PlayerService playerService;
   private final ScoreCardService scoreCardService;
   private final ScoreRepository repository;
+
+  ScoreEntity findOrThrow(long id) {
+    return repository.findByIdOptional(id)
+        .orElseThrow(() -> new NotFoundException("Could not find score with id " + id));
+  }
 
   ScoreEntity addScore(long id, NewScoreDTO newScore) {
     var scoreCard = scoreCardService.findOrThrow(id);

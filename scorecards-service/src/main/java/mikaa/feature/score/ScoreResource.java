@@ -20,7 +20,7 @@ class ScoreResource implements ScoresApi {
 
   @Override
   public ScoreDTO getScore(Integer id) {
-    return mapScore(new ScoreEntity());
+    return mapScore(service.findOrThrow(id));
   }
 
   @Override

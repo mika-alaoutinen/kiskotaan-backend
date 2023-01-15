@@ -59,6 +59,7 @@ class GlobalErrorHandler {
         .timestamp(OffsetDateTime.now())
         .status(400)
         .error("Bad Request")
+        .message("Invalid request body")
         .path(getPath(uri))
         .validationErrors(errors);
   }

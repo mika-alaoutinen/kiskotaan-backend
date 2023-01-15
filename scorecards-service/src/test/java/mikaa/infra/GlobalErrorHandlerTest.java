@@ -65,6 +65,7 @@ class GlobalErrorHandlerTest {
     assertNotNull(body.getTimestamp());
     assertEquals(400, body.getStatus());
     assertEquals("Bad Request", body.getError());
+    assertEquals("Invalid request body", body.getMessage());
     assertEquals("/api/scorecards/1", body.getPath());
 
     var expectedError = new ValidationErrorDTO()

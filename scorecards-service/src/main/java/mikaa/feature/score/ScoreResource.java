@@ -20,17 +20,14 @@ class ScoreResource implements ScoresApi {
 
   @Override
   public ScoreDTO getScore(Integer id) {
-    return mapScore(service.findOrThrow(id));
+    var score = service.findOrThrow(id);
+    return MAPPER.map(score, ScoreDTO.class);
   }
 
   @Override
   @Transactional
   public void deleteScore(Integer id) {
     service.delete(id);
-  }
-
-  private static ScoreDTO mapScore(ScoreEntity score) {
-    return MAPPER.map(score, ScoreDTO.class);
   }
 
 }

@@ -112,7 +112,7 @@ class ScoreResourceTest {
   void should_delete_score() {
     given()
         .when()
-        .delete(getEndpointUrl(1))
+        .delete("/scores/1")
         .then()
         .statusCode(204);
 

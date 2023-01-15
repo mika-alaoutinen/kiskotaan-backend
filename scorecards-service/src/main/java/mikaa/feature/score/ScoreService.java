@@ -4,17 +4,19 @@ import javax.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.player.PlayerService;
-import mikaa.feature.scorecard.ScoreCardEntity;
+import mikaa.feature.scorecard.ScoreCardService;
 import mikaa.model.NewScoreDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-public class ScoreService {
+class ScoreService {
 
   private final PlayerService playerService;
+  private final ScoreCardService scoreCardService;
   private final ScoreRepository repository;
 
-  public ScoreEntity addScore(NewScoreDTO newScore, ScoreCardEntity scoreCard) {
+  ScoreEntity addScore(long id, NewScoreDTO newScore) {
+    var scoreCard = scoreCardService.findOrThrow(id);
     var player = playerService.findOrThrow(newScore.getPlayerId().longValue());
     var score = new ScoreEntity(newScore.getHole(), newScore.getScore());
 

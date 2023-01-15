@@ -13,9 +13,7 @@ import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoreCardsApi;
 import mikaa.model.NewScoreCardDTO;
-import mikaa.model.NewScoreDTO;
 import mikaa.model.ScoreCardDTO;
-import mikaa.model.ScoreDTO;
 
 @ApplicationScoped
 @Blocking
@@ -48,13 +46,6 @@ class ScoreCardResource implements ScoreCardsApi {
         .stream()
         .map(ScoreCardResource::mapScoreCard)
         .toList();
-  }
-
-  @Override
-  @Transactional
-  public ScoreDTO addScore(Integer id, @Valid @NotNull NewScoreDTO newScoreDTO) {
-    var score = service.addScore(id, newScoreDTO);
-    return MAPPER.map(score, ScoreDTO.class);
   }
 
   private static ScoreCardDTO mapScoreCard(ScoreCardEntity scoreCard) {

@@ -27,4 +27,8 @@ class ScoreService {
     return score;
   }
 
+  void delete(long id) {
+    repository.deleteById(id);
+  }
+
 }

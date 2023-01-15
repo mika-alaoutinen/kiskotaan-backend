@@ -27,7 +27,9 @@ public class ScoreResource implements ScoresApi {
   }
 
   @Override
+  @Transactional
   public void deleteScore(Integer id) {
+    service.delete(id);
   }
 
   private static ScoreDTO mapScore(ScoreEntity score) {

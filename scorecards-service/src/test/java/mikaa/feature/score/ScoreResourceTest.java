@@ -108,6 +108,17 @@ class ScoreResourceTest {
     verify(repository, never()).persist(any(ScoreEntity.class));
   }
 
+  @Test
+  void should_delete_score() {
+    given()
+        .when()
+        .delete(getEndpointUrl(1))
+        .then()
+        .statusCode(204);
+
+    verify(repository, atLeastOnce()).deleteById(1L);
+  }
+
   private static void assertNotFoundResponse(ValidatableResponse response, String message, int scoreCardId) {
     String path = String.format("/api/%s", getEndpointUrl(scoreCardId));
 

@@ -13,8 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -38,7 +38,7 @@ public class ScoreCardEntity {
   @GeneratedValue
   private Long id;
 
-  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scorecard", optional = false)
+  @ManyToOne(fetch = FetchType.LAZY)
   private CourseEntity course;
 
   @Size(min = 1, max = 5, message = "Score card can have 1-5 players")
@@ -54,27 +54,22 @@ public class ScoreCardEntity {
     this.players = players;
   }
 
-  void setCourse(CourseEntity course) {
-    this.course = course;
-    course.setScorecard(this);
-  }
-
-  void addPlayer(PlayerEntity player) {
+  public void addPlayer(PlayerEntity player) {
     players.add(player);
     player.getScorecards().add(this);
   }
 
-  void removePlayer(PlayerEntity player) {
+  public void removePlayer(PlayerEntity player) {
     players.remove(player);
     player.getScorecards().remove(this);
   }
 
-  void addScore(ScoreEntity score) {
+  public void addScore(ScoreEntity score) {
     scores.add(score);
     score.setScorecard(this);
   }
 
-  void removeScore(ScoreEntity score) {
+  public void removeScore(ScoreEntity score) {
     scores.remove(score);
     score.setScorecard(null);
   }

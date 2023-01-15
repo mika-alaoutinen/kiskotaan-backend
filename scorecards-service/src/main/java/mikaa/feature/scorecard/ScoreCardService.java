@@ -1,10 +1,11 @@
 package mikaa.feature.scorecard;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.course.CourseService;
@@ -13,25 +14,26 @@ import mikaa.model.NewScoreCardDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class ScoreCardService {
+public class ScoreCardService {
 
   private final CourseService courseService;
   private final PlayerService playerService;
   private final ScoreCardRepository repository;
 
+  public ScoreCardEntity findOrThrow(long id) {
+    return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
+  }
+
   List<ScoreCardEntity> findAll() {
     return repository.listAll();
   }
 
-  Optional<ScoreCardEntity> findOne(long id) {
-    return repository.findByIdOptional(id);
-  }
-
   ScoreCardEntity add(NewScoreCardDTO newScoreCard) {
-    var course = courseService.findOrThrow(newScoreCard.getCourseId());
+    var course = courseService.findOrThrow(newScoreCard.getCourseId().longValue());
 
     var players = newScoreCard.getPlayerIds()
         .stream()
+        .map(BigDecimal::longValue)
         .map(playerService::findOrThrow)
         .collect(Collectors.toSet());
 
@@ -42,6 +44,10 @@ class ScoreCardService {
 
   void delete(long id) {
     repository.deleteById(id);
+  }
+
+  private static NotFoundException notFound(long id) {
+    return new NotFoundException("Could not find score card with id " + id);
   }
 
 }

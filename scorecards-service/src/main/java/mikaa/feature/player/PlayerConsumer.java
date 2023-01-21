@@ -18,11 +18,13 @@ class PlayerConsumer {
 
   @Incoming("players-in")
   void consumeCourses(PlayerEvent event) {
+    var type = event.type();
     var payload = event.payload();
-    log.info("type " + event.type());
+
+    log.info("type " + type);
     log.info("payload " + payload);
 
-    switch (event.type()) {
+    switch (type) {
       case PLAYER_ADDED:
         service.add(payload);
         break;
@@ -33,7 +35,7 @@ class PlayerConsumer {
         service.update(payload);
         break;
       default:
-        log.warn("Unrecognized event type " + event.type());
+        log.warn("Unrecognized event type " + type);
         break;
     }
   }

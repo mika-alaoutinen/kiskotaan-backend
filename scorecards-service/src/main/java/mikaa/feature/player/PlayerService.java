@@ -17,19 +17,29 @@ class PlayerService implements PlayerFinder {
     return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }
 
-  void add(PlayerDTO newPlayer) {
-    var entity = new PlayerEntity(null, newPlayer.firstName(), newPlayer.lastName());
+  void add(PlayerDTO player) {
+    var entity = new PlayerEntity(null, player.firstName(), player.lastName());
     repository.persist(entity);
   }
 
-  void delete(PlayerDTO newPlayer) {
+  void delete(PlayerDTO player) {
+    repository.deleteById(player.id());
   }
 
-  void update(PlayerDTO newPlayer) {
+  void update(PlayerDTO player) {
+    repository.findByIdOptional(player.id())
+        .map(entity -> updateName(entity, player))
+        .ifPresent(repository::persist);
   }
 
   private static NotFoundException notFound(long id) {
     return new NotFoundException("Could not find player with id " + id);
+  }
+
+  private static PlayerEntity updateName(PlayerEntity entity, PlayerDTO updated) {
+    entity.setFirstName(updated.firstName());
+    entity.setLastName(updated.lastName());
+    return entity;
   }
 
 }

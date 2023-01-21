@@ -80,7 +80,7 @@ class CourseEventsTest {
     assertEquals(1, sink.received().size());
     var event = sink.received().get(0).getPayload();
     assertEquals(eventName, event.type().toString());
-    assertEquals(courseName, event.course().name());
+    assertEquals(courseName, event.payload().name());
   }
 
   private static CourseEntity courseMock() {

@@ -2,7 +2,7 @@ package mikaa.players.events;
 
 public interface PlayerEvents {
 
-  public record PlayerEvent(EventType type, Player player) {
+  public record PlayerEvent(EventType type, Player payload) {
   }
 
   enum EventType {

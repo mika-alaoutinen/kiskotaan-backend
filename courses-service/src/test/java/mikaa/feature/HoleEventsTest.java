@@ -84,7 +84,7 @@ class HoleEventsTest {
     assertEquals(1, sink.received().size());
     var event = sink.received().get(0).getPayload();
     assertEquals(eventName, event.type().toString());
-    assertEquals(courseId, event.course().id());
+    assertEquals(courseId, event.payload().id());
   }
 
   private static CourseEntity courseMock() {

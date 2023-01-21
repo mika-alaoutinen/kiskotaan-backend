@@ -17,7 +17,7 @@ class PlayerConsumer {
   private final PlayerService service;
 
   @Incoming("players-in")
-  void consumeCourses(PlayerEvent event) {
+  void consume(PlayerEvent event) {
     var type = event.type();
     var payload = event.payload();
 

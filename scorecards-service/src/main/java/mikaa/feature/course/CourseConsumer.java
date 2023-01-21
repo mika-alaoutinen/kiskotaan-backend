@@ -14,7 +14,7 @@ class CourseConsumer {
   private static final Logger log = LoggerFactory.getLogger(CourseConsumer.class);
 
   @Incoming("courses-in")
-  void consumeCourses(CourseEvent event) {
+  void consume(CourseEvent event) {
     log.info("type " + event.type());
     log.info("payload " + event.payload());
   }

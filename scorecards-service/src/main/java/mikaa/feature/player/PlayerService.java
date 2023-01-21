@@ -5,11 +5,10 @@ import javax.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.kafka.player.PlayerDTO;
-import mikaa.kafka.player.PlayerUpdater;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class PlayerService implements PlayerFinder, PlayerUpdater {
+class PlayerService implements PlayerFinder {
 
   private final PlayerRepository repository;
 
@@ -18,18 +17,15 @@ class PlayerService implements PlayerFinder, PlayerUpdater {
     return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }
 
-  @Override
-  public void add(PlayerDTO newPlayer) {
+  void add(PlayerDTO newPlayer) {
     var entity = new PlayerEntity(null, newPlayer.firstName(), newPlayer.lastName());
     repository.persist(entity);
   }
 
-  @Override
-  public void delete(PlayerDTO newPlayer) {
+  void delete(PlayerDTO newPlayer) {
   }
 
-  @Override
-  public void update(PlayerDTO newPlayer) {
+  void update(PlayerDTO newPlayer) {
   }
 
   private static NotFoundException notFound(long id) {

@@ -9,7 +9,7 @@ import javax.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.course.CourseService;
-import mikaa.feature.player.PlayerService;
+import mikaa.feature.player.PlayerFinder;
 import mikaa.model.NewScoreCardDTO;
 
 @ApplicationScoped
@@ -17,7 +17,7 @@ import mikaa.model.NewScoreCardDTO;
 public class ScoreCardService {
 
   private final CourseService courseService;
-  private final PlayerService playerService;
+  private final PlayerFinder playerFinder;
   private final ScoreCardRepository repository;
 
   public ScoreCardEntity findOrThrow(long id) {
@@ -34,7 +34,7 @@ public class ScoreCardService {
     var players = newScoreCard.getPlayerIds()
         .stream()
         .map(BigDecimal::longValue)
-        .map(playerService::findOrThrow)
+        .map(playerFinder::findOrThrow)
         .collect(Collectors.toSet());
 
     var entity = new ScoreCardEntity(course, players);

@@ -13,7 +13,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import mikaa.feature.player.PlayerEntity;
-import mikaa.feature.player.PlayerService;
+import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardService;
 
 import static io.restassured.RestAssured.given;
@@ -28,7 +28,7 @@ class ScoreResourceTest {
   private ScoreCardService scoreCardService;
 
   @InjectMock
-  private PlayerService playerService;
+  private PlayerFinder playerFinder;
 
   @InjectMock
   private ScoreRepository repository;

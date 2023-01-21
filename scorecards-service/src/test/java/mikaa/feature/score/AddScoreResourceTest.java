@@ -21,7 +21,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
-import mikaa.feature.player.PlayerService;
+import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.feature.scorecard.ScoreCardService;
 import mikaa.model.NewScoreDTO;
@@ -43,7 +43,7 @@ class AddScoreResourceTest {
   private ScoreCardService scoreCardService;
 
   @InjectMock
-  private PlayerService playerService;
+  private PlayerFinder playerFinder;
 
   @InjectMock
   private ScoreRepository repository;
@@ -51,7 +51,7 @@ class AddScoreResourceTest {
   @Test
   void should_add_new_score() {
     when(scoreCardService.findOrThrow(anyLong())).thenReturn(scoreCardMock());
-    when(playerService.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
+    when(playerFinder.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
 
     postScore(NEW_SCORE)
         .statusCode(200) // see readme for problem description
@@ -67,7 +67,7 @@ class AddScoreResourceTest {
   @Test
   void should_throw_400_when_invalid_request_body() {
     when(scoreCardService.findOrThrow(anyLong())).thenReturn(scoreCardMock());
-    when(playerService.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
+    when(playerFinder.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
 
     var invalidScore = new NewScoreDTO()
         .playerId(new BigDecimal("123"))
@@ -101,7 +101,7 @@ class AddScoreResourceTest {
   @Test
   void should_throw_404_when_player_not_found() {
     String errorMsg = "Could not find player with id 123";
-    when(playerService.findOrThrow(anyLong())).thenThrow(new NotFoundException(errorMsg));
+    when(playerFinder.findOrThrow(anyLong())).thenThrow(new NotFoundException(errorMsg));
 
     var response = postScore(NEW_SCORE);
     assertNotFoundResponse(response, errorMsg, 1);

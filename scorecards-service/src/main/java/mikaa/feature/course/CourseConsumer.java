@@ -1,4 +1,4 @@
-package mikaa.kafka.player;
+package mikaa.feature.course;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -6,13 +6,15 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import mikaa.events.course.CourseEvent;
+
 @ApplicationScoped
-class PlayerConsumer {
+class CourseConsumer {
 
-  private static final Logger log = LoggerFactory.getLogger(PlayerConsumer.class);
+  private static final Logger log = LoggerFactory.getLogger(CourseConsumer.class);
 
-  @Incoming("players-in")
-  void consumeCourses(PlayerEvent event) {
+  @Incoming("courses-in")
+  void consume(CourseEvent event) {
     log.info("type " + event.type());
     log.info("payload " + event.payload());
   }

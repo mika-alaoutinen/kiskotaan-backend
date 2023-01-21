@@ -1,4 +1,4 @@
-package mikaa.kafka;
+package mikaa.kafka.course;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -12,8 +12,9 @@ class CourseConsumer {
   private static final Logger log = LoggerFactory.getLogger(CourseConsumer.class);
 
   @Incoming("courses-in")
-  void consumeCourses(String event) {
-    log.info(event);
+  void consumeCourses(CourseEvent event) {
+    log.info("type " + event.type());
+    log.info("payload " + event.payload());
   }
 
 }

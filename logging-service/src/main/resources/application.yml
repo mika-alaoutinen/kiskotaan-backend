@@ -3,10 +3,6 @@ quarkus:
     port: 8085
     root-path: /api
 
-kafka:
-  bootstrap:
-    servers: localhost:9092
-
 log:
   enabled: true
   level: info

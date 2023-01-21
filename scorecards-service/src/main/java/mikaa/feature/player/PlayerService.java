@@ -20,6 +20,8 @@ class PlayerService implements PlayerFinder, PlayerUpdater {
 
   @Override
   public void add(PlayerDTO newPlayer) {
+    var entity = new PlayerEntity(null, newPlayer.firstName(), newPlayer.lastName());
+    repository.persist(entity);
   }
 
   @Override

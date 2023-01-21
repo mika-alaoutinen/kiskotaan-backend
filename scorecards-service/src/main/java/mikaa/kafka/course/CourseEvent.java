@@ -1,4 +1,4 @@
 package mikaa.kafka.course;
 
-record CourseEvent(CourseEventType type, CourseDTO payload) {
+public record CourseEvent(CourseEventType type, CourseDTO payload) {
 }

@@ -1,4 +1,4 @@
-package mikaa.kafka.player;
+package mikaa.feature.player;
 
 import javax.enterprise.context.ApplicationScoped;
 
@@ -7,13 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.kafka.player.PlayerEvent;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 class PlayerConsumer {
 
   private static final Logger log = LoggerFactory.getLogger(PlayerConsumer.class);
-  private final PlayerUpdater updater;
+  private final PlayerService service;
 
   @Incoming("players-in")
   void consumeCourses(PlayerEvent event) {
@@ -23,13 +24,13 @@ class PlayerConsumer {
 
     switch (event.type()) {
       case PLAYER_ADDED:
-        updater.add(payload);
+        service.add(payload);
         break;
       case PLAYER_DELETED:
-        updater.delete(payload);
+        service.delete(payload);
         break;
       case PLAYER_UPDATED:
-        updater.update(payload);
+        service.update(payload);
         break;
       default:
         log.warn("Unrecognized event type " + event.type());

@@ -1,5 +1,5 @@
 package mikaa.kafka.player;
 
-public enum PlayerEventType {
+enum PlayerEventType {
   PLAYER_ADDED, PLAYER_DELETED, PLAYER_UPDATED
 }

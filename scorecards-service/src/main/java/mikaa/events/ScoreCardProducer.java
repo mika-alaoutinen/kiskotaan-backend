@@ -1,4 +1,4 @@
-package mikaa.kafka;
+package mikaa.events;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;

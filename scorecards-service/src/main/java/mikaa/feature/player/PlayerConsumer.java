@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kafka.player.PlayerEvent;
+import mikaa.events.player.PlayerEvent;
 
 @ApplicationScoped
 @RequiredArgsConstructor

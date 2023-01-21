@@ -4,7 +4,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kafka.player.PlayerDTO;
+import mikaa.events.player.PlayerDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor

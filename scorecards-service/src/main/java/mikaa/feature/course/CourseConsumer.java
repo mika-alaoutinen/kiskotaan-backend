@@ -6,7 +6,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import mikaa.kafka.course.CourseEvent;
+import mikaa.events.course.CourseEvent;
 
 @ApplicationScoped
 class CourseConsumer {

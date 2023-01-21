@@ -1,4 +1,4 @@
-package mikaa.kafka.course;
+package mikaa.events.course;
 
 enum CourseEventType {
   COURSE_ADDED,

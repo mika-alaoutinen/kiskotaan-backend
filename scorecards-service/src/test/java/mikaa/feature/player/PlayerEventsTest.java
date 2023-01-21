@@ -14,9 +14,9 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
 import io.smallrye.reactive.messaging.providers.connectors.InMemorySource;
-import mikaa.kafka.player.PlayerDTO;
-import mikaa.kafka.player.PlayerEvent;
-import mikaa.kafka.player.PlayerEventType;
+import mikaa.events.player.PlayerDTO;
+import mikaa.events.player.PlayerEvent;
+import mikaa.events.player.PlayerEventType;
 
 @QuarkusTest
 class PlayerEventsTest {

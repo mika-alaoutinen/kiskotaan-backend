@@ -1,4 +1,4 @@
-package mikaa.kafka.course;
+package mikaa.events.course;
 
 import java.util.List;
 

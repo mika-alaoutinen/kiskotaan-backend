@@ -16,6 +16,11 @@ class KafkaConsumer {
     log.info(event);
   }
 
+  @Incoming("holes-in")
+  void consumeHoles(String event) {
+    log.info(event);
+  }
+
   @Incoming("players-in")
   void consumePlayers(String event) {
     log.info(event);

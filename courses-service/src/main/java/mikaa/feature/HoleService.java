@@ -41,7 +41,7 @@ class HoleService {
 
   void delete(long id) {
     repository.findByIdOptional(id)
-        .map(HoleMapper::dto)
+        .map(HoleMapper::payload)
         .ifPresent(hole -> {
           repository.deleteById(id);
           producer.send(HoleEventType.HOLE_DELETED, hole);
@@ -50,9 +50,8 @@ class HoleService {
 
   private HoleDTO save(HoleEntity hole, HoleEventType type) {
     repository.persist(hole);
-    var dto = HoleMapper.dto(hole);
-    producer.send(type, dto);
-    return dto;
+    producer.send(type, HoleMapper.payload(hole));
+    return HoleMapper.dto(hole);
   }
 
 }

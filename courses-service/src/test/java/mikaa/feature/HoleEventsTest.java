@@ -28,6 +28,9 @@ import mikaa.kafka.holes.HoleProducer;
 @QuarkusTest
 class HoleEventsTest {
 
+  private static final long COURSE_ID = 321;
+  private static final long HOLE_ID = 123;
+
   @Any
   @Inject
   private InMemoryConnector connector;
@@ -59,7 +62,7 @@ class HoleEventsTest {
   @Test
   void should_send_event_on_add() {
     when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
-    service.add(1L, new NewHoleDTO(1, 3, 100));
+    service.add(COURSE_ID, new NewHoleDTO(1, 3, 100));
     // holeId is null because mocked repository does not create a new ID on persist
     assertEvent("HOLE_ADDED", null);
     verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
@@ -68,16 +71,16 @@ class HoleEventsTest {
   @Test
   void should_send_event_on_update() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
-    service.update(1L, new NewHoleDTO(1, 3, 100));
-    assertEvent("HOLE_UPDATED", 1L);
+    service.update(HOLE_ID, new NewHoleDTO(1, 3, 100));
+    assertEvent("HOLE_UPDATED", HOLE_ID);
     verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
   @Test
   void should_send_event_on_delete() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
-    service.delete(1L);
-    assertEvent("HOLE_DELETED", 1L);
+    service.delete(HOLE_ID);
+    assertEvent("HOLE_DELETED", HOLE_ID);
     verify(repository, atLeastOnce()).deleteById(anyLong());
   }
 
@@ -86,15 +89,16 @@ class HoleEventsTest {
     var event = sink.received().get(0).getPayload();
     assertEquals(eventName, event.type().toString());
     assertEquals(holeId, event.payload().id());
+    assertEquals(COURSE_ID, event.payload().courseId());
   }
 
   private static CourseEntity courseMock() {
-    return new CourseEntity(1L, "DG Course", new ArrayList<>());
+    return new CourseEntity(COURSE_ID, "DG Course", new ArrayList<>());
   }
 
   private static HoleEntity holeMock() {
     var course = courseMock();
-    var hole = new HoleEntity(1L, 2, 3, 123, course);
+    var hole = new HoleEntity(HOLE_ID, 2, 3, 123, course);
     course.addHole(hole);
     return hole;
   }

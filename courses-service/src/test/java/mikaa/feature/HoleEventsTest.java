@@ -23,6 +23,7 @@ import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
 import io.smallrye.reactive.messaging.providers.connectors.InMemorySink;
 import mikaa.dto.NewHoleDTO;
 import mikaa.kafka.holes.HoleEvent;
+import mikaa.kafka.holes.HolePayload;
 import mikaa.kafka.holes.HoleProducer;
 
 @QuarkusTest
@@ -63,16 +64,20 @@ class HoleEventsTest {
   void should_send_event_on_add() {
     when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.add(COURSE_ID, new NewHoleDTO(1, 3, 100));
+
     // holeId is null because mocked repository does not create a new ID on persist
-    assertEvent("HOLE_ADDED", null);
+    var expected = new HolePayload(null, COURSE_ID, 1, 3, 100);
+    assertEvent("HOLE_ADDED", expected);
     verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
   @Test
   void should_send_event_on_update() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
-    service.update(HOLE_ID, new NewHoleDTO(1, 3, 100));
-    assertEvent("HOLE_UPDATED", HOLE_ID);
+    service.update(HOLE_ID, new NewHoleDTO(4, 5, 165));
+
+    var expected = new HolePayload(HOLE_ID, COURSE_ID, 4, 5, 165);
+    assertEvent("HOLE_UPDATED", expected);
     verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
@@ -80,16 +85,22 @@ class HoleEventsTest {
   void should_send_event_on_delete() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
     service.delete(HOLE_ID);
-    assertEvent("HOLE_DELETED", HOLE_ID);
+
+    var expected = new HolePayload(HOLE_ID, COURSE_ID, 2, 3, 123);
+    assertEvent("HOLE_DELETED", expected);
     verify(repository, atLeastOnce()).deleteById(anyLong());
   }
 
-  private void assertEvent(String eventName, Long holeId) {
+  private void assertEvent(String eventName, HolePayload expected) {
     assertEquals(1, sink.received().size());
     var event = sink.received().get(0).getPayload();
+
     assertEquals(eventName, event.type().toString());
-    assertEquals(holeId, event.payload().id());
-    assertEquals(COURSE_ID, event.payload().courseId());
+    assertEquals(expected.id(), event.payload().id());
+    assertEquals(expected.courseId(), event.payload().courseId());
+    assertEquals(expected.number(), event.payload().number());
+    assertEquals(expected.distance(), event.payload().distance());
+    assertEquals(expected.par(), event.payload().par());
   }
 
   private static CourseEntity courseMock() {

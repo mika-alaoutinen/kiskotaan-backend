@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@EqualsAndHashCode(callSuper = false)
-@ToString
+@EqualsAndHashCode(callSuper = false, exclude = "course")
+@ToString(exclude = "course")
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "hole")

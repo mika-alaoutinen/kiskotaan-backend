@@ -8,6 +8,9 @@ mp:
       courses-in:
         connector: smallrye-in-memory
         topic: "courses"
+      holes-in:
+        connector: smallrye-in-memory
+        topic: "holes"
       players-in:
         connector: smallrye-in-memory
         topic: "players"

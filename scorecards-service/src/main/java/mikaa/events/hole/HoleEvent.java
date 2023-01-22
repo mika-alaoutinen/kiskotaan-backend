@@ -1,4 +1,4 @@
 package mikaa.events.hole;
 
-public record HoleEvent(String s) {
+public record HoleEvent(HoleEventType type, HolePayload payload) {
 }

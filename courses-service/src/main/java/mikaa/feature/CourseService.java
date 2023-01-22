@@ -10,14 +10,14 @@ import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseNameDTO;
 import mikaa.dto.CourseSummaryDTO;
 import mikaa.dto.NewCourseDTO;
-import mikaa.kafka.EventType;
-import mikaa.kafka.KafkaProducer;
+import mikaa.kafka.courses.CourseEventType;
+import mikaa.kafka.courses.CourseProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 class CourseService {
 
-  private final KafkaProducer producer;
+  private final CourseProducer producer;
   private final CourseRepository repository;
 
   List<CourseSummaryDTO> findAll() {
@@ -42,7 +42,7 @@ class CourseService {
     repository.persist(entity);
 
     var savedCourse = CourseMapper.course(entity);
-    producer.send(EventType.COURSE_ADDED, savedCourse);
+    producer.send(CourseEventType.COURSE_ADDED, savedCourse);
 
     return savedCourse;
   }
@@ -57,7 +57,7 @@ class CourseService {
     maybeCourse.ifPresent(repository::persist);
 
     maybeCourse.map(CourseMapper::course)
-        .ifPresent(course -> producer.send(EventType.COURSE_UPDATED, course));
+        .ifPresent(course -> producer.send(CourseEventType.COURSE_UPDATED, course));
 
     return maybeCourse.map(CourseMapper::courseName);
   }
@@ -67,7 +67,7 @@ class CourseService {
         .map(CourseMapper::course)
         .ifPresent(course -> {
           repository.deleteById(id);
-          producer.send(EventType.COURSE_DELETED, course);
+          producer.send(CourseEventType.COURSE_DELETED, course);
         });
   }
 

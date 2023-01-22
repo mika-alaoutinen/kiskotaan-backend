@@ -12,3 +12,5 @@ mp:
     outgoing:
       courses-out:
         topic: "courses"
+      holes-out:
+        topic: "holes"

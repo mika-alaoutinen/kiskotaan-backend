@@ -1,4 +1,4 @@
-package mikaa.kafka;
+package mikaa.kafka.holes;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -6,17 +6,15 @@ import javax.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
-import mikaa.dto.CourseDTO;
-
 @ApplicationScoped
-public class KafkaProducer {
+public class HoleProducer {
 
   @Inject
-  @Channel("courses-out")
-  Emitter<CourseEvent> emitter;
+  @Channel("holes-out")
+  Emitter<HoleEvent> emitter;
 
-  public void send(EventType type, CourseDTO course) {
-    var acked = emitter.send(new CourseEvent(type, course));
+  public void send(HoleEventType type, HolePayload payload) {
+    var acked = emitter.send(new HoleEvent(type, payload));
     acked.toCompletableFuture().join();
   }
 

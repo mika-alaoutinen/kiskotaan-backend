@@ -11,3 +11,6 @@ mp:
       courses-out:
         connector: smallrye-in-memory
         topic: "courses"
+      holes-out:
+        connector: smallrye-in-memory
+        topic: "holes"

@@ -3,6 +3,7 @@ package mikaa.feature.player;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -54,6 +55,14 @@ class PlayerEventsTest {
 
     source.send(new PlayerEvent(PlayerEventType.PLAYER_UPDATED, MIKKI_HIIRI));
     verify(repository, atLeastOnce()).persist(any(PlayerEntity.class));
+  }
+
+  @Test
+  void should_do_nothing_on_update_if_player_not_found() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
+
+    source.send(new PlayerEvent(PlayerEventType.PLAYER_UPDATED, MIKKI_HIIRI));
+    verify(repository, never()).persist(any(PlayerEntity.class));
   }
 
   @Test

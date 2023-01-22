@@ -17,6 +17,11 @@ mp:
           offset:
             reset: "earliest"
         topic: "courses"
+      holes-in:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "holes"
       players-in:
         auto:
           offset:

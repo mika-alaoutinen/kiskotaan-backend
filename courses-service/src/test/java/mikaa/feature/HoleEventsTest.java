@@ -60,7 +60,8 @@ class HoleEventsTest {
   void should_send_event_on_add() {
     when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.add(1L, new NewHoleDTO(1, 3, 100));
-    assertEvent("HOLE_ADDED", 1L);
+    // holeId is null because mocked repository does not create a new ID on persist
+    assertEvent("HOLE_ADDED", null);
     verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
@@ -80,11 +81,11 @@ class HoleEventsTest {
     verify(repository, atLeastOnce()).deleteById(anyLong());
   }
 
-  private void assertEvent(String eventName, Long courseId) {
+  private void assertEvent(String eventName, Long holeId) {
     assertEquals(1, sink.received().size());
     var event = sink.received().get(0).getPayload();
     assertEquals(eventName, event.type().toString());
-    assertEquals(courseId, event.payload().id());
+    assertEquals(holeId, event.payload().id());
   }
 
   private static CourseEntity courseMock() {

@@ -1,5 +1,6 @@
 package mikaa.feature.course;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -32,7 +33,12 @@ public class CourseEntity {
   private String name;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
-  private Set<ScoreCardEntity> scorecards;
+  private Set<ScoreCardEntity> scorecards = new HashSet<>();
+
+  public CourseEntity(int holes, String name) {
+    this.holes = holes;
+    this.name = name;
+  }
 
   CourseEntity incrementHoleCount() {
     holes++;

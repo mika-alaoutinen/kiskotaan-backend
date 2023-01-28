@@ -7,10 +7,11 @@ import lombok.RequiredArgsConstructor;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-public class CourseService {
+class CourseService implements CourseFinder {
 
   private final CourseRepository repository;
 
+  @Override
   public CourseEntity findOrThrow(long id) {
     return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }

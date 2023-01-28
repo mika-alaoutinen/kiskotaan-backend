@@ -24,6 +24,7 @@ import io.smallrye.reactive.messaging.providers.connectors.InMemorySource;
 import mikaa.events.course.CourseEvent;
 import mikaa.events.course.CourseEventType;
 import mikaa.events.course.CoursePayload;
+import mikaa.events.course.Hole;
 
 @QuarkusTest
 class CourseEventsTest {
@@ -46,7 +47,10 @@ class CourseEventsTest {
 
   @Test
   void should_save_new_course() {
-    source.send(new CourseEvent(CourseEventType.COURSE_ADDED, LAAJIS));
+    var hole = new Hole(222, 1, 3, 85);
+    var newCourse = new CoursePayload(111L, "Laajis", List.of(hole));
+
+    source.send(new CourseEvent(CourseEventType.COURSE_ADDED, newCourse));
     verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
   }
 

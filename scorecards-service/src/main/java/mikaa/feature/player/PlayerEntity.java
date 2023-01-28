@@ -44,8 +44,12 @@ public class PlayerEntity {
   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "players")
   private Set<ScoreCardEntity> scorecards = new HashSet<>();
 
+  public PlayerEntity(String firstName, String lastName) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+
   public PlayerEntity(Long id, String firstName, String lastName) {
-    this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
   }

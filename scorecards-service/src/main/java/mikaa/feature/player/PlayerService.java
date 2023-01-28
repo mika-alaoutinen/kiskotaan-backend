@@ -18,7 +18,7 @@ class PlayerService implements PlayerFinder {
   }
 
   void add(PlayerPayload player) {
-    var entity = new PlayerEntity(null, player.firstName(), player.lastName());
+    var entity = new PlayerEntity(player.firstName(), player.lastName());
     repository.persist(entity);
   }
 

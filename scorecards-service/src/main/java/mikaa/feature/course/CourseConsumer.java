@@ -18,7 +18,7 @@ class CourseConsumer {
   private final CourseService service;
 
   @Incoming("courses-in")
-  @Transactional
+  // @Transactional
   void consume(CourseEvent event) {
     var type = event.type();
     var payload = event.payload();

@@ -74,7 +74,7 @@ class CourseEventsTest {
 
   @Test
   void should_delete_course() {
-    source.send(new CourseEvent(CourseEventType.COURSE_UPDATED, LAAJIS));
+    source.send(new CourseEvent(CourseEventType.COURSE_DELETED, LAAJIS));
     verify(repository, atLeastOnce()).deleteById(111L);
   }
 

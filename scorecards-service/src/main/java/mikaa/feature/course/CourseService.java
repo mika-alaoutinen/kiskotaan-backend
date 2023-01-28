@@ -25,6 +25,7 @@ class CourseService implements CourseFinder {
   }
 
   void delete(CoursePayload course) {
+    repository.deleteById(course.id());
   }
 
   void update(CoursePayload course) {

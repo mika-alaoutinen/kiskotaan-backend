@@ -51,7 +51,8 @@ class CourseEventsTest {
     var newCourse = new CoursePayload(111L, "Laajis", List.of(hole));
 
     source.send(new CourseEvent(CourseEventType.COURSE_ADDED, newCourse));
-    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
+    var persistedEntity = new CourseEntity(null, 1, "Laajis", Set.of());
+    verify(repository, atLeastOnce()).persist(persistedEntity);
   }
 
   @Test

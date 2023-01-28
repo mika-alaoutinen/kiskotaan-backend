@@ -26,16 +26,16 @@ import mikaa.events.player.PlayerEventType;
 @QuarkusTest
 class PlayerEventsTest {
 
-  private static final PlayerPayload MIKKI_HIIRI = new PlayerPayload(123, "Mikki", "Hiiri");
+  static final PlayerPayload MIKKI_HIIRI = new PlayerPayload(123, "Mikki", "Hiiri");
 
   @Any
   @Inject
-  private InMemoryConnector connector;
+  InMemoryConnector connector;
 
   @InjectMock
-  private PlayerRepository repository;
+  PlayerRepository repository;
 
-  private InMemorySource<PlayerEvent> source;
+  InMemorySource<PlayerEvent> source;
 
   @BeforeEach
   void setup() {

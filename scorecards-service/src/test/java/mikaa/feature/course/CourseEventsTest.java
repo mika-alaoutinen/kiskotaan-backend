@@ -29,16 +29,16 @@ import mikaa.events.course.Hole;
 @QuarkusTest
 class CourseEventsTest {
 
-  private static final CoursePayload LAAJIS = new CoursePayload(111, "Laajis", List.of());
+  static final CoursePayload LAAJIS = new CoursePayload(111, "Laajis", List.of());
 
   @Any
   @Inject
-  private InMemoryConnector connector;
+  InMemoryConnector connector;
 
   @InjectMock
-  private CourseRepository repository;
+  CourseRepository repository;
 
-  private InMemorySource<CourseEvent> source;
+  InMemorySource<CourseEvent> source;
 
   @BeforeEach
   void setup() {

@@ -29,10 +29,18 @@ class CourseService implements CourseFinder {
   }
 
   void update(CoursePayload course) {
+    repository.findByIdOptional(course.id())
+        .map(entity -> updateName(entity, course))
+        .ifPresent(repository::persist);
   }
 
   private static NotFoundException notFound(long id) {
     return new NotFoundException("Could not find course with id " + id);
+  }
+
+  private static CourseEntity updateName(CourseEntity entity, CoursePayload updated) {
+    entity.setName(updated.name());
+    return entity;
   }
 
 }

@@ -18,7 +18,7 @@ class HoleConsumer {
   private final HoleService service;
 
   @Incoming("holes-in")
-  // @Transactional
+  @Transactional
   void consume(HoleEvent event) {
     var type = event.type();
     var payload = event.payload();

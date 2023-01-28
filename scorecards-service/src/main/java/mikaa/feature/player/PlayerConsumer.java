@@ -23,8 +23,7 @@ class PlayerConsumer {
     var type = event.type();
     var payload = event.payload();
 
-    log.info("type " + type);
-    log.info("payload " + payload);
+    log.info("type: %s, payload: %s".formatted(type, payload));
 
     switch (type) {
       case PLAYER_ADDED -> service.add(payload);

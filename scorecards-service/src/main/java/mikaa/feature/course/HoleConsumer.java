@@ -23,8 +23,7 @@ class HoleConsumer {
     var type = event.type();
     var payload = event.payload();
 
-    log.info("type " + event.type());
-    log.info("payload " + event.payload());
+    log.info("type: %s, payload: %s".formatted(type, payload));
 
     switch (type) {
       case HOLE_ADDED -> service.add(payload);

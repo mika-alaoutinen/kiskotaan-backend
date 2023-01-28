@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.QuarkusIntegrationTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
 import io.smallrye.reactive.messaging.providers.connectors.InMemorySource;
@@ -24,7 +24,7 @@ import mikaa.events.hole.HoleEvent;
 import mikaa.events.hole.HoleEventType;
 import mikaa.events.hole.HolePayload;
 
-@QuarkusTest
+@QuarkusIntegrationTest
 class HoleEventsTest {
 
   static final HolePayload HOLE = new HolePayload(123L, 111L, 1, 3, 85);

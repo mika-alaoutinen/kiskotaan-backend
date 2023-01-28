@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.QuarkusIntegrationTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
 import io.smallrye.reactive.messaging.providers.connectors.InMemorySource;
@@ -26,7 +26,7 @@ import mikaa.events.course.CourseEventType;
 import mikaa.events.course.CoursePayload;
 import mikaa.events.course.Hole;
 
-@QuarkusTest
+@QuarkusIntegrationTest
 class CourseEventsTest {
 
   static final CoursePayload LAAJIS = new CoursePayload(111, "Laajis", List.of());

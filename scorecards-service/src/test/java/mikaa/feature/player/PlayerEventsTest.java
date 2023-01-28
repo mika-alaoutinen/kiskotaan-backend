@@ -15,7 +15,7 @@ import javax.inject.Inject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.QuarkusIntegrationTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
 import io.smallrye.reactive.messaging.providers.connectors.InMemorySource;
@@ -23,7 +23,7 @@ import mikaa.events.player.PlayerPayload;
 import mikaa.events.player.PlayerEvent;
 import mikaa.events.player.PlayerEventType;
 
-@QuarkusTest
+@QuarkusIntegrationTest
 class PlayerEventsTest {
 
   static final PlayerPayload MIKKI_HIIRI = new PlayerPayload(123, "Mikki", "Hiiri");

@@ -1,6 +1,7 @@
 package mikaa.feature.player;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ class PlayerConsumer {
   private final PlayerService service;
 
   @Incoming("players-in")
+  @Transactional
   void consume(PlayerEvent event) {
     var type = event.type();
     var payload = event.payload();

@@ -1,6 +1,7 @@
 package mikaa.feature.course;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.transaction.Transactional;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.slf4j.Logger;
@@ -17,6 +18,7 @@ class CourseConsumer {
   private final CourseService service;
 
   @Incoming("courses-in")
+  @Transactional
   void consume(CourseEvent event) {
     var type = event.type();
     var payload = event.payload();

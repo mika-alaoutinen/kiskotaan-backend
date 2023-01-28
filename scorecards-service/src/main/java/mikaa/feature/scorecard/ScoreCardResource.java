@@ -9,14 +9,12 @@ import javax.validation.constraints.NotNull;
 
 import org.modelmapper.ModelMapper;
 
-import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoreCardsApi;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.model.ScoreCardDTO;
 
 @ApplicationScoped
-@Blocking
 @RequiredArgsConstructor
 class ScoreCardResource implements ScoreCardsApi {
 

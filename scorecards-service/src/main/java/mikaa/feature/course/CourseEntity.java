@@ -28,18 +28,19 @@ public class CourseEntity {
 
   @Id
   @GeneratedValue
-  @Column(name = "course_id")
+  private Long id;
+
+  @Column(name = "course_id", unique = true)
   private long courseId;
 
-  private Long id;
   private int holes;
   private String name;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
   private Set<ScoreCardEntity> scorecards = new HashSet<>();
 
-  public CourseEntity(long id, int holes, String name) {
-    this.id = id;
+  public CourseEntity(long courseId, int holes, String name) {
+    this.courseId = courseId;
     this.holes = holes;
     this.name = name;
   }

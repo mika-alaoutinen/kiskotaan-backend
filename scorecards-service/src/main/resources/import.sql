@@ -8,9 +8,9 @@ INSERT INTO player (id, first_name, last_name) VALUES
   (102, 'Kalle', 'Kukko'),
   (103, 'Riki', 'Sorsa');
 
-INSERT INTO course (id, holes, name) VALUES
-  (201, 18, 'Frisbeegolf Laajis'),
-  (202, 9, 'Keljonkankaan frisbeegolfrata');
+INSERT INTO course (id, course_id, holes, name) VALUES
+  (201, 3, 18, 'Frisbeegolf Laajis'),
+  (202, 4, 18, 'Keljonkankaan frisbeegolfrata');
 
 INSERT INTO scorecard (id, course_id) VALUES
   (1, 201),

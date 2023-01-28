@@ -14,7 +14,9 @@ class CourseService implements CourseFinder {
 
   @Override
   public CourseEntity findOrThrow(long id) {
-    return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
+    return repository.find("courseId", id)
+        .firstResultOptional()
+        .orElseThrow(() -> notFound(id));
   }
 
   void add(CoursePayload course) {

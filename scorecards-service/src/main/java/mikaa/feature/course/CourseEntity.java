@@ -34,12 +34,22 @@ public class CourseEntity {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
   private Set<ScoreCardEntity> scorecards;
 
-  public void addScoreCard(ScoreCardEntity scoreCard) {
+  CourseEntity incrementHoleCount() {
+    holes++;
+    return this;
+  }
+
+  CourseEntity decrementHoleCount() {
+    holes--;
+    return this;
+  }
+
+  void addScoreCard(ScoreCardEntity scoreCard) {
     scorecards.add(scoreCard);
     scoreCard.setCourse(this);
   }
 
-  public void removeScoreCard(ScoreCardEntity scoreCard) {
+  void removeScoreCard(ScoreCardEntity scoreCard) {
     scorecards.remove(scoreCard);
     scoreCard.setCourse(null);
   }

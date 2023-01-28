@@ -25,15 +25,10 @@ class CourseConsumer {
     log.info("payload " + payload);
 
     switch (type) {
-      case COURSE_ADDED:
-        break;
-      case COURSE_DELETED:
-        break;
-      case COURSE_UPDATED:
-        break;
-      default:
-        log.warn("Unrecognized event type " + type);
-        break;
+      case COURSE_ADDED -> service.add(payload);
+      case COURSE_DELETED -> service.delete(payload);
+      case COURSE_UPDATED -> service.update(payload);
+      default -> log.warn("Unrecognized event type " + type);
     }
   }
 

@@ -25,18 +25,10 @@ class PlayerConsumer {
     log.info("payload " + payload);
 
     switch (type) {
-      case PLAYER_ADDED:
-        service.add(payload);
-        break;
-      case PLAYER_DELETED:
-        service.delete(payload);
-        break;
-      case PLAYER_UPDATED:
-        service.update(payload);
-        break;
-      default:
-        log.warn("Unrecognized event type " + type);
-        break;
+      case PLAYER_ADDED -> service.add(payload);
+      case PLAYER_DELETED -> service.delete(payload);
+      case PLAYER_UPDATED -> service.update(payload);
+      default -> log.warn("Unrecognized event type " + type);
     }
   }
 

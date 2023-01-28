@@ -1,7 +1,5 @@
 package mikaa.feature.course;
 
-import java.util.Set;
-
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.NotFoundException;
 

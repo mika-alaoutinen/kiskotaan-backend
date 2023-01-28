@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -27,15 +28,18 @@ public class CourseEntity {
 
   @Id
   @GeneratedValue
-  private Long id;
+  @Column(name = "course_id")
+  private long courseId;
 
+  private Long id;
   private int holes;
   private String name;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
   private Set<ScoreCardEntity> scorecards = new HashSet<>();
 
-  public CourseEntity(int holes, String name) {
+  public CourseEntity(long id, int holes, String name) {
+    this.id = id;
     this.holes = holes;
     this.name = name;
   }

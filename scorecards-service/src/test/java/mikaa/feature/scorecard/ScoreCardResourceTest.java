@@ -7,7 +7,7 @@ import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import mikaa.feature.course.CourseEntity;
-import mikaa.feature.course.CourseService;
+import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.score.ScoreEntity;
@@ -40,7 +40,7 @@ class ScoreCardResourceTest {
   private ScoreCardRepository repository;
 
   @InjectMock
-  private CourseService courseService;
+  private CourseFinder courseFinder;
 
   @InjectMock
   private PlayerFinder playerFinder;
@@ -96,7 +96,7 @@ class ScoreCardResourceTest {
 
   @Test
   void should_add_new_score_card() {
-    when(courseService.findOrThrow(anyLong())).thenReturn(COURSE);
+    when(courseFinder.findOrThrow(anyLong())).thenReturn(COURSE);
     when(playerFinder.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
     
     var newScoreCard = new NewScoreCardDTO()
@@ -123,7 +123,7 @@ class ScoreCardResourceTest {
 
   @Test
   void post_score_card_should_throw_404_when_course_not_found() {
-    when(courseService.findOrThrow(anyLong())).thenThrow(new NotFoundException("Could not find course with id 1"));
+    when(courseFinder.findOrThrow(anyLong())).thenThrow(new NotFoundException("Could not find course with id 1"));
 
     var newScoreCard = new NewScoreCardDTO()
         .courseId(BigDecimal.valueOf(1))
@@ -144,7 +144,7 @@ class ScoreCardResourceTest {
 
   @Test
   void post_score_card_should_throw_404_when_player_not_found() {
-    when(courseService.findOrThrow(anyLong())).thenReturn(COURSE);
+    when(courseFinder.findOrThrow(anyLong())).thenReturn(COURSE);
     when(playerFinder.findOrThrow(anyLong())).thenThrow(new NotFoundException("Could not find player with id 999"));
 
     var newScoreCard = new NewScoreCardDTO()

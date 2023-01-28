@@ -1,4 +1,4 @@
-package mikaa.feature.player;
+package mikaa.feature.course;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
@@ -8,27 +8,29 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.events.player.PlayerEvent;
+import mikaa.events.hole.HoleEvent;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class PlayerConsumer {
+class HoleConsumer {
 
-  private static final Logger log = LoggerFactory.getLogger(PlayerConsumer.class);
-  private final PlayerService service;
+  private static final Logger log = LoggerFactory.getLogger(HoleConsumer.class);
+  private final HoleService service;
 
-  @Incoming("players-in")
+  @Incoming("holes-in")
   // @Transactional
-  void consume(PlayerEvent event) {
+  void consume(HoleEvent event) {
     var type = event.type();
     var payload = event.payload();
 
     log.info("type: %s, payload: %s".formatted(type, payload));
 
     switch (type) {
-      case PLAYER_ADDED -> service.add(payload);
-      case PLAYER_DELETED -> service.delete(payload);
-      case PLAYER_UPDATED -> service.update(payload);
+      case HOLE_ADDED -> service.add(payload);
+      case HOLE_DELETED -> service.delete(payload);
+      case HOLE_UPDATED -> {
+        // do nothing
+      }
       default -> log.warn("Unrecognized event type " + type);
     }
   }

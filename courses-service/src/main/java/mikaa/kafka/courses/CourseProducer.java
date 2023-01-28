@@ -1,5 +1,7 @@
 package mikaa.kafka.courses;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -16,7 +18,15 @@ public class CourseProducer {
   Emitter<CourseEvent> emitter;
 
   public void send(CourseEventType type, CourseDTO course) {
-    var acked = emitter.send(new CourseEvent(type, course));
+    var acked = switch (type) {
+      case COURSE_ADDED -> emitter.send(new CourseEvent(type, course));
+
+      case COURSE_DELETED, COURSE_UPDATED -> {
+        var courseWithoutHoles = new CourseDTO(course.id(), course.name(), List.of());
+        yield emitter.send(new CourseEvent(type, courseWithoutHoles));
+      }
+    };
+
     acked.toCompletableFuture().join();
   }
 

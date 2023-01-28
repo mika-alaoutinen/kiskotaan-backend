@@ -8,7 +8,7 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.feature.course.CourseService;
+import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.model.NewScoreCardDTO;
 
@@ -16,7 +16,7 @@ import mikaa.model.NewScoreCardDTO;
 @RequiredArgsConstructor
 public class ScoreCardService {
 
-  private final CourseService courseService;
+  private final CourseFinder courseFinder;
   private final PlayerFinder playerFinder;
   private final ScoreCardRepository repository;
 
@@ -29,7 +29,7 @@ public class ScoreCardService {
   }
 
   ScoreCardEntity add(NewScoreCardDTO newScoreCard) {
-    var course = courseService.findOrThrow(newScoreCard.getCourseId().longValue());
+    var course = courseFinder.findOrThrow(newScoreCard.getCourseId().longValue());
 
     var players = newScoreCard.getPlayerIds()
         .stream()

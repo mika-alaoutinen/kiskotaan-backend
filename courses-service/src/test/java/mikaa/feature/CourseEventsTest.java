@@ -1,6 +1,7 @@
 package mikaa.feature;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
@@ -21,7 +22,9 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.providers.connectors.InMemoryConnector;
 import io.smallrye.reactive.messaging.providers.connectors.InMemorySink;
+import mikaa.dto.CourseDTO;
 import mikaa.dto.NewCourseDTO;
+import mikaa.dto.NewHoleDTO;
 import mikaa.kafka.courses.CourseEvent;
 import mikaa.kafka.courses.CourseProducer;
 
@@ -55,8 +58,11 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    service.add(new NewCourseDTO("New Course", List.of()));
-    assertEvent("COURSE_ADDED", "New Course");
+    var course = new NewCourseDTO("New Course", List.of(new NewHoleDTO(1, 3, 90)));
+    service.add(course);
+
+    var payload = assertEvent("COURSE_ADDED", "New Course");
+    assertEquals(1, payload.holes().size());
     verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
   }
 
@@ -64,7 +70,9 @@ class CourseEventsTest {
   void should_send_event_on_course_name_update() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.updateCourseName(1, "Updated Name");
-    assertEvent("COURSE_UPDATED", "Updated Name");
+
+    var payload = assertEvent("COURSE_UPDATED", "Updated Name");
+    assertTrue(payload.holes().isEmpty());
     verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
   }
 
@@ -72,15 +80,20 @@ class CourseEventsTest {
   void should_send_event_on_delete() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));    
     service.delete(1);
-    assertEvent("COURSE_DELETED", "DG Course");
+
+    var payload = assertEvent("COURSE_DELETED", "DG Course");
+    assertTrue(payload.holes().isEmpty());
     verify(repository, atLeastOnce()).deleteById(1L);
   }
 
-  private void assertEvent(String eventName, String courseName) {
+  private CourseDTO assertEvent(String eventName, String courseName) {
     assertEquals(1, sink.received().size());
     var event = sink.received().get(0).getPayload();
+
     assertEquals(eventName, event.type().toString());
     assertEquals(courseName, event.payload().name());
+
+    return event.payload();
   }
 
   private static CourseEntity courseMock() {

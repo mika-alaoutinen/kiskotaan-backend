@@ -13,4 +13,5 @@ modelNameSuffix: DTO
 openApiNullable: false
 performBeanValidation: true
 skipDefaultInterface: true
+useSpringBoot3: true
 useTags: true

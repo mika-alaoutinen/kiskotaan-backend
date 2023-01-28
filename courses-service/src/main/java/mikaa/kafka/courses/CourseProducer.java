@@ -1,5 +1,7 @@
 package mikaa.kafka.courses;
 
+import java.util.List;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
@@ -7,26 +9,21 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import mikaa.dto.CourseDTO;
-import mikaa.dto.CourseNameDTO;
 
 @ApplicationScoped
 public class CourseProducer {
 
   @Inject
   @Channel("courses-out")
-  Emitter<CourseEvent> courseEmitter;
-
-  @Inject
-  @Channel("courses-out")
-  Emitter<CourseNameEvent> courseNameEmitter;
+  Emitter<CourseEvent> emitter;
 
   public void send(CourseEventType type, CourseDTO course) {
     var acked = switch (type) {
-      case COURSE_ADDED -> courseEmitter.send(new CourseEvent(type, course));
+      case COURSE_ADDED -> emitter.send(new CourseEvent(type, course));
 
       case COURSE_DELETED, COURSE_UPDATED -> {
-        var courseName = new CourseNameDTO(course.id(), course.name());
-        yield courseNameEmitter.send(new CourseNameEvent(type, courseName));
+        var courseWithoutHoles = new CourseDTO(course.id(), course.name(), List.of());
+        yield emitter.send(new CourseEvent(type, courseWithoutHoles));
       }
     };
 

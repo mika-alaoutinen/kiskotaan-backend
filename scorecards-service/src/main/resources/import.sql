@@ -4,13 +4,14 @@
 -- See https://stackoverflow.com/questions/37511719/hibernate-duplicate-key-value-violates-unique-constraint
 
 INSERT INTO player (id, external_id, first_name, last_name) VALUES
-  (101, 5, 'Pekka', 'Kana'),
-  (102, 6, 'Kalle', 'Kukko'),
-  (103, 7, 'Riki', 'Sorsa');
+  (101, 1, 'Pekka', 'Kana'),
+  (102, 2, 'Kalle', 'Kukko'),
+  (103, 3, 'Aku', 'Ankka'),
+  (104, 4, 'Iines', 'Ankka');
 
 INSERT INTO course (id, external_id, holes, name) VALUES
-  (201, 3, 18, 'Frisbeegolf Laajis'),
-  (202, 4, 18, 'Keljonkankaan frisbeegolfrata');
+  (201, 1, 18, 'Frisbeegolf Laajis'),
+  (202, 2, 18, 'Keljonkankaan frisbeegolfrata');
 
 INSERT INTO scorecard (id, course_id) VALUES
   (1, 201),

@@ -54,7 +54,7 @@ class PlayerServiceTest {
   @Test
   void should_delete_player() {
     service.delete(MIKKI_HIIRI);
-    verify(repository, atLeastOnce()).deleteById(123L);
+    verify(repository, atLeastOnce()).deleteByExternalId(123L);
   }
 
 }

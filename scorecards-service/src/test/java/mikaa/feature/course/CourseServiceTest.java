@@ -60,7 +60,7 @@ class CourseServiceTest {
   @Test
   void should_delete_course() {
     service.delete(LAAJIS);
-    verify(repository, atLeastOnce()).deleteById(111L);
+    verify(repository, atLeastOnce()).deleteByExternalId(111L);
   }
 
 }

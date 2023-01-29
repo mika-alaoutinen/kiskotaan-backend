@@ -68,4 +68,8 @@ public class PlayerEntity {
     score.setPlayer(null);
   }
 
+  public void removeFromScoreCards() {
+    scorecards.forEach(sc -> sc.removePlayer(this));
+  }
+
 }

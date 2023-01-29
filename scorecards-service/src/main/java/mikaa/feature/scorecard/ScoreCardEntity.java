@@ -42,7 +42,7 @@ public class ScoreCardEntity {
   private CourseEntity course;
 
   @Size(min = 1, max = 5, message = "Score card can have 1-5 players")
-  @ManyToMany(cascade = CascadeType.ALL)
+  @ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinTable(name = "scorecard_player", joinColumns = @JoinColumn(name = "scorecard_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
   private Set<PlayerEntity> players = new HashSet<>();
 

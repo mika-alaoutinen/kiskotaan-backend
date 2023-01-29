@@ -8,7 +8,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +35,7 @@ class HoleServiceTest {
   void should_increment_hole_count_by_one() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(mockCourse()));
     service.add(HOLE);
-    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 19, "Laajis", Set.of()));
+    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 19, "Laajis"));
   }
 
   @Test
@@ -49,7 +48,7 @@ class HoleServiceTest {
   void should_decrement_hole_count_by_one() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(mockCourse()));
     service.delete(HOLE);
-    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 17, "Laajis", Set.of()));
+    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 17, "Laajis"));
   }
 
   @Test
@@ -59,7 +58,7 @@ class HoleServiceTest {
   }
 
   private static CourseEntity mockCourse() {
-    return new CourseEntity(111L, 18, "Laajis", Set.of());
+    return new CourseEntity(111L, 18, "Laajis");
   }
 
 }

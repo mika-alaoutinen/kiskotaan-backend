@@ -135,7 +135,7 @@ class AddScoreResourceTest {
   }
 
   private static ScoreCardEntity scoreCardMock() {
-    var course = new CourseEntity(321L, 18, "Laajis", null);
+    var course = new CourseEntity(321L, 18, "Laajis");
     var players = new HashSet<>(List.of(PEKKA_KANA));
     var scores = new ArrayList<ScoreEntity>(List.of(new ScoreEntity(2L, 1, 3, PEKKA_KANA, null)));
     return new ScoreCardEntity(1L, course, players, scores);

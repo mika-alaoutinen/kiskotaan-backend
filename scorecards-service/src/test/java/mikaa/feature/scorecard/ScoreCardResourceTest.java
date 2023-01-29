@@ -33,7 +33,7 @@ import javax.ws.rs.NotFoundException;
 class ScoreCardResourceTest {
 
   private static final String ENDPOINT = "/scorecards";
-  private static final CourseEntity COURSE = new CourseEntity(321L, 18, "Laajis", null);
+  private static final CourseEntity COURSE = new CourseEntity(321L, 18, "Laajis");
   private static final PlayerEntity PEKKA_KANA = new PlayerEntity(123L, "Pekka", "Kana");
 
   @InjectMock

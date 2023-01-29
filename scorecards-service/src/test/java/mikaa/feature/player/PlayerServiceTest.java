@@ -34,15 +34,15 @@ class PlayerServiceTest {
   @Test
   void should_save_new_player() {
     service.add(MIKKI_HIIRI);
-    verify(repository, atLeastOnce()).persist(new PlayerEntity(null, "Mikki", "Hiiri"));
+    verify(repository, atLeastOnce()).persist(new PlayerEntity(123, "Mikki", "Hiiri"));
   }
 
   @Test
   void should_update_player() {
     var player = new PlayerEntity(123L, "Pekka", "Kana");
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(player));
+    when(repository.findByExternalId(anyLong())).thenReturn(Optional.of(player));
     service.update(MIKKI_HIIRI);
-    verify(repository, atLeastOnce()).persist(new PlayerEntity(123L, "Mikki", "Hiiri"));
+    verify(repository, atLeastOnce()).persist(new PlayerEntity(123, "Mikki", "Hiiri"));
   }
 
   @Test
@@ -54,7 +54,7 @@ class PlayerServiceTest {
   @Test
   void should_delete_player() {
     service.delete(MIKKI_HIIRI);
-    verify(repository, atLeastOnce()).deleteById(123L);
+    verify(repository, atLeastOnce()).deleteByExternalId(123L);
   }
 
 }

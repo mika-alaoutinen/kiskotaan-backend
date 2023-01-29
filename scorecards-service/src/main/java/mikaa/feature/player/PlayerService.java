@@ -14,20 +14,20 @@ class PlayerService implements PlayerFinder {
 
   @Override
   public PlayerEntity findOrThrow(long id) {
-    return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
+    return repository.findByExternalId(id).orElseThrow(() -> notFound(id));
   }
 
   void add(PlayerPayload player) {
-    var entity = new PlayerEntity(player.firstName(), player.lastName());
+    var entity = new PlayerEntity(player.id(), player.firstName(), player.lastName());
     repository.persist(entity);
   }
 
   void delete(PlayerPayload player) {
-    repository.deleteById(player.id());
+    repository.deleteByExternalId(player.id());
   }
 
   void update(PlayerPayload player) {
-    repository.findByIdOptional(player.id())
+    repository.findByExternalId(player.id())
         .map(entity -> updateName(entity, player))
         .ifPresent(repository::persist);
   }

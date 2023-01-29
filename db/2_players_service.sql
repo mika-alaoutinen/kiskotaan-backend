@@ -7,9 +7,9 @@ CREATE DATABASE players_db WITH
 \c players_db;
 
 CREATE TABLE IF NOT EXISTS player (
-  id          SERIAL PRIMARY KEY,
-  first_name   varchar(50) NOT NULL,
-  last_name    varchar(50) NOT NULL
+  id            SERIAL PRIMARY KEY,
+  first_name    varchar(50) NOT NULL,
+  last_name     varchar(50) NOT NULL
 );
 
 -- Insert test data

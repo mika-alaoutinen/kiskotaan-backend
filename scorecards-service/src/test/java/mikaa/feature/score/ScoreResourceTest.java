@@ -35,7 +35,7 @@ class ScoreResourceTest {
 
   @Test
   void should_get_score_by_id() {
-    var player = new PlayerEntity(222L, "Pekka", "Kana");
+    var player = new PlayerEntity(222, "Pekka", "Kana");
     var score = new ScoreEntity(111L, 8, 4, player, null);
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(score));
 

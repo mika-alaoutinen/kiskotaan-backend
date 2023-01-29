@@ -6,7 +6,7 @@ CREATE DATABASE player_db WITH
 \c player_db;
 
 CREATE TABLE IF NOT EXISTS player (
-    id          SERIAL PRIMARY KEY,
+    id           SERIAL PRIMARY KEY,
     first_name   varchar(50) NOT NULL,
     last_name    varchar(50) NOT NULL
 );

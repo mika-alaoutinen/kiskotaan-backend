@@ -14,20 +14,20 @@ class CourseService implements CourseFinder {
 
   @Override
   public CourseEntity findOrThrow(long id) {
-    return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
+    return repository.findByExternalId(id).orElseThrow(() -> notFound(id));
   }
 
   void add(CoursePayload course) {
-    var entity = new CourseEntity(course.holes().size(), course.name());
+    var entity = new CourseEntity(course.id(), course.holes().size(), course.name());
     repository.persist(entity);
   }
 
   void delete(CoursePayload course) {
-    repository.deleteById(course.id());
+    repository.deleteByExternalId(course.id());
   }
 
   void update(CoursePayload course) {
-    repository.findByIdOptional(course.id())
+    repository.findByExternalId(course.id())
         .map(entity -> updateName(entity, course))
         .ifPresent(repository::persist);
   }

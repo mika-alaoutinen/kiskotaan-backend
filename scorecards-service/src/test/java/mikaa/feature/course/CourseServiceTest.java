@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,16 +39,16 @@ class CourseServiceTest {
     var newCourse = new CoursePayload(111L, "Laajis", List.of(hole));
 
     service.add(newCourse);
-    verify(repository, atLeastOnce()).persist(new CourseEntity(null, 1, "Laajis", Set.of()));
+    verify(repository, atLeastOnce()).persist(new CourseEntity(111, 1, "Laajis"));
   }
 
   @Test
   void should_update_course() {
-    var course = new CourseEntity(111L, 24, "Kaihu", Set.of());
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(course));
+    var course = new CourseEntity(111L, 24, "Kaihu");
+    when(repository.findByExternalId(anyLong())).thenReturn(Optional.of(course));
 
     service.update(LAAJIS);
-    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 24, "Laajis", Set.of()));
+    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 24, "Laajis"));
   }
 
   @Test
@@ -61,7 +60,7 @@ class CourseServiceTest {
   @Test
   void should_delete_course() {
     service.delete(LAAJIS);
-    verify(repository, atLeastOnce()).deleteById(111L);
+    verify(repository, atLeastOnce()).deleteByExternalId(111L);
   }
 
 }

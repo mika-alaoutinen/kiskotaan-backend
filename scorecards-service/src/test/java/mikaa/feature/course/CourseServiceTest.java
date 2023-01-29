@@ -45,7 +45,7 @@ class CourseServiceTest {
   @Test
   void should_update_course() {
     var course = new CourseEntity(111L, 24, "Kaihu");
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(course));
+    when(repository.findByExternalId(anyLong())).thenReturn(Optional.of(course));
 
     service.update(LAAJIS);
     verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 24, "Laajis"));

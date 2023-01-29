@@ -12,10 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import mikaa.feature.score.ScoreEntity;
 import mikaa.feature.scorecard.ScoreCardEntity;
@@ -30,7 +33,12 @@ public class PlayerEntity {
 
   @Id
   @GeneratedValue
+  @Getter(value = AccessLevel.PACKAGE)
+  @Setter(value = AccessLevel.PACKAGE)
   private Long id;
+
+  @Column(name = "external_id", unique = true)
+  private long externalId;
 
   @Column(name = "first_name", nullable = false)
   private String firstName;
@@ -44,13 +52,8 @@ public class PlayerEntity {
   @ManyToMany(fetch = FetchType.LAZY, mappedBy = "players")
   private Set<ScoreCardEntity> scorecards = new HashSet<>();
 
-  public PlayerEntity(String firstName, String lastName) {
-    this.firstName = firstName;
-    this.lastName = lastName;
-  }
-
-  public PlayerEntity(Long id, String firstName, String lastName) {
-    this.id = id;
+  public PlayerEntity(long externalId, String firstName, String lastName) {
+    this.externalId = externalId;
     this.firstName = firstName;
     this.lastName = lastName;
   }

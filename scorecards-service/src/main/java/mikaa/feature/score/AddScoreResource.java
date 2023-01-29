@@ -18,14 +18,14 @@ import mikaa.model.ScoreDTO;
 @RequiredArgsConstructor
 class AddScoreResource implements AddNewScoreApi {
 
-  private static final ModelMapper MAPPER = new ModelMapper();
+  private final ModelMapper mapper;
   private final ScoreService service;
 
   @Override
   @Transactional
   public ScoreDTO addScore(Integer id, @Valid @NotNull NewScoreDTO newScoreDTO) {
     var score = service.addScore(id, newScoreDTO);
-    return MAPPER.map(score, ScoreDTO.class);
+    return mapper.map(score, ScoreDTO.class);
   }
 
 }

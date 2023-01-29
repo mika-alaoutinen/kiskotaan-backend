@@ -18,7 +18,7 @@ import mikaa.model.ScoreCardDTO;
 @RequiredArgsConstructor
 class ScoreCardResource implements ScoreCardsApi {
 
-  private static final ModelMapper MAPPER = new ModelMapper();
+  private final ModelMapper mapper;
   private final ScoreCardService service;
 
   @Override
@@ -42,12 +42,12 @@ class ScoreCardResource implements ScoreCardsApi {
   public List<ScoreCardDTO> getScoreCards() {
     return service.findAll()
         .stream()
-        .map(ScoreCardResource::mapScoreCard)
+        .map(this::mapScoreCard)
         .toList();
   }
 
-  private static ScoreCardDTO mapScoreCard(ScoreCardEntity scoreCard) {
-    return MAPPER.map(scoreCard, ScoreCardDTO.class);
+  private ScoreCardDTO mapScoreCard(ScoreCardEntity scoreCard) {
+    return mapper.map(scoreCard, ScoreCardDTO.class);
   }
 
 }

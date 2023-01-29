@@ -3,12 +3,12 @@
 -- at the correct number after test data insertion.
 -- See https://stackoverflow.com/questions/37511719/hibernate-duplicate-key-value-violates-unique-constraint
 
-INSERT INTO player (id, first_name, last_name) VALUES
-  (101, 'Pekka', 'Kana'),
-  (102, 'Kalle', 'Kukko'),
-  (103, 'Riki', 'Sorsa');
+INSERT INTO player (id, external_id, first_name, last_name) VALUES
+  (101, 5, 'Pekka', 'Kana'),
+  (102, 6, 'Kalle', 'Kukko'),
+  (103, 7, 'Riki', 'Sorsa');
 
-INSERT INTO course (id, course_id, holes, name) VALUES
+INSERT INTO course (id, external_id, holes, name) VALUES
   (201, 3, 18, 'Frisbeegolf Laajis'),
   (202, 4, 18, 'Keljonkankaan frisbeegolfrata');
 

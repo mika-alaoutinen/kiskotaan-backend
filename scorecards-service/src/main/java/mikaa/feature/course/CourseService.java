@@ -14,9 +14,7 @@ class CourseService implements CourseFinder {
 
   @Override
   public CourseEntity findOrThrow(long id) {
-    return repository.find("courseId", id)
-        .firstResultOptional()
-        .orElseThrow(() -> notFound(id));
+    return repository.findByExternalId(id).orElseThrow(() -> notFound(id));
   }
 
   void add(CoursePayload course) {
@@ -29,7 +27,7 @@ class CourseService implements CourseFinder {
   }
 
   void update(CoursePayload course) {
-    repository.findByIdOptional(course.id())
+    repository.findByExternalId(course.id())
         .map(entity -> updateName(entity, course))
         .ifPresent(repository::persist);
   }

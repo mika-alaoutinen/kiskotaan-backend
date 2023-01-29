@@ -23,7 +23,10 @@ class PlayerService implements PlayerFinder {
   }
 
   void delete(PlayerPayload player) {
-    repository.deleteByExternalId(player.id());
+    repository.findByExternalId(player.id()).ifPresent(entity -> {
+      entity.removeFromScoreCards();
+      repository.delete(entity);
+    });
   }
 
   void update(PlayerPayload player) {

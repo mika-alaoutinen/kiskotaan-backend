@@ -25,6 +25,7 @@ Kiskotaan backend is a disc golf scorekeeping application that consists of sever
 Messages will be sent to the following topics when resources are modified. Modifications include adding new resources, editing existing ones and deleting resources.
 
 - "courses"
+- "holes"
 - "players"
 - "scorecards"
 

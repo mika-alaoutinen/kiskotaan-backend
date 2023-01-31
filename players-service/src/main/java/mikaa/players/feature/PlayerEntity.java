@@ -16,6 +16,7 @@ import lombok.ToString;
 
 @Data
 @Entity(name = "player")
+@UniqueName
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

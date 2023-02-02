@@ -37,6 +37,8 @@ class PlayersService {
   }
 
   Optional<PlayerEntity> update(long id, PlayerEntity edited) {
+    validator.validateUniqueName(edited);
+
     var saved = repository.findById(id)
         .map(player -> {
           player.setFirstName(edited.getFirstName());

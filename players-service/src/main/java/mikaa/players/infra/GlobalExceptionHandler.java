@@ -14,7 +14,7 @@ import mikaa.players.errors.BadRequestException;
 
 @RestControllerAdvice
 @Slf4j
-class GlobalExceptionHandler {
+public class GlobalExceptionHandler {
 
   @ExceptionHandler(BadRequestException.class)
   ResponseEntity<ErrorBodyDTO> handleBadRequest(BadRequestException ex, HttpServletRequest req) {

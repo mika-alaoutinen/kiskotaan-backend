@@ -47,9 +47,6 @@ Folder `.http` has http-files that contain example payloads that can be used to 
 - [ ] Course names should be unique.
 - [ ] Should not be able to add a hole with duplicate number to a course.
 
-### Players service validation logic
-- [ ] Player names should be unique.
-
 ## Discovered problems
 
 ### Score card service

@@ -17,13 +17,17 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mikaa.model.NewPlayerDTO;
+import mikaa.players.errors.BadRequestException;
 import mikaa.players.events.PlayerEvents.PlayerEvent;
+import mikaa.players.infra.GlobalExceptionHandler;
 import mikaa.players.kafka.KafkaProducer;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -35,7 +39,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@ContextConfiguration(classes = { PlayersController.class, PlayersService.class })
+@ContextConfiguration(classes = {
+    GlobalExceptionHandler.class,
+    PlayersController.class,
+    PlayersService.class,
+    PlayerValidator.class })
 @ExtendWith(SpringExtension.class)
 @WebMvcTest
 class PlayersControllerTest {
@@ -105,7 +113,7 @@ class PlayersControllerTest {
   @MethodSource("invalidNewPlayers")
   @NullSource
   @ParameterizedTest
-  void should_not_add_player_if_validation_errors(NewPlayerDTO invalidPlayer) throws Exception {
+  void should_not_add_player_if_malformed_payload(NewPlayerDTO invalidPlayer) throws Exception {
     mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
@@ -114,6 +122,26 @@ class PlayersControllerTest {
 
     verify(repository, never()).save(any());
     verify(producer, never()).send(any());
+  }
+
+  @Test
+  void should_not_add_player_if_name_not_unique() throws Exception {
+    String errorMessage = "Found existing player with the same name";
+
+    doThrow(new BadRequestException(errorMessage))
+        .when(repository)
+        .existsPlayerByFirstNameAndLastName(anyString(), anyString());
+
+    var newPlayer = new NewPlayerDTO().firstName("Pekka").lastName("Kana");
+
+    mvc
+        .perform(post(ENDPOINT)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJson(newPlayer)))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.message").value(errorMessage));
+
+    verifyNoPersist();
   }
 
   @Test
@@ -147,22 +175,40 @@ class PlayersControllerTest {
             .content(asJson(editedPlayer)))
         .andExpect(status().isNotFound());
 
-    verify(repository, never()).save(any());
-    verify(producer, never()).send(any());
+    verifyNoPersist();
   }
 
   @MethodSource("invalidNewPlayers")
   @NullSource
   @ParameterizedTest
-  void should_not_update_player_if_validation_errors(NewPlayerDTO invalidPlayer) throws Exception {
+  void should_not_update_player_if_malformed_payload(NewPlayerDTO invalidPlayer) throws Exception {
     mvc
         .perform(put(ENDPOINT + "/1")
             .contentType(MediaType.APPLICATION_JSON)
             .content(asJson(invalidPlayer)))
         .andExpect(status().isBadRequest());
 
-    verify(repository, never()).save(any());
-    verify(producer, never()).send(any());
+    verifyNoPersist();
+  }
+
+  @Test
+  void should_not_update_player_if_name_not_unique() throws Exception {
+    String errorMessage = "Found existing player with the same name";
+
+    doThrow(new BadRequestException(errorMessage))
+        .when(repository)
+        .existsPlayerByFirstNameAndLastName(anyString(), anyString());
+
+    var newPlayer = new NewPlayerDTO().firstName("Pekka").lastName("Kana");
+
+    mvc
+        .perform(post(ENDPOINT)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(asJson(newPlayer)))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.message").value(errorMessage));
+
+    verifyNoPersist();
   }
 
   @Test
@@ -186,6 +232,11 @@ class PlayersControllerTest {
         .andExpect(status().isNoContent());
     
     verify(repository, never()).deleteById(anyLong());
+    verify(producer, never()).send(any());
+  }
+
+  private void verifyNoPersist() {
+    verify(repository, never()).save(any());
     verify(producer, never()).send(any());
   }
 

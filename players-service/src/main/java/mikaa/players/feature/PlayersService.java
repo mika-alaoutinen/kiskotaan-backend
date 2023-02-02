@@ -16,6 +16,7 @@ class PlayersService {
 
   private final KafkaProducer producer;
   private final PlayersRepository repository;
+  private final PlayerValidator validator;
 
   List<PlayerEntity> findAll() {
     return repository.findAll();
@@ -26,8 +27,11 @@ class PlayersService {
   }
 
   PlayerEntity add(PlayerEntity newPlayer) {
+    validator.validateUniqueName(newPlayer);
+
     var saved = repository.save(newPlayer);
     var player = toPlayer(saved);
+
     producer.send(PlayerEvents.add(player));
     return saved;
   }

@@ -20,7 +20,7 @@ class CourseValidator {
         .flatMap(Optional::stream)
         .toArray(ValidationError[]::new);
 
-    throw new ValidationException(errors);
+    ValidationException.maybeThrow(errors);
   }
 
   private Optional<ValidationError> validateUniqueName(String name) {

@@ -12,7 +12,7 @@ interface HoleValidator {
         .anyMatch(num -> num == hole.getHoleNumber());
 
     if (duplicateHoleNumber) {
-      var error = new ValidationError("holeNumber", "Duplicate hole number");
+      var error = new ValidationError("number", "Duplicate hole number");
       ValidationException.maybeThrow(error);
     }
   }

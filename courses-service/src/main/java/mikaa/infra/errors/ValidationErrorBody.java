@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import mikaa.errors.ValidationError;
 
 /**
  * DTO representing a validation error. Returning this should result in a 400

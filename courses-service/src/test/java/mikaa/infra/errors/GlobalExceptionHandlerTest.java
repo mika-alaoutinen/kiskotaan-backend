@@ -20,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
+import mikaa.errors.ValidationError;
 
 @QuarkusTest
 class GlobalExceptionHandlerTest {

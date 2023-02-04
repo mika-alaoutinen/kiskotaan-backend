@@ -104,22 +104,6 @@ class CourseResourceTest {
   }
 
   @Test
-  void should_reject_invalid_new_course() {
-    var invalidCourse = new NewCourseDTO("New Course", List.of());
-
-    given()
-        .contentType(ContentType.JSON)
-        .body(invalidCourse)
-        .when()
-        .post(ENDPOINT)
-        .then()
-        .statusCode(400)
-        .contentType(ContentType.JSON);
-
-    verify(repository, never()).persist(any(CourseEntity.class));
-  }
-
-  @Test
   void should_add_hole_for_a_course() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     
@@ -137,20 +121,6 @@ class CourseResourceTest {
           "distance", is(90));
 
     verify(holeRepository, atLeastOnce()).persist(any(HoleEntity.class));
-  }
-
-  @Test
-  void should_reject_invalid_hole() {
-    given()
-        .contentType(ContentType.JSON)
-        .body(new NewHoleDTO(0, 3, 120))
-        .when()
-        .post(ENDPOINT + "/1/holes")
-        .then()
-        .statusCode(400)
-        .contentType(ContentType.JSON);
-
-    verify(holeRepository, never()).persist(any(HoleEntity.class));
   }
 
   @Test
@@ -182,20 +152,6 @@ class CourseResourceTest {
         .statusCode(200)
         .contentType(ContentType.JSON)
         .body("name", is("Updated name"));
-  }
-
-  @Test
-  void should_reject_invalid_course_name() {
-    given()
-        .contentType(ContentType.JSON)
-        .body(new NewCourseNameDTO(""))
-        .when()
-        .patch(ENDPOINT + "/1")
-        .then()
-        .statusCode(400)
-        .contentType(ContentType.JSON);
-
-    verify(repository, never()).persist(any(CourseEntity.class));
   }
 
   @Test

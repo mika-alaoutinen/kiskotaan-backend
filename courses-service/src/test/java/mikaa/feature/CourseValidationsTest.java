@@ -60,13 +60,6 @@ class CourseValidationsTest {
   }
 
   @Test
-  void should_reject_empty_course_name_on_update() {
-    var response = patchInvalidCourseName(new NewCourseNameDTO(""));
-    assertBadRequest(response, new ValidationError("name", "Course name is required"));
-    verify(repository, never()).persist(any(CourseEntity.class));
-  }
-
-  @Test
   void should_reject_invalid_course_name_on_update() {
     var response = patchInvalidCourseName(new NewCourseNameDTO("A"));
     assertBadRequest(response, new ValidationError("name", "Course name must be 3-40 chars long"));

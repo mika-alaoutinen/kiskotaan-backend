@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Path;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.UriInfo;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,6 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
-import mikaa.errors.NotFoundException;
 
 @QuarkusTest
 class GlobalExceptionHandlerTest {

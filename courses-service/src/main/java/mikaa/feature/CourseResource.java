@@ -8,6 +8,7 @@ import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -27,7 +28,6 @@ import mikaa.dto.HoleDTO;
 import mikaa.dto.NewCourseDTO;
 import mikaa.dto.NewCourseNameDTO;
 import mikaa.dto.NewHoleDTO;
-import mikaa.errors.NotFoundException;
 
 @ApplicationScoped
 @Blocking

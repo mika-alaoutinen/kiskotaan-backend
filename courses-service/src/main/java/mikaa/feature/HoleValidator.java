@@ -5,11 +5,11 @@ import mikaa.errors.ValidationError;
 
 interface HoleValidator {
 
-  static void validateUniqueHoleNumber(HoleEntity hole, CourseEntity course) {
+  static void validateUniqueHoleNumber(Integer holeNumber, CourseEntity course) {
     boolean duplicateHoleNumber = course.getHoles()
         .stream()
         .map(HoleEntity::getHoleNumber)
-        .anyMatch(num -> num == hole.getHoleNumber());
+        .anyMatch(holeNumber::equals);
 
     if (duplicateHoleNumber) {
       var error = new ValidationError("number", "Duplicate hole number");

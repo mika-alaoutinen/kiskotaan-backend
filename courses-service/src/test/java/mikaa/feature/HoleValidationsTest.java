@@ -45,6 +45,30 @@ class HoleValidationsTest {
     assertBadRequest(response, new ValidationError("number", "Duplicate hole number"));
   }
 
+  @Test
+  void should_not_update_hole_with_duplicate_number() {
+    HoleEntity hole = new HoleEntity(1L, 1, 3, 80, courseMock());
+    when(holeRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(hole));
+
+    given()
+        .contentType(ContentType.JSON)
+        .body(new NewHoleDTO(1, 3, 120))
+        .when()
+        .put("holes/1")
+        .then()
+        .statusCode(400)
+        .contentType(ContentType.JSON)
+        .body(
+            "timestamp", notNullValue(),
+            "status", is(400),
+            "error", is("Bad Request"),
+            "path", is("/api/holes/1"),
+            "validationErrors[0].field", is("number"),
+            "validationErrors[0].message", is("Duplicate hole number"));
+
+    verify(holeRepository, never()).persist(any(HoleEntity.class));
+  }
+
   private ValidatableResponse postInvalidHole(NewHoleDTO hole) {
     return given()
         .contentType(ContentType.JSON)

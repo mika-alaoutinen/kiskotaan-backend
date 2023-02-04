@@ -33,7 +33,7 @@ class CourseEntity {
 
   @NotBlank(message = "Course name is required")
   @Size(min = 3, max = 40, message = "Course name must be 3-40 chars long")
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   private String name;
 
   @Size(min = 1, max = 30, message = "Course can haven 1-30 holes")

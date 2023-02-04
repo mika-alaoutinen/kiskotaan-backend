@@ -1,8 +1,7 @@
 package mikaa.feature;
 
-import java.util.Optional;
-
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.dto.HoleDTO;
@@ -18,25 +17,32 @@ class HoleService {
   private final CourseRepository courseRepository;
   private final HoleRepository repository;
 
-  Optional<HoleDTO> findOne(long id) {
-    return repository.findByIdOptional(id).map(HoleMapper::dto);
+  HoleDTO findOne(long id) {
+    return repository.findByIdOptional(id)
+        .map(HoleMapper::dto)
+        .orElseThrow(() -> holeNotFound(id));
   }
 
-  Optional<HoleDTO> add(long courseId, NewHoleDTO newHole) {
-    return courseRepository.findByIdOptional(courseId).map(course -> {
-      HoleEntity hole = HoleMapper.entity(newHole);
-      course.addHole(hole);
-      return hole;
-    }).map(hole -> save(hole, HoleEventType.HOLE_ADDED));
+  HoleDTO add(long courseId, NewHoleDTO newHole) {
+    var course = courseRepository.findByIdOptional(courseId).orElseThrow(() -> courseNotFound(courseId));
+
+    HoleEntity hole = HoleMapper.entity(newHole);
+    course.addHole(hole);
+
+    repository.persist(hole);
+    producer.send(HoleEventType.HOLE_ADDED, HoleMapper.payload(hole));
+    return HoleMapper.dto(hole);
   }
 
-  Optional<HoleDTO> update(long id, NewHoleDTO updatedHole) {
-    return repository.findByIdOptional(id).map(hole -> {
-      hole.setDistance(updatedHole.distance());
-      hole.setHoleNumber(updatedHole.number());
-      hole.setPar(updatedHole.par());
-      return hole;
-    }).map(hole -> save(hole, HoleEventType.HOLE_UPDATED));
+  HoleDTO update(long id, NewHoleDTO updatedHole) {
+    var hole = repository.findByIdOptional(id).orElseThrow(() -> holeNotFound(id));
+
+    hole.setDistance(updatedHole.distance());
+    hole.setHoleNumber(updatedHole.number());
+    hole.setPar(updatedHole.par());
+
+    producer.send(HoleEventType.HOLE_UPDATED, HoleMapper.payload(hole));
+    return HoleMapper.dto(hole);
   }
 
   void delete(long id) {
@@ -48,10 +54,14 @@ class HoleService {
         });
   }
 
-  private HoleDTO save(HoleEntity hole, HoleEventType type) {
-    repository.persist(hole);
-    producer.send(type, HoleMapper.payload(hole));
-    return HoleMapper.dto(hole);
+  private static NotFoundException courseNotFound(long id) {
+    String msg = "Could not find course with id " + id;
+    return new NotFoundException(msg);
+  }
+
+  private static NotFoundException holeNotFound(long id) {
+    String msg = "Could not find hole with id " + id;
+    return new NotFoundException(msg);
   }
 
 }

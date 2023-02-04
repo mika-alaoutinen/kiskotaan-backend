@@ -76,8 +76,6 @@ class HoleResourceTest {
             "number", is(2),
             "par", is(4),
             "distance", is(100));
-
-    verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
   @Test

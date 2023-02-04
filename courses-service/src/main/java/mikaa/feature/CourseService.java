@@ -1,9 +1,9 @@
 package mikaa.feature;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.dto.CourseDTO;
@@ -19,6 +19,7 @@ class CourseService {
 
   private final CourseProducer producer;
   private final CourseRepository repository;
+  private final CourseValidator validator;
 
   List<CourseSummaryDTO> findAll() {
     return repository.listAll()
@@ -27,12 +28,16 @@ class CourseService {
         .toList();
   }
 
-  Optional<CourseDTO> findOne(long id) {
-    return repository.findByIdOptional(id).map(CourseMapper::course);
+  CourseDTO findOne(long id) {
+    return repository.findByIdOptional(id)
+        .map(CourseMapper::course)
+        .orElseThrow(() -> notFound(id));
   }
 
   CourseDTO add(NewCourseDTO newCourse) {
     CourseEntity entity = CourseEntity.fromName(newCourse.name());
+
+    validator.validate(entity);
 
     newCourse.holes()
         .stream()
@@ -47,19 +52,14 @@ class CourseService {
     return savedCourse;
   }
 
-  Optional<CourseNameDTO> updateCourseName(long id, String name) {
-    var maybeCourse = repository.findByIdOptional(id)
-        .map(course -> {
-          course.setName(name);
-          return course;
-        });
+  CourseNameDTO updateCourseName(long id, String name) {
+    var course = repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
+    validator.validate(CourseEntity.fromName(name));
 
-    maybeCourse.ifPresent(repository::persist);
+    course.setName(name);
+    producer.send(CourseEventType.COURSE_UPDATED, CourseMapper.course(course));
 
-    maybeCourse.map(CourseMapper::course)
-        .ifPresent(course -> producer.send(CourseEventType.COURSE_UPDATED, course));
-
-    return maybeCourse.map(CourseMapper::courseName);
+    return CourseMapper.courseName(course);
   }
 
   void delete(long id) {
@@ -69,6 +69,11 @@ class CourseService {
           repository.deleteById(id);
           producer.send(CourseEventType.COURSE_DELETED, course);
         });
+  }
+
+  private static NotFoundException notFound(long id) {
+    String msg = "Could not find course with id " + id;
+    return new NotFoundException(msg);
   }
 
 }

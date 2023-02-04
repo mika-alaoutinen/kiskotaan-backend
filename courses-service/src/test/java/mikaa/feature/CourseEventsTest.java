@@ -38,6 +38,9 @@ class CourseEventsTest {
   @Inject
   private CourseProducer producer;
 
+  @Inject
+  private CourseValidator validator;
+
   @InjectMock
   private CourseRepository repository;
 
@@ -48,7 +51,7 @@ class CourseEventsTest {
   void setup() {
     sink = connector.sink("courses-out");
     sink.clear();
-    service = new CourseService(producer, repository);
+    service = new CourseService(producer, repository, validator);
   }
 
   @AfterEach
@@ -73,7 +76,6 @@ class CourseEventsTest {
 
     var payload = assertEvent("COURSE_UPDATED", "Updated Name");
     assertTrue(payload.holes().isEmpty());
-    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
   }
 
   @Test

@@ -1,8 +1,12 @@
-package mikaa.infra;
+package mikaa.infra.errors;
+
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Path.Node;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
@@ -11,24 +15,26 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.errors.ErrorBody;
-import mikaa.errors.NotFoundException;
 import mikaa.errors.ValidationError;
-import mikaa.errors.ValidationErrorBody;
+import mikaa.errors.ValidationException;
 
 @RequestScoped
 @RequiredArgsConstructor
 @Slf4j
-class GlobalErrorHandler {
+class GlobalExceptionHandler {
 
   private final UriInfo uri;
 
   @ServerExceptionMapper(ConstraintViolationException.class)
   RestResponse<ValidationErrorBody> handleConstraintViolation(ConstraintViolationException ex) {
-    var body = fromException(ex, uri);
     log.info(ex.getMessage());
 
-    return RestResponse.status(Status.BAD_REQUEST, body);
+    var errors = ex.getConstraintViolations()
+        .stream()
+        .map(GlobalExceptionHandler::fromConstraintViolation)
+        .toList();
+
+    return fromValidationErrors(errors);
   }
 
   @ServerExceptionMapper(NotFoundException.class)
@@ -41,17 +47,30 @@ class GlobalErrorHandler {
     return RestResponse.status(Status.NOT_FOUND, body);
   }
 
-  private static ValidationErrorBody fromException(ConstraintViolationException ex, UriInfo uri) {
-    var errors = ex.getConstraintViolations()
+  @ServerExceptionMapper(ValidationException.class)
+  RestResponse<ValidationErrorBody> handleValidationException(ValidationException ex) {
+    log.info(ex.getMessage());
+
+    var errors = ex.getErrors()
         .stream()
-        .map(GlobalErrorHandler::fromConstraintViolation)
+        .map(e -> new ValidationError(e.field(), e.message()))
         .toList();
 
-    return new ValidationErrorBody(getPath(uri), errors);
+    return fromValidationErrors(errors);
+  }
+
+  private RestResponse<ValidationErrorBody> fromValidationErrors(List<ValidationError> errors) {
+    var body = new ValidationErrorBody(getPath(uri), errors);
+    return RestResponse.status(Status.BAD_REQUEST, body);
   }
 
   private static ValidationError fromConstraintViolation(ConstraintViolation<?> violation) {
-    return new ValidationError(violation.getPropertyPath().toString(), violation.getMessage());
+    String field = "";
+    for (Node node : violation.getPropertyPath()) {
+      field = node.getName();
+    }
+
+    return new ValidationError(field, violation.getMessage());
   }
 
   private static String getPath(UriInfo uri) {

@@ -25,8 +25,9 @@ class HoleService {
 
   HoleDTO add(long courseId, NewHoleDTO newHole) {
     var course = courseRepository.findByIdOptional(courseId).orElseThrow(() -> courseNotFound(courseId));
-
     HoleEntity hole = HoleMapper.entity(newHole);
+
+    HoleValidator.validateUniqueHoleNumber(hole, course);
     course.addHole(hole);
 
     repository.persist(hole);

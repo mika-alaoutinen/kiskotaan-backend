@@ -1,5 +1,8 @@
 package mikaa.feature;
 
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import javax.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
@@ -12,10 +15,18 @@ class CourseValidator {
 
   private final CourseRepository repository;
 
-  void validateUniqueName(CourseEntity course) {
-    if (repository.existsByName(course.getName())) {
-      throw new ValidationException(new ValidationError("name", "Course name should be unique"));
-    }
+  void validate(CourseEntity course) {
+    ValidationError[] errors = Stream.of(validateUniqueName(course.getName()))
+        .flatMap(Optional::stream)
+        .toArray(ValidationError[]::new);
+
+    throw new ValidationException(errors);
+  }
+
+  private Optional<ValidationError> validateUniqueName(String name) {
+    return repository.existsByName(name)
+        ? Optional.of(new ValidationError("name", "Course name should be unique"))
+        : Optional.empty();
   }
 
 }

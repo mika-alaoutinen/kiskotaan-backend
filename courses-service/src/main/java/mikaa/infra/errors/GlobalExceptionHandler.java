@@ -3,7 +3,9 @@ package mikaa.infra.errors;
 import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.Path.Node;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
@@ -29,7 +31,7 @@ class GlobalExceptionHandler {
 
     var errors = ex.getConstraintViolations()
         .stream()
-        .map(v -> new ValidationError(v.getPropertyPath().toString(), v.getMessage()))
+        .map(GlobalExceptionHandler::fromConstraintViolation)
         .toList();
 
     return fromValidationErrors(errors);
@@ -60,6 +62,15 @@ class GlobalExceptionHandler {
   private RestResponse<ValidationErrorBody> fromValidationErrors(List<ValidationError> errors) {
     var body = new ValidationErrorBody(getPath(uri), errors);
     return RestResponse.status(Status.BAD_REQUEST, body);
+  }
+
+  private static ValidationError fromConstraintViolation(ConstraintViolation<?> violation) {
+    String field = "";
+    for (Node node : violation.getPropertyPath()) {
+      field = node.getName();
+    }
+
+    return new ValidationError(field, violation.getMessage());
   }
 
   private static String getPath(UriInfo uri) {

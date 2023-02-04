@@ -2,16 +2,14 @@ package mikaa.infra.errors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Set;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import javax.validation.Path;
+import javax.validation.Validation;
+import javax.validation.constraints.Size;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.UriInfo;
 
@@ -49,15 +47,21 @@ class GlobalExceptionHandlerTest {
     assertEquals("/api/courses/1", body.path());
   }
 
+  private static class TestClass {
+    @Size(min = 1, message = "Test validation error")
+    private final String fieldA;
+
+    private TestClass() {
+      fieldA = "";
+    }
+  }
+
   @Test
   void should_handle_constraint_violation_errors() throws URISyntaxException {
-    ConstraintViolation<?> violation = mock(ConstraintViolation.class);
-    Path path = mock(Path.class);
-    when(violation.getPropertyPath()).thenReturn(path);
-    when(violation.getMessage()).thenReturn("Test validation error");
-    when(path.toString()).thenReturn("obj.field.test");
+    var validator = Validation.buildDefaultValidatorFactory().getValidator();
+    var violations = validator.validate(new TestClass());
 
-    var response = handler.handleConstraintViolation(new ConstraintViolationException(Set.of(violation)));
+    var response = handler.handleConstraintViolation(new ConstraintViolationException(violations));
     assertEquals(400, response.getStatus());
 
     var body = response.getEntity();
@@ -68,8 +72,7 @@ class GlobalExceptionHandlerTest {
 
     var validationErrors = body.validationErrors();
     assertEquals(1, validationErrors.size());
-
-    assertEquals(new ValidationError("obj.field.test", "Test validation error"), validationErrors.get(0));
+    assertEquals(new ValidationError("fieldA", "Test validation error"), validationErrors.get(0));
   }
 
 }

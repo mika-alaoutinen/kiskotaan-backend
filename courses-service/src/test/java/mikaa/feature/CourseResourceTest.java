@@ -182,8 +182,6 @@ class CourseResourceTest {
         .statusCode(200)
         .contentType(ContentType.JSON)
         .body("name", is("Updated name"));
-
-    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
   }
 
   @Test

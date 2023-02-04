@@ -25,9 +25,13 @@ class HoleService {
 
   HoleDTO add(long courseId, NewHoleDTO newHole) {
     var course = courseRepository.findByIdOptional(courseId).orElseThrow(() -> courseNotFound(courseId));
+
     HoleEntity hole = HoleMapper.entity(newHole);
     course.addHole(hole);
-    return save(hole, HoleEventType.HOLE_ADDED);
+
+    repository.persist(hole);
+    producer.send(HoleEventType.HOLE_ADDED, HoleMapper.payload(hole));
+    return HoleMapper.dto(hole);
   }
 
   HoleDTO update(long id, NewHoleDTO updatedHole) {
@@ -37,7 +41,8 @@ class HoleService {
     hole.setHoleNumber(updatedHole.number());
     hole.setPar(updatedHole.par());
 
-    return save(hole, HoleEventType.HOLE_UPDATED);
+    producer.send(HoleEventType.HOLE_UPDATED, HoleMapper.payload(hole));
+    return HoleMapper.dto(hole);
   }
 
   void delete(long id) {
@@ -47,12 +52,6 @@ class HoleService {
           repository.deleteById(id);
           producer.send(HoleEventType.HOLE_DELETED, hole);
         });
-  }
-
-  private HoleDTO save(HoleEntity hole, HoleEventType type) {
-    repository.persist(hole);
-    producer.send(type, HoleMapper.payload(hole));
-    return HoleMapper.dto(hole);
   }
 
   private static NotFoundException courseNotFound(long id) {

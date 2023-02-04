@@ -78,7 +78,6 @@ class HoleEventsTest {
 
     var expected = new HolePayload(HOLE_ID, COURSE_ID, 4, 5, 165);
     assertEvent("HOLE_UPDATED", expected);
-    verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
   @Test

@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -47,9 +46,7 @@ public class CourseResource {
   @GET
   @Path("/{id}")
   public RestResponse<CourseDTO> getCourse(@PathParam("id") long id) {
-    return service.findOne(id)
-        .map(RestResponse::ok)
-        .orElseThrow(() -> notFound(id));
+    return RestResponse.ok(service.findOne(id));
   }
 
   @POST
@@ -65,8 +62,7 @@ public class CourseResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
   public RestResponse<HoleDTO> addHole(@PathParam("id") Long id, @Valid NewHoleDTO newHole) {
-    var savedHole = holeService.add(id, newHole).orElseThrow(() -> notFound(id));
-    return RestResponse.status(Status.CREATED, savedHole);
+    return RestResponse.status(Status.CREATED, holeService.add(id, newHole));
   }
 
   @PATCH
@@ -74,9 +70,7 @@ public class CourseResource {
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
   public RestResponse<CourseNameDTO> updateCourseName(@PathParam("id") long id, @Valid NewCourseNameDTO newName) {
-    return service.updateCourseName(id, newName.name())
-        .map(RestResponse::ok)
-        .orElseThrow(() -> notFound(id));
+    return RestResponse.ok(service.updateCourseName(id, newName.name()));
   }
 
   @DELETE
@@ -85,11 +79,6 @@ public class CourseResource {
   public RestResponse<Void> delete(@PathParam("id") long id) {
     service.delete(id);
     return RestResponse.noContent();
-  }
-
-  private static NotFoundException notFound(long id) {
-    String msg = "Could not find course with id " + id;
-    return new NotFoundException(msg);
   }
 
 }

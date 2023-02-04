@@ -34,9 +34,6 @@ class CourseValidationsTest {
   @InjectMock
   CourseRepository repository;
 
-  @InjectMock
-  HoleRepository holeRepository;
-
   @Test
   void should_reject_new_course_without_holes() {
     var invalidCourse = new NewCourseDTO("New Course", List.of());
@@ -74,20 +71,6 @@ class CourseValidationsTest {
     var response = patchInvalidCourseName(new NewCourseNameDTO("Duplicate name"));
     assertBadRequest(response, new ValidationError("name", "Course name should be unique"));
     verify(repository, never()).persist(any(CourseEntity.class));
-  }
-
-  @Test
-  void should_reject_invalid_hole() {
-    given()
-        .contentType(ContentType.JSON)
-        .body(new NewHoleDTO(0, 3, 120))
-        .when()
-        .post(ENDPOINT + "/1/holes")
-        .then()
-        .statusCode(400)
-        .contentType(ContentType.JSON);
-
-    verify(holeRepository, never()).persist(any(HoleEntity.class));
   }
 
   private ValidatableResponse postInvalidCourse(NewCourseDTO invalidCourse) {

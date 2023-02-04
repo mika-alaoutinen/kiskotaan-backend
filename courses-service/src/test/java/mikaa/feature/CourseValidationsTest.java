@@ -12,6 +12,7 @@ import mikaa.dto.NewHoleDTO;
 import mikaa.errors.ValidationError;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -21,7 +22,9 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static io.restassured.RestAssured.given;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @QuarkusTest
 class CourseValidationsTest {
@@ -57,16 +60,26 @@ class CourseValidationsTest {
   }
 
   @Test
-  void should_reject_invalid_course_name() {
-    given()
-        .contentType(ContentType.JSON)
-        .body(new NewCourseNameDTO(""))
-        .when()
-        .patch(ENDPOINT + "/1")
-        .then()
-        .statusCode(400)
-        .contentType(ContentType.JSON);
+  void should_reject_empty_course_name_on_update() {
+    var response = patchInvalidCourseName(new NewCourseNameDTO(""));
+    assertBadRequest(response, new ValidationError("name", "Course name is required"));
+    verify(repository, never()).persist(any(CourseEntity.class));
+  }
 
+  @Test
+  void should_reject_invalid_course_name_on_update() {
+    var response = patchInvalidCourseName(new NewCourseNameDTO("A"));
+    assertBadRequest(response, new ValidationError("name", "Course name must be 3-40 chars long"));
+    verify(repository, never()).persist(any(CourseEntity.class));
+  }
+
+  @Test
+  void should_reject_duplicate_course_name_on_update() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
+    when(repository.existsByName(anyString())).thenReturn(true);
+    
+    var response = patchInvalidCourseName(new NewCourseNameDTO("Duplicate name"));
+    assertBadRequest(response, new ValidationError("name", "Course name should be unique"));
     verify(repository, never()).persist(any(CourseEntity.class));
   }
 
@@ -93,6 +106,15 @@ class CourseValidationsTest {
         .then();
   }
 
+  private ValidatableResponse patchInvalidCourseName(NewCourseNameDTO invalidName) {
+    return given()
+        .contentType(ContentType.JSON)
+        .body(invalidName)
+        .when()
+        .patch(ENDPOINT + "/1")
+        .then();
+  }
+
   private static void assertBadRequest(ValidatableResponse res, ValidationError expected) {
     res.statusCode(400)
         .contentType(ContentType.JSON)
@@ -103,6 +125,13 @@ class CourseValidationsTest {
             "path", containsString("api/courses"),
             "validationErrors[0].field", is(expected.field()),
             "validationErrors[0].message", is(expected.message()));
+  }
+
+  private static CourseEntity courseMock() {
+    var course = new CourseEntity(1L, "DG Course", new ArrayList<>());
+    course.addHole(HoleEntity.from(1, 3, 80));
+    course.addHole(HoleEntity.from(2, 4, 120));
+    return course;
   }
 
 }

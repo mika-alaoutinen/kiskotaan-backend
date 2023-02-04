@@ -109,14 +109,14 @@ class CourseResourceTest {
     
     given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO(2, 3, 90))
+        .body(new NewHoleDTO(3, 3, 90))
         .when()
         .post(ENDPOINT + "/1/holes")
         .then()
         .statusCode(201)
         .contentType(ContentType.JSON)
         .body(
-          "number", is(2),
+          "number", is(3),
           "par", is(3),
           "distance", is(90));
 

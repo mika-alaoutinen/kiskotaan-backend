@@ -41,12 +41,6 @@ The database is loaded up with a few rows of test data per service. See the sql 
 ## Calling the services
 Folder `.http` has http-files that contain example payloads that can be used to test the different services.
 
-## TODO list
-
-### Courses service validation logic
-- [ ] Course names should be unique.
-- [ ] Should not be able to add a hole with duplicate number to a course.
-
 ## Discovered problems
 
 ### Score card service

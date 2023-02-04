@@ -1,7 +1,7 @@
-package mikaa.errors;
+package mikaa.infra.errors;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 
 @RegisterForReflection
-public record ValidationError(String field, String message) {
+record ValidationError(String field, String message) {
 }

@@ -1,4 +1,4 @@
-package mikaa.infra;
+package mikaa.infra.errors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,22 +19,20 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
-import mikaa.errors.ErrorBody;
 import mikaa.errors.NotFoundException;
-import mikaa.errors.ValidationError;
 
 @QuarkusTest
-class GlobalErrorHandlerTest {
+class GlobalExceptionHandlerTest {
 
   @InjectMock
   private UriInfo uri;
 
-  private GlobalErrorHandler handler;
+  private GlobalExceptionHandler handler;
 
   @BeforeEach
   void setup() throws URISyntaxException {
     when(uri.getRequestUri()).thenReturn(new URI("https://testuri:8082/api/courses/1"));
-    handler = new GlobalErrorHandler(uri);
+    handler = new GlobalExceptionHandler(uri);
   }
 
   @Test

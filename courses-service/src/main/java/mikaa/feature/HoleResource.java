@@ -6,7 +6,6 @@ import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -31,18 +30,14 @@ public class HoleResource {
 
   @GET
   public RestResponse<HoleDTO> getHole(@PathParam("id") Long id) {
-    return service.findOne(id)
-        .map(RestResponse::ok)
-        .orElseThrow(() -> notFound(id));
+    return RestResponse.ok(service.findOne(id));
   }
 
   @PUT
   @Consumes(MediaType.APPLICATION_JSON)
   @Transactional
   public RestResponse<HoleDTO> updateHole(@PathParam("id") Long id, @Valid NewHoleDTO hole) {
-    return service.update(id, hole)
-        .map(RestResponse::ok)
-        .orElseThrow(() -> notFound(id));
+    return RestResponse.ok(service.update(id, hole));
   }
 
   @DELETE
@@ -50,11 +45,6 @@ public class HoleResource {
   public RestResponse<Void> deleteHole(@PathParam("id") Long id) {
     service.delete(id);
     return RestResponse.noContent();
-  }
-
-  private static NotFoundException notFound(long id) {
-    String msg = "Could not find hole with id " + id;
-    return new NotFoundException(msg);
   }
 
 }

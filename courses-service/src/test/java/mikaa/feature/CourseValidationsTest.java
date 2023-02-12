@@ -98,7 +98,7 @@ class CourseValidationsTest {
             "timestamp", notNullValue(),
             "status", is(400),
             "error", is("Bad Request"),
-            "path", containsString("api/courses"),
+            "path", containsString("/courses"),
             "validationErrors[0].field", is(expected.field()),
             "validationErrors[0].message", is(expected.message()));
   }

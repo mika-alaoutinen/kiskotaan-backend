@@ -1,0 +1,13 @@
+@url = http://localhost:8085/api/q/health
+
+### Health check
+GET {{url}} HTTP/1.1
+
+### Liveness
+GET {{url}}/live HTTP/1.1
+
+### Readiness
+GET {{url}}/ready HTTP/1.1
+
+### Startup
+GET {{url}}/started HTTP/1.1

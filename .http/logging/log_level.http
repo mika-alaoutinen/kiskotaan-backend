@@ -1,0 +1,3 @@
+@url = http://localhost:8085/api
+
+GET {{url}}/logging HTTP/1.1

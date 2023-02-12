@@ -1,4 +1,4 @@
-@url = http://localhost:8081/api/players
+@url = http://localhost:8081/players
 
 ### add new
 POST {{url}} HTTP/1.1

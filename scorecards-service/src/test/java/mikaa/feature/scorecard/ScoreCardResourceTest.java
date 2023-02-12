@@ -183,7 +183,7 @@ class ScoreCardResourceTest {
             "status", is(404),
             "error", is("Not Found"),
             "message", is("Could not find score card with id " + id),
-            "path", containsString("/api/scorecards/" + id));
+            "path", containsString("/scorecards/" + id));
   }
 
   private static ScoreCardEntity scoreCardMock() {

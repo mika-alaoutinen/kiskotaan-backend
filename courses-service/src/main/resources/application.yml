@@ -5,7 +5,6 @@ quarkus:
 
   http:
     port: 8082
-    root-path: /api
 
 mp:
   messaging:

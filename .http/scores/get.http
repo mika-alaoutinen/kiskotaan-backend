@@ -1,4 +1,4 @@
-@url = http://localhost:8083/api/scores
+@url = http://localhost:8083/scores
 
 ### Get score by ID
 GET {{url}}/301 HTTP/1.1

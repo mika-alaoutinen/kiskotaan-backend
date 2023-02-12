@@ -33,7 +33,7 @@ class GlobalErrorHandlerTest {
 
   @BeforeEach
   void setup() throws URISyntaxException {
-    when(uri.getRequestUri()).thenReturn(new URI("https://testuri:8083/api/scorecards/1"));
+    when(uri.getRequestUri()).thenReturn(new URI("https://testuri:8083/scorecards/1"));
     handler = new GlobalErrorHandler(uri);
   }
 
@@ -47,7 +47,7 @@ class GlobalErrorHandlerTest {
     assertEquals(404, body.getStatus());
     assertEquals("Not Found", body.getError());
     assertEquals("Test error message", body.getMessage());
-    assertEquals("/api/scorecards/1", body.getPath());
+    assertEquals("/scorecards/1", body.getPath());
   }
 
   @Test
@@ -66,7 +66,7 @@ class GlobalErrorHandlerTest {
     assertEquals(400, body.getStatus());
     assertEquals("Bad Request", body.getError());
     assertEquals("Invalid request body", body.getMessage());
-    assertEquals("/api/scorecards/1", body.getPath());
+    assertEquals("/scorecards/1", body.getPath());
 
     var expectedError = new ValidationErrorDTO()
         .field("obj.field.test")

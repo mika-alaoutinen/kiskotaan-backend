@@ -30,7 +30,7 @@ class GlobalExceptionHandlerTest {
 
   @BeforeEach
   void setup() throws URISyntaxException {
-    when(uri.getRequestUri()).thenReturn(new URI("https://testuri:8082/api/courses/1"));
+    when(uri.getRequestUri()).thenReturn(new URI("https://testuri:8082/courses/1"));
     handler = new GlobalExceptionHandler(uri);
   }
 
@@ -44,7 +44,7 @@ class GlobalExceptionHandlerTest {
     assertEquals(404, body.status());
     assertEquals("Not Found", body.error());
     assertEquals("Test error message", body.message());
-    assertEquals("/api/courses/1", body.path());
+    assertEquals("/courses/1", body.path());
   }
 
   private static class TestClass {
@@ -68,7 +68,7 @@ class GlobalExceptionHandlerTest {
     assertNotNull(body.timestamp());
     assertEquals(400, body.status());
     assertEquals("Bad Request", body.error());
-    assertEquals("/api/courses/1", body.path());
+    assertEquals("/courses/1", body.path());
 
     var validationErrors = body.validationErrors();
     assertEquals(1, validationErrors.size());

@@ -1,4 +1,4 @@
-@url = http://localhost:8083/api/scorecards
+@url = http://localhost:8083/scorecards
 
 ### Add score for Laajis
 POST {{url}}/1/scores HTTP/1.1

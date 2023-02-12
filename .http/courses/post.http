@@ -1,4 +1,4 @@
-@url = http://localhost:8082/api/courses
+@url = http://localhost:8082/courses
 
 ### Add new course with one hole
 POST {{url}} HTTP/1.1

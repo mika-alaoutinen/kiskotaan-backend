@@ -17,7 +17,7 @@ import mikaa.players.errors.BadRequestException;
 @ExtendWith(MockitoExtension.class)
 class GlobalExceptionHandlerTest {
 
-  static final String PATH = "/api/players";
+  static final String PATH = "/players";
   static final GlobalExceptionHandler HANDLER = new GlobalExceptionHandler();
 
   @Mock

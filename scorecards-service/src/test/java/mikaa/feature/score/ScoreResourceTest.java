@@ -67,7 +67,7 @@ class ScoreResourceTest {
             "status", is(404),
             "error", is("Not Found"),
             "message", is("Could not find score with id 111"),
-            "path", containsString("/api/scores/1"));
+            "path", containsString("/scores/1"));
   }
 
   @Test

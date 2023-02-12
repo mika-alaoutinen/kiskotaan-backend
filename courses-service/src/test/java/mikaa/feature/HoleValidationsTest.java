@@ -62,7 +62,7 @@ class HoleValidationsTest {
             "timestamp", notNullValue(),
             "status", is(400),
             "error", is("Bad Request"),
-            "path", is("/api/holes/1"),
+            "path", is("/holes/1"),
             "validationErrors[0].field", is("number"),
             "validationErrors[0].message", is("Duplicate hole number"));
 
@@ -85,7 +85,7 @@ class HoleValidationsTest {
             "timestamp", notNullValue(),
             "status", is(400),
             "error", is("Bad Request"),
-            "path", is("/api/courses/1/holes"),
+            "path", is("/courses/1/holes"),
             "validationErrors[0].field", is(expected.field()),
             "validationErrors[0].message", is(expected.message()));
 

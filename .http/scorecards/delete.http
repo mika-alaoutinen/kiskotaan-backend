@@ -1,3 +1,3 @@
-@url = http://localhost:8083/api/scorecards
+@url = http://localhost:8083/scorecards
 
 DELETE {{url}}/1 HTTP/1.1

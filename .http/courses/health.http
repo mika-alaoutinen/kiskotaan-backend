@@ -1,4 +1,4 @@
-@url = http://localhost:8082/api/q/health
+@url = http://localhost:8082/q/health
 
 ### Health check
 GET {{url}} HTTP/1.1

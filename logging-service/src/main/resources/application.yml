@@ -1,7 +1,6 @@
 quarkus:
   http:
     port: 8085
-    root-path: /api
 
 log:
   enabled: true

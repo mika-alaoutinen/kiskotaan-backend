@@ -1,4 +1,4 @@
-@url = http://localhost:8081/api/players
+@url = http://localhost:8081/players
 
 ### update
 PUT {{url}}/1 HTTP/1.1

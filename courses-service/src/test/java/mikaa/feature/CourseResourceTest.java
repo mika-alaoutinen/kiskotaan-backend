@@ -190,7 +190,7 @@ class CourseResourceTest {
             "status", is(404),
             "error", is("Not Found"),
             "message", is("Could not find course with id " + id),
-            "path", containsString("/api/courses/" + id));
+            "path", containsString("/courses/" + id));
   }
 
   private static CourseEntity courseMock() {

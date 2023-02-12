@@ -1,4 +1,4 @@
-@url = http://localhost:8082/api/holes
+@url = http://localhost:8082/holes
 
 ### Find hole by ID
 GET {{url}}/3 HTTP/1.1

@@ -73,7 +73,7 @@ class AddScoreResourceTest {
         .playerId(new BigDecimal("123"))
         .score(3);
 
-    String path = String.format("/api/%s", getEndpointUrl(1));
+    String path = getEndpointUrl(1);
     
     postScore(invalidScore)
         .statusCode(400)
@@ -109,7 +109,7 @@ class AddScoreResourceTest {
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, String message, int scoreCardId) {
-    String path = String.format("/api/%s", getEndpointUrl(scoreCardId));
+    String path = getEndpointUrl(scoreCardId);
 
     response.statusCode(404)
         .contentType(ContentType.JSON)

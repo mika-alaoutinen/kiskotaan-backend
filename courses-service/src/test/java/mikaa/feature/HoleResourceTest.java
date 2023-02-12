@@ -127,7 +127,7 @@ class HoleResourceTest {
             "status", is(404),
             "error", is("Not Found"),
             "message", is("Could not find hole with id " + id),
-            "path", is("/api/holes/" + id));
+            "path", is("/holes/" + id));
   }
 
   private static HoleEntity holeMock() {

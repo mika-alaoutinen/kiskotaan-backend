@@ -1,9 +1,9 @@
-package mikaa.feature;
+package mikaa.config;
 
 import io.smallrye.config.ConfigMapping;
 import io.smallrye.config.WithDefault;
 
-@ConfigMapping(prefix = "log")
+@ConfigMapping(prefix = "logging-settings")
 public interface LoggingConfig {
 
     @WithDefault("false")

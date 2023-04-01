@@ -7,11 +7,11 @@ import static org.mockito.Mockito.when;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.Validation;
-import javax.validation.constraints.Size;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.UriInfo;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.constraints.Size;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.UriInfo;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

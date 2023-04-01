@@ -38,7 +38,7 @@ public class PlayerEntity {
   @Setter(value = AccessLevel.PACKAGE)
   private Long id;
 
-  @Column(name = "external_id", unique = true)
+  @Column(name = "external_id", nullable = false, unique = true)
   private long externalId;
 
   @Column(name = "first_name", nullable = false)

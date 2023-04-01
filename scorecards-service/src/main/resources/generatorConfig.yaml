@@ -17,4 +17,5 @@ modelNameSuffix: DTO
 openApiNullable: false
 performBeanValidation: true
 skipDefaultInterface: true
+useJakartaEe: true
 useTags: true

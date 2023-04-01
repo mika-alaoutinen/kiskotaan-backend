@@ -1,6 +1,6 @@
 package mikaa.config;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import org.modelmapper.ModelMapper;
 

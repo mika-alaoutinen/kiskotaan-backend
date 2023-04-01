@@ -5,8 +5,8 @@ POST {{url}} HTTP/1.1
 Content-Type: application/json
 
 {
-  "courseId": 7,
-  "playerIds": [ 3, 4 ]
+  "courseId": 201,
+  "playerIds": [ 103, 104 ]
 }
 
 ### Try to add new score card for course that doesn't exist

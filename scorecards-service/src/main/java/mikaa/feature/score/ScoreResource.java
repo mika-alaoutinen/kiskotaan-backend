@@ -1,7 +1,7 @@
 package mikaa.feature.score;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 

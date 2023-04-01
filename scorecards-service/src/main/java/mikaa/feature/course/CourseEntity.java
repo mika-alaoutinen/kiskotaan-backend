@@ -3,13 +3,14 @@ package mikaa.feature.course;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,12 +31,12 @@ import mikaa.feature.scorecard.ScoreCardEntity;
 public class CourseEntity {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Getter(value = AccessLevel.PACKAGE)
   @Setter(value = AccessLevel.PACKAGE)
   private Long id;
 
-  @Column(name = "external_id", unique = true)
+  @Column(name = "external_id", nullable = false, unique = true)
   private long externalId;
 
   private int holes;

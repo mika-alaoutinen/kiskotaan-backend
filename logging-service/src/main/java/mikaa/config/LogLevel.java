@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.config;
 
 enum LogLevel {
   trace, info, warn, error

@@ -1,10 +1,10 @@
+logging-settings:
+  enabled: true
+  level: info
+
 quarkus:
   http:
     port: 8085
-
-log:
-  enabled: true
-  level: info
 
 mp:
   messaging:

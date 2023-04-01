@@ -1,6 +1,7 @@
 package mikaa.feature;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
+import mikaa.config.LoggingConfig;
 
 @ApplicationScoped
 class LogService {

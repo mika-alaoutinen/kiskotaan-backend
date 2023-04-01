@@ -4,12 +4,12 @@ import io.smallrye.config.ConfigMapping;
 import io.smallrye.config.WithDefault;
 
 @ConfigMapping(prefix = "log")
-interface LoggingConfig {
+public interface LoggingConfig {
 
     @WithDefault("false")
-    boolean enabled();
+    public boolean enabled();
 
     @WithDefault("warn")
-    LogLevel level();
+    public LogLevel level();
 
 }

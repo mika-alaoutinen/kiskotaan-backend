@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.ws.rs.NotFoundException;
+import jakarta.ws.rs.NotFoundException;
 
 import org.junit.jupiter.api.Test;
 

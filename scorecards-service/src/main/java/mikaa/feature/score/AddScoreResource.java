@@ -1,9 +1,9 @@
 package mikaa.feature.score;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 import org.modelmapper.ModelMapper;
 

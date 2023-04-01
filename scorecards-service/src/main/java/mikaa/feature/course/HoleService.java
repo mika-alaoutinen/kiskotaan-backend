@@ -1,6 +1,6 @@
 package mikaa.feature.course;
 
-import javax.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.events.hole.HolePayload;

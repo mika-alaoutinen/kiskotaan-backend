@@ -2,12 +2,12 @@ package mikaa.infra;
 
 import java.time.OffsetDateTime;
 
-import javax.enterprise.context.RequestScoped;
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.core.Response.Status;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.ws.rs.NotFoundException;
+import jakarta.ws.rs.core.UriInfo;
+import jakarta.ws.rs.core.Response.Status;
 
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;

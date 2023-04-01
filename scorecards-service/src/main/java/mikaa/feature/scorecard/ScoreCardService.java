@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.ws.rs.NotFoundException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.course.CourseFinder;

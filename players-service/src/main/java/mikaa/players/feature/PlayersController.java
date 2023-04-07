@@ -1,6 +1,7 @@
 package mikaa.players.feature;
 
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.validation.Valid;
 
@@ -44,8 +45,14 @@ class PlayersController implements PlayersApi {
   }
 
   @Override
-  public ResponseEntity<List<PlayerDTO>> getPlayers() {
-    var players = service.findAll().stream().map(PlayersController::toDto).toList();
+  public ResponseEntity<List<PlayerDTO>> getPlayers(
+      @Valid Optional<String> firstName,
+      @Valid Optional<String> lastName) {
+    var players = service.findAll()
+        .stream()
+        .map(PlayersController::toDto)
+        .toList();
+
     return ResponseEntity.ok(players);
   }
 

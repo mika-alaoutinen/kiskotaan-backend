@@ -61,7 +61,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    var course = new NewCourseDTO("New Course", List.of(new NewHoleDTO(1, 3, 90)));
+    var course = new CourseEntity(1L, "New Course", List.of(new HoleEntity(1L, 1, 3, 90, null)));
     service.add(course);
 
     var payload = assertEvent("COURSE_ADDED", "New Course");

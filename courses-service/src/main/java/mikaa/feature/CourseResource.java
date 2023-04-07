@@ -2,83 +2,73 @@ package mikaa.feature;
 
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PATCH;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response.Status;
-
-import org.jboss.resteasy.reactive.RestResponse;
-
-import io.smallrye.common.annotation.Blocking;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import mikaa.dto.CourseDTO;
-import mikaa.dto.CourseNameDTO;
-import mikaa.dto.CourseSummaryDTO;
-import mikaa.dto.HoleDTO;
-import mikaa.dto.NewCourseDTO;
-import mikaa.dto.NewCourseNameDTO;
-import mikaa.dto.NewHoleDTO;
+import mikaa.api.CoursesApi;
+import mikaa.model.CourseDTO;
+import mikaa.model.CourseNameDTO;
+import mikaa.model.CourseSummaryDTO;
+import mikaa.model.HoleDTO;
+import mikaa.model.NewCourseDTO;
+import mikaa.model.NewCourseNameDTO;
+import mikaa.model.NewHoleDTO;
 
 @ApplicationScoped
-@Blocking
-@Path("/courses")
-@Produces(MediaType.APPLICATION_JSON)
 @RequiredArgsConstructor
-public class CourseResource {
+public class CourseResource implements CoursesApi {
 
+  private static final ModelMapper MAPPER = new ModelMapper();
   private final CourseService service;
   private final HoleService holeService;
 
-  @GET
-  public RestResponse<List<CourseSummaryDTO>> getCourses() {
-    return RestResponse.ok(service.findAll());
-  }
-
-  @GET
-  @Path("/{id}")
-  public RestResponse<CourseDTO> getCourse(@PathParam("id") long id) {
-    return RestResponse.ok(service.findOne(id));
-  }
-
-  @POST
-  @Consumes(MediaType.APPLICATION_JSON)
+  @Override
   @Transactional
-  public RestResponse<CourseDTO> addCourse(@Valid NewCourseDTO newCourse) {
-    var savedCourse = service.add(newCourse);
-    return RestResponse.status(Status.CREATED, savedCourse);
+  public CourseDTO addCourse(@Valid @NotNull NewCourseDTO newCourseDTO) {
+    var course = service.add(MAPPER.map(newCourseDTO, CourseEntity.class));
+    return MAPPER.map(course, CourseDTO.class);
   }
 
-  @POST
-  @Path("/{id}/holes")
-  @Consumes(MediaType.APPLICATION_JSON)
+  @Override
   @Transactional
-  public RestResponse<HoleDTO> addHole(@PathParam("id") Long id, @Valid NewHoleDTO newHole) {
-    return RestResponse.status(Status.CREATED, holeService.add(id, newHole));
+  public HoleDTO addHole(Integer id, @Valid @NotNull NewHoleDTO newHoleDTO) {
+    var hole = holeService.add(id, MAPPER.map(newHoleDTO, HoleEntity.class));
+    return MAPPER.map(hole, HoleDTO.class);
   }
 
-  @PATCH
-  @Path("/{id}")
-  @Consumes(MediaType.APPLICATION_JSON)
+  @Override
   @Transactional
-  public RestResponse<CourseNameDTO> updateCourseName(@PathParam("id") long id, @Valid NewCourseNameDTO newName) {
-    return RestResponse.ok(service.updateCourseName(id, newName.name()));
-  }
-
-  @DELETE
-  @Path("/{id}")
-  @Transactional
-  public RestResponse<Void> delete(@PathParam("id") long id) {
+  public void deleteCourse(Integer id) {
     service.delete(id);
-    return RestResponse.noContent();
+  }
+
+  @Override
+  public CourseDTO getCourse(Integer id) {
+    return MAPPER.map(service.findOne(id), CourseDTO.class);
+  }
+
+  @Override
+  public List<CourseSummaryDTO> getCourses(
+      String name,
+      Integer holesMin,
+      Integer holesMax,
+      Integer parMin,
+      Integer parMax) {
+    return service.findAll()
+        .stream()
+        .map(courseSummary -> MAPPER.map(courseSummary, CourseSummaryDTO.class))
+        .toList();
+  }
+
+  @Override
+  @Transactional
+  public CourseNameDTO updateCourseName(Integer id, @Valid @NotNull NewCourseNameDTO courseName) {
+    var course = service.updateCourseName(id, courseName.getName());
+    return MAPPER.map(course, CourseNameDTO.class);
   }
 
 }

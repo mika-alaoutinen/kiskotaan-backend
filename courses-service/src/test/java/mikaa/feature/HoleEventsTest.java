@@ -63,7 +63,8 @@ class HoleEventsTest {
   @Test
   void should_send_event_on_add() {
     when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
-    service.add(COURSE_ID, new NewHoleDTO(1, 3, 100));
+    var newHole = new HoleEntity(1L, 1, 3, 100, courseMock());
+    service.add(COURSE_ID, newHole);
 
     // holeId is null because mocked repository does not create a new ID on persist
     var expected = new HolePayload(null, COURSE_ID, 1, 3, 100);

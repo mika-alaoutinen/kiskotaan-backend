@@ -23,16 +23,16 @@ class HoleService {
         .orElseThrow(() -> holeNotFound(id));
   }
 
-  HoleDTO add(long courseId, NewHoleDTO newHole) {
+  HoleEntity add(long courseId, HoleEntity newHole) {
     var course = courseRepository.findByIdOptional(courseId).orElseThrow(() -> courseNotFound(courseId));
-    HoleEntity hole = HoleMapper.entity(newHole);
 
-    HoleValidator.validateUniqueHoleNumber(hole.getHoleNumber(), course);
-    course.addHole(hole);
+    HoleValidator.validateUniqueHoleNumber(newHole.getHoleNumber(), course);
+    course.addHole(newHole);
 
-    repository.persist(hole);
-    producer.send(HoleEventType.HOLE_ADDED, HoleMapper.payload(hole));
-    return HoleMapper.dto(hole);
+    repository.persist(newHole);
+    producer.send(HoleEventType.HOLE_ADDED, HoleMapper.payload(newHole));
+
+    return newHole;
   }
 
   HoleDTO update(long id, NewHoleDTO updatedHole) {

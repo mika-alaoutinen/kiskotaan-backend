@@ -6,10 +6,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.dto.CourseDTO;
-import mikaa.dto.CourseNameDTO;
-import mikaa.dto.CourseSummaryDTO;
-import mikaa.dto.NewCourseDTO;
+import mikaa.dto.CourseSummary;
+
 import mikaa.kafka.courses.CourseEventType;
 import mikaa.kafka.courses.CourseProducer;
 
@@ -21,45 +19,32 @@ class CourseService {
   private final CourseRepository repository;
   private final CourseValidator validator;
 
-  List<CourseSummaryDTO> findAll() {
+  List<CourseSummary> findAll() {
     return repository.listAll()
         .stream()
         .map(CourseMapper::courseSummary)
         .toList();
   }
 
-  CourseDTO findOne(long id) {
-    return repository.findByIdOptional(id)
-        .map(CourseMapper::course)
-        .orElseThrow(() -> notFound(id));
+  CourseEntity findOne(long id) {
+    return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }
 
-  CourseDTO add(NewCourseDTO newCourse) {
-    CourseEntity entity = CourseEntity.fromName(newCourse.name());
-
-    validator.validate(entity);
-
-    newCourse.holes()
-        .stream()
-        .map(HoleMapper::entity)
-        .forEach(entity::addHole);
-
-    repository.persist(entity);
-
-    var savedCourse = CourseMapper.course(entity);
-    producer.send(CourseEventType.COURSE_ADDED, savedCourse);
-
-    return savedCourse;
+  CourseEntity add(CourseEntity newCourse) {
+    validator.validate(newCourse);
+    repository.persist(newCourse);
+    producer.send(CourseEventType.COURSE_ADDED, CourseMapper.course(newCourse));
+    return newCourse;
   }
 
-  CourseNameDTO updateCourseName(long id, String name) {
+  CourseEntity updateCourseName(long id, String name) {
     var course = repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
     validator.validate(CourseEntity.fromName(name));
 
     course.setName(name);
     producer.send(CourseEventType.COURSE_UPDATED, CourseMapper.course(course));
 
-    return CourseMapper.courseName(course);
+    return course;
   }
 
   void delete(long id) {

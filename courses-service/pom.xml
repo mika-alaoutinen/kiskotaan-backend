@@ -160,6 +160,27 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.openapitools</groupId>
+        <artifactId>openapi-generator-maven-plugin</artifactId>
+        <version>6.5.0</version>
+        <executions>
+          <execution>
+          <goals>
+            <goal>generate</goal>
+          </goals>
+          <configuration>
+            <configurationFile>${project.basedir}/src/main/resources/generatorConfig.yaml</configurationFile>
+            <inputSpec>
+              https://raw.githubusercontent.com/mika-alaoutinen/kiskotaan-openapi/master/apidoc_courses.json
+            </inputSpec>
+            <generatorName>jaxrs-spec</generatorName>
+            <library>quarkus</library>
+          </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 

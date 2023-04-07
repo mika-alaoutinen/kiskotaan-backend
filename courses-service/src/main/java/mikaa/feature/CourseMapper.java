@@ -4,7 +4,7 @@ import java.util.List;
 
 import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseNameDTO;
-import mikaa.dto.CourseSummaryDTO;
+import mikaa.dto.CourseSummary;
 import mikaa.dto.HoleDTO;
 
 interface CourseMapper {
@@ -17,8 +17,8 @@ interface CourseMapper {
     return entity.getHoles().stream().map(HoleMapper::dto).toList();
   }
 
-  static CourseSummaryDTO courseSummary(CourseEntity entity) {
-    return new CourseSummaryDTO(
+  static CourseSummary courseSummary(CourseEntity entity) {
+    return new CourseSummary(
         entity.getId(),
         entity.getName(),
         courseHoleCount(entity),

@@ -3,6 +3,9 @@
 ### get all
 GET {{url}} HTTP/1.1
 
+### get all with filter
+GET {{url}}?name=Pekka HTTP/1.1
+
 ### get one
 GET {{url}}/4 HTTP/1.1
 

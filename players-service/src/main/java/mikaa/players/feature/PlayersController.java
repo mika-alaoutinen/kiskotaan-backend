@@ -45,10 +45,8 @@ class PlayersController implements PlayersApi {
   }
 
   @Override
-  public ResponseEntity<List<PlayerDTO>> getPlayers(
-      @Valid Optional<String> firstName,
-      @Valid Optional<String> lastName) {
-    var players = service.findAll()
+  public ResponseEntity<List<PlayerDTO>> getPlayers(@Valid Optional<String> name) {
+    var players = service.findAll(name)
         .stream()
         .map(PlayersController::toDto)
         .toList();

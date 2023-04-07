@@ -20,11 +20,9 @@ public class GlobalExceptionHandler {
   ResponseEntity<ErrorBodyDTO> handleBadRequest(BadRequestException ex, HttpServletRequest req) {
     log.info(ex.getMessage());
 
-    var body = new ErrorBodyDTO()
+    var body = new ErrorBodyDTO(400, ex.getMessage())
         .error("Bad Request")
-        .message(ex.getMessage())
         .path(req.getRequestURI())
-        .status(400)
         .timestamp(OffsetDateTime.now());
 
     return new ResponseEntity<ErrorBodyDTO>(body, HttpStatus.BAD_REQUEST);

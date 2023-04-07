@@ -51,6 +51,7 @@ class PlayersControllerTest {
   private static final String ENDPOINT = "/players";
   private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final PlayerEntity PLAYER = new PlayerEntity(1L, "Pekka", "Kana");
+  private static final NewPlayerDTO NEW_PLAYER = new NewPlayerDTO("Pekka", "Kana");
 
   @MockBean
   private KafkaProducer producer;
@@ -96,12 +97,10 @@ class PlayersControllerTest {
   void should_add_new_player() throws Exception {
     when(repository.save(any(PlayerEntity.class))).thenReturn(PLAYER);
 
-    var newPlayer = new NewPlayerDTO().firstName("Pekka").lastName("Kana");
-
     mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(newPlayer)))
+            .content(asJson(NEW_PLAYER)))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.id").value(1))
         .andExpect(jsonPath("$.firstName").value("Pekka"))
@@ -132,12 +131,10 @@ class PlayersControllerTest {
         .when(repository)
         .existsPlayerByFirstNameAndLastName(anyString(), anyString());
 
-    var newPlayer = new NewPlayerDTO().firstName("Pekka").lastName("Kana");
-
     mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(newPlayer)))
+            .content(asJson(NEW_PLAYER)))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.message").value(errorMessage));
 
@@ -149,7 +146,7 @@ class PlayersControllerTest {
     when(repository.findById(anyLong())).thenReturn(Optional.of(PLAYER));
     when(repository.save(any(PlayerEntity.class))).thenReturn(new PlayerEntity(1L, "Edited", "Edited"));
 
-    var editedPlayer = new NewPlayerDTO().firstName("Edited").lastName("Edited");
+    var editedPlayer = new NewPlayerDTO("Edited", "Edited");
 
     mvc
         .perform(put(ENDPOINT + "/1")
@@ -167,12 +164,10 @@ class PlayersControllerTest {
   void put_should_return_404_when_player_not_found() throws Exception {
     when(repository.findById(anyLong())).thenReturn(Optional.empty());
     
-    var editedPlayer = new NewPlayerDTO().firstName("Pekka").lastName("Kana");
-
     mvc
         .perform(put(ENDPOINT + "/1")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(editedPlayer)))
+            .content(asJson(NEW_PLAYER)))
         .andExpect(status().isNotFound());
 
     verifyNoPersist();
@@ -199,12 +194,10 @@ class PlayersControllerTest {
         .when(repository)
         .existsPlayerByFirstNameAndLastName(anyString(), anyString());
 
-    var newPlayer = new NewPlayerDTO().firstName("Pekka").lastName("Kana");
-
     mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(newPlayer)))
+            .content(asJson(NEW_PLAYER)))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.message").value(errorMessage));
 
@@ -242,8 +235,8 @@ class PlayersControllerTest {
 
   private static Stream<NewPlayerDTO> invalidNewPlayers() {
     return Stream.of(
-        new NewPlayerDTO().firstName("Kalle"),
-        new NewPlayerDTO().firstName("Kalle").lastName(""));
+        new NewPlayerDTO("Kalle", null),
+        new NewPlayerDTO("Kalle", ""));
   }
 
   private static String asJson(NewPlayerDTO dto) throws JsonProcessingException {

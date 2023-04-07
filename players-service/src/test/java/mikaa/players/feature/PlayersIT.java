@@ -40,7 +40,7 @@ class PlayersIT {
     mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(new NewPlayerDTO().firstName("Pekka").lastName("Kana"))))
+            .content(asJson(new NewPlayerDTO("Pekka", "Kana"))))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.firstName").value("Pekka"))
         .andExpect(jsonPath("$.lastName").value("Kana"));
@@ -53,7 +53,7 @@ class PlayersIT {
     mvc
         .perform(put(ENDPOINT + "/" + saved.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(new NewPlayerDTO().firstName("Edited").lastName("Player"))))
+            .content(asJson(new NewPlayerDTO("Edited", "Player"))))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.firstName").value("Edited"))
         .andExpect(jsonPath("$.lastName").value("Player"));

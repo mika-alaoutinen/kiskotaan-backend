@@ -45,3 +45,15 @@ Folder `.http` has http-files that contain example payloads that can be used to 
 
 ### Score card service
 `org.jboss.resteasy.reactive.ResponseStatus` annotation does nothing. It should be possible to set the status code of a response using the annotation, but in reality the annotation does nothing. The workaround is to wrap responses in `Response` or `RestResponse` and set headers that way. Unfortunately OpenAPI code generation does not support RestResponse.
+
+## TODO
+- Refactor `Score cards service` to be reactive. Requires switching from Postgres to MongoDB.
+- Consider creating a new "read-only" service that consolidates all GET operations into one service.
+  - Applies CQRS design pattern.
+  - Listens to events from other services and duplicates their data into MongoDB.
+  - Problems: `Score cards service` also has to listen to events from Courses and Players services, so there's some overlap with existing functionality.
+  - Might be more reasonable to implement GET operations into `Score cards service`?
+- Implement filtering by keywords in GET requests.
+- Implement search functionality for score cards.
+- Implement paging.
+- Implement authentication and authorization.

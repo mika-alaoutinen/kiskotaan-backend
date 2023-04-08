@@ -10,11 +10,10 @@ import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import mikaa.model.NewPlayerDTO;
+import mikaa.players.utils.MvcUtils;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PlayersIT {
 
   private static final String ENDPOINT = "/players";
-  private static final ObjectMapper MAPPER = new ObjectMapper();
 
   @Autowired
   private PlayersRepository repository;
@@ -36,27 +34,43 @@ class PlayersIT {
   private MockMvc mvc;
 
   @Test
-  void should_post_new_player() throws Exception {
+  void should_get_all_players() throws Exception {
     mvc
+        .perform(get(ENDPOINT))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$", hasSize(3)));
+  }
+
+  @Test
+  void should_get_one_player_by_id() throws Exception {
+    var result = mvc.perform(get(ENDPOINT + "/1"))
+        .andExpect(status().isOk());
+
+    MvcUtils.verifyName(result, "Aku", "Ankka");
+  }
+
+  @Test
+  void should_post_new_player() throws Exception {
+    var result = mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(new NewPlayerDTO("Pekka", "Kana"))))
-        .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.firstName").value("Pekka"))
-        .andExpect(jsonPath("$.lastName").value("Kana"));
+            .content(MvcUtils.asJson(new NewPlayerDTO("Pekka", "Kana"))))
+        .andExpect(status().isCreated());
+
+    MvcUtils.verifyName(result, "Pekka", "Kana");
   }
 
   @Test
   void should_update_existing_player() throws Exception {
     var saved = repository.save(new PlayerEntity("Kalle", "Kukko"));
 
-    mvc
+    var result = mvc
         .perform(put(ENDPOINT + "/" + saved.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(new NewPlayerDTO("Edited", "Player"))))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.firstName").value("Edited"))
-        .andExpect(jsonPath("$.lastName").value("Player"));
+            .content(MvcUtils.asJson(new NewPlayerDTO("Edited", "Player"))))
+        .andExpect(status().isOk());
+
+    MvcUtils.verifyName(result, "Edited", "Player");
   }
 
   @Test
@@ -68,10 +82,6 @@ class PlayersIT {
         .andExpect(status().isNoContent());
 
     assertTrue(repository.findById(saved.getId()).isEmpty());
-  }
-
-  private static String asJson(NewPlayerDTO dto) throws JsonProcessingException {
-    return MAPPER.writeValueAsString(dto);
   }
 
 }

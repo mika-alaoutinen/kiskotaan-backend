@@ -6,7 +6,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kafka.courses.CourseEventType;
 import mikaa.kafka.courses.CourseProducer;
 
 @ApplicationScoped
@@ -32,7 +31,7 @@ class CourseService implements CourseFinder {
   CourseEntity add(CourseEntity newCourse) {
     validator.validate(newCourse);
     repository.persist(newCourse);
-    producer.send(CourseEventType.COURSE_ADDED, CourseMapper.course(newCourse));
+    producer.courseAdded(CourseMapper.course(newCourse));
     return newCourse;
   }
 
@@ -41,7 +40,7 @@ class CourseService implements CourseFinder {
     validator.validate(CourseEntity.fromName(name));
 
     course.setName(name);
-    producer.send(CourseEventType.COURSE_UPDATED, CourseMapper.course(course));
+    producer.courseUpdated(CourseMapper.course(course));
 
     return course;
   }
@@ -51,7 +50,7 @@ class CourseService implements CourseFinder {
         .map(CourseMapper::course)
         .ifPresent(course -> {
           repository.deleteById(id);
-          producer.send(CourseEventType.COURSE_DELETED, course);
+          producer.courseDeleted(course);
         });
   }
 

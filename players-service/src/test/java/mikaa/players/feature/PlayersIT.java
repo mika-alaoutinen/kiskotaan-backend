@@ -9,12 +9,9 @@ import org.springframework.http.MediaType;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import mikaa.model.NewPlayerDTO;
+import mikaa.players.utils.MvcUtils;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -29,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PlayersIT {
 
   private static final String ENDPOINT = "/players";
-  private static final ObjectMapper MAPPER = new ObjectMapper();
 
   @Autowired
   private PlayersRepository repository;
@@ -50,7 +46,7 @@ class PlayersIT {
     var result = mvc.perform(get(ENDPOINT + "/1"))
         .andExpect(status().isOk());
 
-    verifyName(result, "Aku", "Ankka");
+    MvcUtils.verifyName(result, "Aku", "Ankka");
   }
 
   @Test
@@ -58,10 +54,10 @@ class PlayersIT {
     var result = mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(new NewPlayerDTO("Pekka", "Kana"))))
+            .content(MvcUtils.asJson(new NewPlayerDTO("Pekka", "Kana"))))
         .andExpect(status().isCreated());
 
-    verifyName(result, "Pekka", "Kana");
+    MvcUtils.verifyName(result, "Pekka", "Kana");
   }
 
   @Test
@@ -71,10 +67,10 @@ class PlayersIT {
     var result = mvc
         .perform(put(ENDPOINT + "/" + saved.getId())
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(new NewPlayerDTO("Edited", "Player"))))
+            .content(MvcUtils.asJson(new NewPlayerDTO("Edited", "Player"))))
         .andExpect(status().isOk());
 
-    verifyName(result, "Edited", "Player");
+    MvcUtils.verifyName(result, "Edited", "Player");
   }
 
   @Test
@@ -86,16 +82,6 @@ class PlayersIT {
         .andExpect(status().isNoContent());
 
     assertTrue(repository.findById(saved.getId()).isEmpty());
-  }
-
-  private static void verifyName(ResultActions result, String firstName, String lastName) throws Exception {
-    result
-        .andExpect(jsonPath("$.firstName").value(firstName))
-        .andExpect(jsonPath("$.lastName").value(lastName));
-  }
-
-  private static String asJson(NewPlayerDTO dto) throws JsonProcessingException {
-    return MAPPER.writeValueAsString(dto);
   }
 
 }

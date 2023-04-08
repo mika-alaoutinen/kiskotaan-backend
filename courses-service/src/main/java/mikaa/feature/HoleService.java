@@ -13,8 +13,8 @@ import mikaa.kafka.holes.HoleProducer;
 @RequiredArgsConstructor
 class HoleService {
 
+  private final CourseService service;
   private final HoleProducer producer;
-  private final CourseRepository courseRepository;
   private final HoleRepository repository;
 
   HoleDTO findOne(long id) {
@@ -24,7 +24,7 @@ class HoleService {
   }
 
   HoleEntity add(long courseId, HoleEntity newHole) {
-    var course = courseRepository.findByIdOptional(courseId).orElseThrow(() -> courseNotFound(courseId));
+    var course = service.findOne(courseId);
 
     HoleValidator.validateUniqueHoleNumber(newHole.getHoleNumber(), course);
     course.addHole(newHole);
@@ -55,11 +55,6 @@ class HoleService {
           repository.deleteById(id);
           producer.send(HoleEventType.HOLE_DELETED, hole);
         });
-  }
-
-  private static NotFoundException courseNotFound(long id) {
-    String msg = "Could not find course with id " + id;
-    return new NotFoundException(msg);
   }
 
   private static NotFoundException holeNotFound(long id) {

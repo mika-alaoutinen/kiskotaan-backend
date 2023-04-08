@@ -3,7 +3,7 @@ package mikaa.feature;
 import java.util.List;
 
 import mikaa.kafka.courses.CoursePayload;
-import mikaa.kafka.holes.HolePayload;
+import mikaa.kafka.courses.HolePayload;
 
 interface CourseMapper {
 
@@ -18,7 +18,6 @@ interface CourseMapper {
   private static HolePayload hole(HoleEntity entity) {
     return new HolePayload(
         entity.getId(),
-        entity.getCourse().getId(),
         entity.getHoleNumber(),
         entity.getPar(),
         entity.getDistance());

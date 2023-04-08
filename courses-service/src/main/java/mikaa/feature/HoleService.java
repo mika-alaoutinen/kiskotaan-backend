@@ -11,7 +11,7 @@ import mikaa.kafka.holes.HoleProducer;
 @RequiredArgsConstructor
 class HoleService {
 
-  private final CourseFinder courseFinder;
+  private final CourseService courseService;
   private final HoleProducer producer;
   private final HoleRepository repository;
 
@@ -20,7 +20,7 @@ class HoleService {
   }
 
   HoleEntity add(long courseId, HoleEntity newHole) {
-    var course = courseFinder.findOne(courseId);
+    var course = courseService.findOne(courseId);
 
     HoleValidator.validateUniqueHoleNumber(newHole.getHoleNumber(), course);
     course.addHole(newHole);

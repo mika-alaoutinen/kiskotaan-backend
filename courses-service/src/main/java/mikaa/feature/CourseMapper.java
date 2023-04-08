@@ -3,7 +3,6 @@ package mikaa.feature;
 import java.util.List;
 
 import mikaa.dto.CourseDTO;
-import mikaa.dto.CourseNameDTO;
 import mikaa.dto.CourseSummary;
 import mikaa.dto.HoleDTO;
 
@@ -31,10 +30,6 @@ interface CourseMapper {
 
   private static int coursePar(CourseEntity entity) {
     return entity.getHoles().stream().mapToInt(HoleEntity::getPar).sum();
-  }
-
-  static CourseNameDTO courseName(CourseEntity entity) {
-    return new CourseNameDTO(entity.getId(), entity.getName());
   }
 
 }

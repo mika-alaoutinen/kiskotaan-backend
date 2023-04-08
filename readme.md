@@ -57,3 +57,4 @@ Folder `.http` has http-files that contain example payloads that can be used to 
 - Implement search functionality for score cards.
 - Implement paging.
 - Implement authentication and authorization.
+- Consider adding DB migrations with Liquibase or Flyway?  

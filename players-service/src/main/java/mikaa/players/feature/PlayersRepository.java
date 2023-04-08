@@ -12,9 +12,10 @@ interface PlayersRepository extends JpaRepository<PlayerEntity, Long> {
 
   boolean existsPlayerByFirstNameAndLastName(String firstName, String lastName);
 
-  List<PlayerEntity> findByFirstNameContainingAndLastNameContaining(String firstName, String lastName);
+  List<PlayerEntity> findByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(
+      String firstName, String lastName);
 
-  @Query("SELECT p FROM player p WHERE p.firstName LIKE :name OR p.lastName LIKE :name")
+  @Query("SELECT p FROM player p WHERE LOWER(p.firstName) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(p.lastName) LIKE LOWER(CONCAT('%', :name, '%'))")
   List<PlayerEntity> findByFirstOrLastname(@Param("name") String name);
 
 }

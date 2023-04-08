@@ -22,7 +22,8 @@ class PlayersService {
     var filters = nameFilter.split(" ");
 
     return filters.length > 1
-        ? repository.findByFirstNameContainingAndLastNameContaining(filters[0], filters[1])
+        ? repository.findByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(
+            filters[0], filters[1])
         : repository.findByFirstOrLastname(filters[0]);
   }
 

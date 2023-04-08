@@ -1,7 +1,15 @@
 package mikaa.dto;
 
-import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.Value;
 
-@RegisterForReflection
-public record CourseSummary(Long id, String name, int holes, int par) {
+/*
+ * Use value class over record due to ModelMapper compatibility.
+ * ModelMapper expects fields to have traditional getters.
+ */
+@Value
+public class CourseSummary {
+  private Long id;
+  private String name;
+  private int holes;
+  private int par;
 }

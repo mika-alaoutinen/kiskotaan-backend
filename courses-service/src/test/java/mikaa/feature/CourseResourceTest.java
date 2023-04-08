@@ -38,8 +38,7 @@ class CourseResourceTest {
 
   @Test
   void should_get_all_courses() {
-    var course = courseMock();
-    when(repository.listAll()).thenReturn(List.of(course));
+    when(repository.listAll()).thenReturn(List.of(courseMock()));
 
     given()
         .when()
@@ -56,8 +55,7 @@ class CourseResourceTest {
 
   @Test
   void should_get_course_by_id() {
-    var course = courseMock();
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(course));
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
 
     given()
         .when()

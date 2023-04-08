@@ -13,7 +13,7 @@ import mikaa.kafka.courses.CourseProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class CourseService {
+class CourseService implements CourseFinder {
 
   private final CourseProducer producer;
   private final CourseRepository repository;
@@ -26,7 +26,8 @@ class CourseService {
         .toList();
   }
 
-  CourseEntity findOne(long id) {
+  @Override
+  public CourseEntity findOne(long id) {
     return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }
 

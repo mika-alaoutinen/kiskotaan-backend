@@ -40,7 +40,7 @@ class HoleEventsTest {
   private HoleProducer producer;
 
   @InjectMock
-  private CourseService courseService;
+  private CourseFinder courseFinder;
 
   @InjectMock
   private HoleRepository repository;
@@ -52,7 +52,7 @@ class HoleEventsTest {
   void setup() {
     sink = connector.sink("holes-out");
     sink.clear();
-    service = new HoleService(courseService, producer, repository);
+    service = new HoleService(courseFinder, producer, repository);
   }
 
   @AfterEach
@@ -62,7 +62,7 @@ class HoleEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    when(courseService.findOne(anyLong())).thenReturn(courseMock());
+    when(courseFinder.findOne(anyLong())).thenReturn(courseMock());
     var newHole = new HoleEntity(null, 1, 3, 100, courseMock());
     service.add(COURSE_ID, newHole);
 

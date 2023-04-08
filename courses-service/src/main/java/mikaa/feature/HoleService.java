@@ -4,8 +4,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.dto.HoleDTO;
-import mikaa.dto.NewHoleDTO;
 import mikaa.kafka.holes.HoleEventType;
 import mikaa.kafka.holes.HoleProducer;
 
@@ -17,10 +15,8 @@ class HoleService {
   private final HoleProducer producer;
   private final HoleRepository repository;
 
-  HoleDTO findOne(long id) {
-    return repository.findByIdOptional(id)
-        .map(HoleMapper::dto)
-        .orElseThrow(() -> holeNotFound(id));
+  HoleEntity findOne(long id) {
+    return repository.findByIdOptional(id).orElseThrow(() -> holeNotFound(id));
   }
 
   HoleEntity add(long courseId, HoleEntity newHole) {
@@ -35,17 +31,18 @@ class HoleService {
     return newHole;
   }
 
-  HoleDTO update(long id, NewHoleDTO updatedHole) {
+  HoleEntity update(long id, HoleEntity updatedHole) {
     var hole = repository.findByIdOptional(id).orElseThrow(() -> holeNotFound(id));
 
-    HoleValidator.validateUniqueHoleNumber(updatedHole.number(), hole.getCourse());
+    HoleValidator.validateUniqueHoleNumber(updatedHole.getHoleNumber(), hole.getCourse());
 
-    hole.setDistance(updatedHole.distance());
-    hole.setHoleNumber(updatedHole.number());
-    hole.setPar(updatedHole.par());
+    hole.setDistance(updatedHole.getDistance());
+    hole.setHoleNumber(updatedHole.getHoleNumber());
+    hole.setPar(updatedHole.getPar());
 
     producer.send(HoleEventType.HOLE_UPDATED, HoleMapper.payload(hole));
-    return HoleMapper.dto(hole);
+
+    return hole;
   }
 
   void delete(long id) {

@@ -21,7 +21,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
-import mikaa.dto.NewHoleDTO;
 import mikaa.kafka.holes.HoleEvent;
 import mikaa.kafka.holes.HolePayload;
 import mikaa.kafka.holes.HoleProducer;
@@ -75,7 +74,7 @@ class HoleEventsTest {
   @Test
   void should_send_event_on_update() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
-    service.update(HOLE_ID, new NewHoleDTO(4, 5, 165));
+    service.update(HOLE_ID, new HoleEntity(null, 4, 5, 165, courseMock()));
 
     var expected = new HolePayload(HOLE_ID, COURSE_ID, 4, 5, 165);
     assertEvent("HOLE_UPDATED", expected);

@@ -6,7 +6,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.dto.NewHoleDTO;
+import mikaa.model.NewHoleDTO;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -65,7 +65,7 @@ class HoleResourceTest {
 
     given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO(2, 4, 100))
+        .body(new NewHoleDTO().number(2).par(4).distance(100))
         .when()
         .put(ENDPOINT + "/1")
         .then()
@@ -82,7 +82,7 @@ class HoleResourceTest {
   void should_reject_update_with_invalid_payload() {
     given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO(0, 3, 120))
+        .body(new NewHoleDTO().number(0).par(3).distance(120))
         .when()
         .put(ENDPOINT + "/1")
         .then()
@@ -97,7 +97,7 @@ class HoleResourceTest {
 
     var response = given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO(2, 4, 100))
+        .body(new NewHoleDTO().number(2).par(4).distance(100))
         .when()
         .put(ENDPOINT + "/1")
         .then();

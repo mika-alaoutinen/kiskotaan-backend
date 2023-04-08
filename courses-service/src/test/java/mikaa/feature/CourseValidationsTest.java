@@ -6,10 +6,10 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.dto.NewCourseDTO;
-import mikaa.dto.NewCourseNameDTO;
-import mikaa.dto.NewHoleDTO;
 import mikaa.errors.ValidationError;
+import mikaa.model.NewCourseDTO;
+import mikaa.model.NewCourseNameDTO;
+import mikaa.model.NewHoleDTO;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -36,7 +36,7 @@ class CourseValidationsTest {
 
   @Test
   void should_reject_new_course_without_holes() {
-    var invalidCourse = new NewCourseDTO("New Course", List.of());
+    var invalidCourse = new NewCourseDTO().name("New Course");
 
     var response = postInvalidCourse(invalidCourse);
     assertBadRequest(response, new ValidationError("holes", "size must be 1-30"));
@@ -48,8 +48,8 @@ class CourseValidationsTest {
   void should_reject_new_course_with_duplicate_name() {
     when(repository.existsByName(anyString())).thenReturn(true);
     
-    var hole = new NewHoleDTO(1, 3, 100);
-    var invalidCourse = new NewCourseDTO("Duplicate name", List.of(hole));
+    var hole = new NewHoleDTO().number(1).par(3).distance(100);
+    var invalidCourse = new NewCourseDTO().name("Duplicate name").holes(List.of(hole));
     var response = postInvalidCourse(invalidCourse);
 
     assertBadRequest(response, new ValidationError("name", "Course name should be unique"));
@@ -58,7 +58,7 @@ class CourseValidationsTest {
 
   @Test
   void should_reject_invalid_course_name_on_update() {
-    var response = patchInvalidCourseName(new NewCourseNameDTO("A"));
+    var response = patchInvalidCourseName(new NewCourseNameDTO().name("A"));
     assertBadRequest(response, new ValidationError("name", "size must be 3-40"));
     verify(repository, never()).persist(any(CourseEntity.class));
   }
@@ -68,7 +68,7 @@ class CourseValidationsTest {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     when(repository.existsByName(anyString())).thenReturn(true);
     
-    var response = patchInvalidCourseName(new NewCourseNameDTO("Duplicate name"));
+    var response = patchInvalidCourseName(new NewCourseNameDTO().name("Duplicate name"));
     assertBadRequest(response, new ValidationError("name", "Course name should be unique"));
     verify(repository, never()).persist(any(CourseEntity.class));
   }

@@ -23,8 +23,6 @@ import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import mikaa.dto.CourseDTO;
-import mikaa.dto.NewCourseDTO;
-import mikaa.dto.NewHoleDTO;
 import mikaa.kafka.courses.CourseEvent;
 import mikaa.kafka.courses.CourseProducer;
 

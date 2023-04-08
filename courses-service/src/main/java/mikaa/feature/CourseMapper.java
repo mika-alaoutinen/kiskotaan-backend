@@ -12,7 +12,16 @@ interface CourseMapper {
   }
 
   private static List<HolePayload> holes(CourseEntity entity) {
-    return entity.getHoles().stream().map(HoleMapper::dto).toList();
+    return entity.getHoles().stream().map(CourseMapper::hole).toList();
+  }
+
+  private static HolePayload hole(HoleEntity entity) {
+    return new HolePayload(
+        entity.getId(),
+        entity.getCourse().getId(),
+        entity.getHoleNumber(),
+        entity.getPar(),
+        entity.getDistance());
   }
 
 }

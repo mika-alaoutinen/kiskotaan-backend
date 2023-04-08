@@ -5,6 +5,7 @@ import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.kafka.holes.HoleEventType;
+import mikaa.kafka.holes.HolePayload;
 import mikaa.kafka.holes.HoleProducer;
 
 @ApplicationScoped
@@ -26,7 +27,7 @@ class HoleService {
     course.addHole(newHole);
 
     repository.persist(newHole);
-    producer.send(HoleEventType.HOLE_ADDED, HoleMapper.payload(newHole));
+    producer.send(HoleEventType.HOLE_ADDED, payload(newHole));
 
     return newHole;
   }
@@ -40,14 +41,14 @@ class HoleService {
     hole.setHoleNumber(updatedHole.getHoleNumber());
     hole.setPar(updatedHole.getPar());
 
-    producer.send(HoleEventType.HOLE_UPDATED, HoleMapper.payload(hole));
+    producer.send(HoleEventType.HOLE_UPDATED, payload(hole));
 
     return hole;
   }
 
   void delete(long id) {
     repository.findByIdOptional(id)
-        .map(HoleMapper::payload)
+        .map(HoleService::payload)
         .ifPresent(hole -> {
           repository.deleteById(id);
           producer.send(HoleEventType.HOLE_DELETED, hole);
@@ -57,6 +58,15 @@ class HoleService {
   private static NotFoundException holeNotFound(long id) {
     String msg = "Could not find hole with id " + id;
     return new NotFoundException(msg);
+  }
+
+  private static HolePayload payload(HoleEntity entity) {
+    return new HolePayload(
+        entity.getId(),
+        entity.getCourse().getId(),
+        entity.getHoleNumber(),
+        entity.getPar(),
+        entity.getDistance());
   }
 
 }

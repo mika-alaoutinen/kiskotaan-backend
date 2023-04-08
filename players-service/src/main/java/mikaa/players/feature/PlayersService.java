@@ -18,8 +18,13 @@ class PlayersService {
   private final PlayersRepository repository;
   private final PlayerValidator validator;
 
-  List<PlayerEntity> findAll() {
-    return repository.findAll();
+  List<PlayerEntity> findAll(String nameFilter) {
+    var filters = nameFilter.split(" ");
+
+    return filters.length > 1
+        ? repository.findByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(
+            filters[0], filters[1])
+        : repository.findByFirstOrLastname(filters[0]);
   }
 
   Optional<PlayerEntity> findOne(long id) {

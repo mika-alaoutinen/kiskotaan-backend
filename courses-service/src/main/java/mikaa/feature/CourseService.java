@@ -6,14 +6,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.dto.CourseSummary;
-
-import mikaa.kafka.courses.CourseEventType;
 import mikaa.kafka.courses.CourseProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class CourseService implements CourseFinder {
+class CourseService {
 
   private final CourseProducer producer;
   private final CourseRepository repository;
@@ -22,19 +19,18 @@ class CourseService implements CourseFinder {
   List<CourseSummary> findAll() {
     return repository.listAll()
         .stream()
-        .map(CourseMapper::courseSummary)
+        .map(CourseSummary::from)
         .toList();
   }
 
-  @Override
-  public CourseEntity findOne(long id) {
+  CourseEntity findOne(long id) {
     return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }
 
   CourseEntity add(CourseEntity newCourse) {
     validator.validate(newCourse);
     repository.persist(newCourse);
-    producer.send(CourseEventType.COURSE_ADDED, CourseMapper.course(newCourse));
+    producer.courseAdded(CourseMapper.toPayload(newCourse));
     return newCourse;
   }
 
@@ -43,17 +39,17 @@ class CourseService implements CourseFinder {
     validator.validate(CourseEntity.fromName(name));
 
     course.setName(name);
-    producer.send(CourseEventType.COURSE_UPDATED, CourseMapper.course(course));
+    producer.courseUpdated(CourseMapper.toPayload(course));
 
     return course;
   }
 
   void delete(long id) {
     repository.findByIdOptional(id)
-        .map(CourseMapper::course)
+        .map(CourseMapper::toPayload)
         .ifPresent(course -> {
           repository.deleteById(id);
-          producer.send(CourseEventType.COURSE_DELETED, course);
+          producer.courseDeleted(course);
         });
   }
 

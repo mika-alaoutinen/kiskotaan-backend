@@ -22,11 +22,9 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
-import mikaa.dto.CourseDTO;
-import mikaa.dto.NewCourseDTO;
-import mikaa.dto.NewHoleDTO;
-import mikaa.kafka.courses.CourseEvent;
+import mikaa.kafka.courses.CoursePayload;
 import mikaa.kafka.courses.CourseProducer;
+import mikaa.kafka.courses.CourseEvent;
 
 @QuarkusTest
 class CourseEventsTest {
@@ -88,7 +86,7 @@ class CourseEventsTest {
     verify(repository, atLeastOnce()).deleteById(1L);
   }
 
-  private CourseDTO assertEvent(String eventName, String courseName) {
+  private CoursePayload assertEvent(String eventName, String courseName) {
     assertEquals(1, sink.received().size());
     var event = sink.received().get(0).getPayload();
 

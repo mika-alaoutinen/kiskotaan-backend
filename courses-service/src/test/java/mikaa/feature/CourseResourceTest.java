@@ -6,9 +6,9 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.dto.NewCourseDTO;
-import mikaa.dto.NewCourseNameDTO;
-import mikaa.dto.NewHoleDTO;
+import mikaa.model.NewCourseDTO;
+import mikaa.model.NewCourseNameDTO;
+import mikaa.model.NewHoleDTO;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -83,8 +83,8 @@ class CourseResourceTest {
 
   @Test
   void should_add_new_course() {
-    var holes = List.of(new NewHoleDTO(1, 3, 85));
-    var newCourse = new NewCourseDTO("New Course", holes);
+    var holes = List.of(new NewHoleDTO().number(1).par(3).distance(85));
+    var newCourse = new NewCourseDTO().name("New Course").holes(holes);
 
     given()
         .contentType(ContentType.JSON)
@@ -107,7 +107,7 @@ class CourseResourceTest {
     
     given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO(3, 3, 90))
+        .body(new NewHoleDTO().number(3).par(3).distance(90))
         .when()
         .post(ENDPOINT + "/1/holes")
         .then()
@@ -127,7 +127,7 @@ class CourseResourceTest {
 
     var response = given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO(2, 3, 120))
+        .body(new NewHoleDTO().number(2).par(3).distance(120))
         .when()
         .post(ENDPOINT + "/1/holes")
         .then();
@@ -143,7 +143,7 @@ class CourseResourceTest {
 
     given()
         .contentType(ContentType.JSON)
-        .body(new NewCourseNameDTO("Updated name"))
+        .body(new NewCourseNameDTO().name("Updated name"))
         .when()
         .patch(ENDPOINT + "/1")
         .then()
@@ -158,7 +158,7 @@ class CourseResourceTest {
 
     var response = given()
         .contentType(ContentType.JSON)
-        .body(new NewCourseNameDTO("Updated name"))
+        .body(new NewCourseNameDTO().name("Updated name"))
         .when()
         .patch(ENDPOINT + "/1")
         .then();

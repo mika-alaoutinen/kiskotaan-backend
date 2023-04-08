@@ -1,21 +1,11 @@
 package mikaa.kafka.holes;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
+public interface HoleProducer {
 
-import org.eclipse.microprofile.reactive.messaging.Channel;
-import org.eclipse.microprofile.reactive.messaging.Emitter;
+  void holeAdded(HolePayload payload);
 
-@ApplicationScoped
-public class HoleProducer {
+  void holeUpdated(HolePayload payload);
 
-  @Inject
-  @Channel("holes-out")
-  Emitter<HoleEvent> emitter;
-
-  public void send(HoleEventType type, HolePayload payload) {
-    var acked = emitter.send(new HoleEvent(type, payload));
-    acked.toCompletableFuture().join();
-  }
+  void holeDeleted(HolePayload payload);
 
 }

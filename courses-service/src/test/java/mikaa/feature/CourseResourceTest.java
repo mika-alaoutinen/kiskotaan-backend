@@ -94,7 +94,7 @@ class CourseResourceTest {
         .when()
         .post(ENDPOINT)
         .then()
-        .statusCode(201)
+        .statusCode(200)
         .contentType(ContentType.JSON)
         .body(
             "name", is("New Course"),
@@ -113,7 +113,7 @@ class CourseResourceTest {
         .when()
         .post(ENDPOINT + "/1/holes")
         .then()
-        .statusCode(201)
+        .statusCode(200)
         .contentType(ContentType.JSON)
         .body(
           "number", is(3),

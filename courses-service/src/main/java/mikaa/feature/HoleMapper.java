@@ -1,6 +1,6 @@
 package mikaa.feature;
 
-import mikaa.dto.HoleDTO;
+import mikaa.kafka.holes.HoleDTO;
 import mikaa.kafka.holes.HolePayload;
 
 interface HoleMapper {

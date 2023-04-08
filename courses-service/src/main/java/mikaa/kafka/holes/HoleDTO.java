@@ -1,4 +1,4 @@
-package mikaa.dto;
+package mikaa.kafka.holes;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 

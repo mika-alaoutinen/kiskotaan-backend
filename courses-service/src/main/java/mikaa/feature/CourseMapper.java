@@ -2,34 +2,17 @@ package mikaa.feature;
 
 import java.util.List;
 
-import mikaa.dto.CourseDTO;
-import mikaa.dto.CourseSummary;
-import mikaa.dto.HoleDTO;
+import mikaa.kafka.courses.CoursePayload;
+import mikaa.kafka.holes.HoleDTO;
 
 interface CourseMapper {
 
-  static CourseDTO course(CourseEntity entity) {
-    return new CourseDTO(entity.getId(), entity.getName(), holes(entity));
+  static CoursePayload course(CourseEntity entity) {
+    return new CoursePayload(entity.getId(), entity.getName(), holes(entity));
   }
 
   private static List<HoleDTO> holes(CourseEntity entity) {
     return entity.getHoles().stream().map(HoleMapper::dto).toList();
-  }
-
-  static CourseSummary courseSummary(CourseEntity entity) {
-    return new CourseSummary(
-        entity.getId(),
-        entity.getName(),
-        courseHoleCount(entity),
-        coursePar(entity));
-  }
-
-  private static int courseHoleCount(CourseEntity entity) {
-    return entity.getHoles().size();
-  }
-
-  private static int coursePar(CourseEntity entity) {
-    return entity.getHoles().stream().mapToInt(HoleEntity::getPar).sum();
   }
 
 }

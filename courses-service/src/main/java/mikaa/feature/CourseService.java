@@ -6,8 +6,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.dto.CourseSummary;
-
 import mikaa.kafka.courses.CourseEventType;
 import mikaa.kafka.courses.CourseProducer;
 
@@ -22,7 +20,7 @@ class CourseService implements CourseFinder {
   List<CourseSummary> findAll() {
     return repository.listAll()
         .stream()
-        .map(CourseMapper::courseSummary)
+        .map(CourseSummary::from)
         .toList();
   }
 

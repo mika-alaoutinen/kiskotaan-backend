@@ -8,8 +8,6 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
-import mikaa.dto.CourseDTO;
-
 @ApplicationScoped
 public class CourseProducer {
 
@@ -17,12 +15,12 @@ public class CourseProducer {
   @Channel("courses-out")
   Emitter<CourseEvent> emitter;
 
-  public void send(CourseEventType type, CourseDTO course) {
+  public void send(CourseEventType type, CoursePayload payload) {
     var acked = switch (type) {
-      case COURSE_ADDED -> emitter.send(new CourseEvent(type, course));
+      case COURSE_ADDED -> emitter.send(new CourseEvent(type, payload));
 
       case COURSE_DELETED, COURSE_UPDATED -> {
-        var courseWithoutHoles = new CourseDTO(course.id(), course.name(), List.of());
+        var courseWithoutHoles = new CoursePayload(payload.id(), payload.name(), List.of());
         yield emitter.send(new CourseEvent(type, courseWithoutHoles));
       }
     };

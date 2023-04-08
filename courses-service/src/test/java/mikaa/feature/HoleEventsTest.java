@@ -21,7 +21,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
-import mikaa.dto.NewHoleDTO;
 import mikaa.kafka.holes.HoleEvent;
 import mikaa.kafka.holes.HolePayload;
 import mikaa.kafka.holes.HoleProducer;
@@ -40,7 +39,7 @@ class HoleEventsTest {
   private HoleProducer producer;
 
   @InjectMock
-  private CourseRepository courseRepository;
+  private CourseFinder courseFinder;
 
   @InjectMock
   private HoleRepository repository;
@@ -52,7 +51,7 @@ class HoleEventsTest {
   void setup() {
     sink = connector.sink("holes-out");
     sink.clear();
-    service = new HoleService(producer, courseRepository, repository);
+    service = new HoleService(courseFinder, producer, repository);
   }
 
   @AfterEach
@@ -62,8 +61,9 @@ class HoleEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
-    service.add(COURSE_ID, new NewHoleDTO(1, 3, 100));
+    when(courseFinder.findOne(anyLong())).thenReturn(courseMock());
+    var newHole = new HoleEntity(null, 1, 3, 100, courseMock());
+    service.add(COURSE_ID, newHole);
 
     // holeId is null because mocked repository does not create a new ID on persist
     var expected = new HolePayload(null, COURSE_ID, 1, 3, 100);
@@ -74,7 +74,7 @@ class HoleEventsTest {
   @Test
   void should_send_event_on_update() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
-    service.update(HOLE_ID, new NewHoleDTO(4, 5, 165));
+    service.update(HOLE_ID, new HoleEntity(null, 4, 5, 165, courseMock()));
 
     var expected = new HolePayload(HOLE_ID, COURSE_ID, 4, 5, 165);
     assertEvent("HOLE_UPDATED", expected);

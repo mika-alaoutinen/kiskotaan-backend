@@ -1,50 +1,44 @@
 package mikaa.feature;
 
+import org.modelmapper.ModelMapper;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.DELETE;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.PUT;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.core.MediaType;
+import jakarta.validation.constraints.NotNull;
 
-import org.jboss.resteasy.reactive.RestResponse;
-
-import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
-import mikaa.dto.HoleDTO;
-import mikaa.dto.NewHoleDTO;
+import mikaa.api.HolesApi;
+import mikaa.model.HoleDTO;
+import mikaa.model.NewHoleDTO;
 
 @ApplicationScoped
-@Blocking
-@Path("/holes/{id}")
-@Produces(MediaType.APPLICATION_JSON)
 @RequiredArgsConstructor
-public class HoleResource {
+public class HoleResource implements HolesApi {
 
+  private static final ModelMapper MAPPER = new ModelMapper();
   private final HoleService service;
 
-  @GET
-  public RestResponse<HoleDTO> getHole(@PathParam("id") Long id) {
-    return RestResponse.ok(service.findOne(id));
-  }
-
-  @PUT
-  @Consumes(MediaType.APPLICATION_JSON)
+  @Override
   @Transactional
-  public RestResponse<HoleDTO> updateHole(@PathParam("id") Long id, @Valid NewHoleDTO hole) {
-    return RestResponse.ok(service.update(id, hole));
-  }
-
-  @DELETE
-  @Transactional
-  public RestResponse<Void> deleteHole(@PathParam("id") Long id) {
+  public void deleteHole(Integer id) {
     service.delete(id);
-    return RestResponse.noContent();
+  }
+
+  @Override
+  public HoleDTO getHole(Integer id) {
+    return mapHole(service.findOne(id));
+  }
+
+  @Override
+  @Transactional
+  public HoleDTO updateHole(Integer id, @Valid @NotNull NewHoleDTO newHole) {
+    var hole = service.update(id, MAPPER.map(newHole, HoleEntity.class));
+    return mapHole(hole);
+  }
+
+  private static HoleDTO mapHole(HoleEntity hole) {
+    return MAPPER.map(hole, HoleDTO.class);
   }
 
 }

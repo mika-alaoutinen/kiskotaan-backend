@@ -4,8 +4,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.dto.HoleDTO;
-import mikaa.dto.NewHoleDTO;
 import mikaa.kafka.holes.HoleEventType;
 import mikaa.kafka.holes.HoleProducer;
 
@@ -13,39 +11,38 @@ import mikaa.kafka.holes.HoleProducer;
 @RequiredArgsConstructor
 class HoleService {
 
+  private final CourseFinder courseFinder;
   private final HoleProducer producer;
-  private final CourseRepository courseRepository;
   private final HoleRepository repository;
 
-  HoleDTO findOne(long id) {
-    return repository.findByIdOptional(id)
-        .map(HoleMapper::dto)
-        .orElseThrow(() -> holeNotFound(id));
+  HoleEntity findOne(long id) {
+    return repository.findByIdOptional(id).orElseThrow(() -> holeNotFound(id));
   }
 
-  HoleDTO add(long courseId, NewHoleDTO newHole) {
-    var course = courseRepository.findByIdOptional(courseId).orElseThrow(() -> courseNotFound(courseId));
-    HoleEntity hole = HoleMapper.entity(newHole);
+  HoleEntity add(long courseId, HoleEntity newHole) {
+    var course = courseFinder.findOne(courseId);
 
-    HoleValidator.validateUniqueHoleNumber(hole.getHoleNumber(), course);
-    course.addHole(hole);
+    HoleValidator.validateUniqueHoleNumber(newHole.getHoleNumber(), course);
+    course.addHole(newHole);
 
-    repository.persist(hole);
-    producer.send(HoleEventType.HOLE_ADDED, HoleMapper.payload(hole));
-    return HoleMapper.dto(hole);
+    repository.persist(newHole);
+    producer.send(HoleEventType.HOLE_ADDED, HoleMapper.payload(newHole));
+
+    return newHole;
   }
 
-  HoleDTO update(long id, NewHoleDTO updatedHole) {
+  HoleEntity update(long id, HoleEntity updatedHole) {
     var hole = repository.findByIdOptional(id).orElseThrow(() -> holeNotFound(id));
 
-    HoleValidator.validateUniqueHoleNumber(updatedHole.number(), hole.getCourse());
+    HoleValidator.validateUniqueHoleNumber(updatedHole.getHoleNumber(), hole.getCourse());
 
-    hole.setDistance(updatedHole.distance());
-    hole.setHoleNumber(updatedHole.number());
-    hole.setPar(updatedHole.par());
+    hole.setDistance(updatedHole.getDistance());
+    hole.setHoleNumber(updatedHole.getHoleNumber());
+    hole.setPar(updatedHole.getPar());
 
     producer.send(HoleEventType.HOLE_UPDATED, HoleMapper.payload(hole));
-    return HoleMapper.dto(hole);
+
+    return hole;
   }
 
   void delete(long id) {
@@ -55,11 +52,6 @@ class HoleService {
           repository.deleteById(id);
           producer.send(HoleEventType.HOLE_DELETED, hole);
         });
-  }
-
-  private static NotFoundException courseNotFound(long id) {
-    String msg = "Could not find course with id " + id;
-    return new NotFoundException(msg);
   }
 
   private static NotFoundException holeNotFound(long id) {

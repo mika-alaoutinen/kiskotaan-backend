@@ -39,7 +39,7 @@ class CourseValidationsTest {
     var invalidCourse = new NewCourseDTO("New Course", List.of());
 
     var response = postInvalidCourse(invalidCourse);
-    assertBadRequest(response, new ValidationError("holes", "Course can haven 1-30 holes"));
+    assertBadRequest(response, new ValidationError("holes", "size must be 1-30"));
 
     verify(repository, never()).persist(any(CourseEntity.class));
   }
@@ -59,7 +59,7 @@ class CourseValidationsTest {
   @Test
   void should_reject_invalid_course_name_on_update() {
     var response = patchInvalidCourseName(new NewCourseNameDTO("A"));
-    assertBadRequest(response, new ValidationError("name", "Course name must be 3-40 chars long"));
+    assertBadRequest(response, new ValidationError("name", "size must be 3-40"));
     verify(repository, never()).persist(any(CourseEntity.class));
   }
 

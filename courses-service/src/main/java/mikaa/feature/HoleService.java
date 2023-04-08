@@ -4,7 +4,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kafka.holes.HoleEventType;
 import mikaa.kafka.holes.HolePayload;
 import mikaa.kafka.holes.HoleProducer;
 
@@ -27,7 +26,7 @@ class HoleService {
     course.addHole(newHole);
 
     repository.persist(newHole);
-    producer.send(HoleEventType.HOLE_ADDED, payload(newHole));
+    producer.holeAdded(payload(newHole));
 
     return newHole;
   }
@@ -41,7 +40,7 @@ class HoleService {
     hole.setHoleNumber(updatedHole.getHoleNumber());
     hole.setPar(updatedHole.getPar());
 
-    producer.send(HoleEventType.HOLE_UPDATED, payload(hole));
+    producer.holeUpdated(payload(hole));
 
     return hole;
   }
@@ -51,7 +50,7 @@ class HoleService {
         .map(HoleService::payload)
         .ifPresent(hole -> {
           repository.deleteById(id);
-          producer.send(HoleEventType.HOLE_DELETED, hole);
+          producer.holeDeleted(hole);
         });
   }
 

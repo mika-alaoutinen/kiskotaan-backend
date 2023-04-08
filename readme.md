@@ -54,6 +54,8 @@ Folder `.http` has http-files that contain example payloads that can be used to 
   - Problems: `Score cards service` also has to listen to events from Courses and Players services, so there's some overlap with existing functionality.
   - Might be more reasonable to implement GET operations into `Score cards service`?
 - Implement filtering by keywords in GET requests.
+  - [x] Players service done.
+  - [x] Courses service
 - Implement search functionality for score cards.
 - Implement paging.
 - Implement authentication and authorization.

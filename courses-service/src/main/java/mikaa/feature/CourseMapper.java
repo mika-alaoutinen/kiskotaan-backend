@@ -7,7 +7,7 @@ import mikaa.kafka.courses.HolePayload;
 
 interface CourseMapper {
 
-  static CoursePayload course(CourseEntity entity) {
+  static CoursePayload toPayload(CourseEntity entity) {
     return new CoursePayload(entity.getId(), entity.getName(), holes(entity));
   }
 

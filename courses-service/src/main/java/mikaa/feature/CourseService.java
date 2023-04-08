@@ -31,7 +31,7 @@ class CourseService implements CourseFinder {
   CourseEntity add(CourseEntity newCourse) {
     validator.validate(newCourse);
     repository.persist(newCourse);
-    producer.courseAdded(CourseMapper.course(newCourse));
+    producer.courseAdded(CourseMapper.toPayload(newCourse));
     return newCourse;
   }
 
@@ -40,14 +40,14 @@ class CourseService implements CourseFinder {
     validator.validate(CourseEntity.fromName(name));
 
     course.setName(name);
-    producer.courseUpdated(CourseMapper.course(course));
+    producer.courseUpdated(CourseMapper.toPayload(course));
 
     return course;
   }
 
   void delete(long id) {
     repository.findByIdOptional(id)
-        .map(CourseMapper::course)
+        .map(CourseMapper::toPayload)
         .ifPresent(course -> {
           repository.deleteById(id);
           producer.courseDeleted(course);

@@ -13,14 +13,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import mikaa.model.NewPlayerDTO;
 import mikaa.players.errors.BadRequestException;
 import mikaa.players.events.PlayerEvents.PlayerEvent;
 import mikaa.players.infra.GlobalExceptionHandler;
 import mikaa.players.kafka.KafkaProducer;
+import mikaa.players.utils.MvcUtils;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -49,7 +47,6 @@ import java.util.stream.Stream;
 class PlayersControllerTest {
 
   private static final String ENDPOINT = "/players";
-  private static final ObjectMapper MAPPER = new ObjectMapper();
   private static final PlayerEntity PLAYER = new PlayerEntity(1L, "Pekka", "Kana");
   private static final NewPlayerDTO NEW_PLAYER = new NewPlayerDTO("Pekka", "Kana");
 
@@ -64,7 +61,7 @@ class PlayersControllerTest {
 
   @Test
   void should_get_all_players() throws Exception {
-    when(repository.findAll()).thenReturn(List.of(PLAYER));
+    when(repository.findByFirstOrLastname("")).thenReturn(List.of(PLAYER));
 
     mvc
         .perform(get(ENDPOINT))
@@ -76,12 +73,12 @@ class PlayersControllerTest {
   void should_get_player_by_id() throws Exception {
     when(repository.findById(anyLong())).thenReturn(Optional.of(PLAYER));
 
-    mvc
+    var result = mvc
         .perform(get(ENDPOINT + "/1"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(1L))
-        .andExpect(jsonPath("$.firstName").value("Pekka"))
-        .andExpect(jsonPath("$.lastName").value("Kana"));
+        .andExpect(jsonPath("$.id").value(1L));
+
+    MvcUtils.verifyName(result, "Pekka", "Kana");
   }
 
   @Test
@@ -97,15 +94,14 @@ class PlayersControllerTest {
   void should_add_new_player() throws Exception {
     when(repository.save(any(PlayerEntity.class))).thenReturn(PLAYER);
 
-    mvc
+    var result = mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(NEW_PLAYER)))
+            .content(MvcUtils.asJson(NEW_PLAYER)))
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.id").value(1))
-        .andExpect(jsonPath("$.firstName").value("Pekka"))
-        .andExpect(jsonPath("$.lastName").value("Kana"));
+        .andExpect(jsonPath("$.id").value(1));
 
+    MvcUtils.verifyName(result, "Pekka", "Kana");
     verify(producer, atLeastOnce()).send(any(PlayerEvent.class));
   }
 
@@ -116,7 +112,7 @@ class PlayersControllerTest {
     mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(invalidPlayer)))
+            .content(MvcUtils.asJson(invalidPlayer)))
         .andExpect(status().isBadRequest());
 
     verify(repository, never()).save(any());
@@ -134,7 +130,7 @@ class PlayersControllerTest {
     mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(NEW_PLAYER)))
+            .content(MvcUtils.asJson(NEW_PLAYER)))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.message").value(errorMessage));
 
@@ -148,15 +144,14 @@ class PlayersControllerTest {
 
     var editedPlayer = new NewPlayerDTO("Edited", "Edited");
 
-    mvc
+    var result = mvc
         .perform(put(ENDPOINT + "/1")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(editedPlayer)))
+            .content(MvcUtils.asJson(editedPlayer)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.id").value(1))
-        .andExpect(jsonPath("$.firstName").value("Edited"))
-        .andExpect(jsonPath("$.lastName").value("Edited"));
+        .andExpect(jsonPath("$.id").value(1));
 
+    MvcUtils.verifyName(result, "Edited", "Edited");
     verify(producer, atLeastOnce()).send(any(PlayerEvent.class));
   }
 
@@ -167,7 +162,7 @@ class PlayersControllerTest {
     mvc
         .perform(put(ENDPOINT + "/1")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(NEW_PLAYER)))
+            .content(MvcUtils.asJson(NEW_PLAYER)))
         .andExpect(status().isNotFound());
 
     verifyNoPersist();
@@ -180,7 +175,7 @@ class PlayersControllerTest {
     mvc
         .perform(put(ENDPOINT + "/1")
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(invalidPlayer)))
+            .content(MvcUtils.asJson(invalidPlayer)))
         .andExpect(status().isBadRequest());
 
     verifyNoPersist();
@@ -197,7 +192,7 @@ class PlayersControllerTest {
     mvc
         .perform(post(ENDPOINT)
             .contentType(MediaType.APPLICATION_JSON)
-            .content(asJson(NEW_PLAYER)))
+            .content(MvcUtils.asJson(NEW_PLAYER)))
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.message").value(errorMessage));
 
@@ -239,7 +234,4 @@ class PlayersControllerTest {
         new NewPlayerDTO("Kalle", ""));
   }
 
-  private static String asJson(NewPlayerDTO dto) throws JsonProcessingException {
-    return MAPPER.writeValueAsString(dto);
-  }
 }

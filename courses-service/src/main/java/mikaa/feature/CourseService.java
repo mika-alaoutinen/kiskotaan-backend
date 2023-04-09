@@ -7,6 +7,7 @@ import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.kafka.courses.CourseProducer;
+import mikaa.rest.Range;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -16,9 +17,9 @@ class CourseService {
   private final CourseRepository repository;
   private final CourseValidator validator;
 
-  List<CourseSummary> findAll() {
-    return repository.listAll()
-        .stream()
+  List<CourseSummary> findAll(Range<Integer> holeFilter) {
+    return repository.streamAll()
+        .filter(course -> holeFilter.inRange(course.getHoles().size()))
         .map(CourseSummary::from)
         .toList();
   }

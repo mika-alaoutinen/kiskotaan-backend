@@ -17,6 +17,7 @@ import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
 import mikaa.model.NewHoleDTO;
+import mikaa.rest.Range;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -58,7 +59,9 @@ public class CourseResource implements CoursesApi {
       Integer holesMax,
       Integer parMin,
       Integer parMax) {
-    return service.findAll()
+    var holesFilter = new Range<Integer>(holesMin, holesMax);
+
+    return service.findAll(holesFilter)
         .stream()
         .map(courseSummary -> MAPPER.map(courseSummary, CourseSummaryDTO.class))
         .toList();

@@ -8,11 +8,11 @@ import lombok.Value;
 
 // This is an overly complicated way of comparing two integers, but I like it.
 @Value
-public class Range<T extends Comparable<T>> {
+public class RangeFilter<T extends Comparable<T>> {
   private final Optional<T> min;
   private final Optional<T> max;
 
-  public Range(@Nullable T min, @Nullable T max) {
+  public RangeFilter(@Nullable T min, @Nullable T max) {
     this.min = Optional.ofNullable(min);
     this.max = Optional.ofNullable(max);
   }

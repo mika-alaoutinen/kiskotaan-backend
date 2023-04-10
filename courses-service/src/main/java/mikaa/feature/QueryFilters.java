@@ -1,17 +1,20 @@
 package mikaa.feature;
 
 import mikaa.util.NameFilter;
-import mikaa.util.Range;
+import mikaa.util.RangeFilter;
 
 record QueryFilters(
     NameFilter nameFilter,
-    Range<Integer> holesFilter,
-    Range<Integer> parFilter) {
+    RangeFilter<Integer> holesFilter,
+    RangeFilter<Integer> parFilter) {
 
   boolean applyAll(CourseEntity course) {
     var holes = course.getHoles();
     var coursePar = holes.stream().mapToInt(HoleEntity::getPar).sum();
-    return holesFilter.within(holes.size()) && parFilter.within(coursePar);
+
+    return nameFilter.contains(course.getName()) &&
+        holesFilter.within(holes.size()) &&
+        parFilter.within(coursePar);
   }
 
 }

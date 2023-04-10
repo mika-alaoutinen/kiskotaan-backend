@@ -8,11 +8,11 @@ public class StringFilter {
   private final Optional<String> maybeString;
 
   public StringFilter(@Nullable String s) {
-    this.maybeString = Optional.ofNullable(s);
+    this.maybeString = Optional.ofNullable(s).map(String::toLowerCase);
   }
 
   public boolean contains(String other) {
-    return other.contains(maybeString.orElse(""));
+    return other.toLowerCase().contains(maybeString.orElse(""));
   }
 
 }

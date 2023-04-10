@@ -18,7 +18,7 @@ class QueryFiltersTest {
   private static final CourseEntity COURSE = courseMock();
 
   @Test
-  public void shouldBeTrueWhenAllFiltersMatch() {
+  void shouldBeTrueWhenAllFiltersMatch() {
     var nameFilter = new StringFilter("Test");
     var holesFilter = new RangeFilter<Integer>(1, 9);
     var parFilter = new RangeFilter<Integer>(9, 15);
@@ -29,7 +29,7 @@ class QueryFiltersTest {
 
   @ParameterizedTest
   @MethodSource("nonMatchingQueryFilters")
-  public void shouldBeFalseWhenSomeFilterDoesNotMatch(QueryFilters nonMatching) {
+  void shouldBeFalseWhenSomeFilterDoesNotMatch(QueryFilters nonMatching) {
     assertFalse(nonMatching.applyAll(COURSE));
   }
 

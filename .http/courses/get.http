@@ -3,6 +3,12 @@
 ### get all courses
 GET {{url}} HTTP/1.1
 
+### get courses filtered by min and max holes
+GET {{url}}?holesMin=9&holesMax=18 HTTP/1.1
+
+### get courses filtered by max holes
+GET {{url}}?&holesMax=18 HTTP/1.1
+
 ### get one course
 GET {{url}}/1 HTTP/1.1
 

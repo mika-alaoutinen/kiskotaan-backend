@@ -48,14 +48,11 @@ Folder `.http` has http-files that contain example payloads that can be used to 
 
 ## TODO
 - Refactor `Score cards service` to be reactive. Requires switching from Postgres to MongoDB.
-- Consider creating a new "read-only" service that consolidates all GET operations into one service.
+- Alternatively to above, consider creating a new "read-only" service that consolidates all GET operations into one service.
   - Applies CQRS design pattern.
   - Listens to events from other services and duplicates their data into MongoDB.
   - Problems: `Score cards service` also has to listen to events from Courses and Players services, so there's some overlap with existing functionality.
   - Might be more reasonable to implement GET operations into `Score cards service`?
-- Implement filtering by keywords in GET requests.
-  - [x] Players service done.
-  - [ ] Courses service
 - Implement search functionality for score cards.
 - Implement paging.
 - Implement authentication and authorization.

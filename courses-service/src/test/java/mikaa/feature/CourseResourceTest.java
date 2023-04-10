@@ -24,6 +24,7 @@ import static io.restassured.RestAssured.given;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @QuarkusTest
 class CourseResourceTest {
@@ -38,7 +39,7 @@ class CourseResourceTest {
 
   @Test
   void should_get_all_courses() {
-    when(repository.listAll()).thenReturn(List.of(courseMock()));
+    when(repository.streamAll()).thenReturn(Stream.of(courseMock()));
 
     given()
         .when()

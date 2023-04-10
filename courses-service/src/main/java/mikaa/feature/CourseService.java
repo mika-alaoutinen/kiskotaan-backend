@@ -16,9 +16,9 @@ class CourseService {
   private final CourseRepository repository;
   private final CourseValidator validator;
 
-  List<CourseSummary> findAll() {
-    return repository.listAll()
-        .stream()
+  List<CourseSummary> findAll(QueryFilters filters) {
+    return repository.streamAll()
+        .filter(filters::applyAll)
         .map(CourseSummary::from)
         .toList();
   }

@@ -17,7 +17,7 @@ import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
 import mikaa.model.NewHoleDTO;
-import mikaa.util.NameFilter;
+import mikaa.util.StringFilter;
 import mikaa.util.RangeFilter;
 
 @ApplicationScoped
@@ -61,7 +61,7 @@ public class CourseResource implements CoursesApi {
       Integer parMin,
       Integer parMax) {
     var filters = new QueryFilters(
-        new NameFilter(name),
+        new StringFilter(name),
         new RangeFilter<Integer>(holesMin, holesMax),
         new RangeFilter<Integer>(parMin, parMax));
 

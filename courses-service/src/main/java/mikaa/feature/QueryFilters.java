@@ -1,10 +1,10 @@
 package mikaa.feature;
 
-import mikaa.util.NameFilter;
+import mikaa.util.StringFilter;
 import mikaa.util.RangeFilter;
 
 record QueryFilters(
-    NameFilter nameFilter,
+    StringFilter nameFilter,
     RangeFilter<Integer> holesFilter,
     RangeFilter<Integer> parFilter) {
 

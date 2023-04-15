@@ -39,10 +39,9 @@ CREATE TABLE IF NOT EXISTS scorecard_player (
 
 -- Insert test data
 INSERT INTO player (external_id, first_name, last_name) VALUES
-  (101, 'Pekka', 'Kana'),
-  (102, 'Kalle', 'Kukko'),
-  (103, 'Aku', 'Ankka'),
-  (104, 'Iines', 'Ankka');
+  (101, 'Aku', 'Ankka'),
+  (102, 'Iines', 'Ankka'),
+  (103, 'Hessu', 'Hopo');
 
 INSERT INTO course (external_id, holes, name) VALUES
   (201, 18, 'Frisbeegolf Laajis'),

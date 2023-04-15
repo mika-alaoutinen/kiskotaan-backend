@@ -1,7 +1,4 @@
-INSERT INTO course (name) VALUES
-  ('Frisbeegolf Laajis'),
-  ('Keljonkankaan frisbeegolfrata');
-
+-- changeset mikaa:add_holes_dev
 INSERT INTO hole (course_id, hole_number, par, distance) VALUES
   (1, 1, 3, 107),
   (1, 2, 3, 127),

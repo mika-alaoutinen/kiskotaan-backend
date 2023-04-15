@@ -2,9 +2,12 @@
 quarkus:
   hibernate-orm:
     validate-in-dev-mode: true
-
   http:
     port: 8082
+  liquibase:
+    change-log: db/changelog.yaml
+    contexts: all,dev
+    migrate-at-start: true
 
 mp:
   messaging:

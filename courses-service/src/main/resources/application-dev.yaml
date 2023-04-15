@@ -1,0 +1,3 @@
+quarkus:
+  liquibase:
+    contexts: all,dev

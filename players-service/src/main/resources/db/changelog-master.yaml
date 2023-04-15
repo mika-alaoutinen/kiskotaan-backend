@@ -1,0 +1,14 @@
+databaseChangeLog:
+  # Create database and tables
+  - includeAll:
+      path: db/tables
+
+  # Insert data for development
+  - includeAll:
+      contextFilter: dev
+      path: db/dev
+
+  # Insert data for integration tests
+  - includeAll:
+      contextFilter: test
+      path: db/test

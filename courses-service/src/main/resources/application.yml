@@ -6,7 +6,7 @@ quarkus:
     port: 8082
   liquibase:
     change-log: db/changelog.yaml
-    contexts: all
+    contexts: all,dev
     migrate-at-start: true
 
 mp:
@@ -16,10 +16,3 @@ mp:
         topic: "courses"
       holes-out:
         topic: "holes"
-
-# Must define profile based configuration like this instead of using an application-dev.yaml
-# file, because Quarkus ignores the dev file even though it should work.
-"%dev":
-  quarkus:
-    liquibase:
-      contexts: all,dev

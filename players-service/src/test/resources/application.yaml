@@ -21,4 +21,5 @@ spring:
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
   liquibase:
-    contexts: test
+    change-log: db/changelog-master.yaml
+    contexts: all,test

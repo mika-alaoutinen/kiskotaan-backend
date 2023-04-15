@@ -16,3 +16,10 @@ mp:
         topic: "courses"
       holes-out:
         topic: "holes"
+
+# Must define profile based configuration like this instead of using an application-dev.yaml
+# file, because Quarkus ignores the dev file even though it should work.
+"%dev":
+  quarkus:
+    liquibase:
+      contexts: all,dev

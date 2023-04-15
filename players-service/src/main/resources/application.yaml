@@ -21,3 +21,4 @@ spring:
 
   liquibase:
     change-log: db/changelog-master.yaml
+    contexts: all

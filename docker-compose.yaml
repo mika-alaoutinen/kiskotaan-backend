@@ -40,10 +40,11 @@ services:
       - kafka
       - postgres
     environment:
-      kafka_url: kafka:9091
       db_url: jdbc:postgresql://postgres:5432/players_db
       db_username: admin
       db_password: admin
+      kafka_url: kafka:9091
+      spring_profiles_active: dev
     expose:
       - 8081
     image: mikaalaoutinen/players-service

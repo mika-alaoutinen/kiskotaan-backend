@@ -28,5 +28,4 @@ services:
       - "5432:5432"
     restart: unless-stopped
     volumes:
-      - ./scripts/data.csv:/data/data.csv
       - ./scripts:/docker-entrypoint-initdb.d

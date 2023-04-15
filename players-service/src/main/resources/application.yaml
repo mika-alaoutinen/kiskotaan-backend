@@ -18,3 +18,7 @@ spring:
       client-id: players-producer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+  liquibase:
+    change-log: db/changelog-master.yaml
+    contexts: all

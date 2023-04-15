@@ -44,6 +44,10 @@
 			<artifactId>modelmapper</artifactId>
 			<version>3.1.1</version>
 		</dependency>
+		<dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+    </dependency>
 
 		<!-- Scoped dependencies -->
 		<dependency>

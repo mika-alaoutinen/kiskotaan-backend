@@ -21,4 +21,4 @@ spring:
 
   liquibase:
     change-log: db/changelog.yaml
-    contexts: all
+    contexts: all,dev # dev context inserts test data into db

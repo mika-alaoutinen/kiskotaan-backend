@@ -4,12 +4,7 @@ databaseChangeLog:
       contextFilter: all
       path: db/all
 
-  # Insert data for development
+  # Insert data for development and integration tests
   - includeAll:
-      contextFilter: dev
+      contextFilter: dev,test
       path: db/dev
-
-  # Insert data for integration tests
-  - includeAll:
-      contextFilter: test
-      path: db/test

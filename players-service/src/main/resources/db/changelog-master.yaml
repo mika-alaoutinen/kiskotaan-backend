@@ -1,8 +1,8 @@
 databaseChangeLog:
-  # Create database and tables
+  # Create tables
   - includeAll:
       contextFilter: all
-      path: db/tables
+      path: db/all
 
   # Insert data for development
   - includeAll:

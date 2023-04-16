@@ -1,4 +1,4 @@
-package mikaa.infra.errors;
+package mikaa.infra;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import mikaa.errors.ValidationError;
+import mikaa.errors.ValidationException;
+import mikaa.model.ValidationErrorDTO;
 
 @QuarkusTest
 class GlobalExceptionHandlerTest {
@@ -39,12 +41,12 @@ class GlobalExceptionHandlerTest {
     var response = handler.handleNotFound(new NotFoundException("Test error message"));
     assertEquals(404, response.getStatus());
 
-    ErrorBody body = response.getEntity();
-    assertNotNull(body.timestamp());
-    assertEquals(404, body.status());
-    assertEquals("Not Found", body.error());
-    assertEquals("Test error message", body.message());
-    assertEquals("/courses/1", body.path());
+    var body = response.getEntity();
+    assertNotNull(body.getTimestamp());
+    assertEquals(404, body.getStatus());
+    assertEquals("Not Found", body.getError());
+    assertEquals("Test error message", body.getMessage());
+    assertEquals("/courses/1", body.getPath());
   }
 
   private static class TestClass {
@@ -65,14 +67,42 @@ class GlobalExceptionHandlerTest {
     assertEquals(400, response.getStatus());
 
     var body = response.getEntity();
-    assertNotNull(body.timestamp());
-    assertEquals(400, body.status());
-    assertEquals("Bad Request", body.error());
-    assertEquals("/courses/1", body.path());
+    assertNotNull(body.getTimestamp());
+    assertEquals(400, body.getStatus());
+    assertEquals("Bad Request", body.getError());
+    assertEquals("/courses/1", body.getPath());
 
-    var validationErrors = body.validationErrors();
+    var expectedError = new ValidationErrorDTO()
+        .field("fieldA")
+        .message("Test validation error");
+
+    var validationErrors = body.getValidationErrors();
     assertEquals(1, validationErrors.size());
-    assertEquals(new ValidationError("fieldA", "Test validation error"), validationErrors.get(0));
+    assertEquals(expectedError, validationErrors.get(0));
+  }
+
+  @Test
+  void shoud_handle_validation_errors() throws URISyntaxException {
+    var validationException = ValidationException.from(new ValidationError("object.name", "Invalid name")).get();
+    var response = handler.handleValidation(validationException);
+
+    assertEquals(400, response.getStatus());
+
+    var body = response.getEntity();
+    assertNotNull(body.getTimestamp());
+    assertEquals(400, body.getStatus());
+    assertEquals("Bad Request", body.getError());
+    assertEquals("Invalid request body", body.getMessage());
+    assertEquals("/courses/1", body.getPath());
+
+    var expectedError = new ValidationErrorDTO()
+        .field("object.name")
+        .message("Invalid name");
+
+    var validationErrors = body.getValidationErrors();
+    assertEquals(1, validationErrors.size());
+    assertEquals(expectedError, validationErrors.get(0));
+
   }
 
 }

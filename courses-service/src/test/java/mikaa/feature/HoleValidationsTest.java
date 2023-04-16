@@ -6,7 +6,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.errors.ValidationError;
 import mikaa.model.NewHoleDTO;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -35,14 +34,14 @@ class HoleValidationsTest {
   @Test
   void should_reject_invalid_hole_number() {
     var response = postInvalidHole(new NewHoleDTO().number(0).par(3).distance(120));
-    assertBadRequest(response, new ValidationError("number", "must be greater than or equal to 1"));
+    assertBadRequest(response, "newHoleDTO.number", "must be greater than or equal to 1");
   }
 
   @Test
   void should_not_add_hole_with_duplicate_number() {
     when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     var response = postInvalidHole(new NewHoleDTO().number(1).par(3).distance(120));
-    assertBadRequest(response, new ValidationError("number", "Duplicate hole number"));
+    assertBadRequest(response, "hole.number", "Duplicate hole number");
   }
 
   @Test
@@ -63,7 +62,7 @@ class HoleValidationsTest {
             "status", is(400),
             "error", is("Bad Request"),
             "path", is("/holes/1"),
-            "validationErrors[0].field", is("number"),
+            "validationErrors[0].field", is("hole.number"),
             "validationErrors[0].message", is("Duplicate hole number"));
 
     verify(holeRepository, never()).persist(any(HoleEntity.class));
@@ -78,7 +77,7 @@ class HoleValidationsTest {
         .then();
   }
 
-  private void assertBadRequest(ValidatableResponse res, ValidationError expected) {
+  private void assertBadRequest(ValidatableResponse res, String expectedField, String expectedMessage) {
     res.statusCode(400)
         .contentType(ContentType.JSON)
         .body(
@@ -86,8 +85,8 @@ class HoleValidationsTest {
             "status", is(400),
             "error", is("Bad Request"),
             "path", is("/courses/1/holes"),
-            "validationErrors[0].field", is(expected.field()),
-            "validationErrors[0].message", is(expected.message()));
+            "validationErrors[0].field", is(expectedField),
+            "validationErrors[0].message", is(expectedMessage));
 
     verify(holeRepository, never()).persist(any(HoleEntity.class));
   }

@@ -1,6 +1,7 @@
 package mikaa.infra;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.validation.ConstraintViolation;
@@ -14,6 +15,8 @@ import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mikaa.errors.ValidationError;
+import mikaa.errors.ValidationException;
 import mikaa.model.ErrorBodyDTO;
 import mikaa.model.ValidationErrorBodyDTO;
 import mikaa.model.ValidationErrorDTO;
@@ -21,22 +24,28 @@ import mikaa.model.ValidationErrorDTO;
 @RequestScoped
 @RequiredArgsConstructor
 @Slf4j
-class GlobalErrorHandler {
+class GlobalExceptionHandler {
 
   private final UriInfo uri;
 
   @ServerExceptionMapper(ConstraintViolationException.class)
   RestResponse<ValidationErrorBodyDTO> handleConstraintViolation(ConstraintViolationException ex) {
-    var body = fromException(ex, uri);
     log.info(ex.getMessage());
+
+    var errors = ex.getConstraintViolations()
+        .stream()
+        .map(GlobalExceptionHandler::fromConstraintViolation)
+        .toList();
+
+    var body = validationErrorBody(errors, uri);
 
     return RestResponse.status(Status.BAD_REQUEST, body);
   }
 
   @ServerExceptionMapper(NotFoundException.class)
   RestResponse<ErrorBodyDTO> handleNotFound(NotFoundException ex) {
-    String msg = ex.getMessage();
-    String path = getPath(uri);
+    var msg = ex.getMessage();
+    var path = getPath(uri);
     var body = new ErrorBodyDTO()
         .error("Not Found")
         .message(msg)
@@ -49,12 +58,21 @@ class GlobalErrorHandler {
     return RestResponse.status(Status.NOT_FOUND, body);
   }
 
-  private static ValidationErrorBodyDTO fromException(ConstraintViolationException ex, UriInfo uri) {
-    var errors = ex.getConstraintViolations()
+  @ServerExceptionMapper(ValidationException.class)
+  RestResponse<ValidationErrorBodyDTO> handleValidation(ValidationException ex) {
+    log.info(ex.getMessage());
+
+    var errors = ex.getErrors()
         .stream()
-        .map(GlobalErrorHandler::fromConstraintViolation)
+        .map(GlobalExceptionHandler::fromValidationError)
         .toList();
 
+    var body = validationErrorBody(errors, uri);
+
+    return RestResponse.status(Status.BAD_REQUEST, body);
+  }
+
+  private static ValidationErrorBodyDTO validationErrorBody(List<ValidationErrorDTO> errors, UriInfo uri) {
     return new ValidationErrorBodyDTO()
         .timestamp(OffsetDateTime.now())
         .status(400)
@@ -64,10 +82,21 @@ class GlobalErrorHandler {
         .validationErrors(errors);
   }
 
+  // Constraint violations have a path of methodName.objectName.objectField.
+  // Return objectName.objectField as error field.
   private static ValidationErrorDTO fromConstraintViolation(ConstraintViolation<?> violation) {
+    var path = violation.getPropertyPath().toString();
+    var field = path.substring(path.indexOf(".") + 1);
+
     return new ValidationErrorDTO()
-        .field(violation.getPropertyPath().toString())
+        .field(field)
         .message(violation.getMessage());
+  }
+
+  private static ValidationErrorDTO fromValidationError(ValidationError error) {
+    return new ValidationErrorDTO()
+        .field(error.field())
+        .message(error.message());
   }
 
   private static String getPath(UriInfo uri) {

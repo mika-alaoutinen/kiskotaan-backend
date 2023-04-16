@@ -6,7 +6,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.errors.ValidationError;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
 import mikaa.model.NewHoleDTO;
@@ -39,7 +38,7 @@ class CourseValidationsTest {
     var invalidCourse = new NewCourseDTO().name("New Course");
 
     var response = postInvalidCourse(invalidCourse);
-    assertBadRequest(response, new ValidationError("holes", "size must be 1-30"));
+    assertBadRequest(response, "newCourseDTO.holes", "size must be 1-30");
 
     verify(repository, never()).persist(any(CourseEntity.class));
   }
@@ -52,14 +51,14 @@ class CourseValidationsTest {
     var invalidCourse = new NewCourseDTO().name("Duplicate name").holes(List.of(hole));
     var response = postInvalidCourse(invalidCourse);
 
-    assertBadRequest(response, new ValidationError("name", "Course name should be unique"));
+    assertBadRequest(response, "course.name", "Course name should be unique");
     verify(repository, never()).persist(any(CourseEntity.class));
   }
 
   @Test
   void should_reject_invalid_course_name_on_update() {
     var response = patchInvalidCourseName(new NewCourseNameDTO().name("A"));
-    assertBadRequest(response, new ValidationError("name", "size must be 3-40"));
+    assertBadRequest(response, "newCourseNameDTO.name", "size must be 3-40");
     verify(repository, never()).persist(any(CourseEntity.class));
   }
 
@@ -69,7 +68,7 @@ class CourseValidationsTest {
     when(repository.existsByName(anyString())).thenReturn(true);
     
     var response = patchInvalidCourseName(new NewCourseNameDTO().name("Duplicate name"));
-    assertBadRequest(response, new ValidationError("name", "Course name should be unique"));
+    assertBadRequest(response, "course.name", "Course name should be unique");
     verify(repository, never()).persist(any(CourseEntity.class));
   }
 
@@ -91,7 +90,8 @@ class CourseValidationsTest {
         .then();
   }
 
-  private static void assertBadRequest(ValidatableResponse res, ValidationError expected) {
+  private static void assertBadRequest(
+      ValidatableResponse res, String expectedField, String expectedMessage) {
     res.statusCode(400)
         .contentType(ContentType.JSON)
         .body(
@@ -99,8 +99,8 @@ class CourseValidationsTest {
             "status", is(400),
             "error", is("Bad Request"),
             "path", containsString("/courses"),
-            "validationErrors[0].field", is(expected.field()),
-            "validationErrors[0].message", is(expected.message()));
+            "validationErrors[0].field", is(expectedField),
+            "validationErrors[0].message", is(expectedMessage));
   }
 
   private static CourseEntity courseMock() {

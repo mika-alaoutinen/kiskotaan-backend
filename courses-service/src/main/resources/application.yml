@@ -6,7 +6,7 @@ quarkus:
     port: 8082
   liquibase:
     change-log: db/changelog.yaml
-    contexts: all,dev
+    contexts: all,dev # dev context inserts test data into db
     migrate-at-start: true
 
 mp:

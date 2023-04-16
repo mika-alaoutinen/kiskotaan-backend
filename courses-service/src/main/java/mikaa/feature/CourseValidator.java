@@ -25,7 +25,7 @@ class CourseValidator {
 
   private Optional<ValidationError> validateUniqueName(String name) {
     return repository.existsByName(name)
-        ? Optional.of(new ValidationError("name", "Course name should be unique"))
+        ? Optional.of(new ValidationError("course.name", "Course name should be unique"))
         : Optional.empty();
   }
 

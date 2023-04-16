@@ -24,17 +24,17 @@ import mikaa.model.ErrorBodyDTO;
 import mikaa.model.ValidationErrorDTO;
 
 @QuarkusTest
-class GlobalErrorHandlerTest {
+class GlobalExceptionHandlerTest {
 
   @InjectMock
   private UriInfo uri;
 
-  private GlobalErrorHandler handler;
+  private GlobalExceptionHandler handler;
 
   @BeforeEach
   void setup() throws URISyntaxException {
     when(uri.getRequestUri()).thenReturn(new URI("https://testuri:8083/scorecards/1"));
-    handler = new GlobalErrorHandler(uri);
+    handler = new GlobalExceptionHandler(uri);
   }
 
   @Test
@@ -56,7 +56,7 @@ class GlobalErrorHandlerTest {
     Path path = mock(Path.class);
     when(violation.getPropertyPath()).thenReturn(path);
     when(violation.getMessage()).thenReturn("Test validation error");
-    when(path.toString()).thenReturn("obj.field.test");
+    when(path.toString()).thenReturn("function.object.field");
 
     var response = handler.handleConstraintViolation(new ConstraintViolationException(Set.of(violation)));
     assertEquals(400, response.getStatus());
@@ -69,7 +69,7 @@ class GlobalErrorHandlerTest {
     assertEquals("/scorecards/1", body.getPath());
 
     var expectedError = new ValidationErrorDTO()
-        .field("obj.field.test")
+        .field("object.field")
         .message("Test validation error");
 
     var validationErrors = body.getValidationErrors();

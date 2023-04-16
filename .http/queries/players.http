@@ -1,0 +1,7 @@
+@url = http://localhost:8080/players
+
+### get all players
+GET {{url}} HTTP/1.1
+
+### get player by id
+GET {{url}}/1 HTTP/1.1

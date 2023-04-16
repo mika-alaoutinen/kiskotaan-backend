@@ -1,0 +1,7 @@
+@url = http://localhost:8080/scorecards
+
+### get all scorecards
+GET {{url}} HTTP/1.1
+
+### get scorecard by id
+GET {{url}}/1 HTTP/1.1

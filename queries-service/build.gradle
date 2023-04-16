@@ -1,0 +1,60 @@
+plugins {
+  id 'java'
+  id 'io.quarkus'
+  id("io.freefair.lombok") version "8.0.1"
+  id("org.openapi.generator") version "6.5.0"
+}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+}
+
+dependencies {
+  implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+  implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'
+  implementation 'io.quarkus:quarkus-mongodb-panache'
+  implementation 'io.quarkus:quarkus-resteasy-reactive'
+  implementation 'io.quarkus:quarkus-smallrye-reactive-messaging-kafka'
+  implementation 'io.quarkus:quarkus-config-yaml'
+  implementation 'io.quarkus:quarkus-smallrye-health'
+  implementation 'io.quarkus:quarkus-arc'
+  testImplementation 'io.quarkus:quarkus-junit5'
+  testImplementation 'io.quarkus:quarkus-junit5-mockito'
+  testImplementation 'io.rest-assured:rest-assured'
+}
+
+group 'mikaa'
+version '1.0.0-SNAPSHOT'
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+}
+
+test {
+  systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
+}
+compileJava {
+  options.encoding = 'UTF-8'
+  options.compilerArgs << '-parameters'
+}
+
+compileTestJava {
+  options.encoding = 'UTF-8'
+}
+
+tasks.named('test', Test) {
+    useJUnitPlatform()
+}
+
+openApiGenerate {
+  configFile = "$projectDir/src/main/resources/generatorConfig.json".toString()
+  generatorName = "jaxrs-spec"
+  library = "quarkus"
+  outputDir = "$buildDir"
+  remoteInputSpec = "https://raw.githubusercontent.com/mika-alaoutinen/kiskotaan-openapi/master/apidoc_queries.json"
+}
+
+// Access generated code from build directory
+sourceSets.main.java.srcDirs += ['build/src/main/java']

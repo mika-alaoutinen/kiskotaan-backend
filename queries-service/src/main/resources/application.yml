@@ -1,0 +1,23 @@
+mp:
+  messaging:
+    incoming:
+      courses-in:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "courses"
+      holes-in:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "holes"
+      players-in:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "players"
+      scorecards-in:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "scorecards"

@@ -1,0 +1,15 @@
+mp:
+  messaging:
+    incoming:
+      courses-in:
+        connector: smallrye-in-memory
+        topic: "courses"
+      holes-in:
+        connector: smallrye-in-memory
+        topic: "holes"
+      players-in:
+        connector: smallrye-in-memory
+        topic: "players"
+      scorecards-in:
+        connector: smallrye-in-memory
+        topic: "scorecards"

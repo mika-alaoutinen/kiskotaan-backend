@@ -1,0 +1,22 @@
+developerName: Mika Alaoutinen
+
+# Package settings
+apiPackage: mikaa.api
+modelPackage: mikaa.model
+sourceFolder: src/main/java
+
+# Java settings
+booleanGetterPrefix: is
+dateLibrary: java8
+
+# code generation settings
+documentationProvider: none
+implicitHeaders: true
+interfaceOnly: true
+modelNameSuffix: DTO
+openApiNullable: false
+performBeanValidation: true
+useBeanValidation: false
+skipDefaultInterface: true
+useJakartaEe: true
+useTags: true

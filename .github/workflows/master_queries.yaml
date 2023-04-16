@@ -21,3 +21,4 @@ jobs:
         with:
           arguments: test
           build-root-directory: queries-service
+          gradle-version: current

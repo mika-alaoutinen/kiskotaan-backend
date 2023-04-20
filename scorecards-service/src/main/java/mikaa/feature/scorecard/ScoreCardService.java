@@ -8,18 +8,22 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.events.scorecard.ScoreCardPayload;
+import mikaa.events.scorecard.ScoreCardProducer;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.model.NewScoreCardDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-public class ScoreCardService {
+class ScoreCardService implements ScoreCardFinder {
 
   private final CourseFinder courseFinder;
   private final PlayerFinder playerFinder;
+  private final ScoreCardProducer producer;
   private final ScoreCardRepository repository;
 
+  @Override
   public ScoreCardEntity findOrThrow(long id) {
     return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }
@@ -38,12 +42,20 @@ public class ScoreCardService {
         .collect(Collectors.toSet());
 
     var entity = new ScoreCardEntity(course, players);
+
     repository.persist(entity);
+    producer.scoreCardAdded(ScoreCardPayload.from(entity));
+
     return entity;
   }
 
   void delete(long id) {
-    repository.deleteById(id);
+    repository.findByIdOptional(id)
+        .map(ScoreCardPayload::from)
+        .ifPresent(payload -> {
+          repository.deleteById(id);
+          producer.scoreCardDeleted(payload);
+        });
   }
 
   private static NotFoundException notFound(long id) {

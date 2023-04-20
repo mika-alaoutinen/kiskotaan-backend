@@ -6,6 +6,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.events.scorecard.ScoreCardPayload;
+import mikaa.events.scorecard.ScoreCardProducer;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
@@ -35,6 +37,9 @@ class ScoreCardResourceTest {
   private static final String ENDPOINT = "/scorecards";
   private static final CourseEntity COURSE = new CourseEntity(321L, 18, "Laajis");
   private static final PlayerEntity PEKKA_KANA = new PlayerEntity(123L, "Pekka", "Kana");
+
+  @InjectMock
+  private ScoreCardProducer producer;
 
   @InjectMock
   private ScoreCardRepository repository;
@@ -119,6 +124,7 @@ class ScoreCardResourceTest {
             "scores", empty());
 
     verify(repository, atLeastOnce()).persist(any(ScoreCardEntity.class));
+    verify(producer, atLeastOnce()).scoreCardAdded(any(ScoreCardPayload.class));
   }
 
   @Test
@@ -140,6 +146,7 @@ class ScoreCardResourceTest {
         .body("message", is("Could not find course with id 1"));
     
     verify(repository, never()).persist(any(ScoreCardEntity.class));
+    verify(producer, never()).scoreCardAdded(any(ScoreCardPayload.class));
   }
 
   @Test
@@ -162,10 +169,13 @@ class ScoreCardResourceTest {
         .body("message", is("Could not find player with id 999"));
     
     verify(repository, never()).persist(any(ScoreCardEntity.class));
+    verify(producer, never()).scoreCardAdded(any(ScoreCardPayload.class));
   }
 
   @Test
   void should_delete_score_card() {
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCardMock()));
+    
     given()
         .when()
         .delete(ENDPOINT + "/1")
@@ -173,6 +183,7 @@ class ScoreCardResourceTest {
         .statusCode(204);
 
     verify(repository, atLeastOnce()).deleteById(1L);
+    verify(producer, atLeastOnce()).scoreCardDeleted(any(ScoreCardPayload.class));
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, int id) {

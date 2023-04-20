@@ -19,11 +19,13 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.events.score.ScorePayload;
+import mikaa.events.score.ScoreProducer;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
-import mikaa.feature.scorecard.ScoreCardService;
+import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
 
 import static io.restassured.RestAssured.given;
@@ -40,17 +42,20 @@ class AddScoreResourceTest {
       .score(3);
 
   @InjectMock
-  private ScoreCardService scoreCardService;
+  private ScoreCardFinder scoreCardFinder;
 
   @InjectMock
   private PlayerFinder playerFinder;
+
+  @InjectMock
+  private ScoreProducer producer;
 
   @InjectMock
   private ScoreRepository repository;
 
   @Test
   void should_add_new_score() {
-    when(scoreCardService.findOrThrow(anyLong())).thenReturn(scoreCardMock());
+    when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
 
     postScore(NEW_SCORE)
@@ -62,11 +67,12 @@ class AddScoreResourceTest {
             "score", is(3));
 
     verify(repository, atLeastOnce()).persist(any(ScoreEntity.class));
+    verify(producer, atLeastOnce()).scoreAdded(any(ScorePayload.class));
   }
 
   @Test
   void should_throw_400_when_invalid_request_body() {
-    when(scoreCardService.findOrThrow(anyLong())).thenReturn(scoreCardMock());
+    when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
 
     var invalidScore = new NewScoreDTO()
@@ -86,16 +92,19 @@ class AddScoreResourceTest {
           "path", containsString(path));
 
     verify(repository, never()).persist(any(ScoreEntity.class));
+    verify(producer, never()).scoreAdded(any(ScorePayload.class));
   }
 
   @Test
   void should_throw_404_when_scorecard_not_found() {
     String errorMsg = "Could not find score card with id 1";
-    when(scoreCardService.findOrThrow(anyLong())).thenThrow(new NotFoundException(errorMsg));
+    when(scoreCardFinder.findOrThrow(anyLong())).thenThrow(new NotFoundException(errorMsg));
 
     var response = postScore(NEW_SCORE);
     assertNotFoundResponse(response, errorMsg, 1);
+
     verify(repository, never()).persist(any(ScoreEntity.class));
+    verify(producer, never()).scoreAdded(any(ScorePayload.class));
   }
 
   @Test
@@ -105,7 +114,9 @@ class AddScoreResourceTest {
 
     var response = postScore(NEW_SCORE);
     assertNotFoundResponse(response, errorMsg, 1);
+
     verify(repository, never()).persist(any(ScoreEntity.class));
+    verify(producer, never()).scoreAdded(any(ScorePayload.class));
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, String message, int scoreCardId) {

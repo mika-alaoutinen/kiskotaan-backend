@@ -1,9 +1,13 @@
 mp:
   messaging:
     outgoing:
+      scores-out:
+        connector: smallrye-in-memory
+        topic: "scores"
       scorecards-out:
         connector: smallrye-in-memory
         topic: "scorecards"
+
     incoming:
       courses-in:
         connector: smallrye-in-memory

@@ -8,8 +8,11 @@ quarkus:
 mp:
   messaging:
     outgoing:
+      scores-out:
+        topic: "scores"
       scorecards-out:
         topic: "scorecards"
+
     incoming:
       courses-in:
         auto:

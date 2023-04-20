@@ -7,7 +7,7 @@ import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.scorecard.ScoreCardEntity;
 
 @RegisterForReflection
-public record ScoreCardPayload(long id, long courseId, List<Long> playerIds) {
+public record ScoreCardPayload(Long id, long courseId, List<Long> playerIds) {
 
   public static ScoreCardPayload from(ScoreCardEntity entity) {
     var playerIds = entity.getPlayers()

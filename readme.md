@@ -2,6 +2,9 @@
 Kiskotaan backend is a disc golf scorekeeping application that consists of several microservices. The services are written in Java using Quarkus and Spring Boot frameworks.
 
 ## Microservices
+- `Queries` service on port 8080.
+  - Consolidates GET requests to different resources into one service.
+  - Maintains a read-only replica of the datasets (courses, players and score cards) in other services.
 - `Players` service on port `8081`.
   - CRUD operations for players.
 - `Courses` service on port `8082`.
@@ -28,6 +31,7 @@ Messages will be sent to the following topics when resources are modified. Modif
 - "holes"
 - "players"
 - "scorecards"
+- "scores"
 
 ## Running the services
 The entire stack, including Kafka and a Postgres database, can be spun up with Docker compose:

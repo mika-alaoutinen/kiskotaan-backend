@@ -5,7 +5,7 @@ import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.player.PlayerFinder;
-import mikaa.feature.scorecard.ScoreCardService;
+import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
 
 @ApplicationScoped
@@ -13,7 +13,7 @@ import mikaa.model.NewScoreDTO;
 class ScoreService {
 
   private final PlayerFinder playerFinder;
-  private final ScoreCardService scoreCardService;
+  private final ScoreCardFinder scoreCardFinder;
   private final ScoreRepository repository;
 
   ScoreEntity findOrThrow(long id) {
@@ -22,7 +22,7 @@ class ScoreService {
   }
 
   ScoreEntity addScore(long id, NewScoreDTO newScore) {
-    var scoreCard = scoreCardService.findOrThrow(id);
+    var scoreCard = scoreCardFinder.findOrThrow(id);
     var player = playerFinder.findOrThrow(newScore.getPlayerId().longValue());
     var score = new ScoreEntity(newScore.getHole(), newScore.getScore());
 

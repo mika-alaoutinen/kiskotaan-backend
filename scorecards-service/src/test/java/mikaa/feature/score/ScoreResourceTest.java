@@ -14,7 +14,7 @@ import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
-import mikaa.feature.scorecard.ScoreCardService;
+import mikaa.feature.scorecard.ScoreCardFinder;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -25,7 +25,7 @@ class ScoreResourceTest {
   private static final String ENDPOINT = "/scores";
 
   @InjectMock
-  private ScoreCardService scoreCardService;
+  private ScoreCardFinder scoreCardFinder;
 
   @InjectMock
   private PlayerFinder playerFinder;

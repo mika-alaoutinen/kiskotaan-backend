@@ -23,7 +23,7 @@ import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
-import mikaa.feature.scorecard.ScoreCardService;
+import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
 
 import static io.restassured.RestAssured.given;
@@ -40,7 +40,7 @@ class AddScoreResourceTest {
       .score(3);
 
   @InjectMock
-  private ScoreCardService scoreCardService;
+  private ScoreCardFinder scoreCardFinder;
 
   @InjectMock
   private PlayerFinder playerFinder;
@@ -50,7 +50,7 @@ class AddScoreResourceTest {
 
   @Test
   void should_add_new_score() {
-    when(scoreCardService.findOrThrow(anyLong())).thenReturn(scoreCardMock());
+    when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
 
     postScore(NEW_SCORE)
@@ -66,7 +66,7 @@ class AddScoreResourceTest {
 
   @Test
   void should_throw_400_when_invalid_request_body() {
-    when(scoreCardService.findOrThrow(anyLong())).thenReturn(scoreCardMock());
+    when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
 
     var invalidScore = new NewScoreDTO()
@@ -91,7 +91,7 @@ class AddScoreResourceTest {
   @Test
   void should_throw_404_when_scorecard_not_found() {
     String errorMsg = "Could not find score card with id 1";
-    when(scoreCardService.findOrThrow(anyLong())).thenThrow(new NotFoundException(errorMsg));
+    when(scoreCardFinder.findOrThrow(anyLong())).thenThrow(new NotFoundException(errorMsg));
 
     var response = postScore(NEW_SCORE);
     assertNotFoundResponse(response, errorMsg, 1);

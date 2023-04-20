@@ -14,12 +14,13 @@ import mikaa.model.NewScoreCardDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-public class ScoreCardService {
+class ScoreCardService implements ScoreCardFinder {
 
   private final CourseFinder courseFinder;
   private final PlayerFinder playerFinder;
   private final ScoreCardRepository repository;
 
+  @Override
   public ScoreCardEntity findOrThrow(long id) {
     return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }

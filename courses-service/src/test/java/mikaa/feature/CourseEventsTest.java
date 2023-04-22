@@ -12,9 +12,9 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.events.courses.CoursePayload;
+import mikaa.events.courses.CourseAdded;
 import mikaa.events.courses.CourseProducer;
-import mikaa.events.courses.CourseWithoutHoles;
+import mikaa.events.courses.CourseUpdated;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,7 +49,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    InMemorySink<CoursePayload> sink = connector.sink("course-added");
+    InMemorySink<CourseAdded> sink = connector.sink("course-added");
 
     var course = new CourseEntity(1L, "New Course", List.of(new HoleEntity(1L, 1, 3, 90, null)));
     service.add(course);
@@ -65,7 +65,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_course_name_update() {
-    InMemorySink<CourseWithoutHoles> sink = connector.sink("course-updated");
+    InMemorySink<CourseUpdated> sink = connector.sink("course-updated");
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.updateCourseName(1, "Updated Name");

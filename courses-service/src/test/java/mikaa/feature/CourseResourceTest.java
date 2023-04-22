@@ -6,8 +6,9 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.events.courses.CoursePayload;
+import mikaa.events.courses.CourseAdded;
 import mikaa.events.courses.CourseProducer;
+import mikaa.events.courses.CourseUpdated;
 import mikaa.events.holes.HolePayload;
 import mikaa.events.holes.HoleProducer;
 import mikaa.model.NewCourseDTO;
@@ -111,7 +112,7 @@ class CourseResourceTest {
             "holes.size()", is(1));
 
     verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
-    verify(courseProducer, atLeastOnce()).courseAdded(any(CoursePayload.class));
+    verify(courseProducer, atLeastOnce()).courseAdded(any(CourseAdded.class));
   }
 
   @Test
@@ -166,7 +167,7 @@ class CourseResourceTest {
         .contentType(ContentType.JSON)
         .body("name", is("Updated name"));
 
-    verify(courseProducer, atLeastOnce()).courseUpdated(any(CoursePayload.class));
+    verify(courseProducer, atLeastOnce()).courseUpdated(any(CourseUpdated.class));
   }
 
   @Test
@@ -196,7 +197,7 @@ class CourseResourceTest {
         .statusCode(204);
 
     verify(repository, atLeastOnce()).deleteById(1L);
-    verify(courseProducer, atLeastOnce()).courseDeleted(any(CoursePayload.class));
+    verify(courseProducer, atLeastOnce()).courseDeleted(anyLong());
   }
 
   @Test

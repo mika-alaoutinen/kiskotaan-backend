@@ -7,6 +7,7 @@ import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.events.courses.CourseProducer;
+import mikaa.events.courses.CourseUpdated;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -39,18 +40,16 @@ class CourseService {
     validator.validate(CourseEntity.fromName(name));
 
     course.setName(name);
-    producer.courseUpdated(CourseMapper.toPayload(course));
+    producer.courseUpdated(new CourseUpdated(course.getId(), name));
 
     return course;
   }
 
   void delete(long id) {
-    repository.findByIdOptional(id)
-        .map(CourseMapper::toPayload)
-        .ifPresent(course -> {
-          repository.deleteById(id);
-          producer.courseDeleted(course);
-        });
+    repository.findByIdOptional(id).ifPresent(_c -> {
+      repository.deleteById(id);
+      producer.courseDeleted(id);
+    });
   }
 
   private static NotFoundException notFound(long id) {

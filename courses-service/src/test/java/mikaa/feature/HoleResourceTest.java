@@ -127,7 +127,7 @@ class HoleResourceTest {
         .statusCode(204);
 
     verify(repository, atLeastOnce()).deleteById(1L);
-    verify(producer, atLeastOnce()).holeDeleted(any(HolePayload.class));
+    verify(producer, atLeastOnce()).holeDeleted(anyLong());
   }
 
   @Test

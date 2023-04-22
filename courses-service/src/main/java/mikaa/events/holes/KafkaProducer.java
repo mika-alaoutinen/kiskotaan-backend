@@ -32,8 +32,8 @@ class KafkaProducer implements HoleProducer {
   }
 
   @Override
-  public void holeDeleted(HolePayload payload) {
-    deleteEmitter.send(payload.id());
+  public void holeDeleted(long id) {
+    deleteEmitter.send(id);
   }
 
 }

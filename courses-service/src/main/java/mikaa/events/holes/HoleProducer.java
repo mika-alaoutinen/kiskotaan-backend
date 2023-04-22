@@ -6,6 +6,6 @@ public interface HoleProducer {
 
   void holeUpdated(HolePayload payload);
 
-  void holeDeleted(HolePayload payload);
+  void holeDeleted(long id);
 
 }

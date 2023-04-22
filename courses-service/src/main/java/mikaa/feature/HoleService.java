@@ -46,12 +46,10 @@ class HoleService {
   }
 
   void delete(long id) {
-    repository.findByIdOptional(id)
-        .map(HoleService::payload)
-        .ifPresent(hole -> {
-          repository.deleteById(id);
-          producer.holeDeleted(hole);
-        });
+    repository.findByIdOptional(id).ifPresent(_h -> {
+      repository.deleteById(id);
+      producer.holeDeleted(id);
+    });
   }
 
   private static NotFoundException holeNotFound(long id) {

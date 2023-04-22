@@ -1,7 +1,5 @@
 package mikaa.events.courses;
 
-import java.util.List;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
@@ -12,32 +10,30 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 class KafkaProducer implements CourseProducer {
 
   @Inject
-  @Channel("courses-out")
-  Emitter<CourseEvent> emitter;
+  @Channel("course-added")
+  Emitter<CourseAdded> addEmitter;
+
+  @Inject
+  @Channel("course-deleted")
+  Emitter<Long> deleteEmitter;
+
+  @Inject
+  @Channel("course-updated")
+  Emitter<CourseUpdated> updateEmitter;
 
   @Override
-  public void courseAdded(CoursePayload course) {
-    send(new CourseEvent(CourseEventType.COURSE_ADDED, course));
+  public void courseAdded(CourseAdded payload) {
+    addEmitter.send(payload);
   }
 
   @Override
-  public void courseUpdated(CoursePayload course) {
-    var payload = withoutHoles(course);
-    send(new CourseEvent(CourseEventType.COURSE_UPDATED, payload));
+  public void courseUpdated(CourseUpdated payload) {
+    updateEmitter.send(payload);
   }
 
   @Override
-  public void courseDeleted(CoursePayload course) {
-    var payload = withoutHoles(course);
-    send(new CourseEvent(CourseEventType.COURSE_DELETED, payload));
-  }
-
-  private void send(CourseEvent event) {
-    emitter.send(event).toCompletableFuture().join();
-  }
-
-  private static CoursePayload withoutHoles(CoursePayload payload) {
-    return new CoursePayload(payload.id(), payload.name(), List.of());
+  public void courseDeleted(long id) {
+    deleteEmitter.send(id);
   }
 
 }

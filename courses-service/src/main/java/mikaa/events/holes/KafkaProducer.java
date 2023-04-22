@@ -10,27 +10,30 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 class KafkaProducer implements HoleProducer {
 
   @Inject
-  @Channel("holes-out")
-  Emitter<HoleEvent> emitter;
+  @Channel("hole-added")
+  Emitter<HolePayload> addEmitter;
+
+  @Inject
+  @Channel("hole-updated")
+  Emitter<HolePayload> updateEmitter;
+
+  @Inject
+  @Channel("hole-deleted")
+  Emitter<Long> deleteEmitter;
 
   @Override
   public void holeAdded(HolePayload payload) {
-    send(HoleEventType.HOLE_ADDED, payload);
+    addEmitter.send(payload);
   }
 
   @Override
   public void holeUpdated(HolePayload payload) {
-    send(HoleEventType.HOLE_UPDATED, payload);
+    updateEmitter.send(payload);
   }
 
   @Override
-  public void holeDeleted(HolePayload payload) {
-    send(HoleEventType.HOLE_DELETED, payload);
-  }
-
-  private void send(HoleEventType type, HolePayload payload) {
-    var acked = emitter.send(new HoleEvent(type, payload));
-    acked.toCompletableFuture().join();
+  public void holeDeleted(long id) {
+    deleteEmitter.send(id);
   }
 
 }

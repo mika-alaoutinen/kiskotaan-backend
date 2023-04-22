@@ -19,7 +19,7 @@ import org.apache.kafka.clients.consumer.Consumer;
 
 // Reset Kafka state before each test. Terrible for performance but makes writing tests easier.
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
+@EmbeddedKafka(partitions = 1)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class PlayerEventsTest {
 

@@ -14,7 +14,7 @@ spring:
       ddl-auto: none
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${spring.embedded.kafka.brokers}
     producer:
       client-id: players-producer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer

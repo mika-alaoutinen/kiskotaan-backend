@@ -20,6 +20,12 @@ mp:
       course-updated:
         connector: smallrye-in-memory
         topic: "Courses.course_updated"
-      holes-out:
+      hole-added:
         connector: smallrye-in-memory
-        topic: "Courses.hole"
+        topic: "Courses.hole_added"
+      hole-deleted:
+        connector: smallrye-in-memory
+        topic: "Courses.hole_deleted"
+      hole-updated:
+        connector: smallrye-in-memory
+        topic: "Courses.hole_updated"

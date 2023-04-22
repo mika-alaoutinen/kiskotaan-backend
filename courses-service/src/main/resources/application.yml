@@ -18,5 +18,9 @@ mp:
         topic: "Courses.course_deleted"
       course-updated:
         topic: "Courses.course_updated"
-      holes-out:
-        topic: "Courses.hole"
+      hole-added:
+        topic: "Courses.hole_added"
+      hole-deleted:
+        topic: "Courses.hole_deleted"
+      hole-updated:
+        topic: "Courses.hole_updated"

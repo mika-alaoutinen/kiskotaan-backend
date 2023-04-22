@@ -6,6 +6,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.events.courses.CoursePayload;
+import mikaa.events.courses.CourseProducer;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
 import mikaa.model.NewHoleDTO;
@@ -15,6 +17,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -30,6 +33,9 @@ import java.util.stream.Stream;
 class CourseResourceTest {
 
   private static final String ENDPOINT = "/courses";
+
+  @InjectMock
+  private CourseProducer courseProducer;
 
   @InjectMock
   private CourseRepository repository;
@@ -100,6 +106,7 @@ class CourseResourceTest {
             "holes.size()", is(1));
 
     verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
+    verify(courseProducer, atLeastOnce()).courseAdded(any(CoursePayload.class));
   }
 
   @Test
@@ -151,6 +158,8 @@ class CourseResourceTest {
         .statusCode(200)
         .contentType(ContentType.JSON)
         .body("name", is("Updated name"));
+
+    verify(courseProducer, atLeastOnce()).courseUpdated(any(CoursePayload.class));
   }
 
   @Test
@@ -166,6 +175,7 @@ class CourseResourceTest {
     
     assertNotFoundResponse(response, 1);
     verify(repository, never()).persist(any(CourseEntity.class));
+    verifyNoInteractions(courseProducer);
   }
 
   @Test

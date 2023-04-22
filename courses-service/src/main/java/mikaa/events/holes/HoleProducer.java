@@ -1,4 +1,4 @@
-package mikaa.kafka.holes;
+package mikaa.events.holes;
 
 public interface HoleProducer {
 

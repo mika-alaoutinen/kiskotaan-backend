@@ -1,4 +1,4 @@
-package mikaa.kafka.holes;
+package mikaa.events.holes;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

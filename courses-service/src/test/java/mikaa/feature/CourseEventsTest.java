@@ -13,6 +13,9 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.events.courses.CourseEvent;
+import mikaa.events.courses.CoursePayload;
+import mikaa.events.courses.CourseProducer;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,9 +25,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
-import mikaa.kafka.courses.CoursePayload;
-import mikaa.kafka.courses.CourseProducer;
-import mikaa.kafka.courses.CourseEvent;
 
 @QuarkusTest
 class CourseEventsTest {

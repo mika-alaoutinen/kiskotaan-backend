@@ -13,7 +13,7 @@ mp:
     outgoing:
       courses-out:
         connector: smallrye-in-memory
-        topic: "courses"
+        topic: "Courses.course"
       holes-out:
         connector: smallrye-in-memory
-        topic: "holes"
+        topic: "Courses.hole"

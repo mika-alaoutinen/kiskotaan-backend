@@ -13,6 +13,6 @@ mp:
   messaging:
     outgoing:
       courses-out:
-        topic: "courses"
+        topic: "Courses.course"
       holes-out:
-        topic: "holes"
+        topic: "Courses.hole"

@@ -8,6 +8,8 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import mikaa.events.courses.CoursePayload;
 import mikaa.events.courses.CourseProducer;
+import mikaa.events.holes.HolePayload;
+import mikaa.events.holes.HoleProducer;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
 import mikaa.model.NewHoleDTO;
@@ -36,6 +38,9 @@ class CourseResourceTest {
 
   @InjectMock
   private CourseProducer courseProducer;
+
+  @InjectMock
+  private HoleProducer holeProducer;
 
   @InjectMock
   private CourseRepository repository;
@@ -127,6 +132,7 @@ class CourseResourceTest {
           "distance", is(90));
 
     verify(holeRepository, atLeastOnce()).persist(any(HoleEntity.class));
+    verify(holeProducer, atLeastOnce()).holeAdded(any(HolePayload.class));
   }
 
   @Test
@@ -142,6 +148,7 @@ class CourseResourceTest {
 
     assertNotFoundResponse(response, 1);
     verify(holeRepository, never()).persist(any(HoleEntity.class));
+    verifyNoInteractions(holeProducer);
   }
 
   @Test
@@ -189,6 +196,19 @@ class CourseResourceTest {
         .statusCode(204);
 
     verify(repository, atLeastOnce()).deleteById(1L);
+    verify(courseProducer, atLeastOnce()).courseDeleted(any(CoursePayload.class));
+  }
+
+  @Test
+  void should_do_nothing_on_delete_if_course_not_found() {
+    given()
+        .when()
+        .delete(ENDPOINT + "/1")
+        .then()
+        .statusCode(204);
+
+    verify(repository, never()).deleteById(anyLong());
+    verifyNoInteractions(courseProducer);
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, int id) {

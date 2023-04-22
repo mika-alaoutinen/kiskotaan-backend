@@ -6,6 +6,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.events.holes.HolePayload;
+import mikaa.events.holes.HoleProducer;
 import mikaa.model.NewHoleDTO;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -13,6 +15,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
@@ -26,6 +29,9 @@ import static io.restassured.RestAssured.given;
 class HoleResourceTest {
 
   private static final String ENDPOINT = "/holes";
+
+  @InjectMock
+  private HoleProducer producer;
 
   @InjectMock
   private HoleRepository repository;
@@ -76,6 +82,8 @@ class HoleResourceTest {
             "number", is(2),
             "par", is(4),
             "distance", is(100));
+
+    verify(producer, atLeastOnce()).holeUpdated(any(HolePayload.class));
   }
 
   @Test
@@ -88,7 +96,8 @@ class HoleResourceTest {
         .then()
         .statusCode(400);
 
-    verify(repository, never()).persist(any(HoleEntity.class));
+    verifyNoInteractions(repository);
+    verifyNoInteractions(producer);
   }
 
   @Test
@@ -104,6 +113,7 @@ class HoleResourceTest {
 
     assertNotFoundResponse(response, 1);
     verify(repository, never()).persist(any(HoleEntity.class));
+    verifyNoInteractions(producer);
   }
 
   @Test
@@ -117,6 +127,19 @@ class HoleResourceTest {
         .statusCode(204);
 
     verify(repository, atLeastOnce()).deleteById(1L);
+    verify(producer, atLeastOnce()).holeDeleted(any(HolePayload.class));
+  }
+
+  @Test
+  void should_do_nothing_on_delete_if_hole_not_found() {
+    given()
+        .when()
+        .delete(ENDPOINT + "/1")
+        .then()
+        .statusCode(204);
+
+    verify(repository, never()).deleteById(anyLong());
+    verifyNoInteractions(producer);
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, int id) {

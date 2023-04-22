@@ -11,9 +11,15 @@ quarkus:
 mp:
   messaging:
     outgoing:
-      courses-out:
+      course-added:
         connector: smallrye-in-memory
-        topic: "Courses.course"
+        topic: "Courses.course_added"
+      course-deleted:
+        connector: smallrye-in-memory
+        topic: "Courses.course_deleted"
+      course-updated:
+        connector: smallrye-in-memory
+        topic: "Courses.course_updated"
       holes-out:
         connector: smallrye-in-memory
         topic: "Courses.hole"

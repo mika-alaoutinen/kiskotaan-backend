@@ -2,10 +2,10 @@ package mikaa.events.courses;
 
 public interface CourseProducer {
 
-  void courseAdded(CoursePayload course);
+  void courseAdded(CoursePayload payload);
 
-  void courseUpdated(CoursePayload course);
+  void courseUpdated(CoursePayload payload);
 
-  void courseDeleted(CoursePayload course);
+  void courseDeleted(CoursePayload payload);
 
 }

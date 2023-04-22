@@ -12,6 +12,9 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.events.holes.HoleEvent;
+import mikaa.events.holes.HolePayload;
+import mikaa.events.holes.HoleProducer;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,9 +24,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
-import mikaa.kafka.holes.HoleEvent;
-import mikaa.kafka.holes.HolePayload;
-import mikaa.kafka.holes.HoleProducer;
 
 @QuarkusTest
 class HoleEventsTest {

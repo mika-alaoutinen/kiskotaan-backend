@@ -3,18 +3,18 @@ mp:
     outgoing:
       scores-out:
         connector: smallrye-in-memory
-        topic: "scores"
+        topic: "Scorecards.score"
       scorecards-out:
         connector: smallrye-in-memory
-        topic: "scorecards"
+        topic: "Scorecards.scorecard"
 
     incoming:
       courses-in:
         connector: smallrye-in-memory
-        topic: "courses"
+        topic: "Courses.course"
       holes-in:
         connector: smallrye-in-memory
-        topic: "holes"
+        topic: "Courses.hole"
       players-in:
         connector: smallrye-in-memory
-        topic: "players"
+        topic: "Players.player"

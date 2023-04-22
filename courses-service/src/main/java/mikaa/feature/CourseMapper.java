@@ -2,8 +2,8 @@ package mikaa.feature;
 
 import java.util.List;
 
-import mikaa.kafka.courses.CoursePayload;
-import mikaa.kafka.courses.HolePayload;
+import mikaa.events.courses.CoursePayload;
+import mikaa.events.courses.HolePayload;
 
 interface CourseMapper {
 

@@ -9,23 +9,23 @@ mp:
   messaging:
     outgoing:
       scores-out:
-        topic: "scores"
+        topic: "Scorecards.score"
       scorecards-out:
-        topic: "scorecards"
+        topic: "Scorecards.scorecard"
 
     incoming:
       courses-in:
         auto:
           offset:
             reset: "earliest"
-        topic: "courses"
+        topic: "Courses.course"
       holes-in:
         auto:
           offset:
             reset: "earliest"
-        topic: "holes"
+        topic: "Courses.hole"
       players-in:
         auto:
           offset:
             reset: "earliest"
-        topic: "players"
+        topic: "Players.player"

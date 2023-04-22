@@ -1,4 +1,4 @@
-package mikaa.kafka.courses;
+package mikaa.events.courses;
 
 public interface CourseProducer {
 

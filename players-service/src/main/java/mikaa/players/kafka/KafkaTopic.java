@@ -8,7 +8,7 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 class KafkaTopic {
 
-  static final String PLAYERS = "players";
+  static final String PLAYERS = "Players.player";
 
   @Bean
   NewTopic playersTopic() {

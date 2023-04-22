@@ -6,7 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kafka.courses.CourseProducer;
+import mikaa.events.courses.CourseProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor

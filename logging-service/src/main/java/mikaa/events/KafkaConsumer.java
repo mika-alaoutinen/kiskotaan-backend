@@ -1,4 +1,4 @@
-package mikaa.kafka;
+package mikaa.events;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -23,6 +23,16 @@ class KafkaConsumer {
 
   @Incoming("players-in")
   void consumePlayers(String event) {
+    log.info(event);
+  }
+
+  @Incoming("scorecards-in")
+  void consumeScorecards(String event) {
+    log.info(event);
+  }
+
+  @Incoming("scores-in")
+  void consumeScores(String event) {
     log.info(event);
   }
 

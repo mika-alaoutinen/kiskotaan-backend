@@ -5,19 +5,24 @@ mp:
         auto:
           offset:
             reset: "earliest"
-        topic: "courses"
+        topic: "Courses.course"
       holes-in:
         auto:
           offset:
             reset: "earliest"
-        topic: "holes"
+        topic: "Courses.hole"
       players-in:
         auto:
           offset:
             reset: "earliest"
-        topic: "players"
+        topic: "Players.player"
       scorecards-in:
         auto:
           offset:
             reset: "earliest"
-        topic: "scorecards"
+        topic: "Scorecards.scorecard"
+      scores-in:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "Scorecards.score"

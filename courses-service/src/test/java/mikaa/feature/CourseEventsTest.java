@@ -14,6 +14,7 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.events.courses.CoursePayload;
 import mikaa.events.courses.CourseProducer;
+import mikaa.events.courses.CourseWithoutHoles;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -64,7 +65,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_course_name_update() {
-    InMemorySink<CoursePayload> sink = connector.sink("course-updated");
+    InMemorySink<CourseWithoutHoles> sink = connector.sink("course-updated");
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.updateCourseName(1, "Updated Name");

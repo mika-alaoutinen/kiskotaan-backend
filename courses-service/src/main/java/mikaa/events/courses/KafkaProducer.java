@@ -19,7 +19,7 @@ class KafkaProducer implements CourseProducer {
 
   @Inject
   @Channel("course-updated")
-  Emitter<CoursePayload> updateEmitter;
+  Emitter<CourseWithoutHoles> updateEmitter;
 
   @Override
   public void courseAdded(CoursePayload payload) {
@@ -28,7 +28,7 @@ class KafkaProducer implements CourseProducer {
 
   @Override
   public void courseUpdated(CoursePayload payload) {
-    updateEmitter.send(payload);
+    updateEmitter.send(new CourseWithoutHoles(payload.id(), payload.name()));
   }
 
   @Override

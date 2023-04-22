@@ -1,5 +1,6 @@
 package mikaa.players.kafka;
 
+import java.time.Duration;
 import java.util.List;
 
 import org.apache.kafka.clients.consumer.Consumer;
@@ -39,6 +40,7 @@ class PlayerConsumerTestConfig {
 
     var consumer = factory.createConsumer();
     consumer.subscribe(List.of(KafkaTopic.PLAYERS));
+    consumer.poll(Duration.ofMillis(0));
 
     return consumer;
   }

@@ -7,7 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
+import mikaa.players.events.Player;
 import mikaa.players.events.PlayerEvents.PlayerEvent;
 import mikaa.players.kafka.KafkaTopic;
 
@@ -15,10 +17,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.apache.kafka.clients.consumer.Consumer;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@DirtiesContext
+// Reset Kafka state before each test. Terrible for performance but makes writing tests easier.
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class PlayerEventsTest {
+
+  // See PlayerConsumer.java in kafka test package
+  @Autowired
+  private Consumer<String, PlayerEvent> consumer;
 
   @Autowired
   private PlayersRepository repository;
@@ -26,19 +33,33 @@ class PlayerEventsTest {
   @Autowired
   private PlayersService service;
 
-  // See PlayerConsumer.java in kafka test package
-  @Autowired
-  private Consumer<String, PlayerEvent> consumer;
+  @Test
+  void sends_event_on_new_player_added() {
+    service.add(new PlayerEntity("Pekka", "Kana"));
+    assertPlayer(getPayload(), "Pekka", "Kana");
+  }
 
   @Test
-  void sends_event_on_new_player_added() throws Exception {
-    service.add(new PlayerEntity("Pekka", "Kana"));
+  void sends_event_on_player_update() {
+    var player = repository.save(new PlayerEntity("Pekka", "Kana"));
+    service.update(player.getId(), new PlayerEntity("Kalle", "Kukko"));
+    assertPlayer(getPayload(), "Kalle", "Kukko");
+  }
 
-    var record = KafkaTestUtils.getSingleRecord(consumer, KafkaTopic.PLAYERS);
-    var payload = record.value().payload();
+  @Test
+  void sends_event_on_player_delete() {
+    var player = repository.save(new PlayerEntity("Delete", "Me"));
+    service.delete(player.getId());
+    assertPlayer(getPayload(), "Delete", "Me");
+  }
 
-    assertEquals("Pekka", payload.firstName());
-    assertEquals("Kana", payload.lastName());
+  private static void assertPlayer(Player player, String firstName, String lastName) {
+    assertEquals(firstName, player.firstName());
+    assertEquals(lastName, player.lastName());
+  }
+
+  private Player getPayload() {
+    return KafkaTestUtils.getSingleRecord(consumer, KafkaTopic.PLAYERS).value().payload();
   }
 
 }

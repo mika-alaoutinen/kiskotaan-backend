@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
-class KafkaTopic {
+public class KafkaTopic {
 
-  static final String PLAYERS = "Players.player";
+  public static final String PLAYERS = "Players.player";
 
   @Bean
   NewTopic playersTopic() {

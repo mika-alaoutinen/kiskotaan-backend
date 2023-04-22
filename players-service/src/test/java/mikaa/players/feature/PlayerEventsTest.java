@@ -14,12 +14,10 @@ import org.springframework.test.annotation.DirtiesContext;
 
 import mikaa.players.events.PlayerEvents.PlayerEvent;
 import mikaa.players.kafka.KafkaTopic;
-import mikaa.players.kafka.PlayerConsumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.kafka.clients.consumer.Consumer;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -49,9 +47,10 @@ class PlayerEventsTest {
   @Test
   void sends_event_on_new_player_added() throws Exception {
     service.add(new PlayerEntity("Pekka", "Kana"));
+
     var record = KafkaTestUtils.getSingleRecord(consumer, KafkaTopic.PLAYERS);
-    System.out.println("record " + record);
     var payload = record.value().payload();
+
     assertEquals("Pekka", payload.firstName());
     assertEquals("Kana", payload.lastName());
   }
@@ -60,13 +59,13 @@ class PlayerEventsTest {
     var configs = KafkaTestUtils.consumerProps(KafkaTopic.PLAYERS, "true", broker);
     configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
+    var keyDeserializer = new StringDeserializer();
+
     var valueDeserializer = new JsonDeserializer<PlayerEvent>();
     valueDeserializer.addTrustedPackages("*");
 
     var factory = new DefaultKafkaConsumerFactory<String, PlayerEvent>(
-        configs,
-        new StringDeserializer(),
-        valueDeserializer);
+        configs, keyDeserializer, valueDeserializer);
 
     var consumer = factory.createConsumer();
     consumer.subscribe(List.of(KafkaTopic.PLAYERS));

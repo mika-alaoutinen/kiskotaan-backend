@@ -23,17 +23,17 @@ class KafkaProducer implements HoleProducer {
 
   @Override
   public void holeAdded(HolePayload payload) {
-    addEmitter.send(payload);
+    addEmitter.send(payload).toCompletableFuture().join();
   }
 
   @Override
   public void holeUpdated(HolePayload payload) {
-    updateEmitter.send(payload);
+    updateEmitter.send(payload).toCompletableFuture().join();
   }
 
   @Override
   public void holeDeleted(HolePayload payload) {
-    deleteEmitter.send(payload);
+    deleteEmitter.send(payload).toCompletableFuture().join();
   }
 
 }

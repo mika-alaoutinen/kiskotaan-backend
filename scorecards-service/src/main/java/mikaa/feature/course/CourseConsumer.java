@@ -8,7 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.events.course.CourseEvent;
+import mikaa.events.course.CourseAdded;
+import mikaa.events.course.CourseUpdated;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -17,20 +18,25 @@ class CourseConsumer {
   private static final Logger log = LoggerFactory.getLogger(CourseConsumer.class);
   private final CourseService service;
 
-  @Incoming("courses-in")
+  @Incoming("course-added")
   @Transactional
-  void consume(CourseEvent event) {
-    var type = event.type();
-    var payload = event.payload();
+  void courseAdded(CourseAdded payload) {
+    log.info("Course added: %s".formatted(payload));
+    service.add(payload);
+  }
 
-    log.info("type: %s, payload: %s".formatted(type, payload));
+  @Incoming("course-deleted")
+  @Transactional
+  void courseDeleted(long courseId) {
+    log.info("Course deleted: %s".formatted(courseId));
+    service.delete(courseId);
+  }
 
-    switch (type) {
-      case COURSE_ADDED -> service.add(payload);
-      case COURSE_DELETED -> service.delete(payload);
-      case COURSE_UPDATED -> service.update(payload);
-      default -> log.warn("Unrecognized event type " + type);
-    }
+  @Incoming("course-updated")
+  @Transactional
+  void courseUpdated(CourseUpdated payload) {
+    log.info("Course updated: %s".formatted(payload));
+    service.update(payload);
   }
 
 }

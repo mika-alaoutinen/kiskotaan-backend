@@ -54,12 +54,7 @@ class CourseEventsTest {
     var course = new CourseEntity(1L, "New Course", List.of(new HoleEntity(1L, 1, 3, 90, null)));
     service.add(course);
 
-    assertEquals(1, sink.received().size());
-    var payload = sink.received().get(0).getPayload();
-
-    assertEquals("New Course", payload.name());
-    assertEquals(1, payload.holes().size());
-
+    assertEvent(sink, "New Course", 1);
     verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
   }
 
@@ -72,21 +67,26 @@ class CourseEventsTest {
 
     assertEquals(1, sink.received().size());
     var payload = sink.received().get(0).getPayload();
-
     assertEquals("Updated Name", payload.name());
   }
 
   @Test
   void should_send_event_on_delete() {
-    InMemorySink<Long> sink = connector.sink("course-deleted");
+    InMemorySink<CoursePayload> sink = connector.sink("course-deleted");
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.delete(1);
 
+    assertEvent(sink, "DG Course", 0);
+    verify(repository, atLeastOnce()).deleteById(anyLong());
+  }
+
+  private static void assertEvent(InMemorySink<CoursePayload> sink, String name, int holeCount) {
     assertEquals(1, sink.received().size());
     var payload = sink.received().get(0).getPayload();
 
-    assertEquals(1, payload);
+    assertEquals(name, payload.name());
+    assertEquals(holeCount, payload.holes().size());
   }
 
   private static CourseEntity courseMock() {

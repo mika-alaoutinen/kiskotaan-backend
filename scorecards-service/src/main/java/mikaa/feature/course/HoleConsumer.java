@@ -4,35 +4,37 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.events.hole.HoleEvent;
+import lombok.extern.slf4j.Slf4j;
+import mikaa.events.hole.HolePayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor
+@Slf4j
 class HoleConsumer {
 
-  private static final Logger log = LoggerFactory.getLogger(HoleConsumer.class);
   private final HoleService service;
 
-  @Incoming("holes-in")
+  @Incoming("hole-added")
   @Transactional
-  void consume(HoleEvent event) {
-    var type = event.type();
-    var payload = event.payload();
+  void courseAdded(HolePayload payload) {
+    log.info("Hole added: %s".formatted(payload));
+    service.add(payload);
+  }
 
-    log.info("type: %s, payload: %s".formatted(type, payload));
+  @Incoming("hole-deleted")
+  @Transactional
+  void courseDeleted(HolePayload payload) {
+    log.info("Hole deleted: %s".formatted(payload));
+    service.delete(payload);
+  }
 
-    switch (type) {
-      case HOLE_ADDED -> service.add(payload);
-      case HOLE_DELETED -> service.delete(payload);
-      case HOLE_UPDATED -> {
-        // do nothing
-      }
-      default -> log.warn("Unrecognized event type " + type);
-    }
+  @Incoming("hole-updated")
+  @Transactional
+  void courseUpdated(HolePayload payload) {
+    log.info("Hole updated: %s".formatted(payload));
+    // Do nothing
   }
 
 }

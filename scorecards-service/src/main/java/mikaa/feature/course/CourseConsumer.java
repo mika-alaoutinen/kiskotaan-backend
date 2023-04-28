@@ -4,18 +4,17 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mikaa.events.course.CourseAdded;
 import mikaa.events.course.CourseUpdated;
 
 @ApplicationScoped
 @RequiredArgsConstructor
+@Slf4j
 class CourseConsumer {
 
-  private static final Logger log = LoggerFactory.getLogger(CourseConsumer.class);
   private final CourseService service;
 
   @Incoming("course-added")
@@ -27,9 +26,9 @@ class CourseConsumer {
 
   @Incoming("course-deleted")
   @Transactional
-  void courseDeleted(long courseId) {
-    log.info("Course deleted: %s".formatted(courseId));
-    service.delete(courseId);
+  void courseDeleted(long id) {
+    log.info("Course deleted: %s".formatted(id));
+    service.delete(id);
   }
 
   @Incoming("course-updated")

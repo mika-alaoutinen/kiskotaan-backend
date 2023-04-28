@@ -19,7 +19,7 @@ class KafkaProducer implements HoleProducer {
 
   @Inject
   @Channel("hole-deleted")
-  Emitter<Long> deleteEmitter;
+  Emitter<HolePayload> deleteEmitter;
 
   @Override
   public void holeAdded(HolePayload payload) {
@@ -32,8 +32,8 @@ class KafkaProducer implements HoleProducer {
   }
 
   @Override
-  public void holeDeleted(long id) {
-    deleteEmitter.send(id);
+  public void holeDeleted(HolePayload payload) {
+    deleteEmitter.send(payload);
   }
 
 }

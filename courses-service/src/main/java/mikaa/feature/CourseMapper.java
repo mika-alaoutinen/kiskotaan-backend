@@ -2,21 +2,21 @@ package mikaa.feature;
 
 import java.util.List;
 
-import mikaa.events.courses.CourseAdded;
-import mikaa.events.courses.HolePayload;
+import mikaa.events.courses.CoursePayload;
+import mikaa.events.courses.Hole;
 
 interface CourseMapper {
 
-  static CourseAdded toPayload(CourseEntity entity) {
-    return new CourseAdded(entity.getId(), entity.getName(), holes(entity));
+  static CoursePayload toPayload(CourseEntity entity) {
+    return new CoursePayload(entity.getId(), entity.getName(), holes(entity));
   }
 
-  private static List<HolePayload> holes(CourseEntity entity) {
+  private static List<Hole> holes(CourseEntity entity) {
     return entity.getHoles().stream().map(CourseMapper::hole).toList();
   }
 
-  private static HolePayload hole(HoleEntity entity) {
-    return new HolePayload(
+  private static Hole hole(HoleEntity entity) {
+    return new Hole(
         entity.getId(),
         entity.getHoleNumber(),
         entity.getPar(),

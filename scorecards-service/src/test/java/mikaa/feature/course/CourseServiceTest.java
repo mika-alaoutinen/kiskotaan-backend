@@ -15,13 +15,12 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
-import mikaa.events.course.CoursePayload;
+import mikaa.events.course.CourseAdded;
+import mikaa.events.course.CourseUpdated;
 import mikaa.events.course.Hole;
 
 @QuarkusTest
 class CourseServiceTest {
-
-  static final CoursePayload LAAJIS = new CoursePayload(111L, "Laajis", List.of());
 
   @InjectMock
   CourseRepository repository;
@@ -36,7 +35,7 @@ class CourseServiceTest {
   @Test
   void should_save_new_course() {
     var hole = new Hole(222, 1, 3, 85);
-    var newCourse = new CoursePayload(111L, "Laajis", List.of(hole));
+    var newCourse = new CourseAdded(111L, "Laajis", List.of(hole));
 
     service.add(newCourse);
     verify(repository, atLeastOnce()).persist(new CourseEntity(111, 1, "Laajis"));
@@ -47,19 +46,19 @@ class CourseServiceTest {
     var course = new CourseEntity(111L, 24, "Kaihu");
     when(repository.findByExternalId(anyLong())).thenReturn(Optional.of(course));
 
-    service.update(LAAJIS);
+    service.update(new CourseUpdated(111l, "Laajis"));
     verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 24, "Laajis"));
   }
 
   @Test
   void should_do_nothing_on_update_if_course_not_found() {
-    service.update(LAAJIS);
+    service.update(new CourseUpdated(111l, "Laajis"));
     verify(repository, never()).persist(any(CourseEntity.class));
   }
 
   @Test
   void should_delete_course() {
-    service.delete(LAAJIS);
+    service.delete(111l);
     verify(repository, atLeastOnce()).deleteByExternalId(111L);
   }
 

@@ -74,14 +74,12 @@ class HoleEventsTest {
 
   @Test
   void should_send_event_on_delete() {
-    InMemorySink<Long> sink = connector.sink("hole-deleted");
+    InMemorySink<HolePayload> sink = connector.sink("hole-deleted");
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
     service.delete(HOLE_ID);
 
-    assertEquals(1, sink.received().size());
-    var payload = sink.received().get(0).getPayload();
-    assertEquals(HOLE_ID, payload);
+    assertEvent(sink, new HolePayload(HOLE_ID, COURSE_ID, 2, 3, 123));
     verify(repository, atLeastOnce()).deleteById(anyLong());
   }
 

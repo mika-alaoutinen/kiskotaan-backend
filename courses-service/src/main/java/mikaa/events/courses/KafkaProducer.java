@@ -11,18 +11,18 @@ class KafkaProducer implements CourseProducer {
 
   @Inject
   @Channel("course-added")
-  Emitter<CourseAdded> addEmitter;
+  Emitter<CoursePayload> addEmitter;
 
   @Inject
   @Channel("course-deleted")
-  Emitter<Long> deleteEmitter;
+  Emitter<CoursePayload> deleteEmitter;
 
   @Inject
   @Channel("course-updated")
   Emitter<CourseUpdated> updateEmitter;
 
   @Override
-  public void courseAdded(CourseAdded payload) {
+  public void courseAdded(CoursePayload payload) {
     addEmitter.send(payload);
   }
 
@@ -32,8 +32,8 @@ class KafkaProducer implements CourseProducer {
   }
 
   @Override
-  public void courseDeleted(long id) {
-    deleteEmitter.send(id);
+  public void courseDeleted(CoursePayload payload) {
+    deleteEmitter.send(payload);
   }
 
 }

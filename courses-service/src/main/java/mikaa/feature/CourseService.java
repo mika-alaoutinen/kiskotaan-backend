@@ -46,10 +46,12 @@ class CourseService {
   }
 
   void delete(long id) {
-    repository.findByIdOptional(id).ifPresent(_c -> {
-      repository.deleteById(id);
-      producer.courseDeleted(id);
-    });
+    repository.findByIdOptional(id)
+        .map(CourseMapper::toPayload)
+        .ifPresent(payload -> {
+          repository.deleteById(id);
+          producer.courseDeleted(payload);
+        });
   }
 
   private static NotFoundException notFound(long id) {

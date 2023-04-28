@@ -23,17 +23,17 @@ class KafkaProducer implements CourseProducer {
 
   @Override
   public void courseAdded(CoursePayload payload) {
-    addEmitter.send(payload);
+    addEmitter.send(payload).toCompletableFuture().join();
   }
 
   @Override
   public void courseUpdated(CourseUpdated payload) {
-    updateEmitter.send(payload);
+    updateEmitter.send(payload).toCompletableFuture().join();
   }
 
   @Override
   public void courseDeleted(CoursePayload payload) {
-    deleteEmitter.send(payload);
+    deleteEmitter.send(payload).toCompletableFuture().join();
   }
 
 }

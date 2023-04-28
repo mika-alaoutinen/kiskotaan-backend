@@ -30,6 +30,7 @@ class CourseService {
 
   CourseEntity add(CourseEntity newCourse) {
     validator.validate(newCourse);
+    newCourse.getHoles().forEach(h -> h.setCourse(newCourse)); // For JPA to work correctly
     repository.persist(newCourse);
     producer.courseAdded(CourseMapper.toPayload(newCourse));
     return newCourse;

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +18,7 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.events.scorecard.ScoreCardEvent;
+import mikaa.events.scorecard.ScoreCardPayload;
 import mikaa.events.scorecard.ScoreCardProducer;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
@@ -46,19 +45,11 @@ class ScoreCardEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
-  private InMemorySink<ScoreCardEvent> sink;
   private ScoreCardService service;
 
   @BeforeEach
   void setup() {
-    sink = connector.sink("scorecards-out");
-    sink.clear();
     service = new ScoreCardService(courseFinder, playerFinder, producer, repository);
-  }
-
-  @AfterEach
-  void teardown() {
-    sink.clear();
   }
 
   @Test
@@ -66,12 +57,14 @@ class ScoreCardEventsTest {
     when(courseFinder.findOrThrow(anyLong())).thenReturn(courseMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(playerMock());
 
+    var sink = initSink("scorecard-added");
+
     var dto = new NewScoreCardDTO()
         .courseId(BigDecimal.ONE)
         .playerIds(Set.of(BigDecimal.TEN));
 
     service.add(dto);
-    assertEvent("SCORECARD_ADDED");
+    assertEvent(sink);
   }
 
   @Test
@@ -79,15 +72,16 @@ class ScoreCardEventsTest {
     var scoreCard = new ScoreCardEntity(13L, courseMock(), Set.of(playerMock()), List.of());
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCard));
 
+    var sink = initSink("scorecard-deleted");
+
     service.delete(13l);
-    assertEvent("SCORECARD_DELETED");
+    assertEvent(sink);
   }
 
-  private void assertEvent(String eventType) {
-    var event = sink.received().get(0).getPayload();
-    assertEquals(eventType, event.type().toString());
+  private void assertEvent(InMemorySink<ScoreCardPayload> sink) {
+    assertEquals(1, sink.received().size());
+    var payload = sink.received().get(0).getPayload();
 
-    var payload = event.payload();
     assertEquals(1l, payload.courseId());
     assertEquals(1, payload.playerIds().size());
     assertEquals(2l, payload.playerIds().get(0));
@@ -99,6 +93,10 @@ class ScoreCardEventsTest {
 
   private static PlayerEntity playerMock() {
     return new PlayerEntity(2L, 2l, "Pekka", "Kana", Set.of(), null);
+  }
+
+  private InMemorySink<ScoreCardPayload> initSink(String channel) {
+    return connector.sink(channel);
   }
 
 }

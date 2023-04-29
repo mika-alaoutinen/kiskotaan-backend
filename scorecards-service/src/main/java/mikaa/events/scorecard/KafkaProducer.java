@@ -10,21 +10,21 @@ import jakarta.inject.Inject;
 class KafkaProducer implements ScoreCardProducer {
 
   @Inject
-  @Channel("scorecards-out")
-  Emitter<ScoreCardEvent> emitter;
+  @Channel("scorecard-added")
+  Emitter<ScoreCardPayload> addEmitter;
+
+  @Inject
+  @Channel("scorecard-deleted")
+  Emitter<ScoreCardPayload> deleteEmitter;
 
   @Override
   public void scoreCardAdded(ScoreCardPayload payload) {
-    send(new ScoreCardEvent(ScoreCardEventType.SCORECARD_ADDED, payload));
+    addEmitter.send(payload).toCompletableFuture().join();
   }
 
   @Override
   public void scoreCardDeleted(ScoreCardPayload payload) {
-    send(new ScoreCardEvent(ScoreCardEventType.SCORECARD_DELETED, payload));
-  }
-
-  private void send(ScoreCardEvent event) {
-    emitter.send(event).toCompletableFuture().join();
+    deleteEmitter.send(payload).toCompletableFuture().join();
   }
 
 }

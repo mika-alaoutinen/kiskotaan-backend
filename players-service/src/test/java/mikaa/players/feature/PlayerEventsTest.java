@@ -11,7 +11,7 @@ import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 import mikaa.players.events.Player;
 import mikaa.players.events.PlayerEvents.PlayerEvent;
-import mikaa.players.kafka.KafkaTopic;
+import mikaa.players.kafka.PlayerTopics;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -59,7 +59,7 @@ class PlayerEventsTest {
   }
 
   private Player getPayload() {
-    return KafkaTestUtils.getSingleRecord(consumer, KafkaTopic.PLAYERS).value().payload();
+    return KafkaTestUtils.getSingleRecord(consumer, PlayerTopics.PLAYER_ADDED).value().payload();
   }
 
 }

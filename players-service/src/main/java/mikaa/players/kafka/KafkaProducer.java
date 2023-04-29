@@ -14,7 +14,7 @@ class KafkaProducer implements PlayerProducer {
 
   @Override
   public void send(PlayerEvent event) {
-    template.send(KafkaTopic.PLAYERS, event);
+    template.send(PlayerTopics.PLAYER_ADDED, event);
   }
 
 }

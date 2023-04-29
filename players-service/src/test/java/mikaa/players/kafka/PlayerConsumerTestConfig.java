@@ -27,7 +27,7 @@ class PlayerConsumerTestConfig {
    */
   @Bean
   Consumer<String, PlayerEvent> playerConsumer(EmbeddedKafkaBroker broker) {
-    var configs = KafkaTestUtils.consumerProps(KafkaTopic.PLAYERS, "true", broker);
+    var configs = KafkaTestUtils.consumerProps(PlayerTopics.PLAYER_ADDED, "true", broker);
     configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
     var keyDeserializer = new StringDeserializer();
@@ -39,7 +39,7 @@ class PlayerConsumerTestConfig {
         configs, keyDeserializer, valueDeserializer);
 
     var consumer = factory.createConsumer();
-    consumer.subscribe(List.of(KafkaTopic.PLAYERS));
+    consumer.subscribe(List.of(PlayerTopics.PLAYER_ADDED));
     consumer.poll(Duration.ofMillis(0));
 
     return consumer;

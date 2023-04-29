@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import mikaa.model.NewPlayerDTO;
 import mikaa.players.errors.BadRequestException;
-import mikaa.players.events.PlayerEvents.PlayerEvent;
+import mikaa.players.events.PlayerPayload;
 import mikaa.players.infra.GlobalExceptionHandler;
 import mikaa.players.kafka.PlayerProducer;
 import mikaa.players.utils.MvcUtils;
@@ -28,6 +28,7 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -102,7 +103,7 @@ class PlayersControllerTest {
         .andExpect(jsonPath("$.id").value(1));
 
     MvcUtils.verifyName(result, "Pekka", "Kana");
-    verify(producer, atLeastOnce()).send(any(PlayerEvent.class));
+    verify(producer, atLeastOnce()).playerAdded(any(PlayerPayload.class));
   }
 
   @MethodSource("invalidNewPlayers")
@@ -115,8 +116,7 @@ class PlayersControllerTest {
             .content(MvcUtils.asJson(invalidPlayer)))
         .andExpect(status().isBadRequest());
 
-    verify(repository, never()).save(any());
-    verify(producer, never()).send(any());
+    verifyNoPersist();
   }
 
   @Test
@@ -152,7 +152,7 @@ class PlayersControllerTest {
         .andExpect(jsonPath("$.id").value(1));
 
     MvcUtils.verifyName(result, "Edited", "Edited");
-    verify(producer, atLeastOnce()).send(any(PlayerEvent.class));
+    verify(producer, atLeastOnce()).playerUpdated(any(PlayerPayload.class));
   }
 
   @Test
@@ -208,7 +208,7 @@ class PlayersControllerTest {
         .andExpect(status().isNoContent());
     
     verify(repository, atLeastOnce()).deleteById(1L);
-    verify(producer, atLeastOnce()).send(any(PlayerEvent.class));
+    verify(producer, atLeastOnce()).playerDeleted(any(PlayerPayload.class));
   }
 
   @Test
@@ -220,12 +220,12 @@ class PlayersControllerTest {
         .andExpect(status().isNoContent());
     
     verify(repository, never()).deleteById(anyLong());
-    verify(producer, never()).send(any());
+    verifyNoInteractions(producer);
   }
 
   private void verifyNoPersist() {
     verify(repository, never()).save(any());
-    verify(producer, never()).send(any());
+    verifyNoInteractions(producer);
   }
 
   private static Stream<NewPlayerDTO> invalidNewPlayers() {

@@ -4,17 +4,27 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.players.events.PlayerEvents.PlayerEvent;
+import mikaa.players.events.PlayerPayload;
 
 @Component
 @RequiredArgsConstructor
 class KafkaProducer implements PlayerProducer {
 
-  private final KafkaTemplate<String, PlayerEvent> template;
+  private final KafkaTemplate<String, PlayerPayload> template;
 
   @Override
-  public void send(PlayerEvent event) {
-    template.send(PlayerTopics.PLAYER_ADDED, event);
+  public void playerAdded(PlayerPayload payload) {
+    template.send(PlayerTopics.PLAYER_ADDED, payload);
+  }
+
+  @Override
+  public void playerDeleted(PlayerPayload payload) {
+    template.send(PlayerTopics.PLAYER_DELETED, payload);
+  }
+
+  @Override
+  public void playerUpdated(PlayerPayload payload) {
+    template.send(PlayerTopics.PLAYER_UPDATED, payload);
   }
 
 }

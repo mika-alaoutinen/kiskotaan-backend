@@ -1,9 +1,13 @@
 package mikaa.players.kafka;
 
-import mikaa.players.events.PlayerEvents.PlayerEvent;
+import mikaa.players.events.PlayerPayload;
 
 public interface PlayerProducer {
 
-  void send(PlayerEvent event);
+  void playerAdded(PlayerPayload payload);
+
+  void playerDeleted(PlayerPayload payload);
+
+  void playerUpdated(PlayerPayload payload);
 
 }

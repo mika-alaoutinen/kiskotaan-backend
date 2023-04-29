@@ -4,13 +4,13 @@ import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.api.CoursesApi;
+import mikaa.api.QueryCoursesApi;
 import mikaa.model.CourseDTO;
 import mikaa.model.CourseSummaryDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class CourseResource implements CoursesApi {
+class CourseResource implements QueryCoursesApi {
 
   @Override
   public CourseDTO getCourse(Integer id) {

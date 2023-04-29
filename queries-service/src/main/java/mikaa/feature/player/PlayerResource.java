@@ -4,12 +4,12 @@ import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.api.PlayersApi;
+import mikaa.api.QueryPlayersApi;
 import mikaa.model.PlayerDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class PlayerResource implements PlayersApi {
+class PlayerResource implements QueryPlayersApi {
 
   @Override
   public PlayerDTO getPlayer(Integer id) {

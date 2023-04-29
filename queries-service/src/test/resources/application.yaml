@@ -1,18 +1,24 @@
 mp:
   messaging:
     incoming:
-      courses-in:
+      course-added:
         connector: smallrye-in-memory
-        topic: "Courses.course"
-      holes-in:
+        topic: "Courses.course_added"
+      course-deleted:
         connector: smallrye-in-memory
-        topic: "Courses.hole"
+        topic: "Courses.course_deleted"
+      course-updated:
+        connector: smallrye-in-memory
+        topic: "Courses.course_updated"
+      hole-added:
+        connector: smallrye-in-memory
+        topic: "Courses.hole_added"
+      hole-deleted:
+        connector: smallrye-in-memory
+        topic: "Courses.hole_deleted"
+      hole-updated:
+        connector: smallrye-in-memory
+        topic: "Courses.hole_updated"
       players-in:
         connector: smallrye-in-memory
         topic: "Players.player"
-      scorecards-in:
-        connector: smallrye-in-memory
-        topic: "Scorecards.scorecard"
-      scores-in:
-        connector: smallrye-in-memory
-        topic: "Scorecards.score"

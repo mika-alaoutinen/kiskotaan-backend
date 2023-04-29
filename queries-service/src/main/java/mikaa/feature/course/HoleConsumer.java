@@ -12,10 +12,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class HoleConsumer {
 
-  @Incoming("holes-in")
+  @Incoming("hole-added")
   @Transactional
-  void consume(String event) {
-    log.info("received hole event", event);
+  void holeAdded(String event) {
+    log.info("received hole added event", event);
+  }
+
+  @Incoming("hole-deleted")
+  @Transactional
+  void holeDeleted(String event) {
+    log.info("received hole deleted event", event);
+  }
+
+  @Incoming("hole-updated")
+  @Transactional
+  void holeUpdated(String event) {
+    log.info("received hole updated event", event);
   }
 
 }

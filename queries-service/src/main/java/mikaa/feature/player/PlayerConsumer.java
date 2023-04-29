@@ -12,10 +12,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class PlayerConsumer {
 
-  @Incoming("players-in")
+  @Incoming("player-added")
   @Transactional
-  void consume(String event) {
-    log.info("received player event", event);
+  void playerAdded(String event) {
+    log.info("received player added event", event);
+  }
+
+  @Incoming("player-deleted")
+  @Transactional
+  void playerDeleted(String event) {
+    log.info("received player deleted event", event);
+  }
+
+  @Incoming("player-updated")
+  @Transactional
+  void playerUpdated(String event) {
+    log.info("received player updated event", event);
   }
 
 }

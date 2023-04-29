@@ -67,11 +67,15 @@ The list of Kafka topics published by the different services.
 - Courses.hole_updated
 
 ### Players service produces
-- Players.player
+- Players.player_added
+- Players.player_deleted
+- Players.player_updated
 
 ### Score cards service produces
-- Scorecards.scorecard
-- Scorecards.score
+- Scorecards.scorecard_added
+- Scorecards.scorecard_deleted
+- Scorecards.score_added
+- Scorecards.score_deleted
 
 
 # Running `Kiskotaan backend`

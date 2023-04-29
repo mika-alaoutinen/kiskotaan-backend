@@ -17,7 +17,7 @@ import mikaa.model.NewPlayerDTO;
 import mikaa.players.errors.BadRequestException;
 import mikaa.players.events.PlayerEvents.PlayerEvent;
 import mikaa.players.infra.GlobalExceptionHandler;
-import mikaa.players.kafka.KafkaProducer;
+import mikaa.players.kafka.PlayerProducer;
 import mikaa.players.utils.MvcUtils;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -51,7 +51,7 @@ class PlayersControllerTest {
   private static final NewPlayerDTO NEW_PLAYER = new NewPlayerDTO("Pekka", "Kana");
 
   @MockBean
-  private KafkaProducer producer;
+  private PlayerProducer producer;
 
   @MockBean
   private PlayersRepository repository;

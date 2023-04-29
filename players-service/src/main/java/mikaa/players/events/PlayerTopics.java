@@ -1,4 +1,4 @@
-package mikaa.players.kafka;
+package mikaa.players.events;
 
 import org.apache.kafka.clients.admin.NewTopic;
 import org.springframework.context.annotation.Bean;

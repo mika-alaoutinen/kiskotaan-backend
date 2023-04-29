@@ -1,4 +1,4 @@
-package mikaa.players.kafka;
+package mikaa.players.events;
 
 public interface PlayerProducer {
 

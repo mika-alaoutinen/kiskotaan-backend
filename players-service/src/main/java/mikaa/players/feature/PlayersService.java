@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.players.kafka.PlayerPayload;
-import mikaa.players.kafka.PlayerProducer;
+import mikaa.players.events.PlayerPayload;
+import mikaa.players.events.PlayerProducer;
 
 @Service
 @RequiredArgsConstructor

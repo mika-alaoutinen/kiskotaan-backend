@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
-import mikaa.events.course.CourseAdded;
+import mikaa.events.course.CoursePayload;
 import mikaa.events.course.CourseUpdated;
 import mikaa.events.course.Hole;
 
@@ -35,7 +35,7 @@ class CourseServiceTest {
   @Test
   void should_save_new_course() {
     var hole = new Hole(222, 1, 3, 85);
-    var newCourse = new CourseAdded(111L, "Laajis", List.of(hole));
+    var newCourse = new CoursePayload(111L, "Laajis", List.of(hole));
 
     service.add(newCourse);
     verify(repository, atLeastOnce()).persist(new CourseEntity(111, 1, "Laajis"));
@@ -58,7 +58,7 @@ class CourseServiceTest {
 
   @Test
   void should_delete_course() {
-    service.delete(111l);
+    service.delete(new CoursePayload(111L, "Laajis", List.of()));
     verify(repository, atLeastOnce()).deleteByExternalId(111L);
   }
 

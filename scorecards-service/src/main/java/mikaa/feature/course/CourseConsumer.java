@@ -7,7 +7,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.events.course.CourseAdded;
+import mikaa.events.course.CoursePayload;
 import mikaa.events.course.CourseUpdated;
 
 @ApplicationScoped
@@ -19,16 +19,16 @@ class CourseConsumer {
 
   @Incoming("course-added")
   @Transactional
-  void courseAdded(CourseAdded payload) {
+  void courseAdded(CoursePayload payload) {
     log.info("Course added: %s".formatted(payload));
     service.add(payload);
   }
 
   @Incoming("course-deleted")
   @Transactional
-  void courseDeleted(long id) {
-    log.info("Course deleted: %s".formatted(id));
-    service.delete(id);
+  void courseDeleted(CoursePayload payload) {
+    log.info("Course deleted: %s".formatted(payload));
+    service.delete(payload);
   }
 
   @Incoming("course-updated")

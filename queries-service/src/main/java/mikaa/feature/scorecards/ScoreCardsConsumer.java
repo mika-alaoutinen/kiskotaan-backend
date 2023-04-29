@@ -12,10 +12,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class ScoreCardsConsumer {
 
-  @Incoming("scorecards-in")
+  @Incoming("scorecard-added")
   @Transactional
-  void consume(String event) {
-    log.info("received score card event", event);
+  void scoreCardAdded(String event) {
+    log.info("received score card added event", event);
+  }
+
+  @Incoming("scorecard-deleted")
+  @Transactional
+  void scoreCardDeleted(String event) {
+    log.info("received score card deleted event", event);
+  }
+
+  @Incoming("scorecard-updated")
+  @Transactional
+  void scoreCardUpdated(String event) {
+    log.info("received score card updated event", event);
   }
 
 }

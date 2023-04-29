@@ -4,7 +4,6 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.players.events.PlayerPayload;
 
 @Component
 @RequiredArgsConstructor

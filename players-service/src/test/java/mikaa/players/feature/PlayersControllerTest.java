@@ -15,8 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import mikaa.model.NewPlayerDTO;
 import mikaa.players.errors.BadRequestException;
-import mikaa.players.events.PlayerPayload;
 import mikaa.players.infra.GlobalExceptionHandler;
+import mikaa.players.kafka.PlayerPayload;
 import mikaa.players.kafka.PlayerProducer;
 import mikaa.players.utils.MvcUtils;
 

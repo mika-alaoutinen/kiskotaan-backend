@@ -10,18 +10,18 @@ import lombok.extern.slf4j.Slf4j;
 @ApplicationScoped
 @RequiredArgsConstructor
 @Slf4j
-class ScoreCardsConsumer {
+class ScoreConsumer {
 
-  @Incoming("scorecard-added")
+  @Incoming("score-added")
   @Transactional
-  void scoreCardAdded(String event) {
-    log.info("received score card added event", event);
+  void scoreAdded(String event) {
+    log.info("received score added event", event);
   }
 
-  @Incoming("scorecard-deleted")
+  @Incoming("score-deleted")
   @Transactional
-  void scoreCardDeleted(String event) {
-    log.info("received score card deleted event", event);
+  void scoreDeleted(String event) {
+    log.info("received score deleted event", event);
   }
 
 }

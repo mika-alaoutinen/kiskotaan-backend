@@ -12,10 +12,22 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class CourseConsumer {
 
-  @Incoming("courses-in")
+  @Incoming("course-added")
   @Transactional
-  void consume(String event) {
-    log.info("received course event", event);
+  void courseAdded(String event) {
+    log.info("received course added event", event);
+  }
+
+  @Incoming("course-deleted")
+  @Transactional
+  void courseDeleted(String event) {
+    log.info("received course deleted event", event);
+  }
+
+  @Incoming("course-updated")
+  @Transactional
+  void courseUpdated(String event) {
+    log.info("received course updated event", event);
   }
 
 }

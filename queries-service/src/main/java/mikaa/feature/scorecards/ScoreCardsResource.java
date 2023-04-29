@@ -4,12 +4,13 @@ import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.api.ScoreCardsApi;
+import mikaa.api.QueryScoreCardsApi;
 import mikaa.model.ScoreCardDTO;
+import mikaa.model.ScoreCardSummaryDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class ScoreCardsResource implements ScoreCardsApi {
+class ScoreCardsResource implements QueryScoreCardsApi {
 
   @Override
   public ScoreCardDTO getScoreCard(Integer id) {
@@ -17,7 +18,7 @@ class ScoreCardsResource implements ScoreCardsApi {
   }
 
   @Override
-  public List<ScoreCardDTO> getScoreCards() {
+  public List<ScoreCardSummaryDTO> getScoreCards() {
     throw new UnsupportedOperationException("Unimplemented method 'getScoreCards'");
   }
 

@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.players.events.Player;
+import mikaa.players.events.PlayerPayload;
 import mikaa.players.events.PlayerEvents;
 import mikaa.players.kafka.PlayerProducer;
 
@@ -68,8 +68,8 @@ class PlayersService {
         });
   }
 
-  private static Player toPlayer(PlayerEntity entity) {
-    return new Player(entity.getId(), entity.getFirstName(), entity.getLastName());
+  private static PlayerPayload toPlayer(PlayerEntity entity) {
+    return new PlayerPayload(entity.getId(), entity.getFirstName(), entity.getLastName());
   }
 
 }

@@ -9,7 +9,7 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
-import mikaa.players.events.Player;
+import mikaa.players.events.PlayerPayload;
 import mikaa.players.events.PlayerEvents.PlayerEvent;
 import mikaa.players.kafka.PlayerTopics;
 
@@ -53,12 +53,12 @@ class PlayerEventsTest {
     assertPlayer(getPayload(), "Delete", "Me");
   }
 
-  private static void assertPlayer(Player player, String firstName, String lastName) {
+  private static void assertPlayer(PlayerPayload player, String firstName, String lastName) {
     assertEquals(firstName, player.firstName());
     assertEquals(lastName, player.lastName());
   }
 
-  private Player getPayload() {
+  private PlayerPayload getPayload() {
     return KafkaTestUtils.getSingleRecord(consumer, PlayerTopics.PLAYER_ADDED).value().payload();
   }
 

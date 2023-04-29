@@ -6,15 +6,14 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.players.events.Player;
-import mikaa.players.events.PlayerEvents;
-import mikaa.players.kafka.KafkaProducer;
+import mikaa.players.events.PlayerPayload;
+import mikaa.players.events.PlayerProducer;
 
 @Service
 @RequiredArgsConstructor
 class PlayersService {
 
-  private final KafkaProducer producer;
+  private final PlayerProducer producer;
   private final PlayersRepository repository;
   private final PlayerValidator validator;
 
@@ -33,11 +32,8 @@ class PlayersService {
 
   PlayerEntity add(PlayerEntity newPlayer) {
     validator.validateUniqueName(newPlayer);
-
     var saved = repository.save(newPlayer);
-    var player = toPlayer(saved);
-
-    producer.send(PlayerEvents.add(player));
+    producer.playerAdded(toPayload(saved));
     return saved;
   }
 
@@ -51,25 +47,22 @@ class PlayersService {
           return player;
         }).map(repository::save);
 
-    saved.map(PlayersService::toPlayer)
-        .map(PlayerEvents::update)
-        .ifPresent(producer::send);
+    saved.map(PlayersService::toPayload).ifPresent(producer::playerUpdated);
 
     return saved;
   }
 
   void delete(long id) {
     repository.findById(id)
-        .map(PlayersService::toPlayer)
-        .map(PlayerEvents::delete)
-        .ifPresent(event -> {
+        .map(PlayersService::toPayload)
+        .ifPresent(payload -> {
           repository.deleteById(id);
-          producer.send(event);
+          producer.playerDeleted(payload);
         });
   }
 
-  private static Player toPlayer(PlayerEntity entity) {
-    return new Player(entity.getId(), entity.getFirstName(), entity.getLastName());
+  private static PlayerPayload toPayload(PlayerEntity entity) {
+    return new PlayerPayload(entity.getId(), entity.getFirstName(), entity.getLastName());
   }
 
 }

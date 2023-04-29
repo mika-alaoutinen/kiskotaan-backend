@@ -1,12 +1,18 @@
 mp:
   messaging:
     outgoing:
-      scores-out:
+      score-added:
         connector: smallrye-in-memory
-        topic: "Scorecards.score"
-      scorecards-out:
+        topic: "Scorecards.score_added"
+      score-deleted:
         connector: smallrye-in-memory
-        topic: "Scorecards.scorecard"
+        topic: "Scorecards.score_deleted"
+      scorecard-added:
+        connector: smallrye-in-memory
+        topic: "Scorecards.scorecard_added"
+      scorecard-deleted:
+        connector: smallrye-in-memory
+        topic: "Scorecards.scorecard_deleted"
 
     incoming:
       course-added:
@@ -27,6 +33,12 @@ mp:
       hole-updated:
         connector: smallrye-in-memory
         topic: "Courses.hole_updated"
-      players-in:
+      player-added:
         connector: smallrye-in-memory
-        topic: "Players.player"
+        topic: "Players.player_added"
+      player-deleted:
+        connector: smallrye-in-memory
+        topic: "Players.player_deleted"
+      player-updated:
+        connector: smallrye-in-memory
+        topic: "Players.player_updated"

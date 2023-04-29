@@ -8,10 +8,14 @@ quarkus:
 mp:
   messaging:
     outgoing:
-      scores-out:
-        topic: "Scorecards.score"
-      scorecards-out:
-        topic: "Scorecards.scorecard"
+      score-added:
+        topic: "Scorecards.score_added"
+      score-deleted:
+        topic: "Scorecards.score_deleted"
+      scorecard-added:
+        topic: "Scorecards.scorecard_added"
+      scorecard-deleted:
+        topic: "Scorecards.scorecard_deleted"
 
     incoming:
       course-added:
@@ -44,8 +48,18 @@ mp:
           offset:
             reset: "earliest"
         topic: "Courses.hole_updated"
-      players-in:
+      player-added:
         auto:
           offset:
             reset: "earliest"
-        topic: "Players.player"
+        topic: "Players.player_added"
+      player-deleted:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "Players.player_deleted"
+      player-updated:
+        auto:
+          offset:
+            reset: "earliest"
+        topic: "Players.player_updated"

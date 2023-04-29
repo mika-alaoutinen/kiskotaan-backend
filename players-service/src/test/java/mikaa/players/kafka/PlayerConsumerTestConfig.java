@@ -13,33 +13,40 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 
-import mikaa.players.events.PlayerEvents.PlayerEvent;
+import mikaa.players.events.PlayerPayload;
 
 @Configuration
 class PlayerConsumerTestConfig {
 
-  /**
-   * Configures a Kafka consumer bean that listens to the "Player.player" topic.
-   * Used for testing Kafka event producer.
-   * 
-   * @param broker Embedded Kafka broker
-   * @return consumer bean
-   */
   @Bean
-  Consumer<String, PlayerEvent> playerConsumer(EmbeddedKafkaBroker broker) {
-    var configs = KafkaTestUtils.consumerProps(PlayerTopics.PLAYER_ADDED, "true", broker);
+  Consumer<String, PlayerPayload> playerAddedConsumer(EmbeddedKafkaBroker broker) {
+    return buildConsumer(broker, PlayerTopics.PLAYER_ADDED);
+  }
+
+  @Bean
+  Consumer<String, PlayerPayload> playerDeletedConsumer(EmbeddedKafkaBroker broker) {
+    return buildConsumer(broker, PlayerTopics.PLAYER_DELETED);
+  }
+
+  @Bean
+  Consumer<String, PlayerPayload> playerUpdatedConsumer(EmbeddedKafkaBroker broker) {
+    return buildConsumer(broker, PlayerTopics.PLAYER_UPDATED);
+  }
+
+  private static Consumer<String, PlayerPayload> buildConsumer(EmbeddedKafkaBroker broker, String topic) {
+    var configs = KafkaTestUtils.consumerProps(topic, "true", broker);
     configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
     var keyDeserializer = new StringDeserializer();
 
-    var valueDeserializer = new JsonDeserializer<PlayerEvent>();
+    var valueDeserializer = new JsonDeserializer<PlayerPayload>();
     valueDeserializer.addTrustedPackages("*");
 
-    var factory = new DefaultKafkaConsumerFactory<String, PlayerEvent>(
+    var factory = new DefaultKafkaConsumerFactory<String, PlayerPayload>(
         configs, keyDeserializer, valueDeserializer);
 
     var consumer = factory.createConsumer();
-    consumer.subscribe(List.of(PlayerTopics.PLAYER_ADDED));
+    consumer.subscribe(List.of(topic));
     consumer.poll(Duration.ofMillis(0));
 
     return consumer;

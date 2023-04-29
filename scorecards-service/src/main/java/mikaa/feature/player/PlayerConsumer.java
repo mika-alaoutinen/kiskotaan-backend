@@ -4,33 +4,37 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.events.player.PlayerEvent;
+import lombok.extern.slf4j.Slf4j;
+import mikaa.events.player.PlayerPayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor
+@Slf4j
 class PlayerConsumer {
 
-  private static final Logger log = LoggerFactory.getLogger(PlayerConsumer.class);
   private final PlayerService service;
 
-  @Incoming("players-in")
+  @Incoming("player-added")
   @Transactional
-  void consume(PlayerEvent event) {
-    var type = event.type();
-    var payload = event.payload();
+  void playerAdded(PlayerPayload payload) {
+    log.info("Player added %s".formatted(payload));
+    service.add(payload);
+  }
 
-    log.info("type: %s, payload: %s".formatted(type, payload));
+  @Incoming("player-deleted")
+  @Transactional
+  void playerDeleted(PlayerPayload payload) {
+    log.info("Player deleted %s".formatted(payload));
+    service.delete(payload);
+  }
 
-    switch (type) {
-      case PLAYER_ADDED -> service.add(payload);
-      case PLAYER_DELETED -> service.delete(payload);
-      case PLAYER_UPDATED -> service.update(payload);
-      default -> log.warn("Unrecognized event type " + type);
-    }
+  @Incoming("player-updated")
+  @Transactional
+  void playerUpdated(PlayerPayload payload) {
+    log.info("Player updated %s".formatted(payload));
+    service.update(payload);
   }
 
 }

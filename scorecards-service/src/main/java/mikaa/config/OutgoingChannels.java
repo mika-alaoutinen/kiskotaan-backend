@@ -1,4 +1,4 @@
-package mikaa.producers;
+package mikaa.config;
 
 public interface OutgoingChannels {
 

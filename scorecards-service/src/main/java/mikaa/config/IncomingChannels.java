@@ -1,4 +1,4 @@
-package mikaa.consumers;
+package mikaa.config;
 
 public interface IncomingChannels {
 

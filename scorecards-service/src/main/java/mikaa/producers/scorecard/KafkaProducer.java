@@ -6,7 +6,7 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.ScoreCardPayload;
-import mikaa.producers.OutgoingChannels;
+import mikaa.config.OutgoingChannels;
 
 @ApplicationScoped
 class KafkaProducer implements ScoreCardProducer {

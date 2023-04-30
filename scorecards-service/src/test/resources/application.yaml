@@ -1,3 +1,11 @@
+quarkus:
+  liquibase:
+    change-log: db/changelog.yaml
+    contexts: all,test
+    migrate-at-start: false
+  log:
+    level: WARN
+
 mp:
   messaging:
     outgoing:

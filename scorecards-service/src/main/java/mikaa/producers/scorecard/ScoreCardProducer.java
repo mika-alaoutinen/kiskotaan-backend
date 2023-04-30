@@ -1,4 +1,4 @@
-package mikaa.events.scorecard;
+package mikaa.producers.scorecard;
 
 import mikaa.ScoreCardPayload;
 

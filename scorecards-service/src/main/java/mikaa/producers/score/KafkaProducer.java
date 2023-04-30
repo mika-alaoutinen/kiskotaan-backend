@@ -1,4 +1,4 @@
-package mikaa.events.score;
+package mikaa.producers.score;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -6,7 +6,7 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.ScorePayload;
-import mikaa.events.OutgoingChannels;
+import mikaa.producers.OutgoingChannels;
 
 @ApplicationScoped
 class KafkaProducer implements ScoreProducer {

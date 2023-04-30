@@ -1,4 +1,4 @@
-package mikaa.events.score;
+package mikaa.producers.score;
 
 import mikaa.ScorePayload;
 

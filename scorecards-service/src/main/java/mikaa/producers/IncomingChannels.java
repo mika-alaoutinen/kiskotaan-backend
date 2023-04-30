@@ -1,4 +1,4 @@
-package mikaa.events;
+package mikaa.producers;
 
 public interface IncomingChannels {
 

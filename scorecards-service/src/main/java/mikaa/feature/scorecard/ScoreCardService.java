@@ -9,11 +9,11 @@ import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.ScoreCardPayload;
-import mikaa.events.scorecard.ScoreCardProducer;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.model.NewScoreCardDTO;
+import mikaa.producers.scorecard.ScoreCardProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor

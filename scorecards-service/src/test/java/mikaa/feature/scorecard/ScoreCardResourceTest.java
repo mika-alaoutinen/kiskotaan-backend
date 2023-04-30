@@ -7,13 +7,13 @@ import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import mikaa.ScoreCardPayload;
-import mikaa.events.scorecard.ScoreCardProducer;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.score.ScoreEntity;
 import mikaa.model.NewScoreCardDTO;
+import mikaa.producers.scorecard.ScoreCardProducer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;

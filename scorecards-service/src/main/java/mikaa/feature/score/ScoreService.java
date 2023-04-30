@@ -5,10 +5,10 @@ import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.ScorePayload;
-import mikaa.events.score.ScoreProducer;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
+import mikaa.producers.score.ScoreProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor

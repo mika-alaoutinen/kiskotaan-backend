@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.CoursePayload;
 import mikaa.CourseUpdated;
-import mikaa.producers.IncomingChannels;
+import mikaa.consumers.IncomingChannels;
 
 @ApplicationScoped
 @RequiredArgsConstructor

@@ -8,7 +8,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.PlayerPayload;
-import mikaa.producers.IncomingChannels;
+import mikaa.consumers.IncomingChannels;
 
 @ApplicationScoped
 @RequiredArgsConstructor

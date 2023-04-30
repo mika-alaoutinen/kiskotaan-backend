@@ -29,6 +29,7 @@
     </dependencies>
   </dependencyManagement>
 
+  <!-- Needed to download kiskotaan-domain package -->
   <repositories>
     <repository>
       <id>github</id>

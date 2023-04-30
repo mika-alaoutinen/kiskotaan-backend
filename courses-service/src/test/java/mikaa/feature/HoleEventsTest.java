@@ -14,7 +14,7 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.events.OutgoingChannels;
 import mikaa.events.holes.HoleProducer;
-import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.HolePayload;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

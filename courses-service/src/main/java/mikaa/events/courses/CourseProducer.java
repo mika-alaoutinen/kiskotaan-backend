@@ -1,6 +1,6 @@
 package mikaa.events.courses;
 
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.CoursePayload;
 
 public interface CourseProducer {
 

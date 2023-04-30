@@ -1,6 +1,6 @@
 package mikaa.events.holes;
 
-import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.HolePayload;
 
 public interface HoleProducer {
 

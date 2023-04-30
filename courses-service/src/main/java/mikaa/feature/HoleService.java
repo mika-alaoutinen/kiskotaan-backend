@@ -5,7 +5,7 @@ import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.events.holes.HoleProducer;
-import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.HolePayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

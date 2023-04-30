@@ -3,7 +3,7 @@ package mikaa.events.courses;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.events.OutgoingChannels;
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.CoursePayload;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;

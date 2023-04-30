@@ -1,4 +1,4 @@
-package mikaa.events.holes;
+package mikaa.producers.holes;
 
 import mikaa.HolePayload;
 

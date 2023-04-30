@@ -12,10 +12,10 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.events.OutgoingChannels;
-import mikaa.events.courses.CourseProducer;
 import mikaa.CoursePayload;
 import mikaa.CourseUpdated;
+import mikaa.producers.OutgoingChannels;
+import mikaa.producers.courses.CourseProducer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

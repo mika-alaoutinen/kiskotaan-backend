@@ -1,4 +1,4 @@
-package mikaa.events.courses;
+package mikaa.producers.courses;
 
 import mikaa.CoursePayload;
 import mikaa.CourseUpdated;

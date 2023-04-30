@@ -103,7 +103,7 @@ Folder `.http` has http-files that contain example payloads that can be used to 
   - [x] Courses service
   - [x] Players service
   - [ ] Score cards service
-- Use `Avro` schema registry to generate code for event data models. Alternatively consider `AsyncAPI`.
+- Use `Avro` schema registry to generate code for event data models.
 - Implement paging in Queries service.
 - Implement search functionality for score cards.
 - Implement authentication and authorization.

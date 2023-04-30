@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.events.OutgoingChannels;
 import mikaa.events.holes.HolePayload;
 import mikaa.events.holes.HoleProducer;
 
@@ -51,7 +52,7 @@ class HoleEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    InMemorySink<HolePayload> sink = connector.sink("hole-added");
+    var sink = initSink(OutgoingChannels.Hole.HOLE_ADDED);
 
     when(courseService.findOne(anyLong())).thenReturn(courseMock());
     var newHole = new HoleEntity(null, 1, 3, 100, courseMock());
@@ -64,7 +65,7 @@ class HoleEventsTest {
 
   @Test
   void should_send_event_on_update() {
-    InMemorySink<HolePayload> sink = connector.sink("hole-updated");
+    var sink = initSink(OutgoingChannels.Hole.HOLE_UPDATED);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
     service.update(HOLE_ID, new HoleEntity(null, 4, 5, 165, courseMock()));
@@ -74,7 +75,7 @@ class HoleEventsTest {
 
   @Test
   void should_send_event_on_delete() {
-    InMemorySink<HolePayload> sink = connector.sink("hole-deleted");
+    var sink = initSink(OutgoingChannels.Hole.HOLE_DELETED);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
     service.delete(HOLE_ID);
@@ -103,6 +104,10 @@ class HoleEventsTest {
     var hole = new HoleEntity(HOLE_ID, 2, 3, 123, course);
     course.addHole(hole);
     return hole;
+  }
+
+  private InMemorySink<HolePayload> initSink(String channel) {
+    return connector.sink(channel);
   }
 
 }

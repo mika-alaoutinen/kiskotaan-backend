@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.events.OutgoingChannels;
 import mikaa.events.courses.CoursePayload;
 import mikaa.events.courses.CourseProducer;
 import mikaa.events.courses.CourseUpdated;
@@ -49,7 +50,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    InMemorySink<CoursePayload> sink = connector.sink("course-added");
+    InMemorySink<CoursePayload> sink = connector.sink(OutgoingChannels.Course.COURSE_ADDED);
 
     var course = new CourseEntity(1L, "New Course", List.of(new HoleEntity(1L, 1, 3, 90, null)));
     service.add(course);
@@ -60,7 +61,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_course_name_update() {
-    InMemorySink<CourseUpdated> sink = connector.sink("course-updated");
+    InMemorySink<CourseUpdated> sink = connector.sink(OutgoingChannels.Course.COURSE_UPDATED);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.updateCourseName(1, "Updated Name");
@@ -72,7 +73,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_delete() {
-    InMemorySink<CoursePayload> sink = connector.sink("course-deleted");
+    InMemorySink<CoursePayload> sink = connector.sink(OutgoingChannels.Course.COURSE_DELETED);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.delete(1);

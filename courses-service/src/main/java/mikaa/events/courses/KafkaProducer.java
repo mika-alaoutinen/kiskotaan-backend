@@ -2,6 +2,7 @@ package mikaa.events.courses;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import mikaa.events.OutgoingChannels;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -10,15 +11,15 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 class KafkaProducer implements CourseProducer {
 
   @Inject
-  @Channel("course-added")
+  @Channel(OutgoingChannels.Course.COURSE_ADDED)
   Emitter<CoursePayload> addEmitter;
 
   @Inject
-  @Channel("course-deleted")
+  @Channel(OutgoingChannels.Course.COURSE_DELETED)
   Emitter<CoursePayload> deleteEmitter;
 
   @Inject
-  @Channel("course-updated")
+  @Channel(OutgoingChannels.Course.COURSE_UPDATED)
   Emitter<CourseUpdated> updateEmitter;
 
   @Override

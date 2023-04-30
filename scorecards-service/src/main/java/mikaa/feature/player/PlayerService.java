@@ -31,18 +31,16 @@ class PlayerService implements PlayerFinder {
 
   void update(PlayerPayload player) {
     repository.findByExternalId(player.id())
-        .map(entity -> updateName(entity, player))
+        .map(entity -> {
+          entity.setFirstName(player.firstName());
+          entity.setLastName(player.lastName());
+          return entity;
+        })
         .ifPresent(repository::persist);
   }
 
   private static NotFoundException notFound(long id) {
     return new NotFoundException("Could not find player with id " + id);
-  }
-
-  private static PlayerEntity updateName(PlayerEntity entity, PlayerPayload updated) {
-    entity.setFirstName(updated.firstName());
-    entity.setLastName(updated.lastName());
-    return entity;
   }
 
 }

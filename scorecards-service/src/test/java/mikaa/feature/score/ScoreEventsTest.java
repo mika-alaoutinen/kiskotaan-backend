@@ -19,7 +19,7 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.config.OutgoingChannels;
+import mikaa.events.OutgoingChannels;
 import mikaa.events.score.ScorePayload;
 import mikaa.events.score.ScoreProducer;
 import mikaa.feature.course.CourseEntity;

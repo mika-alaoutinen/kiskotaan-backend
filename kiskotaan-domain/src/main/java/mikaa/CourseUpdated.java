@@ -1,4 +1,4 @@
-package mikaa.kiskotaan.domain;
+package mikaa;
 
 public record CourseUpdated(Long id, String name) {
 }

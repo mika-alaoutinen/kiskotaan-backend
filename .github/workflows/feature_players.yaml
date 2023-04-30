@@ -20,3 +20,5 @@ jobs:
           java-version: "17"
       - name: Build and test with Maven
         run: mvn -B clean verify --file ./players-service/pom.xml
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

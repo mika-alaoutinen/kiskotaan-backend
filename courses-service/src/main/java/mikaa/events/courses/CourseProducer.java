@@ -1,6 +1,7 @@
 package mikaa.events.courses;
 
 import mikaa.CoursePayload;
+import mikaa.CourseUpdated;
 
 public interface CourseProducer {
 

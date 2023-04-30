@@ -14,8 +14,8 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.events.OutgoingChannels;
 import mikaa.events.courses.CourseProducer;
-import mikaa.events.courses.CourseUpdated;
 import mikaa.CoursePayload;
+import mikaa.CourseUpdated;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

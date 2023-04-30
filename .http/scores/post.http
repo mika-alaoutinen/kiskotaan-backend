@@ -5,7 +5,7 @@ POST {{url}}/1/scores HTTP/1.1
 Content-Type: application/json
 
 {
-  "playerId": 101,
+  "playerId": 1,
   "hole": 5,
   "score": 5
 }
@@ -15,7 +15,7 @@ POST {{url}}/404/scores HTTP/1.1
 Content-Type: application/json
 
 {
-  "playerId": 101,
+  "playerId": 1,
   "hole": 1,
   "score": 2
 }

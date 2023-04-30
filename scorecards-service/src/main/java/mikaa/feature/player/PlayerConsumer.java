@@ -7,6 +7,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mikaa.config.IncomingChannels;
 import mikaa.events.player.PlayerPayload;
 
 @ApplicationScoped
@@ -16,21 +17,21 @@ class PlayerConsumer {
 
   private final PlayerService service;
 
-  @Incoming("player-added")
+  @Incoming(IncomingChannels.Player.PLAYER_ADDED)
   @Transactional
   void playerAdded(PlayerPayload payload) {
     log.info("Player added %s".formatted(payload));
     service.add(payload);
   }
 
-  @Incoming("player-deleted")
+  @Incoming(IncomingChannels.Player.PLAYER_DELETED)
   @Transactional
   void playerDeleted(PlayerPayload payload) {
     log.info("Player deleted %s".formatted(payload));
     service.delete(payload);
   }
 
-  @Incoming("player-updated")
+  @Incoming(IncomingChannels.Player.PLAYER_UPDATED)
   @Transactional
   void playerUpdated(PlayerPayload payload) {
     log.info("Player updated %s".formatted(payload));

@@ -18,6 +18,7 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.config.OutgoingChannels;
 import mikaa.events.scorecard.ScoreCardPayload;
 import mikaa.events.scorecard.ScoreCardProducer;
 import mikaa.feature.course.CourseEntity;
@@ -57,7 +58,7 @@ class ScoreCardEventsTest {
     when(courseFinder.findOrThrow(anyLong())).thenReturn(courseMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(playerMock());
 
-    var sink = initSink("scorecard-added");
+    var sink = initSink(OutgoingChannels.ScoreCard.SCORECARD_ADDED);
 
     var dto = new NewScoreCardDTO()
         .courseId(BigDecimal.ONE)
@@ -72,7 +73,7 @@ class ScoreCardEventsTest {
     var scoreCard = new ScoreCardEntity(13L, courseMock(), Set.of(playerMock()), List.of());
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCard));
 
-    var sink = initSink("scorecard-deleted");
+    var sink = initSink(OutgoingChannels.ScoreCard.SCORECARD_DELETED);
 
     service.delete(13l);
     assertEvent(sink);

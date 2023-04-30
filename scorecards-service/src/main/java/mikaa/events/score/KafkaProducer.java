@@ -5,16 +5,17 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import mikaa.config.OutgoingChannels;
 
 @ApplicationScoped
 class KafkaProducer implements ScoreProducer {
 
   @Inject
-  @Channel("score-added")
+  @Channel(OutgoingChannels.Score.SCORE_ADDED)
   Emitter<ScorePayload> addEmitter;
 
   @Inject
-  @Channel("score-deleted")
+  @Channel(OutgoingChannels.Score.SCORE_DELETED)
   Emitter<ScorePayload> deleteEmitter;
 
   @Override

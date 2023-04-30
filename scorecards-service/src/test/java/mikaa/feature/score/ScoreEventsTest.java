@@ -19,6 +19,7 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.config.OutgoingChannels;
 import mikaa.events.score.ScorePayload;
 import mikaa.events.score.ScoreProducer;
 import mikaa.feature.course.CourseEntity;
@@ -59,7 +60,7 @@ class ScoreEventsTest {
     when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(playerMock());
 
-    var sink = initSink("score-added");
+    var sink = initSink(OutgoingChannels.Score.SCORE_ADDED);
 
     var newScore = new NewScoreDTO()
         .hole(9)
@@ -75,7 +76,7 @@ class ScoreEventsTest {
     var score = new ScoreEntity(22l, 16, 5, playerMock(), scoreCardMock());
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(score));
 
-    var sink = initSink("score-deleted");
+    var sink = initSink(OutgoingChannels.Score.SCORE_DELETED);
 
     service.delete(22);
     assertEvent(sink, new ScorePayload(null, 16, 5, 2l, 13l));

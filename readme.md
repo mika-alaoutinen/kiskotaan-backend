@@ -98,6 +98,7 @@ Folder `.http` has http-files that contain example payloads that can be used to 
 `org.jboss.resteasy.reactive.ResponseStatus` annotation does nothing. It should be possible to set the status code of a response using the annotation, but in reality the annotation does nothing. The workaround is to wrap responses in `Response` or `RestResponse` and set headers that way. Unfortunately OpenAPI code generation does not support RestResponse.
 
 # TODO
+- Add configuration class for using channel names
 - Implement Queries service.
 - Add DB migrations with Liquibase or Flyway.
   - [x] Courses service

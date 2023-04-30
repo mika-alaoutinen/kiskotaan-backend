@@ -3,6 +3,7 @@ package mikaa.events.holes;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.events.OutgoingChannels;
+import mikaa.kiskotaan.domain.HolePayload;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;

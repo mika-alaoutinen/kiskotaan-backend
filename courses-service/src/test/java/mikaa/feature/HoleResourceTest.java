@@ -6,8 +6,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.events.holes.HolePayload;
 import mikaa.events.holes.HoleProducer;
+import mikaa.kiskotaan.domain.HolePayload;
 import mikaa.model.NewHoleDTO;
 
 import static org.mockito.ArgumentMatchers.any;

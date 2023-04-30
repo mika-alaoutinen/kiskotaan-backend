@@ -10,7 +10,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
 import mikaa.PlayerPayload;
-import mikaa.players.events.PlayerTopics;
+import mikaa.players.producers.PlayerTopics;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

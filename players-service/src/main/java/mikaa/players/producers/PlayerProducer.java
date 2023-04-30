@@ -1,4 +1,4 @@
-package mikaa.players.events;
+package mikaa.players.producers;
 
 import mikaa.PlayerPayload;
 

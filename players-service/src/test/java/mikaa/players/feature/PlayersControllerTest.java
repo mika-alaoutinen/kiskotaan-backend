@@ -16,8 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import mikaa.PlayerPayload;
 import mikaa.model.NewPlayerDTO;
 import mikaa.players.errors.BadRequestException;
-import mikaa.players.events.PlayerProducer;
 import mikaa.players.infra.GlobalExceptionHandler;
+import mikaa.players.producers.PlayerProducer;
 import mikaa.players.utils.MvcUtils;
 
 import static org.hamcrest.Matchers.hasSize;

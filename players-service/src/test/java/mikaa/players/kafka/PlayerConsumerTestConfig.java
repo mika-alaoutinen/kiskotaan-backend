@@ -14,7 +14,7 @@ import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 
 import mikaa.PlayerPayload;
-import mikaa.players.events.PlayerTopics;
+import mikaa.players.producers.PlayerTopics;
 
 @Configuration
 class PlayerConsumerTestConfig {

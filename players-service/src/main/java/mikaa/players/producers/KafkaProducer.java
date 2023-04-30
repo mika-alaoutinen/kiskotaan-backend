@@ -1,4 +1,4 @@
-package mikaa.players.events;
+package mikaa.players.producers;
 
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;

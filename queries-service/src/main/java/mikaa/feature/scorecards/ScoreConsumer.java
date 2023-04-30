@@ -6,19 +6,20 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mikaa.events.IncomingChannels;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 @Slf4j
 class ScoreConsumer {
 
-  @Incoming("score-added")
+  @Incoming(IncomingChannels.Score.SCORE_ADDED)
   @Transactional
   void scoreAdded(String event) {
     log.info("received score added event", event);
   }
 
-  @Incoming("score-deleted")
+  @Incoming(IncomingChannels.Score.SCORE_DELETED)
   @Transactional
   void scoreDeleted(String event) {
     log.info("received score deleted event", event);

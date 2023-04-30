@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.players.events.PlayerPayload;
+import mikaa.PlayerPayload;
 import mikaa.players.events.PlayerProducer;
 
 @Service

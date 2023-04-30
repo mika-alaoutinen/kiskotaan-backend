@@ -1,4 +1,4 @@
-package mikaa;
+package mikaa.kiskotaan.domain;
 
 import java.util.List;
 

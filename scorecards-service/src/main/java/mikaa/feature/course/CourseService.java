@@ -4,8 +4,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.events.course.CoursePayload;
-import mikaa.events.course.CourseUpdated;
+import mikaa.CoursePayload;
+import mikaa.CourseUpdated;
 
 @ApplicationScoped
 @RequiredArgsConstructor

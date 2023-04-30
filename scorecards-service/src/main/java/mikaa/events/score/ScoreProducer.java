@@ -1,5 +1,7 @@
 package mikaa.events.score;
 
+import mikaa.ScorePayload;
+
 public interface ScoreProducer {
 
   void scoreAdded(ScorePayload payload);

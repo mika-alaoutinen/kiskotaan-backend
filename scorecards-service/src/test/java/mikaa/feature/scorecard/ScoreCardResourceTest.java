@@ -6,7 +6,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.events.scorecard.ScoreCardPayload;
+import mikaa.ScoreCardPayload;
 import mikaa.events.scorecard.ScoreCardProducer;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;

@@ -2,8 +2,8 @@ name: Publish kiskotaan-domain to GitHub Packages
 
 on:
   push:
-    branches:
-      - master
+    # branches:
+    #   - master
     paths:
       - kiskotaan-domain/**
 

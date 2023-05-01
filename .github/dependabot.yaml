@@ -12,6 +12,21 @@ updates:
       interval: weekly
 
   - package-ecosystem: maven
+    directory: logging-service
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: maven
     directory: players-service
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: maven
+    directory: queries-service
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: maven
+    directory: scorecards-service
     schedule:
       interval: weekly

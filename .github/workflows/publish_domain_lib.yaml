@@ -2,41 +2,26 @@ name: Publish kiskotaan-domain to GitHub Packages
 
 on:
   push:
-    # branches:
-    #   - master
+    branches:
+      - master
     paths:
       - kiskotaan-domain/**
 
 jobs:
-  release:
-    defaults:
-      run:
-        working-directory: kiskotaan-domain
+  publish:
+    needs:
+      - release
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v3
-      - name: Release
-        uses: qcastel/github-actions-maven-release@v1.12.39
-        env:
-          JAVA_HOME: /usr/lib/jvm/java-17-openjdk/
+      - uses: actions/setup-java@v3
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
-          release-branch-name: "release-kiskotaan-domain"
-
-  # publish:
-  #   needs:
-  #     - release
-  #   runs-on: ubuntu-latest
-  #   permissions:
-  #     contents: read
-  #     packages: write
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-java@v3
-  #       with:
-  #         distribution: "adopt"
-  #         java-version: "17"
-  #     - name: Publish package
-  #       run: mvn -B -f ./kiskotaan-domain/pom.xml deploy
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          distribution: "adopt"
+          java-version: "17"
+      - name: Publish package
+        run: mvn -B -f ./kiskotaan-domain/pom.xml deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

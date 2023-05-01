@@ -2,10 +2,23 @@ name: Publish kiskotaan-domain to GitHub Packages
 
 on:
   push:
+    branches:
+      - master
     paths:
       - kiskotaan-domain/**
 
 jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Release
+        uses: qcastel/github-actions-maven-release@v1.12.39
+        env:
+          JAVA_HOME: /usr/lib/jvm/java-17-openjdk/
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
   publish:
     runs-on: ubuntu-latest
     permissions:

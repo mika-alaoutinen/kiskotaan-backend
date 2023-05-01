@@ -18,6 +18,7 @@ jobs:
           JAVA_HOME: /usr/lib/jvm/java-17-openjdk/
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          release-branch-name: "release-kiskotaan-domain"
 
   publish:
     runs-on: ubuntu-latest

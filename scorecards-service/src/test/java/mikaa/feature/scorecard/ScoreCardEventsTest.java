@@ -18,14 +18,14 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.events.OutgoingChannels;
-import mikaa.events.scorecard.ScoreCardPayload;
-import mikaa.events.scorecard.ScoreCardProducer;
+import mikaa.ScoreCardPayload;
+import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.model.NewScoreCardDTO;
+import mikaa.producers.scorecard.ScoreCardProducer;
 
 @QuarkusTest
 class ScoreCardEventsTest {

@@ -13,8 +13,8 @@ import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
 
-import mikaa.players.events.PlayerPayload;
-import mikaa.players.events.PlayerTopics;
+import mikaa.PlayerPayload;
+import mikaa.players.producers.PlayerTopics;
 
 @Configuration
 class PlayerConsumerTestConfig {

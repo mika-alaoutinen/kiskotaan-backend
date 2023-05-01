@@ -7,9 +7,9 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.events.IncomingChannels;
-import mikaa.events.course.CoursePayload;
-import mikaa.events.course.CourseUpdated;
+import mikaa.CoursePayload;
+import mikaa.CourseUpdated;
+import mikaa.config.IncomingChannels;
 
 @ApplicationScoped
 @RequiredArgsConstructor

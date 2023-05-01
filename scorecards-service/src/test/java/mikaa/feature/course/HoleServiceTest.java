@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
-import mikaa.events.hole.HolePayload;
+import mikaa.HolePayload;
 
 @QuarkusTest
 class HoleServiceTest {

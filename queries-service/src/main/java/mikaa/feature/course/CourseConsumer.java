@@ -6,7 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.events.IncomingChannels;
+import mikaa.config.IncomingChannels;
 
 @ApplicationScoped
 @RequiredArgsConstructor

@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
-import mikaa.events.course.CoursePayload;
-import mikaa.events.course.CourseUpdated;
-import mikaa.events.course.Hole;
+import mikaa.CoursePayload;
+import mikaa.CourseUpdated;
+import mikaa.Hole;
 
 @QuarkusTest
 class CourseServiceTest {
@@ -34,7 +34,7 @@ class CourseServiceTest {
 
   @Test
   void should_save_new_course() {
-    var hole = new Hole(222, 1, 3, 85);
+    var hole = new Hole(222l, 1, 3, 85);
     var newCourse = new CoursePayload(111L, "Laajis", List.of(hole));
 
     service.add(newCourse);

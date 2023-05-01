@@ -9,8 +9,8 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
-import mikaa.players.events.PlayerPayload;
-import mikaa.players.events.PlayerTopics;
+import mikaa.PlayerPayload;
+import mikaa.players.producers.PlayerTopics;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

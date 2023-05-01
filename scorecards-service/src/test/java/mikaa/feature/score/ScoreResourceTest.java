@@ -16,12 +16,12 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
-import mikaa.events.score.ScorePayload;
-import mikaa.events.score.ScoreProducer;
+import mikaa.ScorePayload;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.feature.scorecard.ScoreCardFinder;
+import mikaa.producers.score.ScoreProducer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;

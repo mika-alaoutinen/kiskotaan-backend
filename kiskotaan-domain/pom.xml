@@ -14,11 +14,12 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
+    <scm.connection>scm:git:git://github.com/mika-alaoutinen/kiskotaan-backend.git</scm.connection>
   </properties>
 
     <scm>
-      <connection>scm:git:git://github.com/mika-alaoutinen/kiskotaan-backend.git</connection>
-      <developerConnection>scm:git:git://github.com/mika-alaoutinen/kiskotaan-backend.git</developerConnection>
+      <connection>${scm.connection}</connection>
+      <developerConnection>${scm.connection}</developerConnection>
       <url>https://github.com/mika-alaoutinen/kiskotaan-backend</url>
       <tag>HEAD</tag>
     </scm>

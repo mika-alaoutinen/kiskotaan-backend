@@ -29,6 +29,20 @@
     </dependencies>
   </dependencyManagement>
 
+  <!-- Needed to download kiskotaan-domain package -->
+  <repositories>
+    <repository>
+      <id>github</id>
+      <url>https://maven.pkg.github.com/mika-alaoutinen/kiskotaan-backend</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>io.quarkus</groupId>
@@ -83,6 +97,13 @@
       <artifactId>lombok</artifactId>
       <version>1.18.26</version>
       <scope>provided</scope>
+    </dependency>
+
+    <!-- Shared domain model library -->
+    <dependency>
+      <groupId>mikaa</groupId>
+      <artifactId>kiskotaan-domain</artifactId>
+      <version>1.0-SNAPSHOT</version>
     </dependency>
   </dependencies>
 
@@ -141,27 +162,6 @@
                 <maven.home>${maven.home}</maven.home>
               </systemPropertyVariables>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.openapitools</groupId>
-        <artifactId>openapi-generator-maven-plugin</artifactId>
-        <version>6.5.0</version>
-        <executions>
-          <execution>
-          <goals>
-            <goal>generate</goal>
-          </goals>
-          <configuration>
-            <configurationFile>${project.basedir}/src/main/resources/generatorConfig.yaml</configurationFile>
-            <inputSpec>
-              https://raw.githubusercontent.com/mika-alaoutinen/kiskotaan-openapi/master/apidoc_queries.json
-            </inputSpec>
-            <generatorName>jaxrs-spec</generatorName>
-            <library>quarkus</library>
-          </configuration>
           </execution>
         </executions>
       </plugin>

@@ -2,23 +2,30 @@ package mikaa.feature.player;
 
 import java.util.List;
 
+import org.jboss.resteasy.reactive.RestQuery;
+
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
-import mikaa.api.QueryPlayersApi;
-import mikaa.model.PlayerDTO;
+import mikaa.dto.PlayerDTO;
+import mikaa.feature.MockData;
 
 @ApplicationScoped
+@Path("players")
 @RequiredArgsConstructor
-class PlayerResource implements QueryPlayersApi {
+public class PlayerResource {
 
-  @Override
-  public PlayerDTO getPlayer(Integer id) {
-    throw new UnsupportedOperationException("Unimplemented method 'getPlayer'");
+  @GET
+  @Path("/{id}")
+  public Uni<PlayerDTO> getPlayer(int id) {
+    return Uni.createFrom().item(MockData.PLAYER);
   }
 
-  @Override
-  public List<PlayerDTO> getPlayers(String name) {
-    throw new UnsupportedOperationException("Unimplemented method 'getPlayers'");
+  @GET
+  public Uni<List<PlayerDTO>> getPlayers(@RestQuery String name) {
+    return Uni.createFrom().item(List.of(MockData.PLAYER));
   }
 
 }

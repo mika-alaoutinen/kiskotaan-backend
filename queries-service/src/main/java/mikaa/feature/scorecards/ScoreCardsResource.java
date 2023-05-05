@@ -2,24 +2,28 @@ package mikaa.feature.scorecards;
 
 import java.util.List;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
-import mikaa.api.QueryScoreCardsApi;
-import mikaa.model.ScoreCardDTO;
-import mikaa.model.ScoreCardSummaryDTO;
+import mikaa.dto.ScoreCardDTO;
+import mikaa.feature.MockData;
 
 @ApplicationScoped
+@Path("scorecards")
 @RequiredArgsConstructor
-class ScoreCardsResource implements QueryScoreCardsApi {
+public class ScoreCardsResource {
 
-  @Override
-  public ScoreCardDTO getScoreCard(Integer id) {
-    throw new UnsupportedOperationException("Unimplemented method 'getScoreCard'");
+  @GET
+  @Path("/{id}")
+  public Uni<ScoreCardDTO> getScoreCard(int id) {
+    return Uni.createFrom().item(MockData.SCORE_CARD);
   }
 
-  @Override
-  public List<ScoreCardSummaryDTO> getScoreCards() {
-    throw new UnsupportedOperationException("Unimplemented method 'getScoreCards'");
+  @GET
+  public Uni<List<ScoreCardDTO>> getScoreCards() {
+    return Uni.createFrom().item(List.of(MockData.SCORE_CARD));
   }
 
 }

@@ -10,7 +10,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.UriInfo;
-import mikaa.model.ErrorBodyDTO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -35,12 +34,12 @@ class GlobalExceptionHandlerTest {
     var response = handler.handleNotFound(new NotFoundException("Test error message"));
     assertEquals(404, response.getStatus());
 
-    ErrorBodyDTO body = response.getEntity();
-    assertNotNull(body.getTimestamp());
-    assertEquals(404, body.getStatus());
-    assertEquals("Not Found", body.getError());
-    assertEquals("Test error message", body.getMessage());
-    assertEquals("/scorecards/1", body.getPath());
+    ErrorBody body = response.getEntity();
+    assertNotNull(body.timestamp());
+    assertEquals(404, body.status());
+    assertEquals("Not Found", body.error());
+    assertEquals("Test error message", body.message());
+    assertEquals("/scorecards/1", body.path());
   }
 
 }

@@ -1,24 +1,28 @@
 package mikaa.feature.player;
 
+import org.jboss.resteasy.reactive.RestQuery;
+
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 
 @ApplicationScoped
+@Path("players")
 @RequiredArgsConstructor
-class PlayerResource {
+public class PlayerResource {
 
-  public Uni<String> hello() {
-    return Uni.createFrom().item("Reactive players");
+  @GET
+  @Path("/{id}")
+  public Uni<String> getPlayer(int id) {
+    return Uni.createFrom().item("get one");
   }
 
-  public void getPlayer(int id) {
-    throw new UnsupportedOperationException("Unimplemented method 'getPlayer'");
-  }
-
-  public Multi<Void> getPlayers(String name) {
-    throw new UnsupportedOperationException("Unimplemented method 'getPlayers'");
+  @GET
+  public Multi<String> getPlayers(@RestQuery String name) {
+    return Multi.createFrom().item("get many");
   }
 
 }

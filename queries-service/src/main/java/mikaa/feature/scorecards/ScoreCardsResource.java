@@ -3,22 +3,25 @@ package mikaa.feature.scorecards;
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 
 @ApplicationScoped
+@Path("scorecards")
 @RequiredArgsConstructor
-class ScoreCardsResource {
+public class ScoreCardsResource {
 
-  public Uni<String> hello() {
-    return Uni.createFrom().item("Reactive score cards");
+  @GET
+  @Path("/{id}")
+  public Uni<String> getScoreCard(int id) {
+    return Uni.createFrom().item("get one");
   }
 
-  public Uni<Void> getScoreCard(int id) {
-    throw new UnsupportedOperationException("Unimplemented method 'getScoreCard'");
-  }
+  @GET
+  public Multi<String> getScoreCards() {
+    return Multi.createFrom().item("get many");
 
-  public Multi<Void> getScoreCards() {
-    throw new UnsupportedOperationException("Unimplemented method 'getScoreCards'");
   }
 
 }

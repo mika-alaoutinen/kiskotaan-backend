@@ -1,29 +1,33 @@
 package mikaa.feature.course;
 
+import org.jboss.resteasy.reactive.RestQuery;
+
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 
 @ApplicationScoped
+@Path("courses")
 @RequiredArgsConstructor
-class CourseResource {
+public class CourseResource {
 
-  public Uni<String> hello() {
-    return Uni.createFrom().item("Reactive courses");
+  @GET
+  @Path("/{id}")
+  public Uni<String> getCourse(int id) {
+    return Uni.createFrom().item("get one");
   }
 
-  public Uni<Void> getCourse(int id) {
-    throw new UnsupportedOperationException("Unimplemented method 'getCourse'");
-  }
-
-  public Multi<Void> getCourses(
-      String name,
-      Integer holesMin,
-      Integer holesMax,
-      Integer parMin,
-      Integer parMax) {
-    throw new UnsupportedOperationException("Unimplemented method 'getCourses'");
+  @GET
+  public Multi<String> getCourses(
+      @RestQuery String name,
+      @RestQuery Integer holesMin,
+      @RestQuery Integer holesMax,
+      @RestQuery Integer parMin,
+      @RestQuery Integer parMax) {
+    return Multi.createFrom().item("get many");
   }
 
 }

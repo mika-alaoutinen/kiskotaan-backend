@@ -9,9 +9,9 @@ import mikaa.dto.ScoreCardDTO;
 
 public interface MockData {
 
-  public static final CourseDTO COURSE = new CourseDTO(1, "Course name", 0, List.of());
+  public static final CourseDTO COURSE = new CourseDTO(1, "Frisbeegolf Laajis", 0, List.of());
 
-  public static final PlayerDTO PLAYER = new PlayerDTO(2, "Mock", "Player");
+  public static final PlayerDTO PLAYER = new PlayerDTO(2, "Pekka", "Kana");
 
   public static final ScoreCardDTO SCORE_CARD = new ScoreCardDTO(
       3,

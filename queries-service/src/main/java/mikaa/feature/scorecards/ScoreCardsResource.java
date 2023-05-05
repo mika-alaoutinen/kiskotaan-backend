@@ -1,11 +1,14 @@
 package mikaa.feature.scorecards;
 
-import io.smallrye.mutiny.Multi;
+import java.util.List;
+
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
+import mikaa.dto.ScoreCardDTO;
+import mikaa.feature.MockData;
 
 @ApplicationScoped
 @Path("scorecards")
@@ -14,14 +17,13 @@ public class ScoreCardsResource {
 
   @GET
   @Path("/{id}")
-  public Uni<String> getScoreCard(int id) {
-    return Uni.createFrom().item("get one");
+  public Uni<ScoreCardDTO> getScoreCard(int id) {
+    return Uni.createFrom().item(MockData.SCORE_CARD);
   }
 
   @GET
-  public Multi<String> getScoreCards() {
-    return Multi.createFrom().item("get many");
-
+  public Uni<List<ScoreCardDTO>> getScoreCards() {
+    return Uni.createFrom().item(List.of(MockData.SCORE_CARD));
   }
 
 }

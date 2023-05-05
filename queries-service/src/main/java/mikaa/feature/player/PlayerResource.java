@@ -1,23 +1,23 @@
 package mikaa.feature.player;
 
-import java.util.List;
-
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.api.QueryPlayersApi;
-import mikaa.model.PlayerDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class PlayerResource implements QueryPlayersApi {
+class PlayerResource {
 
-  @Override
-  public PlayerDTO getPlayer(Integer id) {
+  public Uni<String> hello() {
+    return Uni.createFrom().item("Reactive players");
+  }
+
+  public void getPlayer(int id) {
     throw new UnsupportedOperationException("Unimplemented method 'getPlayer'");
   }
 
-  @Override
-  public List<PlayerDTO> getPlayers(String name) {
+  public Multi<Void> getPlayers(String name) {
     throw new UnsupportedOperationException("Unimplemented method 'getPlayers'");
   }
 

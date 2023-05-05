@@ -1,24 +1,23 @@
 package mikaa.feature.scorecards;
 
-import java.util.List;
-
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.api.QueryScoreCardsApi;
-import mikaa.model.ScoreCardDTO;
-import mikaa.model.ScoreCardSummaryDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class ScoreCardsResource implements QueryScoreCardsApi {
+class ScoreCardsResource {
 
-  @Override
-  public ScoreCardDTO getScoreCard(Integer id) {
+  public Uni<String> hello() {
+    return Uni.createFrom().item("Reactive score cards");
+  }
+
+  public Uni<Void> getScoreCard(int id) {
     throw new UnsupportedOperationException("Unimplemented method 'getScoreCard'");
   }
 
-  @Override
-  public List<ScoreCardSummaryDTO> getScoreCards() {
+  public Multi<Void> getScoreCards() {
     throw new UnsupportedOperationException("Unimplemented method 'getScoreCards'");
   }
 

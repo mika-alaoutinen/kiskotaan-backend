@@ -1,24 +1,23 @@
 package mikaa.feature.course;
 
-import java.util.List;
-
+import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.api.QueryCoursesApi;
-import mikaa.model.CourseDTO;
-import mikaa.model.CourseSummaryDTO;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class CourseResource implements QueryCoursesApi {
+class CourseResource {
 
-  @Override
-  public CourseDTO getCourse(Integer id) {
+  public Uni<String> hello() {
+    return Uni.createFrom().item("Reactive courses");
+  }
+
+  public Uni<Void> getCourse(int id) {
     throw new UnsupportedOperationException("Unimplemented method 'getCourse'");
   }
 
-  @Override
-  public List<CourseSummaryDTO> getCourses(
+  public Multi<Void> getCourses(
       String name,
       Integer holesMin,
       Integer holesMax,

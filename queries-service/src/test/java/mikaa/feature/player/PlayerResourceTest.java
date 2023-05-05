@@ -2,6 +2,7 @@ package mikaa.feature.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
@@ -43,6 +44,17 @@ class PlayerResourceTest {
         .as(PlayerDTO.class);
 
     assertPlayer(response, TestData.PLAYER);
+  }
+
+  @Disabled("Mock data never returns 404")
+  @Test
+  void should_handle_player_not_found() {
+    given()
+        .when()
+        .get(ENDPOINT + "/99")
+        .then()
+        .statusCode(404)
+        .contentType(ContentType.JSON);
   }
 
   private static void assertPlayer(PlayerDTO player, PlayerDTO expected) {

@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mikaa.HolePayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -14,20 +15,20 @@ class HoleConsumer {
 
   @Incoming("hole-added")
   @Transactional
-  void holeAdded(String event) {
-    log.info("received hole added event", event);
+  void holeAdded(HolePayload payload) {
+    log.info("received hole added event", payload);
   }
 
   @Incoming("hole-deleted")
   @Transactional
-  void holeDeleted(String event) {
-    log.info("received hole deleted event", event);
+  void holeDeleted(HolePayload payload) {
+    log.info("received hole deleted event", payload);
   }
 
   @Incoming("hole-updated")
   @Transactional
-  void holeUpdated(String event) {
-    log.info("received hole updated event", event);
+  void holeUpdated(HolePayload payload) {
+    log.info("received hole updated event", payload);
   }
 
 }

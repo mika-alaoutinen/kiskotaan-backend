@@ -6,6 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mikaa.ScoreCardPayload;
 import mikaa.config.IncomingChannels;
 
 @ApplicationScoped
@@ -15,14 +16,14 @@ class ScoreCardsConsumer {
 
   @Incoming(IncomingChannels.ScoreCard.SCORECARD_ADDED)
   @Transactional
-  void scoreCardAdded(String event) {
-    log.info("received score card added event", event);
+  void scoreCardAdded(ScoreCardPayload payload) {
+    log.info("received score card added event", payload);
   }
 
   @Incoming(IncomingChannels.ScoreCard.SCORECARD_DELETED)
   @Transactional
-  void scoreCardDeleted(String event) {
-    log.info("received score card deleted event", event);
+  void scoreCardDeleted(ScoreCardPayload payload) {
+    log.info("received score card deleted event", payload);
   }
 
 }

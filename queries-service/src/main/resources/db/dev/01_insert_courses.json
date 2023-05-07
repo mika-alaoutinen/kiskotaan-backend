@@ -1,0 +1,43 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "add_courses_dev",
+        "author": "mikaa",
+        "changes": [
+          {
+            "insertMany": {
+              "collectionName": "course",
+              "documents": {
+                "$rawJson": [
+                  {
+                    "externalId": 1,
+                    "name": "Frisbeegolf Laajis",
+                    "holes": [
+                      {
+                        "holeNumber": 1,
+                        "par": 3,
+                        "distance": 107
+                      }
+                    ]
+                  },
+                  {
+                    "externalId": 2,
+                    "name": "Keljonkankaan frisbeegolfrata",
+                    "holes": [
+                      {
+                        "holeNumber": 1,
+                        "par": 3,
+                        "distance": 92
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

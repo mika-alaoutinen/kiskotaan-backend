@@ -1,3 +1,14 @@
+quarkus:
+  http:
+    port: 8080
+  liquibase-mongodb:
+    change-log: db/changelog.yaml
+    contexts: all,dev # dev context inserts test data into db
+    migrate-at-start: true
+    validate-on-migrate: true
+  mongodb:
+    database: course
+
 mp:
   messaging:
     incoming:

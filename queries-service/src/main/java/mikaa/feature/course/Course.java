@@ -15,7 +15,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString(exclude = "id")
-@MongoEntity
+@MongoEntity(collection = "course")
 public class Course {
 
   @Getter(value = AccessLevel.PACKAGE)
@@ -24,5 +24,11 @@ public class Course {
   private long externalId;
   private String name;
   private List<Hole> holes;
+
+  public Course(long externalId, String name, List<Hole> holes) {
+    this.externalId = externalId;
+    this.name = name;
+    this.holes = List.copyOf(holes);
+  }
 
 }

@@ -3,18 +3,21 @@ package mikaa.feature.course;
 import org.bson.types.ObjectId;
 
 import io.quarkus.mongodb.panache.common.MongoEntity;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
+@Getter
+@Setter
 @NoArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = false, exclude = "courseId")
-@ToString(exclude = "courseId")
+@ToString(exclude = { "id", "courseId" })
 @MongoEntity
 public class Hole {
 
+  @Getter(value = AccessLevel.PACKAGE)
+  @Setter(value = AccessLevel.PACKAGE)
   private ObjectId id;
   private long externalId;
   private int holeNumber;

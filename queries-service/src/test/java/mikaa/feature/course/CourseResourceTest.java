@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import mikaa.dto.CourseDTO;
+import mikaa.dto.CourseSummaryDTO;
 import mikaa.feature.TestData;
 
 import static io.restassured.RestAssured.given;
@@ -26,10 +27,15 @@ class CourseResourceTest {
         .statusCode(200)
         .contentType(ContentType.JSON)
         .extract()
-        .as(CourseDTO[].class);
+        .as(CourseSummaryDTO[].class);
 
     assertEquals(1, response.length);
-    assertCourse(response[0], TestData.COURSE);
+
+    var course = response[0];
+    assertEquals(course.id(), TestData.COURSE.id());
+    assertEquals(course.name(), TestData.COURSE.name());
+    assertEquals(course.par(), TestData.COURSE.par());
+    assertEquals(course.holes(), TestData.COURSE.holes().size());
   }
 
   @Test
@@ -43,7 +49,10 @@ class CourseResourceTest {
         .extract()
         .as(CourseDTO.class);
 
-    assertCourse(response, TestData.COURSE);
+    assertEquals(response.id(), TestData.COURSE.id());
+    assertEquals(response.name(), TestData.COURSE.name());
+    assertEquals(response.par(), TestData.COURSE.par());
+    assertEquals(response.holes().size(), TestData.COURSE.holes().size());
   }
 
   @Disabled("Mock data never returns 404")
@@ -55,13 +64,6 @@ class CourseResourceTest {
         .then()
         .statusCode(404)
         .contentType(ContentType.JSON);
-  }
-
-  private static void assertCourse(CourseDTO course, CourseDTO expected) {
-    assertEquals(course.id(), expected.id());
-    assertEquals(course.name(), expected.name());
-    assertEquals(course.par(), expected.par());
-    assertEquals(course.holes().size(), expected.holes().size());
   }
 
 }

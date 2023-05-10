@@ -2,17 +2,18 @@ package mikaa.feature.course;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import mikaa.dto.CourseDTO;
 import mikaa.dto.CourseSummaryDTO;
-import mikaa.feature.TestData;
 
 import static io.restassured.RestAssured.given;
 
+/**
+ * Insert test data with Liquibase. See src/main/resources/db.
+ */
 @QuarkusTest
 class CourseResourceTest {
 
@@ -20,7 +21,7 @@ class CourseResourceTest {
 
   @Test
   void should_get_all_courses() {
-    var response = given()
+    var courseSummaries = given()
         .when()
         .get(ENDPOINT)
         .then()
@@ -29,18 +30,24 @@ class CourseResourceTest {
         .extract()
         .as(CourseSummaryDTO[].class);
 
-    assertEquals(1, response.length);
+    assertEquals(2, courseSummaries.length);
 
-    var course = response[0];
-    assertEquals(course.id(), TestData.COURSE.id());
-    assertEquals(course.name(), TestData.COURSE.name());
-    assertEquals(course.par(), TestData.COURSE.par());
-    assertEquals(course.holes(), TestData.COURSE.holes().size());
+    var laajis = courseSummaries[0];
+    assertEquals(1, laajis.id());
+    assertEquals("Frisbeegolf Laajis", laajis.name());
+    assertEquals(58, laajis.par());
+    assertEquals(18, laajis.holes());
+
+    var keljo = courseSummaries[1];
+    assertEquals(2, keljo.id());
+    assertEquals("Keljonkankaan frisbeegolfrata", keljo.name());
+    assertEquals(63, keljo.par());
+    assertEquals(18, keljo.holes());
   }
 
   @Test
   void should_get_course_by_id() {
-    var response = given()
+    var laajis = given()
         .when()
         .get(ENDPOINT + "/1")
         .then()
@@ -49,13 +56,17 @@ class CourseResourceTest {
         .extract()
         .as(CourseDTO.class);
 
-    assertEquals(response.id(), TestData.COURSE.id());
-    assertEquals(response.name(), TestData.COURSE.name());
-    assertEquals(response.par(), TestData.COURSE.par());
-    assertEquals(response.holes().size(), TestData.COURSE.holes().size());
+    assertEquals(1, laajis.id());
+    assertEquals("Frisbeegolf Laajis", laajis.name());
+    assertEquals(58, laajis.par());
+    assertEquals(18, laajis.holes().size());
+
+    var hole9 = laajis.holes().get(8);
+    assertEquals(9, hole9.number());
+    assertEquals(4, hole9.par());
+    assertEquals(172, hole9.distance());
   }
 
-  @Disabled("Mock data never returns 404")
   @Test
   void should_handle_course_not_found() {
     given()

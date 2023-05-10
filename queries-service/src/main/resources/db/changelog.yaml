@@ -1,7 +1,4 @@
 databaseChangeLog:
-  #   - includeAll:
-  #       contextFilter: all
-  #       path: db/all
   - includeAll:
       contextFilter: dev,test
       path: db/dev

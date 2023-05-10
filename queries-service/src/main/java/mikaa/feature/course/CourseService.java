@@ -5,6 +5,8 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import mikaa.consumers.course.CourseWriter;
+import mikaa.queries.course.CourseReader;
 
 @ApplicationScoped
 @RequiredArgsConstructor

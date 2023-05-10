@@ -1,4 +1,4 @@
-package mikaa.feature.course;
+package mikaa.queries.course;
 
 import org.jboss.resteasy.reactive.RestQuery;
 

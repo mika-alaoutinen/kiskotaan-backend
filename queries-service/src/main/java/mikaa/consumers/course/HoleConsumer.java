@@ -1,4 +1,4 @@
-package mikaa.feature.course;
+package mikaa.consumers.course;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 

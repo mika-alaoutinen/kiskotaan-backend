@@ -1,9 +1,10 @@
-package mikaa.feature.course;
+package mikaa.queries.course;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import mikaa.feature.course.Course;
 
-interface CourseReader {
+public interface CourseReader {
 
   Uni<Course> findOne(long externalId);
 

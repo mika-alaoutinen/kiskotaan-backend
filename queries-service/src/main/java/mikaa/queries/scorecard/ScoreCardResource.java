@@ -7,8 +7,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
+import mikaa.MockData;
 import mikaa.dto.ScoreCardDTO;
-import mikaa.feature.MockData;
 
 @ApplicationScoped
 @Path("scorecards")

@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa;
 
 import java.util.List;
 import java.util.Map;

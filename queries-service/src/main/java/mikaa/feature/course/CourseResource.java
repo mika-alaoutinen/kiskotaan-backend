@@ -16,12 +16,12 @@ import mikaa.dto.CourseSummaryDTO;
 @RequiredArgsConstructor
 public class CourseResource {
 
-  private final CourseService service;
+  private final CourseReader courses;
 
   @GET
   @Path("/{id}")
   public Uni<CourseDTO> getCourse(int id) {
-    return service.getCourse(id).map(CourseMapper::toCourse);
+    return courses.findOne(id).map(CourseMapper::toCourse);
   }
 
   @GET
@@ -31,7 +31,7 @@ public class CourseResource {
       @RestQuery Integer holesMax,
       @RestQuery Integer parMin,
       @RestQuery Integer parMax) {
-    return service.getCourses().map(CourseMapper::toSummary);
+    return courses.findAll().map(CourseMapper::toSummary);
   }
 
 }

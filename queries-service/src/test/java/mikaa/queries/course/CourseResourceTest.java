@@ -1,4 +1,4 @@
-package mikaa.feature.course;
+package mikaa.queries.course;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -1,4 +1,4 @@
-package mikaa.feature.scorecards;
+package mikaa.queries.scorecard;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import mikaa.feature.MockData;
 @ApplicationScoped
 @Path("scorecards")
 @RequiredArgsConstructor
-public class ScoreCardsResource {
+public class ScoreCardResource {
 
   @GET
   @Path("/{id}")

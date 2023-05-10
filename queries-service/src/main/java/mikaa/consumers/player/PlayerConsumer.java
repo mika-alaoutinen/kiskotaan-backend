@@ -1,4 +1,4 @@
-package mikaa.feature.player;
+package mikaa.consumers.player;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 

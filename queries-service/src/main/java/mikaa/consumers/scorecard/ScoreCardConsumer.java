@@ -1,4 +1,4 @@
-package mikaa.feature.scorecards;
+package mikaa.consumers.scorecard;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
@@ -12,7 +12,7 @@ import mikaa.config.IncomingChannels;
 @ApplicationScoped
 @RequiredArgsConstructor
 @Slf4j
-class ScoreCardsConsumer {
+class ScoreCardConsumer {
 
   @Incoming(IncomingChannels.ScoreCard.SCORECARD_ADDED)
   @Transactional

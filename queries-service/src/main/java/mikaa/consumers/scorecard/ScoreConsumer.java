@@ -1,4 +1,4 @@
-package mikaa.feature.scorecards;
+package mikaa.consumers.scorecard;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 

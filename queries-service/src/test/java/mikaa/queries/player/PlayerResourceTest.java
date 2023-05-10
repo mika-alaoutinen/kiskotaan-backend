@@ -1,4 +1,4 @@
-package mikaa.feature.player;
+package mikaa.queries.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import mikaa.dto.PlayerDTO;
-import mikaa.feature.TestData;
+import mikaa.queries.TestData;
 
 import static io.restassured.RestAssured.given;
 

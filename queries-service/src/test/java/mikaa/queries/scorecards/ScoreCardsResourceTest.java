@@ -1,4 +1,4 @@
-package mikaa.feature.scorecards;
+package mikaa.queries.scorecards;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import mikaa.dto.ScoreCardDTO;
-import mikaa.feature.TestData;
+import mikaa.queries.TestData;
 
 import static io.restassured.RestAssured.given;
 

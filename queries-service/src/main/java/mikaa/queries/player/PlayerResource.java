@@ -1,4 +1,4 @@
-package mikaa.feature.player;
+package mikaa.queries.player;
 
 import java.util.List;
 

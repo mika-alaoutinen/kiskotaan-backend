@@ -8,8 +8,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
-import mikaa.dto.CourseDTO;
-import mikaa.dto.CourseSummaryDTO;
+import mikaa.queries.dto.CourseDTO;
+import mikaa.queries.dto.CourseSummaryDTO;
 
 @ApplicationScoped
 @Path("courses")

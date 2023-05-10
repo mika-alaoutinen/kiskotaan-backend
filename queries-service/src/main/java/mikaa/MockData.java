@@ -3,9 +3,9 @@ package mikaa;
 import java.util.List;
 import java.util.Map;
 
-import mikaa.dto.CourseDTO;
-import mikaa.dto.PlayerDTO;
-import mikaa.dto.ScoreCardDTO;
+import mikaa.queries.dto.CourseDTO;
+import mikaa.queries.dto.PlayerDTO;
+import mikaa.queries.dto.ScoreCardDTO;
 
 public interface MockData {
 

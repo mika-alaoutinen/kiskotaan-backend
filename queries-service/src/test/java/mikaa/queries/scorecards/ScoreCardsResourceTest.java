@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import mikaa.dto.ScoreCardDTO;
 import mikaa.queries.TestData;
+import mikaa.queries.dto.ScoreCardDTO;
 
 import static io.restassured.RestAssured.given;
 

@@ -1,10 +1,10 @@
 package mikaa.queries.course;
 
-import mikaa.dto.CourseDTO;
-import mikaa.dto.CourseSummaryDTO;
-import mikaa.dto.HoleDTO;
 import mikaa.feature.course.Course;
 import mikaa.feature.course.Hole;
+import mikaa.queries.dto.CourseDTO;
+import mikaa.queries.dto.CourseSummaryDTO;
+import mikaa.queries.dto.HoleDTO;
 
 interface CourseMapper {
 

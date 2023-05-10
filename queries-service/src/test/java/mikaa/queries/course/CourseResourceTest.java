@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import mikaa.dto.CourseDTO;
-import mikaa.dto.CourseSummaryDTO;
+import mikaa.queries.dto.CourseDTO;
+import mikaa.queries.dto.CourseSummaryDTO;
 
 import static io.restassured.RestAssured.given;
 

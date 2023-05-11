@@ -28,7 +28,7 @@ interface CourseMapper {
 
   private static HoleDTO toHole(HoleEntity hole) {
     return new HoleDTO(
-        hole.getHoleNumber(),
+        hole.getExternalId(),
         hole.getHoleNumber(),
         hole.getDistance(),
         hole.getPar());

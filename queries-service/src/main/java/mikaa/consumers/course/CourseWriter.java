@@ -1,14 +1,16 @@
 package mikaa.consumers.course;
 
+import io.smallrye.mutiny.Uni;
 import mikaa.CoursePayload;
 import mikaa.CourseUpdated;
+import mikaa.feature.course.CourseEntity;
 
 public interface CourseWriter {
 
-  void add(CoursePayload payload);
+  Uni<CourseEntity> add(CoursePayload payload);
 
-  void update(CourseUpdated payload);
+  Uni<CourseEntity> update(CourseUpdated payload);
 
-  void delete(CoursePayload payload);
+  Uni<Void> delete(CoursePayload payload);
 
 }

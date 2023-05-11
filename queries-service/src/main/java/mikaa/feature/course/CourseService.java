@@ -31,27 +31,27 @@ class CourseService implements CourseReader, CourseWriter {
   }
 
   @Override
-  public void add(CoursePayload payload) {
-    repository.persist(toCourse(payload));
+  public Uni<CourseEntity> add(CoursePayload payload) {
+    return repository.persist(toCourse(payload));
   }
 
   @Override
-  public void update(CourseUpdated payload) {
-    repository.findByExternalId(payload.id())
+  public Uni<CourseEntity> update(CourseUpdated payload) {
+    return repository.findByExternalId(payload.id())
         .onItem()
         .ifNotNull()
-        .transform(course -> {
+        .transformToUni(course -> {
           course.setName(payload.name());
-          return course;
+          return repository.update(course);
         });
   }
 
   @Override
-  public void delete(CoursePayload payload) {
-    repository.findByExternalId(payload.id())
+  public Uni<Void> delete(CoursePayload payload) {
+    return repository.findByExternalId(payload.id())
         .onItem()
         .ifNotNull()
-        .invoke(repository::delete);
+        .transformToUni(course -> repository.delete(course));
   }
 
   private static NotFoundException notFound(long id) {

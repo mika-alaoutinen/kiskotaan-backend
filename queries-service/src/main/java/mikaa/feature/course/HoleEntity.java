@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Hole {
+public class HoleEntity {
 
   private long externalId;
   private int holeNumber;

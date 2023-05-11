@@ -5,9 +5,9 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-class CourseRepository implements ReactivePanacheMongoRepository<Course> {
+class CourseRepository implements ReactivePanacheMongoRepository<CourseEntity> {
 
-  Uni<Course> findByExternalId(long externalId) {
+  Uni<CourseEntity> findByExternalId(long externalId) {
     return find("externalId", externalId).firstResult();
   }
 

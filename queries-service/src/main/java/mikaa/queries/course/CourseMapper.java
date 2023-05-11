@@ -1,14 +1,14 @@
 package mikaa.queries.course;
 
-import mikaa.feature.course.Course;
-import mikaa.feature.course.Hole;
+import mikaa.feature.course.CourseEntity;
+import mikaa.feature.course.HoleEntity;
 import mikaa.queries.dto.CourseDTO;
 import mikaa.queries.dto.CourseSummaryDTO;
 import mikaa.queries.dto.HoleDTO;
 
 interface CourseMapper {
 
-  static CourseDTO toCourse(Course course) {
+  static CourseDTO toCourse(CourseEntity course) {
     var holes = course.getHoles().stream().map(CourseMapper::toHole).toList();
 
     return new CourseDTO(
@@ -18,7 +18,7 @@ interface CourseMapper {
         holes);
   }
 
-  static CourseSummaryDTO toSummary(Course course) {
+  static CourseSummaryDTO toSummary(CourseEntity course) {
     return new CourseSummaryDTO(
         course.getExternalId(),
         course.getName(),
@@ -26,7 +26,7 @@ interface CourseMapper {
         course.getHoles().size());
   }
 
-  private static HoleDTO toHole(Hole hole) {
+  private static HoleDTO toHole(HoleEntity hole) {
     return new HoleDTO(
         hole.getHoleNumber(),
         hole.getHoleNumber(),
@@ -34,8 +34,8 @@ interface CourseMapper {
         hole.getPar());
   }
 
-  private static int calculateCoursePar(Course course) {
-    return course.getHoles().stream().mapToInt(Hole::getPar).sum();
+  private static int calculateCoursePar(CourseEntity course) {
+    return course.getHoles().stream().mapToInt(HoleEntity::getPar).sum();
   }
 
 }

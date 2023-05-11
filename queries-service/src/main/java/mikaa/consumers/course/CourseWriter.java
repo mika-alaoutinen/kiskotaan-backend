@@ -1,9 +1,14 @@
 package mikaa.consumers.course;
 
-import mikaa.feature.course.Course;
+import mikaa.CoursePayload;
+import mikaa.CourseUpdated;
 
 public interface CourseWriter {
 
-  void addOne(Course course);
+  void add(CoursePayload payload);
+
+  void update(CourseUpdated payload);
+
+  void delete(CoursePayload payload);
 
 }

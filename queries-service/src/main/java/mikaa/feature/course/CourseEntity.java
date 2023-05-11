@@ -16,16 +16,16 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString(exclude = "id")
 @MongoEntity(collection = "course")
-public class Course {
+public class CourseEntity {
 
   @Getter(value = AccessLevel.PACKAGE)
   @Setter(value = AccessLevel.PACKAGE)
   private ObjectId id;
   private long externalId;
   private String name;
-  private List<Hole> holes;
+  private List<HoleEntity> holes;
 
-  public Course(long externalId, String name, List<Hole> holes) {
+  public CourseEntity(long externalId, String name, List<HoleEntity> holes) {
     this.externalId = externalId;
     this.name = name;
     this.holes = List.copyOf(holes);

@@ -3,14 +3,12 @@ package mikaa.queries.scorecard;
 import java.util.List;
 
 import io.smallrye.mutiny.Uni;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import mikaa.MockData;
 import mikaa.queries.dto.ScoreCardDTO;
 
-@ApplicationScoped
 @Path("scorecards")
 @RequiredArgsConstructor
 public class ScoreCardResource {

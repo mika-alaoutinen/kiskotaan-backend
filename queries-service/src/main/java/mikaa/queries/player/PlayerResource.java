@@ -5,14 +5,12 @@ import java.util.List;
 import org.jboss.resteasy.reactive.RestQuery;
 
 import io.smallrye.mutiny.Uni;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import mikaa.MockData;
 import mikaa.queries.dto.PlayerDTO;
 
-@ApplicationScoped
 @Path("players")
 @RequiredArgsConstructor
 public class PlayerResource {

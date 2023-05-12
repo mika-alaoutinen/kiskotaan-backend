@@ -2,8 +2,8 @@ package mikaa.consumers.course;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.CoursePayload;
@@ -18,24 +18,21 @@ class CourseConsumer {
   private final CourseWriter writer;
 
   @Incoming(IncomingChannels.Course.COURSE_ADDED)
-  @Transactional
-  void courseAdded(CoursePayload payload) {
+  Uni<Void> courseAdded(CoursePayload payload) {
     log.info("received course added event", payload);
-    writer.add(payload);
+    return writer.add(payload).replaceWithVoid();
   }
 
   @Incoming(IncomingChannels.Course.COURSE_DELETED)
-  @Transactional
-  void courseDeleted(CoursePayload payload) {
+  Uni<Void> courseDeleted(CoursePayload payload) {
     log.info("received course deleted event", payload);
-    writer.delete(payload);
+    return writer.delete(payload).replaceWithVoid();
   }
 
   @Incoming(IncomingChannels.Course.COURSE_UPDATED)
-  @Transactional
-  void courseUpdated(CourseUpdated payload) {
+  Uni<Void> courseUpdated(CourseUpdated payload) {
     log.info("received course updated event", payload);
-    writer.update(payload);
+    return writer.update(payload).replaceWithVoid();
   }
 
 }

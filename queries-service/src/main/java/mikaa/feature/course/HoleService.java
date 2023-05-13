@@ -1,5 +1,7 @@
 package mikaa.feature.course;
 
+import java.util.stream.Stream;
+
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,6 @@ class HoleService implements HoleWriter {
   public Uni<HoleEntity> add(HolePayload payload) {
     var hole = toHole(payload);
 
-    // sort holes?
     return reader.findOne(payload.courseId())
         .map(course -> addHole(course, hole))
         .flatMap(repository::update)
@@ -44,7 +45,8 @@ class HoleService implements HoleWriter {
   }
 
   private static CourseEntity addHole(CourseEntity course, HoleEntity newHole) {
-    course.getHoles().add(newHole);
+    var holes = Stream.concat(course.getHoles().stream(), Stream.of(newHole)).toList();
+    course.setHoles(holes);
     return course;
   }
 

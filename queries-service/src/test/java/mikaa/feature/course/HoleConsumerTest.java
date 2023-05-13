@@ -37,39 +37,39 @@ class HoleConsumerTest {
   void handles_add_hole_event() {
     when(repository.findByExternalId(anyLong())).thenReturn(courseUni());
     sendAddEvent();
-    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
+    verifyUpdate();
   }
 
   @Test
   void does_nothing_on_add_if_course_not_found() {
     sendAddEvent();
-    verify(repository, never()).persist(any(CourseEntity.class));
+    verifyNoUpdate();
   }
 
   @Test
   void handles_delete_hole_event() {
     when(repository.findByExternalId(anyLong())).thenReturn(courseUni());
     sendDeleteEvent();
-    verify(repository, atLeastOnce()).delete(any(CourseEntity.class));
+    verifyUpdate();
   }
 
   @Test
   void does_nothing_on_delete_if_course_not_found() {
     sendDeleteEvent();
-    verify(repository, never()).persist(any(CourseEntity.class));
+    verifyNoUpdate();
   }
 
   @Test
   void handles_update_hole_event() {
     when(repository.findByExternalId(anyLong())).thenReturn(courseUni());
     sendUpdateEvent();
-    verify(repository, atLeastOnce()).update(any(CourseEntity.class));
+    verifyUpdate();
   }
 
   @Test
   void does_nothing_on_update_if_course_not_found() {
     sendUpdateEvent();
-    verify(repository, never()).persist(any(CourseEntity.class));
+    verifyNoUpdate();
   }
 
   private void sendAddEvent() {
@@ -85,6 +85,14 @@ class HoleConsumerTest {
   private void sendUpdateEvent() {
     var source = initSource(IncomingChannels.Hole.HOLE_UPDATED);
     source.send(PAYLOAD);
+  }
+
+  private void verifyUpdate() {
+    verify(repository, atLeastOnce()).update(any(CourseEntity.class));
+  }
+
+  private void verifyNoUpdate() {
+    verify(repository, never()).update(any(CourseEntity.class));
   }
 
   private InMemorySource<HolePayload> initSource(String channel) {

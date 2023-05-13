@@ -2,15 +2,16 @@ package mikaa.feature.course;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import mikaa.HolePayload;
 import mikaa.consumers.course.HoleWriter;
+import mikaa.queries.course.CourseReader;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 class HoleService implements HoleWriter {
 
+  private final CourseReader reader;
   private final CourseRepository repository;
 
   @Override
@@ -18,10 +19,7 @@ class HoleService implements HoleWriter {
     var hole = toHole(payload);
 
     // sort holes?
-    return repository.findByExternalId(payload.courseId())
-        .onItem()
-        .ifNull()
-        .failWith(() -> notFound(payload.courseId()))
+    return reader.findOne(payload.id())
         .map(course -> {
           course.getHoles().add(hole);
           return course;
@@ -32,7 +30,12 @@ class HoleService implements HoleWriter {
 
   @Override
   public Uni<HoleEntity> update(HolePayload payload) {
-    return Uni.createFrom().nothing();
+    var hole = toHole(payload);
+
+    return reader.findOne(payload.id())
+        .map(course -> updateHole(course, hole))
+        .flatMap(repository::update)
+        .chain(() -> Uni.createFrom().item(hole));
   }
 
   @Override
@@ -40,8 +43,14 @@ class HoleService implements HoleWriter {
     return Uni.createFrom().nothing();
   }
 
-  private static NotFoundException notFound(long id) {
-    return new NotFoundException("Could not find course with ID " + id);
+  private static CourseEntity updateHole(CourseEntity course, HoleEntity updated) {
+    var holes = course.getHoles()
+        .stream()
+        .map(hole -> hole.getExternalId() == updated.getExternalId() ? updated : hole)
+        .toList();
+
+    course.setHoles(holes);
+    return course;
   }
 
   private static HoleEntity toHole(HolePayload payload) {

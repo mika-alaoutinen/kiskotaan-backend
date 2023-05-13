@@ -1,0 +1,69 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "add_courses_dev",
+        "author": "mikaa",
+        "changes": [
+          {
+            "insertMany": {
+              "collectionName": "course",
+              "documents": {
+                "$rawJson": [
+                  {
+                    "externalId": 1,
+                    "name": "Frisbeegolf Laajis",
+                    "holes": [
+                      { "holeNumber": 1, "par": 3, "distance": 107 },
+                      { "holeNumber": 2, "par": 3, "distance": 127 },
+                      { "holeNumber": 3, "par": 3, "distance": 107 },
+                      { "holeNumber": 4, "par": 3, "distance": 49 },
+                      { "holeNumber": 5, "par": 3, "distance": 97 },
+                      { "holeNumber": 6, "par": 3, "distance": 100 },
+                      { "holeNumber": 7, "par": 3, "distance": 62 },
+                      { "holeNumber": 8, "par": 3, "distance": 90 },
+                      { "holeNumber": 9, "par": 4, "distance": 172 },
+                      { "holeNumber": 10, "par": 3, "distance": 100 },
+                      { "holeNumber": 11, "par": 4, "distance": 165 },
+                      { "holeNumber": 12, "par": 3, "distance": 80 },
+                      { "holeNumber": 13, "par": 3, "distance": 89 },
+                      { "holeNumber": 14, "par": 3, "distance": 76 },
+                      { "holeNumber": 15, "par": 4, "distance": 140 },
+                      { "holeNumber": 16, "par": 3, "distance": 107 },
+                      { "holeNumber": 17, "par": 4, "distance": 183 },
+                      { "holeNumber": 18, "par": 3, "distance": 164 }
+                    ]
+                  },
+                  {
+                    "externalId": 2,
+                    "name": "Keljonkankaan frisbeegolfrata",
+                    "holes": [
+                      { "holeNumber": 1, "par": 3, "distance": 92 },
+                      { "holeNumber": 2, "par": 4, "distance": 158 },
+                      { "holeNumber": 3, "par": 3, "distance": 95 },
+                      { "holeNumber": 4, "par": 3, "distance": 80 },
+                      { "holeNumber": 5, "par": 3, "distance": 90 },
+                      { "holeNumber": 6, "par": 3, "distance": 94 },
+                      { "holeNumber": 7, "par": 4, "distance": 141 },
+                      { "holeNumber": 8, "par": 3, "distance": 98 },
+                      { "holeNumber": 9, "par": 4, "distance": 138 },
+                      { "holeNumber": 10, "par": 3, "distance": 90 },
+                      { "holeNumber": 11, "par": 4, "distance": 116 },
+                      { "holeNumber": 12, "par": 3, "distance": 90 },
+                      { "holeNumber": 13, "par": 4, "distance": 154 },
+                      { "holeNumber": 14, "par": 4, "distance": 138 },
+                      { "holeNumber": 15, "par": 4, "distance": 177 },
+                      { "holeNumber": 16, "par": 3, "distance": 91 },
+                      { "holeNumber": 17, "par": 5, "distance": 251 },
+                      { "holeNumber": 18, "par": 3, "distance": 98 }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

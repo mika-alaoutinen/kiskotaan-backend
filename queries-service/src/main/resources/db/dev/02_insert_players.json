@@ -1,0 +1,36 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "add_players_dev",
+        "author": "mikaa",
+        "changes": [
+          {
+            "insertMany": {
+              "collectionName": "player",
+              "documents": {
+                "$rawJson": [
+                  {
+                    "externalId": 1,
+                    "firstName": "Aku",
+                    "lastName": "Ankka"
+                  },
+                  {
+                    "externalId": 2,
+                    "firstName": "Iines",
+                    "lastName": "Ankka"
+                  },
+                  {
+                    "externalId": 3,
+                    "firstName": "Hessu",
+                    "lastName": "Hopo"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -2,8 +2,8 @@ package mikaa.consumers.course;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 
+import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.HolePayload;
@@ -13,22 +13,24 @@ import mikaa.HolePayload;
 @Slf4j
 class HoleConsumer {
 
+  private final HoleWriter writer;
+
   @Incoming("hole-added")
-  @Transactional
-  void holeAdded(HolePayload payload) {
+  Uni<Void> holeAdded(HolePayload payload) {
     log.info("received hole added event", payload);
+    return writer.add(payload).replaceWithVoid();
   }
 
   @Incoming("hole-deleted")
-  @Transactional
-  void holeDeleted(HolePayload payload) {
+  Uni<Void> holeDeleted(HolePayload payload) {
     log.info("received hole deleted event", payload);
+    return writer.delete(payload).replaceWithVoid();
   }
 
   @Incoming("hole-updated")
-  @Transactional
-  void holeUpdated(HolePayload payload) {
+  Uni<Void> holeUpdated(HolePayload payload) {
     log.info("received hole updated event", payload);
+    return writer.update(payload).replaceWithVoid();
   }
 
 }

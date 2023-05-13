@@ -1,7 +1,6 @@
 package mikaa.feature.course;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -35,7 +34,7 @@ class HoleConsumerTest {
 
   @Test
   void handles_add_hole_event() {
-    when(repository.findByExternalId(anyLong())).thenReturn(courseUni());
+    when(repository.findByExternalId(1)).thenReturn(courseUni());
     sendAddEvent();
     verifyUpdate();
   }
@@ -48,7 +47,7 @@ class HoleConsumerTest {
 
   @Test
   void handles_delete_hole_event() {
-    when(repository.findByExternalId(anyLong())).thenReturn(courseUni());
+    when(repository.findByExternalId(1)).thenReturn(courseUni());
     sendDeleteEvent();
     verifyUpdate();
   }
@@ -61,7 +60,7 @@ class HoleConsumerTest {
 
   @Test
   void handles_update_hole_event() {
-    when(repository.findByExternalId(anyLong())).thenReturn(courseUni());
+    when(repository.findByExternalId(1)).thenReturn(courseUni());
     sendUpdateEvent();
     verifyUpdate();
   }
@@ -73,17 +72,17 @@ class HoleConsumerTest {
   }
 
   private void sendAddEvent() {
-    var source = initSource(IncomingChannels.Hole.HOLE_ADDED);
+    InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_ADDED);
     source.send(PAYLOAD);
   }
 
   private void sendDeleteEvent() {
-    var source = initSource(IncomingChannels.Hole.HOLE_DELETED);
+    InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_DELETED);
     source.send(PAYLOAD);
   }
 
   private void sendUpdateEvent() {
-    var source = initSource(IncomingChannels.Hole.HOLE_UPDATED);
+    InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_UPDATED);
     source.send(PAYLOAD);
   }
 
@@ -93,10 +92,6 @@ class HoleConsumerTest {
 
   private void verifyNoUpdate() {
     verify(repository, never()).update(any(CourseEntity.class));
-  }
-
-  private InMemorySource<HolePayload> initSource(String channel) {
-    return connector.source(channel);
   }
 
   private static Uni<CourseEntity> courseUni() {

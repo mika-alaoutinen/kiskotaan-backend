@@ -19,7 +19,7 @@ class HoleService implements HoleWriter {
     var hole = toHole(payload);
 
     // sort holes?
-    return reader.findOne(payload.id())
+    return reader.findOne(payload.courseId())
         .map(course -> {
           course.getHoles().add(hole);
           return course;
@@ -32,7 +32,7 @@ class HoleService implements HoleWriter {
   public Uni<HoleEntity> update(HolePayload payload) {
     var hole = toHole(payload);
 
-    return reader.findOne(payload.id())
+    return reader.findOne(payload.courseId())
         .map(course -> updateHole(course, hole))
         .flatMap(repository::update)
         .chain(() -> Uni.createFrom().item(hole));

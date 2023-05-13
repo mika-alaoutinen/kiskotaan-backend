@@ -20,9 +20,9 @@ class CourseService implements CourseReader, CourseWriter {
   @Override
   public Uni<CourseEntity> findOne(long externalId) {
     return repository.findByExternalId(externalId)
-        .replaceIfNullWith(() -> {
-          throw notFound(externalId);
-        });
+        .onItem()
+        .ifNull()
+        .failWith(() -> new NotFoundException("Could not find course with ID " + externalId));
   }
 
   @Override
@@ -52,10 +52,6 @@ class CourseService implements CourseReader, CourseWriter {
         .onItem()
         .ifNotNull()
         .transformToUni(course -> repository.delete(course));
-  }
-
-  private static NotFoundException notFound(long id) {
-    return new NotFoundException("Could not find course with ID " + id);
   }
 
   private static CourseEntity toCourse(CoursePayload payload) {

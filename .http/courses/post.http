@@ -22,13 +22,3 @@ Content-Type: application/json
 {
   "name": "Invalid course"
 }
-
-### Add new hole for course
-POST {{url}}/1/holes HTTP/1.1
-Content-Type: application/json
-
-{
-  "number": 19,
-  "par": 4,
-  "distance": 123
-}

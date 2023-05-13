@@ -38,44 +38,43 @@ class CourseConsumerTest {
   void handles_add_course_event() {
     InMemorySource<CoursePayload> source = connector.source(IncomingChannels.Course.COURSE_ADDED);
     source.send(new CoursePayload(1l, "New Course", List.of()));
-
     verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
   }
 
   @Test
   void handles_delete_course_event() {
     when(repository.findByExternalId(anyLong())).thenReturn(LAAJIS_UNI);
-
-    InMemorySource<CoursePayload> source = connector.source(IncomingChannels.Course.COURSE_DELETED);
-    source.send(new CoursePayload(1l, "Laajis", List.of()));
-
+    sendDeleteEvent();
     verify(repository, atLeastOnce()).delete(any(CourseEntity.class));
   }
 
   @Test
   void does_nothing_on_delete_if_course_not_found() {
-    InMemorySource<CoursePayload> source = connector.source(IncomingChannels.Course.COURSE_DELETED);
-    source.send(new CoursePayload(1l, "Laajis", List.of()));
-
+    sendDeleteEvent();
     verify(repository, never()).delete(any(CourseEntity.class));
   }
 
   @Test
   void handles_update_course_event() {
     when(repository.findByExternalId(anyLong())).thenReturn(LAAJIS_UNI);
-
-    InMemorySource<CourseUpdated> source = connector.source(IncomingChannels.Course.COURSE_UPDATED);
-    source.send(new CourseUpdated(1l, "Laajis v2"));
-
+    sendUpdateEvent();
     verify(repository, atLeastOnce()).update(any(CourseEntity.class));
   }
 
   @Test
   void does_nothing_on_update_if_course_not_found() {
+    sendUpdateEvent();
+    verify(repository, never()).update(any(CourseEntity.class));
+  }
+
+  private void sendDeleteEvent() {
+    InMemorySource<CoursePayload> source = connector.source(IncomingChannels.Course.COURSE_DELETED);
+    source.send(new CoursePayload(1l, "Laajis", List.of()));
+  }
+
+  private void sendUpdateEvent() {
     InMemorySource<CourseUpdated> source = connector.source(IncomingChannels.Course.COURSE_UPDATED);
     source.send(new CourseUpdated(1l, "Laajis v2"));
-
-    verify(repository, never()).update(any(CourseEntity.class));
   }
 
 }

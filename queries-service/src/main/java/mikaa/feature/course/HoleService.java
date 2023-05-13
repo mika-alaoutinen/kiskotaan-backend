@@ -20,10 +20,7 @@ class HoleService implements HoleWriter {
 
     // sort holes?
     return reader.findOne(payload.courseId())
-        .map(course -> {
-          course.getHoles().add(hole);
-          return course;
-        })
+        .map(course -> addHole(course, hole))
         .flatMap(repository::update)
         .chain(() -> Uni.createFrom().item(hole));
   }
@@ -40,13 +37,31 @@ class HoleService implements HoleWriter {
 
   @Override
   public Uni<Void> delete(HolePayload payload) {
-    return Uni.createFrom().nothing();
+    return reader.findOne(payload.courseId())
+        .map(course -> deleteHole(course, payload.id()))
+        .flatMap(repository::update)
+        .chain(() -> Uni.createFrom().nullItem());
+  }
+
+  private static CourseEntity addHole(CourseEntity course, HoleEntity newHole) {
+    course.getHoles().add(newHole);
+    return course;
   }
 
   private static CourseEntity updateHole(CourseEntity course, HoleEntity updated) {
     var holes = course.getHoles()
         .stream()
         .map(hole -> hole.getExternalId() == updated.getExternalId() ? updated : hole)
+        .toList();
+
+    course.setHoles(holes);
+    return course;
+  }
+
+  private static CourseEntity deleteHole(CourseEntity course, Long holeId) {
+    var holes = course.getHoles()
+        .stream()
+        .filter(hole -> hole.getExternalId() != holeId)
         .toList();
 
     course.setHoles(holes);

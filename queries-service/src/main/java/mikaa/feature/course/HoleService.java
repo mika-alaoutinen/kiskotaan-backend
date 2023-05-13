@@ -14,31 +14,24 @@ class HoleService implements HoleWriter {
   private final CourseRepository repository;
 
   @Override
-  public Uni<CourseEntity> add(HolePayload payload) {
+  public Uni<HoleEntity> add(HolePayload payload) {
     var hole = toHole(payload);
 
     // sort holes?
-    // repository.findByExternalId(payload.courseId())
-    // .onItem()
-    // .ifNull()
-    // .failWith(() -> notFound(payload.courseId()))
-    // .map(course -> {
-    // course.getHoles().add(hole);
-    // return course;
-    // })
-    // .flatMap(repository::update);
-
     return repository.findByExternalId(payload.courseId())
         .onItem()
-        .ifNotNull()
-        .transformToUni(course -> {
+        .ifNull()
+        .failWith(() -> notFound(payload.courseId()))
+        .map(course -> {
           course.getHoles().add(hole);
-          return repository.update(course);
-        });
+          return course;
+        })
+        .flatMap(repository::update)
+        .chain(() -> Uni.createFrom().item(hole));
   }
 
   @Override
-  public Uni<CourseEntity> update(HolePayload payload) {
+  public Uni<HoleEntity> update(HolePayload payload) {
     return Uni.createFrom().nothing();
   }
 

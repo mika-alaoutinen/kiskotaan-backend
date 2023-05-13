@@ -2,7 +2,6 @@ package mikaa.feature.scorecard;
 
 import java.util.List;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -14,7 +13,6 @@ import mikaa.api.ScoreCardsApi;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.model.ScoreCardDTO;
 
-@ApplicationScoped
 @RequiredArgsConstructor
 class ScoreCardResource implements ScoreCardsApi {
 

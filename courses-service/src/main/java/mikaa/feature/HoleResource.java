@@ -2,7 +2,6 @@ package mikaa.feature;
 
 import org.modelmapper.ModelMapper;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -12,9 +11,8 @@ import mikaa.api.HolesApi;
 import mikaa.model.HoleDetailsDTO;
 import mikaa.model.NewHoleDTO;
 
-@ApplicationScoped
 @RequiredArgsConstructor
-public class HoleResource implements HolesApi {
+class HoleResource implements HolesApi {
 
   private static final ModelMapper MAPPER = new ModelMapper();
   private final HoleService service;

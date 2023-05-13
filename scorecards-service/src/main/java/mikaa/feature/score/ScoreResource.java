@@ -1,6 +1,5 @@
 package mikaa.feature.score;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
@@ -10,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoresApi;
 import mikaa.model.ScoreDTO;
 
-@ApplicationScoped
 @Blocking
 @RequiredArgsConstructor
 class ScoreResource implements ScoresApi {

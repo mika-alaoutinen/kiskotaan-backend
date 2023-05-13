@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -20,9 +19,8 @@ import mikaa.model.NewHoleDTO;
 import mikaa.util.StringFilter;
 import mikaa.util.RangeFilter;
 
-@ApplicationScoped
 @RequiredArgsConstructor
-public class CourseResource implements CoursesApi {
+class CourseResource implements CoursesApi {
 
   private static final ModelMapper MAPPER = new ModelMapper();
   private final CourseService service;

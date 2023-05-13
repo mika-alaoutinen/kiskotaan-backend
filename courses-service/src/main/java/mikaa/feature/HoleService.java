@@ -34,8 +34,6 @@ class HoleService {
   HoleEntity update(long id, HoleEntity updatedHole) {
     var hole = repository.findByIdOptional(id).orElseThrow(() -> holeNotFound(id));
 
-    HoleValidator.validateUniqueHoleNumber(updatedHole.getHoleNumber(), hole.getCourse());
-
     hole.setDistance(updatedHole.getDistance());
     hole.setHoleNumber(updatedHole.getHoleNumber());
     hole.setPar(updatedHole.getPar());

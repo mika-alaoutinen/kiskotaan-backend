@@ -17,19 +17,19 @@ class HoleConsumer {
 
   @Incoming("hole-added")
   Uni<Void> holeAdded(HolePayload payload) {
-    log.info("received hole added event", payload);
+    log.info("received hole added event: %s".formatted(payload));
     return writer.add(payload).replaceWithVoid();
   }
 
   @Incoming("hole-deleted")
   Uni<Void> holeDeleted(HolePayload payload) {
-    log.info("received hole deleted event", payload);
+    log.info("received hole deleted event: %s".formatted(payload));
     return writer.delete(payload).replaceWithVoid();
   }
 
   @Incoming("hole-updated")
   Uni<Void> holeUpdated(HolePayload payload) {
-    log.info("received hole updated event", payload);
+    log.info("received hole updated event: %s".formatted(payload));
     return writer.update(payload).replaceWithVoid();
   }
 

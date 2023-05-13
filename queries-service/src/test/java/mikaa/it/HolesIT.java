@@ -27,10 +27,10 @@ class HolesIT {
     fetchLaajis().body("holes.size()", is(18));
 
     InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_ADDED);
-    source.send(new HolePayload(19l, 2l, 19, 5, 200));
+    source.send(new HolePayload(100l, 1l, 19, 5, 200));
 
     fetchLaajis().body(
-        "holes[18].par", is(15),
+        "holes[18].par", is(5),
         "holes[18].distance", is(200));
   }
 
@@ -41,7 +41,7 @@ class HolesIT {
         "holes[0].distance", is(107));
 
     InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_UPDATED);
-    source.send(new HolePayload(20l, 1l, 1, 4, 123));
+    source.send(new HolePayload(1l, 1l, 1, 4, 123));
 
     fetchLaajis().body(
         "holes[0].par", is(4),
@@ -50,19 +50,27 @@ class HolesIT {
 
   @Test
   void fetch_course_after_hole_delete() {
-    fetchLaajis().body("holes[1].par", is(3));
+    fetchKeljo().body("holes[0].par", is(3));
 
     InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_DELETED);
-    source.send(new HolePayload(21l, 1l, 2, 3, 127));
+    source.send(new HolePayload(19l, 2l, 1, 3, 92));
 
-    // Second hole is now number 3 after hole 2 was deleted
-    fetchLaajis().body("holes[1].number", is(3));
+    // First hole is now number 2 after hole 1 was deleted
+    fetchKeljo().body("holes[0].number", is(2));
   }
 
   private ValidatableResponse fetchLaajis() {
+    return fetchCourse(1);
+  }
+
+  private ValidatableResponse fetchKeljo() {
+    return fetchCourse(2);
+  }
+
+  private ValidatableResponse fetchCourse(int id) {
     return given()
         .when()
-        .get("/courses/1")
+        .get("/courses/" + id)
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON);

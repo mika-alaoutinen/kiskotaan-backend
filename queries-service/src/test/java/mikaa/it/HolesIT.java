@@ -50,21 +50,17 @@ class HolesIT {
 
   @Test
   void fetch_course_after_hole_delete() {
-    fetchKeljo().body("holes[0].par", is(3));
+    fetchCourse(101).body("holes[0].par", is(4));
 
     InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_DELETED);
-    source.send(new HolePayload(19l, 2l, 1, 3, 92));
+    source.send(new HolePayload(201l, 101l, 1, 4, 110));
 
-    // First hole is now number 2 after hole 1 was deleted
-    fetchKeljo().body("holes[0].number", is(2));
+    // First hole was deleted, hole 2 is now the only hole in the course
+    fetchCourse(101).body("holes[0].number", is(2));
   }
 
   private ValidatableResponse fetchLaajis() {
     return fetchCourse(1);
-  }
-
-  private ValidatableResponse fetchKeljo() {
-    return fetchCourse(2);
   }
 
   private ValidatableResponse fetchCourse(int id) {

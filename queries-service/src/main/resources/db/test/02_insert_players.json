@@ -1,0 +1,31 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "add_players_test",
+        "author": "mikaa",
+        "changes": [
+          {
+            "insertMany": {
+              "collectionName": "player",
+              "documents": {
+                "$rawJson": [
+                  {
+                    "externalId": 4,
+                    "firstName": "Update",
+                    "lastName": "Me"
+                  },
+                  {
+                    "externalId": 5,
+                    "firstName": "Delete",
+                    "lastName": "Me"
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

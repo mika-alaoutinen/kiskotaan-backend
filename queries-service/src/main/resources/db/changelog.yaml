@@ -2,3 +2,6 @@ databaseChangeLog:
   - includeAll:
       contextFilter: dev,test
       path: db/dev
+  - includeAll:
+      contextFilter: test
+      path: db/test

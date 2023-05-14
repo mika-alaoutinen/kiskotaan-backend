@@ -1,0 +1,36 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "add_courses_test",
+        "author": "mikaa",
+        "changes": [
+          {
+            "insertMany": {
+              "collectionName": "course",
+              "documents": {
+                "$rawJson": [
+                  {
+                    "externalId": 100,
+                    "name": "Delete me 1",
+                    "holes": [
+                      { "externalId": 200, "holeNumber": 1, "par": 3, "distance": 70 }
+                    ]
+                  },
+                  {
+                    "externalId": 101,
+                    "name": "Delete holes",
+                    "holes": [
+                      { "externalId": 201, "holeNumber": 1, "par": 4, "distance": 110 },
+                      { "externalId": 202, "holeNumber": 2, "par": 5, "distance": 200 }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

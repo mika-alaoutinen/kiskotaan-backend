@@ -4,6 +4,9 @@
 - Implement REST endpoints using a reactive programming style.
 - Try out MongoDB just for the heck of it.
 
+## Managing test data
+A test data set is inserted into the database using Liquibase Mongo extension.
+
 ## Tehnical issues
 A note on technical issues.
 

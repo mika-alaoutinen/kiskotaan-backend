@@ -38,17 +38,17 @@ class CoursesIT {
 
   @Test
   void try_to_fetch_deleted_course() {
-    fetchById(1); // Course 1 has been added with Liquibase
+    fetchById(100);
 
     InMemorySource<CoursePayload> source = connector.source(IncomingChannels.Course.COURSE_DELETED);
-    source.send(new CoursePayload(1l, "Frisbeegolf Laajis", List.of()));
+    source.send(new CoursePayload(100l, "Delete me 1", List.of()));
 
-    fetchByIdAndExpectNotFound(1);
+    fetchByIdAndExpectNotFound(100);
   }
 
   @Test
   void fetch_updated_course() {
-    fetchById(2); // Course 2 has been added with Liquibase
+    fetchById(2);
 
     InMemorySource<CourseUpdated> source = connector.source(IncomingChannels.Course.COURSE_UPDATED);
     source.send(new CourseUpdated(2l, "Updated name"));

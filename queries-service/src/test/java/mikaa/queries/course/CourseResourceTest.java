@@ -30,7 +30,7 @@ class CourseResourceTest {
         .extract()
         .as(CourseSummaryDTO[].class);
 
-    assertEquals(2, courseSummaries.length);
+    assertEquals(4, courseSummaries.length);
 
     var laajis = courseSummaries[0];
     assertEquals(1, laajis.id());

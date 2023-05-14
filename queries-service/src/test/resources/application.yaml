@@ -1,3 +1,10 @@
+quarkus:
+  liquibase-mongodb:
+    change-log: db/changelog.yaml
+    contexts: dev,test
+    migrate-at-start: true
+    validate-on-migrate: true
+
 mp:
   messaging:
     incoming:

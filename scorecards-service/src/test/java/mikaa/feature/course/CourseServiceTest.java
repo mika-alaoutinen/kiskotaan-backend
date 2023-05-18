@@ -15,9 +15,9 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
-import mikaa.CoursePayload;
-import mikaa.CourseUpdated;
-import mikaa.Hole;
+import mikaa.kiskotaan.scorecards.CoursePayload;
+import mikaa.kiskotaan.scorecards.CourseUpdated;
+import mikaa.kiskotaan.scorecards.Hole;
 
 @QuarkusTest
 class CourseServiceTest {

@@ -17,48 +17,36 @@ mp:
             reset: "earliest"
         connector: smallrye-kafka
         topic: "Courses.course_added"
-        value:
-          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       course-deleted:
         auto:
           offset:
             reset: "earliest"
         connector: smallrye-kafka
         topic: "Courses.course_deleted"
-        value:
-          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       course-updated:
         auto:
           offset:
             reset: "earliest"
         connector: smallrye-kafka
         topic: "Courses.course_updated"
-        value:
-          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       hole-added:
         auto:
           offset:
             reset: "earliest"
         connector: smallrye-kafka
         topic: "Courses.hole_added"
-        value:
-          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       hole-deleted:
         auto:
           offset:
             reset: "earliest"
         connector: smallrye-kafka
         topic: "Courses.hole_deleted"
-        value:
-          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       hole-updated:
         auto:
           offset:
             reset: "earliest"
         connector: smallrye-kafka
         topic: "Courses.hole_updated"
-        value:
-          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       player-added:
         auto:
           offset:

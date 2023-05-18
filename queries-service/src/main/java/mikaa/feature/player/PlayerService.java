@@ -1,7 +1,5 @@
 package mikaa.feature.player;
 
-import java.util.function.Function;
-
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -10,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import mikaa.PlayerPayload;
 import mikaa.consumers.player.PlayerWriter;
 import mikaa.queries.player.PlayerReader;
-import mikaa.utils.UniFn;
+import mikaa.uni.UniDecorator;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -23,22 +21,15 @@ class PlayerService implements PlayerReader, PlayerWriter {
     return repository.persist(toPlayer(payload));
   }
 
-  // Maybe add decorator for working with Unis?
-  @Override
   public Uni<PlayerEntity> update(PlayerPayload payload) {
-    Function<PlayerEntity, PlayerEntity> update = player -> {
-      player.setFirstName(payload.firstName());
-      player.setLastName(payload.lastName());
-      return player;
-    };
-
-    Function<PlayerEntity, Uni<? extends PlayerEntity>> persist = player -> {
-      return repository.update(player);
-    };
-
-    var maybePlayer = repository.findByExternalId(payload.id());
-    var updated = UniFn.map(maybePlayer, update);
-    return UniFn.flatMap(updated, persist);
+    return UniDecorator.from(repository.findByExternalId(payload.id()))
+        .map(player -> {
+          player.setFirstName(payload.firstName());
+          player.setLastName(payload.lastName());
+          return player;
+        })
+        .flatMap(repository::update)
+        .unwrap();
   }
 
   @Override

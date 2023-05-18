@@ -5,10 +5,12 @@ import java.util.function.Function;
 import io.smallrye.mutiny.Uni;
 
 /**
- * Generic helper functions that fix the behaviour of Mutiny Uni methods.
+ * UniDecorator fixes the behaviour of ill-behaving mapping functions of Mutiny
+ * Uni and adds convenient shortcuts.
  * 
- * Uni functions should behave similarly to f.ex. Optional, where they apply the
- * mapping function if the source is not null and do nothing otherwise.
+ * Uni mapping functions should behave similarly to f.ex. Optional, where they
+ * apply the mapping function if the source is not null and do nothing
+ * otherwise.
  */
 public interface UniDecorator<T> {
 
@@ -19,6 +21,8 @@ public interface UniDecorator<T> {
   UniDecorator<T> flatMap(Function<T, Uni<? extends T>> mapper);
 
   UniDecorator<T> map(Function<T, T> mapper);
+
+  Uni<T> orThrow(Throwable failure);
 
   Uni<T> unwrap();
 

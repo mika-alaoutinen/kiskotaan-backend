@@ -21,6 +21,11 @@ class UniImpl<T> implements UniDecorator<T> {
     return UniDecorator.from(result);
   }
 
+  @Override
+  public Uni<T> orThrow(Throwable failure) {
+    return value.onItem().ifNull().failWith(failure);
+  }
+
   public Uni<T> unwrap() {
     return value;
   }

@@ -22,7 +22,8 @@ class PlayerService implements PlayerReader, PlayerWriter {
   }
 
   public Uni<PlayerEntity> update(PlayerPayload payload) {
-    return UniDecorator.from(repository.findByExternalId(payload.id()))
+    return UniDecorator
+        .from(repository.findByExternalId(payload.id()))
         .map(player -> {
           player.setFirstName(payload.firstName());
           player.setLastName(payload.lastName());
@@ -42,10 +43,9 @@ class PlayerService implements PlayerReader, PlayerWriter {
 
   @Override
   public Uni<PlayerEntity> findOne(long externalId) {
-    return repository.findByExternalId(externalId)
-        .onItem()
-        .ifNull()
-        .failWith(new NotFoundException("Could not find player with ID " + externalId));
+    return UniDecorator
+        .from(repository.findByExternalId(externalId))
+        .orThrow(new NotFoundException("Could not find player with ID " + externalId));
   }
 
   @Override

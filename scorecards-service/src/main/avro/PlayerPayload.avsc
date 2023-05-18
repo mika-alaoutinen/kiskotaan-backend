@@ -1,0 +1,19 @@
+{
+  "namespace": "mikaa.kiskotaan.scorecards",
+  "name": "PlayerPayload",
+  "type": "record",
+  "fields": [
+    {
+      "name": "id",
+      "type": "long"
+    },
+    {
+      "name": "firstName",
+      "type": "string"
+    },
+    {
+      "name": "lastName",
+      "type": "string"
+    }
+  ]
+}

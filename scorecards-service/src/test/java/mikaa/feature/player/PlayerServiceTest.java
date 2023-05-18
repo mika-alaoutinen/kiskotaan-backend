@@ -14,13 +14,13 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
-import mikaa.PlayerPayload;
+import mikaa.kiskotaan.scorecards.PlayerPayload;
 
 @QuarkusTest
 class PlayerServiceTest {
 
   static final PlayerEntity ENTITY = new PlayerEntity(123, "Mikki", "Hiiri");
-  static final PlayerPayload PAYLOAD = new PlayerPayload(123, "Mikki", "Hiiri");
+  static final PlayerPayload PAYLOAD = new PlayerPayload(123l, "Mikki", "Hiiri");
 
   @InjectMock
   PlayerRepository repository;

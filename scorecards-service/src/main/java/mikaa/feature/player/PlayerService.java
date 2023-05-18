@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.PlayerPayload;
+import mikaa.kiskotaan.scorecards.PlayerPayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -18,22 +18,22 @@ class PlayerService implements PlayerFinder {
   }
 
   void add(PlayerPayload player) {
-    var entity = new PlayerEntity(player.id(), player.firstName(), player.lastName());
+    var entity = new PlayerEntity(player.getId(), player.getFirstName(), player.getLastName());
     repository.persist(entity);
   }
 
   void delete(PlayerPayload player) {
-    repository.findByExternalId(player.id()).ifPresent(entity -> {
+    repository.findByExternalId(player.getId()).ifPresent(entity -> {
       entity.removeFromScoreCards();
       repository.delete(entity);
     });
   }
 
   void update(PlayerPayload player) {
-    repository.findByExternalId(player.id())
+    repository.findByExternalId(player.getId())
         .map(entity -> {
-          entity.setFirstName(player.firstName());
-          entity.setLastName(player.lastName());
+          entity.setFirstName(player.getFirstName());
+          entity.setLastName(player.getLastName());
           return entity;
         })
         .ifPresent(repository::persist);

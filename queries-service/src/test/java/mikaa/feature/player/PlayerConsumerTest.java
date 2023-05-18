@@ -52,6 +52,7 @@ class PlayerConsumerTest {
 
   @Test
   void handles_delete_player_event() {
+    when(repository.findByExternalId(1)).thenReturn(AKU_UNI);
     sendDeleteEvent();
     verify(repository, atLeastOnce()).delete(any(PlayerEntity.class));
   }

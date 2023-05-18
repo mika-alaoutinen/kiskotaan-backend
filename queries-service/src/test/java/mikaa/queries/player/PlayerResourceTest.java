@@ -24,7 +24,7 @@ class PlayerResourceTest {
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON)
-        .body("$.size()", is(4));
+        .body("$.size()", is(5));
   }
 
   @Test

@@ -22,7 +22,7 @@ class CourseService implements CourseReader, CourseWriter {
     return repository.findByExternalId(externalId)
         .onItem()
         .ifNull()
-        .failWith(() -> new NotFoundException("Could not find course with ID " + externalId));
+        .failWith(new NotFoundException("Could not find course with ID " + externalId));
   }
 
   @Override

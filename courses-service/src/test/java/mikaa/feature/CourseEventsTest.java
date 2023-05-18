@@ -12,8 +12,8 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.CoursePayload;
-import mikaa.CourseUpdated;
+import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.courses.CourseProducer;
 
@@ -68,7 +68,7 @@ class CourseEventsTest {
 
     assertEquals(1, sink.received().size());
     var payload = sink.received().get(0).getPayload();
-    assertEquals("Updated Name", payload.name());
+    assertEquals("Updated Name", payload.getName());
   }
 
   @Test
@@ -86,8 +86,8 @@ class CourseEventsTest {
     assertEquals(1, sink.received().size());
     var payload = sink.received().get(0).getPayload();
 
-    assertEquals(name, payload.name());
-    assertEquals(holeCount, payload.holes().size());
+    assertEquals(name, payload.getName());
+    assertEquals(holeCount, payload.getHoles().size());
   }
 
   private static CourseEntity courseMock() {

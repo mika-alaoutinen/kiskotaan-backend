@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.HolePayload;
+import mikaa.kiskotaan.domain.HolePayload;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.holes.HoleProducer;
 
@@ -88,11 +88,11 @@ class HoleEventsTest {
     assertEquals(1, sink.received().size());
     var payload = sink.received().get(0).getPayload();
 
-    assertEquals(expected.id(), payload.id());
-    assertEquals(expected.courseId(), payload.courseId());
-    assertEquals(expected.number(), payload.number());
-    assertEquals(expected.distance(), payload.distance());
-    assertEquals(expected.par(), payload.par());
+    assertEquals(expected.getId(), payload.getId());
+    assertEquals(expected.getCourseId(), payload.getCourseId());
+    assertEquals(expected.getNumber(), payload.getNumber());
+    assertEquals(expected.getDistance(), payload.getDistance());
+    assertEquals(expected.getPar(), payload.getPar());
   }
 
   private static CourseEntity courseMock() {

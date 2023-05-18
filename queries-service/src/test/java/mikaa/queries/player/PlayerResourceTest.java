@@ -2,14 +2,13 @@ package mikaa.queries.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import mikaa.queries.TestData;
 import mikaa.queries.dto.PlayerDTO;
 
+import static org.hamcrest.Matchers.is;
 import static io.restassured.RestAssured.given;
 
 @QuarkusTest
@@ -19,17 +18,13 @@ class PlayerResourceTest {
 
   @Test
   void should_get_all_players() {
-    var response = given()
+    given()
         .when()
         .get(ENDPOINT)
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON)
-        .extract()
-        .as(PlayerDTO[].class);
-
-    assertEquals(1, response.length);
-    assertPlayer(response[0], TestData.PLAYER);
+        .body("$.size()", is(5));
   }
 
   @Test
@@ -43,10 +38,10 @@ class PlayerResourceTest {
         .extract()
         .as(PlayerDTO.class);
 
-    assertPlayer(response, TestData.PLAYER);
+    var expected = new PlayerDTO(2, "Iines", "Ankka");
+    assertPlayer(response, expected);
   }
 
-  @Disabled("Mock data never returns 404")
   @Test
   void should_handle_player_not_found() {
     given()

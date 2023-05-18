@@ -10,6 +10,7 @@ import mikaa.CourseUpdated;
 import mikaa.Hole;
 import mikaa.consumers.course.CourseWriter;
 import mikaa.queries.course.CourseReader;
+import mikaa.uni.UniDecorator;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -19,10 +20,9 @@ class CourseService implements CourseReader, CourseWriter {
 
   @Override
   public Uni<CourseEntity> findOne(long externalId) {
-    return repository.findByExternalId(externalId)
-        .onItem()
-        .ifNull()
-        .failWith(() -> new NotFoundException("Could not find course with ID " + externalId));
+    return UniDecorator
+        .from(repository.findByExternalId(externalId))
+        .orThrow(new NotFoundException("Could not find course with ID " + externalId));
   }
 
   @Override
@@ -37,21 +37,21 @@ class CourseService implements CourseReader, CourseWriter {
 
   @Override
   public Uni<CourseEntity> update(CourseUpdated payload) {
-    return repository.findByExternalId(payload.id())
-        .onItem()
-        .ifNotNull()
-        .transformToUni(course -> {
+    return UniDecorator
+        .from(repository.findByExternalId(payload.id()))
+        .map(course -> {
           course.setName(payload.name());
-          return repository.update(course);
-        });
+          return course;
+        })
+        .flatMap(repository::update)
+        .unwrap();
   }
 
   @Override
   public Uni<Void> delete(CoursePayload payload) {
-    return repository.findByExternalId(payload.id())
-        .onItem()
-        .ifNotNull()
-        .transformToUni(course -> repository.delete(course));
+    return UniDecorator
+        .from(repository.findByExternalId(payload.id()))
+        .ifPresent(repository::delete);
   }
 
   private static CourseEntity toCourse(CoursePayload payload) {

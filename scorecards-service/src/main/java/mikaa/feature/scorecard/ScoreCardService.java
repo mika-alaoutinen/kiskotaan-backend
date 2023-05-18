@@ -8,7 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.ScoreCardPayload;
+import mikaa.kiskotaan.domain.ScoreCardPayload;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
@@ -69,8 +69,11 @@ class ScoreCardService implements ScoreCardFinder {
         .map(PlayerEntity::getExternalId)
         .toList();
 
+    // ID is only null in tests where repository is mocked
+    long id = entity.getId() == null ? 0 : entity.getId();
+
     return new ScoreCardPayload(
-        entity.getId(),
+        id,
         entity.getCourse().getExternalId(),
         playerIds);
   }

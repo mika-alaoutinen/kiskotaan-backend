@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.HolePayload;
+import mikaa.kiskotaan.domain.HolePayload;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.holes.HoleProducer;
 
@@ -55,11 +55,10 @@ class HoleEventsTest {
     var sink = initSink(OutgoingChannels.Hole.HOLE_ADDED);
 
     when(courseService.findOne(anyLong())).thenReturn(courseMock());
-    var newHole = new HoleEntity(null, 1, 3, 100, courseMock());
+    var newHole = new HoleEntity(321l, 1, 3, 100, courseMock());
     service.add(COURSE_ID, newHole);
 
-    // holeId is null because mocked repository does not create a new ID on persist
-    assertEvent(sink, new HolePayload(null, COURSE_ID, 1, 3, 100));
+    assertEvent(sink, new HolePayload(321l, COURSE_ID, 1, 3, 100));
     verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
@@ -88,11 +87,11 @@ class HoleEventsTest {
     assertEquals(1, sink.received().size());
     var payload = sink.received().get(0).getPayload();
 
-    assertEquals(expected.id(), payload.id());
-    assertEquals(expected.courseId(), payload.courseId());
-    assertEquals(expected.number(), payload.number());
-    assertEquals(expected.distance(), payload.distance());
-    assertEquals(expected.par(), payload.par());
+    assertEquals(expected.getId(), payload.getId());
+    assertEquals(expected.getCourseId(), payload.getCourseId());
+    assertEquals(expected.getNumber(), payload.getNumber());
+    assertEquals(expected.getDistance(), payload.getDistance());
+    assertEquals(expected.getPar(), payload.getPar());
   }
 
   private static CourseEntity courseMock() {

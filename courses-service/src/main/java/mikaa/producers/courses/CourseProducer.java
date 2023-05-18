@@ -1,7 +1,7 @@
 package mikaa.producers.courses;
 
-import mikaa.CoursePayload;
-import mikaa.CourseUpdated;
+import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.domain.CourseUpdated;
 
 public interface CourseProducer {
 

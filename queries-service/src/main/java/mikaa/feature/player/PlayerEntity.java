@@ -18,4 +18,10 @@ public class PlayerEntity {
   private String firstName;
   private String lastName;
 
+  public PlayerEntity(long externalId, String firstName, String lastName) {
+    this.externalId = externalId;
+    this.firstName = firstName;
+    this.lastName = lastName;
+  }
+
 }

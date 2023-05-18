@@ -1,6 +1,8 @@
 version: '3.8'
 
 services:
+  # Add Apicurio schema registry
+
   # Kafka message broker using KRaft instead of ZooKeeper for simpler development experience.
   kafka:
     container_name: kafka
@@ -34,6 +36,7 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d
 
+  # Add Queries service
   players_service:
     container_name: players_service
     depends_on:

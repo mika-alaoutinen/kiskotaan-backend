@@ -18,9 +18,17 @@ public interface UniDecorator<T> {
     return new UniImpl<T>(uni);
   }
 
+  static UniDecorator<Void> empty() {
+    return new UniImpl<Void>(Uni.createFrom().nullItem());
+  }
+
+  // Pipe operations
   UniDecorator<T> flatMap(Function<T, Uni<? extends T>> mapper);
 
   UniDecorator<T> map(Function<T, T> mapper);
+
+  // Terminal operations
+  Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper);
 
   Uni<T> orThrow(Throwable failure);
 

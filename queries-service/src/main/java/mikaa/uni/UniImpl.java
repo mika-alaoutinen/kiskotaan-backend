@@ -22,6 +22,11 @@ class UniImpl<T> implements UniDecorator<T> {
   }
 
   @Override
+  public Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper) {
+    return value.onItem().ifNotNull().transformToUni(mapper);
+  }
+
+  @Override
   public Uni<T> orThrow(Throwable failure) {
     return value.onItem().ifNull().failWith(failure);
   }

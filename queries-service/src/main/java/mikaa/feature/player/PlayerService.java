@@ -35,10 +35,9 @@ class PlayerService implements PlayerReader, PlayerWriter {
 
   @Override
   public Uni<Void> delete(PlayerPayload payload) {
-    return repository.findByExternalId(payload.id())
-        .onItem()
-        .ifNotNull()
-        .transformToUni(player -> repository.delete(player));
+    return UniDecorator
+        .from(repository.findByExternalId(payload.id()))
+        .ifPresent(repository::delete);
   }
 
   @Override

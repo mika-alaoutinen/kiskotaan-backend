@@ -49,10 +49,9 @@ class CourseService implements CourseReader, CourseWriter {
 
   @Override
   public Uni<Void> delete(CoursePayload payload) {
-    return repository.findByExternalId(payload.id())
-        .onItem()
-        .ifNotNull()
-        .transformToUni(course -> repository.delete(course));
+    return UniDecorator
+        .from(repository.findByExternalId(payload.id()))
+        .ifPresent(repository::delete);
   }
 
   private static CourseEntity toCourse(CoursePayload payload) {

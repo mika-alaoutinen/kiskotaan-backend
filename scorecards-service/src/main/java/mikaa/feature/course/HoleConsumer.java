@@ -7,7 +7,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.kiskotaan.scorecards.HolePayload;
+import mikaa.kiskotaan.domain.HolePayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

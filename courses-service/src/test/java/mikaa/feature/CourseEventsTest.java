@@ -12,8 +12,8 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.kiskotaan.courses.CoursePayload;
-import mikaa.kiskotaan.courses.CourseUpdated;
+import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.courses.CourseProducer;
 

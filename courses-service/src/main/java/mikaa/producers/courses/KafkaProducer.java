@@ -2,8 +2,8 @@ package mikaa.producers.courses;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import mikaa.kiskotaan.courses.CoursePayload;
-import mikaa.kiskotaan.courses.CourseUpdated;
+import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.producers.OutgoingChannels;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;

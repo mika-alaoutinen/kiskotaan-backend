@@ -1,5 +1,5 @@
 {
-  "namespace": "mikaa.kiskotaan.scorecards",
+  "namespace": "mikaa.kiskotaan.domain",
   "name": "CoursePayload",
   "type": "record",
   "fields": [

@@ -3,7 +3,7 @@ package mikaa.feature.course;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.scorecards.HolePayload;
+import mikaa.kiskotaan.domain.HolePayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

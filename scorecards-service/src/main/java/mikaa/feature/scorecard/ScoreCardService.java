@@ -8,7 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.scorecards.ScoreCardPayload;
+import mikaa.kiskotaan.domain.ScoreCardPayload;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;

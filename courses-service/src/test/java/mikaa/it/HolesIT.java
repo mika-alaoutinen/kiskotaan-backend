@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
-import mikaa.kiskotaan.courses.HolePayload;
+import mikaa.kiskotaan.domain.HolePayload;
 import mikaa.model.NewHoleDTO;
 import mikaa.producers.holes.HoleProducer;
 

@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.scorecards.ScorePayload;
+import mikaa.kiskotaan.domain.ScorePayload;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;

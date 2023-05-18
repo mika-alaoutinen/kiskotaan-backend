@@ -15,32 +15,50 @@ mp:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.course_added"
+        value:
+          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       course-deleted:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.course_deleted"
+        value:
+          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       course-updated:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.course_updated"
+        value:
+          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       hole-added:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.hole_added"
+        value:
+          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       hole-deleted:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.hole_deleted"
+        value:
+          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       hole-updated:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.hole_updated"
+        value:
+          deserializer: io.apicurio.registry.serde.avro.AvroKafkaDeserializer
       player-added:
         auto:
           offset:
@@ -59,10 +77,26 @@ mp:
 
     outgoing:
       score-added:
+        apicurio:
+          registry:
+            auto-register: true
+        connector: smallrye-kafka
         topic: "Scorecards.score_added"
       score-deleted:
+        apicurio:
+          registry:
+            auto-register: true
+        connector: smallrye-kafka
         topic: "Scorecards.score_deleted"
       scorecard-added:
+        apicurio:
+          registry:
+            auto-register: true
+        connector: smallrye-kafka
         topic: "Scorecards.scorecard_added"
       scorecard-deleted:
+        apicurio:
+          registry:
+            auto-register: true
+        connector: smallrye-kafka
         topic: "Scorecards.scorecard_deleted"

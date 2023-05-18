@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 class UniImpl<T> implements UniDecorator<T> {
+
   private final Uni<T> value;
 
   @Override

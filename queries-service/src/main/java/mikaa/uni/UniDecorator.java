@@ -5,8 +5,8 @@ import java.util.function.Function;
 import io.smallrye.mutiny.Uni;
 
 /**
- * UniDecorator fixes the behaviour of ill-behaving mapping functions of Mutiny
- * Uni and adds convenient shortcuts.
+ * UniDecorator fixes the ill-behaving mapping functions of Mutiny Uni and adds
+ * convenient shortcuts.
  * 
  * Uni mapping functions should behave in a monadic fashion similarly to f. ex.
  * Optional, where they apply the mapping function if the source is not null and
@@ -22,12 +22,10 @@ public interface UniDecorator<T> {
     return new UniImpl<Void>(Uni.createFrom().nullItem());
   }
 
-  // Pipe operations
   <U> UniDecorator<U> flatMap(Function<? super T, Uni<? extends U>> mapper);
 
   <U> UniDecorator<U> map(Function<? super T, U> mapper);
 
-  // Terminal operations
   Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper);
 
   Uni<T> orThrow(Throwable failure);

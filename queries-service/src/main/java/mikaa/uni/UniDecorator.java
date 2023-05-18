@@ -8,9 +8,9 @@ import io.smallrye.mutiny.Uni;
  * UniDecorator fixes the behaviour of ill-behaving mapping functions of Mutiny
  * Uni and adds convenient shortcuts.
  * 
- * Uni mapping functions should behave similarly to f.ex. Optional, where they
- * apply the mapping function if the source is not null and do nothing
- * otherwise.
+ * Uni mapping functions should behave in a monadic fashion similarly to f. ex.
+ * Optional, where they apply the mapping function if the source is not null and
+ * do nothing otherwise.
  */
 public interface UniDecorator<T> {
 

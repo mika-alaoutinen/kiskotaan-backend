@@ -10,13 +10,13 @@ class UniImpl<T> implements UniDecorator<T> {
   private final Uni<T> value;
 
   @Override
-  public UniDecorator<T> flatMap(Function<T, Uni<? extends T>> mapper) {
+  public <U> UniDecorator<U> flatMap(Function<? super T, Uni<? extends U>> mapper) {
     var result = value.onItem().ifNotNull().transformToUni(mapper);
     return UniDecorator.from(result);
   }
 
   @Override
-  public UniDecorator<T> map(Function<T, T> mapper) {
+  public <R> UniDecorator<R> map(Function<? super T, R> mapper) {
     var result = value.onItem().ifNotNull().transform(mapper);
     return UniDecorator.from(result);
   }
@@ -31,6 +31,7 @@ class UniImpl<T> implements UniDecorator<T> {
     return value.onItem().ifNull().failWith(failure);
   }
 
+  @Override
   public Uni<T> unwrap() {
     return value;
   }

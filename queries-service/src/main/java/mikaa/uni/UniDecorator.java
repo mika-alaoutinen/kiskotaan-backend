@@ -23,9 +23,9 @@ public interface UniDecorator<T> {
   }
 
   // Pipe operations
-  UniDecorator<T> flatMap(Function<T, Uni<? extends T>> mapper);
+  <U> UniDecorator<U> flatMap(Function<? super T, Uni<? extends U>> mapper);
 
-  UniDecorator<T> map(Function<T, T> mapper);
+  <U> UniDecorator<U> map(Function<? super T, U> mapper);
 
   // Terminal operations
   Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper);

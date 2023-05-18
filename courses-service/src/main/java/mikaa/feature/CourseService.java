@@ -6,7 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.domain.CourseUpdated;
+import mikaa.kiskotaan.courses.CourseUpdated;
 import mikaa.producers.courses.CourseProducer;
 
 @ApplicationScoped

@@ -12,7 +12,7 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.kiskotaan.courses.HolePayload;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.holes.HoleProducer;
 

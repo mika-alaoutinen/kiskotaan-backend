@@ -5,7 +5,7 @@ import org.eclipse.microprofile.reactive.messaging.Emitter;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import mikaa.kiskotaan.domain.ScorePayload;
+import mikaa.kiskotaan.scorecards.ScorePayload;
 import mikaa.config.OutgoingChannels;
 
 @ApplicationScoped

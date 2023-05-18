@@ -1,6 +1,6 @@
 package mikaa.producers.score;
 
-import mikaa.kiskotaan.domain.ScorePayload;
+import mikaa.kiskotaan.scorecards.ScorePayload;
 
 public interface ScoreProducer {
 

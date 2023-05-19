@@ -11,13 +11,19 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+    open-in-view: false
 
   kafka:
     bootstrap-servers: ${kafka_url:localhost:9092}
     producer:
       client-id: players-producer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: io.apicurio.registry.serde.avro.AvroKafkaSerializer
+      properties:
+        apicurio:
+          registry:
+            auto-register: true
+            url: ${apicurio_url:http://localhost:8000}
 
   liquibase:
     change-log: db/changelog.yaml

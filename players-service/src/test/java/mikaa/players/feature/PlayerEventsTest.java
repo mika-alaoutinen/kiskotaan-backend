@@ -9,7 +9,7 @@ import org.springframework.kafka.test.utils.KafkaTestUtils;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
 
-import mikaa.PlayerPayload;
+import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.players.producers.PlayerTopics;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -62,8 +62,8 @@ class PlayerEventsTest {
   }
 
   private static void assertPlayer(PlayerPayload player, String firstName, String lastName) {
-    assertEquals(firstName, player.firstName());
-    assertEquals(lastName, player.lastName());
+    assertEquals(firstName, player.getFirstName());
+    assertEquals(lastName, player.getLastName());
   }
 
 }

@@ -16,29 +16,35 @@ mp:
         apicurio:
           registry:
             auto-register: true
+        connector: smallrye-kafka
         topic: "Courses.course_added"
       course-deleted:
         apicurio:
           registry:
             auto-register: true
+        connector: smallrye-kafka
         topic: "Courses.course_deleted"
       course-updated:
         apicurio:
           registry:
             auto-register: true
+        connector: smallrye-kafka
         topic: "Courses.course_updated"
       hole-added:
         apicurio:
           registry:
             auto-register: true
+        connector: smallrye-kafka
         topic: "Courses.hole_added"
       hole-deleted:
         apicurio:
           registry:
             auto-register: true
+        connector: smallrye-kafka
         topic: "Courses.hole_deleted"
       hole-updated:
         apicurio:
           registry:
             auto-register: true
+        connector: smallrye-kafka
         topic: "Courses.hole_updated"

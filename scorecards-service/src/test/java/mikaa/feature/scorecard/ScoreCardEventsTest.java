@@ -18,7 +18,7 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.ScoreCardPayload;
+import mikaa.kiskotaan.domain.ScoreCardPayload;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
@@ -83,9 +83,9 @@ class ScoreCardEventsTest {
     assertEquals(1, sink.received().size());
     var payload = sink.received().get(0).getPayload();
 
-    assertEquals(1l, payload.courseId());
-    assertEquals(1, payload.playerIds().size());
-    assertEquals(2l, payload.playerIds().get(0));
+    assertEquals(1l, payload.getCourseId());
+    assertEquals(1, payload.getPlayerIds().size());
+    assertEquals(2l, payload.getPlayerIds().get(0));
   }
 
   private static CourseEntity courseMock() {

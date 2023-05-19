@@ -19,7 +19,7 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.ScorePayload;
+import mikaa.kiskotaan.domain.ScorePayload;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
@@ -68,7 +68,8 @@ class ScoreEventsTest {
         .score(4);
 
     service.addScore(13l, newScore);
-    assertEvent(sink, new ScorePayload(null, 9, 4, 2l, 13l));
+    // ID is set to 0 because of mocked repository. See stupid hack in ScoreService.fromEntity method.
+    assertEvent(sink, new ScorePayload(0l, 2l, 13l, 9, 4));
   }
 
   @Test
@@ -79,17 +80,17 @@ class ScoreEventsTest {
     var sink = initSink(OutgoingChannels.Score.SCORE_DELETED);
 
     service.delete(22);
-    assertEvent(sink, new ScorePayload(null, 16, 5, 2l, 13l));
+    assertEvent(sink, new ScorePayload(22l, 2l, 13l, 16, 5));
   }
 
   private static void assertEvent(InMemorySink<ScorePayload> sink, ScorePayload expected) {
     assertEquals(1, sink.received().size());
     var payload = sink.received().get(0).getPayload();
 
-    assertEquals(expected.hole(), payload.hole());
-    assertEquals(expected.playerId(), payload.playerId());
-    assertEquals(expected.score(), payload.score());
-    assertEquals(expected.scoreCardId(), payload.scoreCardId());
+    assertEquals(expected.getHole(), payload.getHole());
+    assertEquals(expected.getPlayerId(), payload.getPlayerId());
+    assertEquals(expected.getScore(), payload.getScore());
+    assertEquals(expected.getScoreCardId(), payload.getScoreCardId());
   }
 
   private static CourseEntity courseMock() {

@@ -15,31 +15,37 @@ mp:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.course_added"
       course-deleted:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.course_deleted"
       course-updated:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.course_updated"
       hole-added:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.hole_added"
       hole-deleted:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.hole_deleted"
       hole-updated:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.hole_updated"
       player-added:
         auto:
@@ -59,10 +65,26 @@ mp:
 
     outgoing:
       score-added:
+        apicurio:
+          registry:
+            auto-register: true
+        connector: smallrye-kafka
         topic: "Scorecards.score_added"
       score-deleted:
+        apicurio:
+          registry:
+            auto-register: true
+        connector: smallrye-kafka
         topic: "Scorecards.score_deleted"
       scorecard-added:
+        apicurio:
+          registry:
+            auto-register: true
+        connector: smallrye-kafka
         topic: "Scorecards.scorecard_added"
       scorecard-deleted:
+        apicurio:
+          registry:
+            auto-register: true
+        connector: smallrye-kafka
         topic: "Scorecards.scorecard_deleted"

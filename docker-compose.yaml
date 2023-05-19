@@ -1,9 +1,14 @@
 version: '3.8'
 
 services:
-  # Add Apicurio schema registry
+  apicurio:
+    container_name: apicurio
+    image: apicurio/apicurio-registry-mem:latest-release
+    networks:
+      - apicurio_network
+    ports:
+      - 8000:8080
 
-  # Kafka message broker using KRaft instead of ZooKeeper for simpler development experience.
   kafka:
     container_name: kafka
     environment:
@@ -40,9 +45,11 @@ services:
   players_service:
     container_name: players_service
     depends_on:
+      - apicurio
       - kafka
       - postgres
     environment:
+      apicurio_url: apicurio:8000
       db_url: jdbc:postgresql://postgres:5432/players_db
       db_username: admin
       db_password: admin
@@ -51,6 +58,7 @@ services:
       - 8081
     image: mikaalaoutinen/players-service
     networks:
+      - apicurio_network
       - kafka_network
       - postgres_network
     ports:
@@ -59,6 +67,7 @@ services:
   courses_service:
     container_name: courses_service
     depends_on:
+      - apicurio
       - kafka
       - postgres
     environment:
@@ -70,6 +79,7 @@ services:
       - 8082
     image: mikaalaoutinen/courses-service
     networks:
+      - apicurio_network
       - kafka_network
       - postgres_network
     ports:
@@ -78,6 +88,7 @@ services:
   scorecards_service:
     container_name: scorecards_service
     depends_on:
+      - apicurio
       - kafka
       - postgres
     environment:
@@ -89,6 +100,7 @@ services:
       - 8083
     image: mikaalaoutinen/scorecards-service
     networks:
+      - apicurio_network
       - kafka_network
       - postgres_network
     ports:
@@ -109,6 +121,8 @@ services:
       - 8085:8085
 
 networks:
+  apicurio_network:
+    driver: bridge
   kafka_network:
     driver: bridge
   postgres_network:

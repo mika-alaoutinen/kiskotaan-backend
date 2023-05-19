@@ -9,10 +9,6 @@ spring:
     username: sa
     password:
 
-  jpa:
-    hibernate:
-      ddl-auto: none
-
   kafka:
     bootstrap-servers: ${spring.embedded.kafka.brokers}
     producer:

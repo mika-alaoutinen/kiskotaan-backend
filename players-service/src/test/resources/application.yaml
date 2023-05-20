@@ -1,9 +1,5 @@
 apicurio-url: "null"
 
-logging:
-  level:
-    root: WARN
-
 spring:
   datasource:
     driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver

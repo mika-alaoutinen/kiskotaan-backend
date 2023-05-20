@@ -4,33 +4,27 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.kafka.test.utils.KafkaTestUtils;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import mikaa.PlayerPayload;
-import mikaa.players.producers.PlayerTopics;
+import mikaa.players.consumers.PlayerConsumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.apache.kafka.clients.consumer.Consumer;
-
-// Reset Kafka state before each test. Terrible for performance but makes writing tests easier.
-@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
-@EmbeddedKafka(partitions = 1)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@Testcontainers
 class PlayerEventsTest {
 
-  // See PlayerConsumerTestConfig.java
-  @Autowired
-  private Consumer<String, PlayerPayload> playerAddedConsumer;
+  @Container
+  static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka")).withKraft();
 
   @Autowired
-  private Consumer<String, PlayerPayload> playerDeletedConsumer;
-
-  @Autowired
-  private Consumer<String, PlayerPayload> playerUpdatedConsumer;
+  private PlayerConsumer consumer;
 
   @Autowired
   private PlayersRepository repository;
@@ -38,26 +32,31 @@ class PlayerEventsTest {
   @Autowired
   private PlayersService service;
 
+  @DynamicPropertySource
+  static void kafkaProperties(DynamicPropertyRegistry registry) {
+    registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
+  }
+
   @Test
-  void sends_event_on_new_player_added() {
+  void sends_event_on_new_player_added() throws InterruptedException {
     service.add(new PlayerEntity("Pekka", "Kana"));
-    var payload = KafkaTestUtils.getSingleRecord(playerAddedConsumer, PlayerTopics.PLAYER_ADDED).value();
+    var payload = consumer.getPlayerAddedAwait();
     assertPlayer(payload, "Pekka", "Kana");
   }
 
   @Test
-  void sends_event_on_player_update() {
+  void sends_event_on_player_update() throws InterruptedException {
     var player = repository.save(new PlayerEntity("Pekka", "Kana"));
     service.update(player.getId(), new PlayerEntity("Kalle", "Kukko"));
-    var payload = KafkaTestUtils.getSingleRecord(playerUpdatedConsumer, PlayerTopics.PLAYER_UPDATED).value();
+    var payload = consumer.getPlayerUpdatedAwait();
     assertPlayer(payload, "Kalle", "Kukko");
   }
 
   @Test
-  void sends_event_on_player_delete() {
+  void sends_event_on_player_delete() throws InterruptedException {
     var player = repository.save(new PlayerEntity("Delete", "Me"));
     service.delete(player.getId());
-    var payload = KafkaTestUtils.getSingleRecord(playerDeletedConsumer, PlayerTopics.PLAYER_DELETED).value();
+    var payload = consumer.getPlayerDeletedAwait();
     assertPlayer(payload, "Delete", "Me");
   }
 

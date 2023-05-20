@@ -51,6 +51,9 @@ class PlayersIT {
 
   @DynamicPropertySource
   static void containerProperties(DynamicPropertyRegistry registry) {
+    var port = apicurio.getMappedPort(8080);
+    var apicurioUrl = "http://localhost:%s/apis/registry/v2".formatted(port);
+    registry.add("apicurio-url", () -> apicurioUrl);
     registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
   }
 
@@ -112,8 +115,8 @@ class PlayersIT {
   }
 
   private static void assertEventPayload(PlayerPayload player, String firstName, String lastName) {
-    assertEquals(firstName, player.getFirstName());
-    assertEquals(lastName, player.getLastName());
+    assertEquals(firstName, player.getFirstName().toString());
+    assertEquals(lastName, player.getLastName().toString());
   }
 
 }

@@ -1,4 +1,11 @@
+# Uncomment lines if you are running infra locally and not using Quarkus Dev Services
+
 quarkus:
+  # datasource:
+  #   username: admin
+  #   password: admin
+  #   jdbc:
+  #     url: jdbc:postgresql://localhost:5432/scorecards_db
   hibernate-orm:
     validate-in-dev-mode: true
   http:
@@ -8,8 +15,17 @@ quarkus:
     contexts: all,dev # dev context inserts test data into db
     migrate-at-start: true
 
+# kafka:
+#   bootstrap:
+#     servers: localhost:9091
+
 mp:
   messaging:
+    # connector:
+    #   smallrye-kafka:
+    #     apicurio:
+    #       registry:
+    #         url: http://localhost:8000/apis/registry/v2
     incoming:
       course-added:
         auto:

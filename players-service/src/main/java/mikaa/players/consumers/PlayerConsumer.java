@@ -20,19 +20,19 @@ public class PlayerConsumer {
   private PlayerPayload playerDeleted;
   private PlayerPayload playerUpdated;
 
-  @KafkaListener(topics = PlayerTopics.PLAYER_ADDED)
+  @KafkaListener(containerFactory = "playerListenerFactory", topics = PlayerTopics.PLAYER_ADDED)
   void playerAdded(PlayerPayload payload) {
     log.info("Player added {}", payload);
     this.playerAdded = payload;
   }
 
-  @KafkaListener(topics = PlayerTopics.PLAYER_DELETED)
+  @KafkaListener(containerFactory = "playerListenerFactory", topics = PlayerTopics.PLAYER_DELETED)
   void playerDeleted(PlayerPayload payload) {
     log.info("Player deleted {}", payload);
     this.playerDeleted = payload;
   }
 
-  @KafkaListener(topics = PlayerTopics.PLAYER_UPDATED)
+  @KafkaListener(containerFactory = "playerListenerFactory", topics = PlayerTopics.PLAYER_UPDATED)
   void playerUpdated(PlayerPayload payload) {
     log.info("Player updated {}", payload);
     this.playerUpdated = payload;

@@ -10,16 +10,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
-
+import io.apicurio.registry.serde.avro.AvroKafkaDeserializer;
 import mikaa.kiskotaan.domain.PlayerPayload;
 
 @Configuration
 class PlayerConsumerConfig {
 
+  private final String apicurioUrl;
   private final String bootstrapServers;
 
-  PlayerConsumerConfig(@Value("${spring.kafka.bootstrap-servers}") String bootstrapServers) {
+  PlayerConsumerConfig(
+      @Value("${spring.kafka.bootstrap-servers}") String bootstrapServers) {
+    this.apicurioUrl = "http://localhost:8000";
     this.bootstrapServers = bootstrapServers;
   }
 
@@ -28,12 +30,14 @@ class PlayerConsumerConfig {
     Map<String, Object> props = Map.of(
         ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest",
         ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
-        ConsumerConfig.GROUP_ID_CONFIG, "players");
+        ConsumerConfig.GROUP_ID_CONFIG, "players",
+        "apicurio.registry.url", apicurioUrl,
+        "apicurio.registry.use-specific-avro-reader", true);
 
     return new DefaultKafkaConsumerFactory<>(
         props,
         new StringDeserializer(),
-        new JsonDeserializer<>(PlayerPayload.class));
+        new AvroKafkaDeserializer<>());
   }
 
   @Bean

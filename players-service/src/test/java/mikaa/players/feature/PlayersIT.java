@@ -9,14 +9,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
-import mikaa.PlayerPayload;
+import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.model.NewPlayerDTO;
 import mikaa.players.consumers.PlayerConsumer;
+import mikaa.players.testcontainers.Images;
 import mikaa.players.utils.MvcUtils;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -43,10 +44,16 @@ class PlayersIT {
   private MockMvc mvc;
 
   @Container
-  static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka")).withKraft();
+  static GenericContainer<?> apicurio = new GenericContainer<>(Images.apicurio).withExposedPorts(8080);
+
+  @Container
+  static KafkaContainer kafka = new KafkaContainer(Images.kafka).withKraft();
 
   @DynamicPropertySource
-  static void kafkaProperties(DynamicPropertyRegistry registry) {
+  static void containerProperties(DynamicPropertyRegistry registry) {
+    var port = apicurio.getMappedPort(8080);
+    var apicurioUrl = "http://localhost:%s/apis/registry/v2".formatted(port);
+    registry.add("apicurio-url", () -> apicurioUrl);
     registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
   }
 
@@ -108,8 +115,8 @@ class PlayersIT {
   }
 
   private static void assertEventPayload(PlayerPayload player, String firstName, String lastName) {
-    assertEquals(firstName, player.firstName());
-    assertEquals(lastName, player.lastName());
+    assertEquals(firstName, player.getFirstName().toString());
+    assertEquals(lastName, player.getLastName().toString());
   }
 
 }

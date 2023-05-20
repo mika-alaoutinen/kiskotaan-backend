@@ -1,10 +1,12 @@
+apicurio-url: ${apicurio_url:http://localhost:8000}
+
 server:
   port: 8081
 
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: ${db_url:jdbc:postgresql://localhost:5432/player_db}
+    url: ${db_url:jdbc:postgresql://localhost:5432/players_db}
     username: ${db_username:admin}
     password: ${db_password:admin}
 
@@ -18,7 +20,12 @@ spring:
     producer:
       client-id: players-producer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      value-serializer: io.apicurio.registry.serde.avro.AvroKafkaSerializer
+      properties:
+        apicurio:
+          registry:
+            auto-register: true
+            url: ${apicurio-url}
 
   liquibase:
     change-log: db/changelog.yaml

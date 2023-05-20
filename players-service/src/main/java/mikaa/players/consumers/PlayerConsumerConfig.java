@@ -11,6 +11,7 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import io.apicurio.registry.serde.avro.AvroKafkaDeserializer;
+import io.apicurio.registry.serde.avro.AvroKafkaSerdeConfig;
 import mikaa.kiskotaan.domain.PlayerPayload;
 
 @Configuration
@@ -32,8 +33,8 @@ class PlayerConsumerConfig {
         ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest",
         ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
         ConsumerConfig.GROUP_ID_CONFIG, "players",
-        "apicurio.registry.url", apicurioUrl,
-        "apicurio.registry.use-specific-avro-reader", true);
+        AvroKafkaSerdeConfig.USE_SPECIFIC_AVRO_READER, true,
+        "apicurio.registry.url", apicurioUrl);
 
     return new DefaultKafkaConsumerFactory<>(
         props,

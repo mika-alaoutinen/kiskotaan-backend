@@ -73,6 +73,7 @@ services:
       - postgres
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9091
+      MP_MESSAGING_CONNECTOR_SMALLRYE-KAFKA_APICURIO_REGISTRY_URL: apicurio:8000/apis/registry/v2
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/courses_db
       QUARKUS_DATASOURCE_USERNAME: admin
       QUARKUS_DATASOURCE_PASSWORD: admin
@@ -94,6 +95,7 @@ services:
       - postgres
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9091
+      MP_MESSAGING_CONNECTOR_SMALLRYE-KAFKA_APICURIO_REGISTRY_URL: apicurio:8000/apis/registry/v2
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/scorecards_db
       QUARKUS_DATASOURCE_USERNAME: admin
       QUARKUS_DATASOURCE_PASSWORD: admin

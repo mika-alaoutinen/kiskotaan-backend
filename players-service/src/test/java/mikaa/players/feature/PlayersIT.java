@@ -6,32 +6,49 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
-import org.springframework.kafka.test.context.EmbeddedKafka;
-import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
+import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
+import mikaa.PlayerPayload;
 import mikaa.model.NewPlayerDTO;
+import mikaa.players.consumers.PlayerConsumer;
 import mikaa.players.utils.MvcUtils;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-@DirtiesContext
-@EmbeddedKafka(partitions = 1, brokerProperties = { "listeners=PLAINTEXT://localhost:9092", "port=9092" })
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@Testcontainers
 class PlayersIT {
 
   private static final String ENDPOINT = "/players";
+
+  @Autowired
+  private PlayerConsumer consumer;
 
   @Autowired
   private PlayersRepository repository;
 
   @Autowired
   private MockMvc mvc;
+
+  @Container
+  static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka")).withKraft();
+
+  @DynamicPropertySource
+  static void kafkaProperties(DynamicPropertyRegistry registry) {
+    registry.add("spring.kafka.bootstrap-servers", kafka::getBootstrapServers);
+  }
 
   @Test
   void should_get_all_players() throws Exception {
@@ -58,6 +75,8 @@ class PlayersIT {
         .andExpect(status().isCreated());
 
     MvcUtils.verifyName(result, "Pekka", "Kana");
+    var payload = consumer.getPlayerAddedAwait();
+    assertEventPayload(payload, "Pekka", "Kana");
   }
 
   @Test
@@ -71,6 +90,8 @@ class PlayersIT {
         .andExpect(status().isOk());
 
     MvcUtils.verifyName(result, "Edited", "Player");
+    var payload = consumer.getPlayerUpdatedAwait();
+    assertEventPayload(payload, "Edited", "Player");
   }
 
   @Test
@@ -82,6 +103,13 @@ class PlayersIT {
         .andExpect(status().isNoContent());
 
     assertTrue(repository.findById(saved.getId()).isEmpty());
+    var payload = consumer.getPlayerDeletedAwait();
+    assertEventPayload(payload, "Aku", "Ankka");
+  }
+
+  private static void assertEventPayload(PlayerPayload player, String firstName, String lastName) {
+    assertEquals(firstName, player.firstName());
+    assertEquals(lastName, player.lastName());
   }
 
 }

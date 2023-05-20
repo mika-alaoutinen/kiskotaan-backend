@@ -21,11 +21,13 @@ quarkus:
 
 mp:
   messaging:
-    # connector:
-    #   smallrye-kafka:
-    #     apicurio:
-    #       registry:
-    #         url: http://localhost:8000/apis/registry/v2
+    connector:
+      smallrye-kafka:
+        apicurio:
+          registry:
+            auto-register: true
+            # url: http://localhost:8000/apis/registry/v2
+
     incoming:
       course-added:
         auto:
@@ -67,40 +69,31 @@ mp:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Players.player_added"
       player-deleted:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Players.player_deleted"
       player-updated:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Players.player_updated"
 
     outgoing:
       score-added:
-        apicurio:
-          registry:
-            auto-register: true
         connector: smallrye-kafka
         topic: "Scorecards.score_added"
       score-deleted:
-        apicurio:
-          registry:
-            auto-register: true
         connector: smallrye-kafka
         topic: "Scorecards.score_deleted"
       scorecard-added:
-        apicurio:
-          registry:
-            auto-register: true
         connector: smallrye-kafka
         topic: "Scorecards.scorecard_added"
       scorecard-deleted:
-        apicurio:
-          registry:
-            auto-register: true
         connector: smallrye-kafka
         topic: "Scorecards.scorecard_deleted"

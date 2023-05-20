@@ -14,7 +14,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.testcontainers.containers.KafkaContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
+
+import mikaa.players.testcontainers.Images;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,7 +31,7 @@ class PlayerFilteringIT {
   private MockMvc mvc;
 
   @Container
-  static KafkaContainer kafka = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka")).withKraft();
+  static KafkaContainer kafka = new KafkaContainer(Images.kafka).withKraft();
 
   @DynamicPropertySource
   static void kafkaProperties(DynamicPropertyRegistry registry) {

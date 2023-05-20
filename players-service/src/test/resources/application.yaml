@@ -1,3 +1,5 @@
+apicurio-url: "null"
+
 logging:
   level:
     root: WARN

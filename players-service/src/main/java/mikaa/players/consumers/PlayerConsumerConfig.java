@@ -1,6 +1,5 @@
 package mikaa.players.consumers;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -18,15 +17,18 @@ import mikaa.PlayerPayload;
 @Configuration
 class PlayerConsumerConfig {
 
-  @Value("${spring.kafka.bootstrap-servers}")
-  private String bootstrapServers;
+  private final String bootstrapServers;
+
+  PlayerConsumerConfig(@Value("${spring.kafka.bootstrap-servers}") String bootstrapServers) {
+    this.bootstrapServers = bootstrapServers;
+  }
 
   @Bean
   ConsumerFactory<String, PlayerPayload> playerConsumerFactory() {
-    Map<String, Object> props = new HashMap<>();
-    props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-    props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-    props.put(ConsumerConfig.GROUP_ID_CONFIG, "players");
+    Map<String, Object> props = Map.of(
+        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest",
+        ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
+        ConsumerConfig.GROUP_ID_CONFIG, "players");
 
     return new DefaultKafkaConsumerFactory<>(
         props,

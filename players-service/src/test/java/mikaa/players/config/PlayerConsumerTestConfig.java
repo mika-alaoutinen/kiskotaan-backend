@@ -1,4 +1,4 @@
-package mikaa.players.kafka;
+package mikaa.players.config;
 
 import java.time.Duration;
 import java.util.List;

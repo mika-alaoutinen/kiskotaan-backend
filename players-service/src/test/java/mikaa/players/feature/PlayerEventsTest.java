@@ -22,7 +22,7 @@ import org.apache.kafka.clients.consumer.Consumer;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class PlayerEventsTest {
 
-  // See PlayerConsumerTestConfig.java in kafka test package
+  // See PlayerConsumerTestConfig.java
   @Autowired
   private Consumer<String, PlayerPayload> playerAddedConsumer;
 

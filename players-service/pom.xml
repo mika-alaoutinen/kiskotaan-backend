@@ -85,10 +85,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <scope>runtime</scope>
-    </dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>1.18.1</version>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- Shared domain model library -->
     <dependency>

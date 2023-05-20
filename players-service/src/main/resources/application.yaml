@@ -1,3 +1,5 @@
+apicurio-url: ${apicurio_url:http://localhost:8000}
+
 server:
   port: 8081
 
@@ -15,11 +17,6 @@ spring:
 
   kafka:
     bootstrap-servers: ${kafka_url:localhost:9092}
-    consumer:
-      properties:
-        apicurio:
-          registry:
-            url: ${apicurio_url:http://localhost:8000}
     producer:
       client-id: players-producer
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -28,7 +25,7 @@ spring:
         apicurio:
           registry:
             auto-register: true
-            url: ${apicurio_url:http://localhost:8000}
+            url: ${apicurio-url}
 
   liquibase:
     change-log: db/changelog.yaml

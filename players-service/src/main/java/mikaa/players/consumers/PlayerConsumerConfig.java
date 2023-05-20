@@ -20,8 +20,9 @@ class PlayerConsumerConfig {
   private final String bootstrapServers;
 
   PlayerConsumerConfig(
+      @Value("${apicurio-url}") String apicurioUrl,
       @Value("${spring.kafka.bootstrap-servers}") String bootstrapServers) {
-    this.apicurioUrl = "http://localhost:8000";
+    this.apicurioUrl = apicurioUrl;
     this.bootstrapServers = bootstrapServers;
   }
 

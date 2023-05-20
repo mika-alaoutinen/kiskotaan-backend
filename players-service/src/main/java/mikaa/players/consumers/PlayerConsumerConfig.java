@@ -12,7 +12,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 
-import mikaa.PlayerPayload;
+import mikaa.kiskotaan.domain.PlayerPayload;
 
 @Configuration
 class PlayerConsumerConfig {

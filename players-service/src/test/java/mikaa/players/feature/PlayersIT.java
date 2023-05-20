@@ -14,7 +14,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import mikaa.PlayerPayload;
+import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.model.NewPlayerDTO;
 import mikaa.players.consumers.PlayerConsumer;
 import mikaa.players.utils.MvcUtils;
@@ -108,8 +108,8 @@ class PlayersIT {
   }
 
   private static void assertEventPayload(PlayerPayload player, String firstName, String lastName) {
-    assertEquals(firstName, player.firstName());
-    assertEquals(lastName, player.lastName());
+    assertEquals(firstName, player.getFirstName());
+    assertEquals(lastName, player.getLastName());
   }
 
 }

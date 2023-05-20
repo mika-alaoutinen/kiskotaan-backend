@@ -4,7 +4,7 @@ server:
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: ${db_url:jdbc:postgresql://localhost:5432/player_db}
+    url: ${db_url:jdbc:postgresql://localhost:5432/players_db}
     username: ${db_username:admin}
     password: ${db_password:admin}
 

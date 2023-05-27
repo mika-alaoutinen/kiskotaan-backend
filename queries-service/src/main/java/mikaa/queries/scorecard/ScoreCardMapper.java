@@ -65,7 +65,7 @@ interface ScoreCardMapper {
     var course = toSummary(entity.getCourse());
     var players = entity.getPlayers()
         .stream()
-        .map(p -> toSummary(p, course.par()))
+        .map(p -> toSummary(p, entity.getCourse()))
         .toList();
 
     return new ScoreCardSummaryDTO(
@@ -85,24 +85,21 @@ interface ScoreCardMapper {
         holes);
   }
 
-  private static PlayerSummaryDTO toSummary(Player player, int coursePar) {
-    var roundScore = calculateRoundScore(player, coursePar);
+  private static PlayerSummaryDTO toSummary(Player player, Course course) {
+    var roundScore = sumItems(player.getScores(), Score::getScore);
+    // Ignore holes that have no score. Calculate score as par instead of zero.
+    var result = roundScore - calculateCoursePar(course);
 
     return new PlayerSummaryDTO(
         player.getExternalId(),
         player.getFirstName(),
         player.getLastName(),
-        roundScore - coursePar,
+        result,
         roundScore);
   }
 
   private static int calculateCoursePar(Course course) {
     return sumItems(course.getHoles(), Hole::getPar);
-  }
-
-  private static int calculateRoundScore(Player player, int coursePar) {
-    // Ignore holes that have no score. Calculate score as par instead of zero.
-    return sumItems(player.getScores(), Score::getScore);
   }
 
   private static <T> int sumItems(Collection<T> items, ToIntFunction<? super T> mapper) {

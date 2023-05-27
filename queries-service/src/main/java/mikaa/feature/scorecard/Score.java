@@ -14,4 +14,5 @@ public class Score {
   private long externalId;
   private int hole;
   private int score;
+
 }

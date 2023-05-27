@@ -104,6 +104,7 @@ Folder `.http` has http-files that contain example payloads that can be used to 
 `org.jboss.resteasy.reactive.ResponseStatus` annotation does nothing. It should be possible to set the status code of a response using the annotation, but in reality the annotation does nothing. The workaround is to wrap responses in `Response` or `RestResponse` and set headers that way. Unfortunately OpenAPI code generation does not support RestResponse.
 
 # TODO
+- Change player scores to `Map<int, int>`, where key is hole number and value is score.
 - Implement `Queries service`.
 - Send course, player and score card events to `Queries service` on application launch to create initial test data.
   - Currently test data is loaded by using Liquibase Mongo extension.

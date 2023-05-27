@@ -11,7 +11,7 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.PlayerPayload;
+import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.config.IncomingChannels;
 import mikaa.queries.dto.PlayerDTO;
 
@@ -26,7 +26,7 @@ class PlayersIT {
 
   @Test
   void fetch_added_player() {
-    var playerId = 10;
+    var playerId = 10l;
     fetchByIdAndExpectNotFound(playerId);
 
     var source = initSource(IncomingChannels.Player.PLAYER_ADDED);
@@ -38,7 +38,7 @@ class PlayersIT {
 
   @Test
   void try_to_fetch_deleted_player() {
-    var playerId = 101;
+    var playerId = 101l;
     fetchById(playerId);
 
     var source = initSource(IncomingChannels.Player.PLAYER_DELETED);
@@ -49,7 +49,7 @@ class PlayersIT {
 
   @Test
   void fetch_updated_player() {
-    var playerId = 100;
+    var playerId = 100l;
     fetchById(playerId);
 
     var source = initSource(IncomingChannels.Player.PLAYER_UPDATED);
@@ -65,15 +65,15 @@ class PlayersIT {
     assertEquals(expected.lastName(), actual.lastName());
   }
 
-  private PlayerDTO fetchById(int id) {
+  private PlayerDTO fetchById(long id) {
     return fetchByIdAndVerifyStatus(id, 200).extract().as(PlayerDTO.class);
   }
 
-  private ValidatableResponse fetchByIdAndExpectNotFound(int id) {
+  private ValidatableResponse fetchByIdAndExpectNotFound(long id) {
     return fetchByIdAndVerifyStatus(id, 404);
   }
 
-  private ValidatableResponse fetchByIdAndVerifyStatus(int id, int expectedStatus) {
+  private ValidatableResponse fetchByIdAndVerifyStatus(long id, int expectedStatus) {
     return given()
         .when()
         .get("/players/%d".formatted(id))

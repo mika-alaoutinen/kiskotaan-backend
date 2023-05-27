@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.HolePayload;
+import mikaa.kiskotaan.domain.HolePayload;
 import mikaa.consumers.course.HoleWriter;
 import mikaa.queries.course.CourseReader;
 
@@ -20,7 +20,7 @@ class HoleService implements HoleWriter {
   public Uni<HoleEntity> add(HolePayload payload) {
     var hole = toHole(payload);
 
-    return reader.findOne(payload.courseId())
+    return reader.findOne(payload.getCourseId())
         .map(course -> addHole(course, hole))
         .flatMap(repository::update)
         .chain(() -> Uni.createFrom().item(hole));
@@ -30,7 +30,7 @@ class HoleService implements HoleWriter {
   public Uni<HoleEntity> update(HolePayload payload) {
     var hole = toHole(payload);
 
-    return reader.findOne(payload.courseId())
+    return reader.findOne(payload.getCourseId())
         .map(course -> updateHole(course, hole))
         .flatMap(repository::update)
         .chain(() -> Uni.createFrom().item(hole));
@@ -38,8 +38,8 @@ class HoleService implements HoleWriter {
 
   @Override
   public Uni<Void> delete(HolePayload payload) {
-    return reader.findOne(payload.courseId())
-        .map(course -> deleteHole(course, payload.id()))
+    return reader.findOne(payload.getCourseId())
+        .map(course -> deleteHole(course, payload.getId()))
         .flatMap(repository::update)
         .chain(() -> Uni.createFrom().nullItem());
   }
@@ -72,10 +72,10 @@ class HoleService implements HoleWriter {
 
   private static HoleEntity toHole(HolePayload payload) {
     return new HoleEntity(
-        payload.id(),
-        payload.number(),
-        payload.par(),
-        payload.distance());
+        payload.getId(),
+        payload.getNumber(),
+        payload.getPar(),
+        payload.getDistance());
   }
 
 }

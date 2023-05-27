@@ -6,8 +6,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.ScorePayload;
 import mikaa.config.IncomingChannels;
+import mikaa.kiskotaan.domain.ScorePayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

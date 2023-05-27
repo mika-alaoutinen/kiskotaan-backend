@@ -7,7 +7,7 @@ quarkus:
     migrate-at-start: true
     validate-on-migrate: true
   mongodb:
-    database: course
+    database: queries_db
 
 mp:
   messaging:
@@ -16,66 +16,79 @@ mp:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.course_added"
       course-deleted:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.course_deleted"
       course-updated:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.course_updated"
       hole-added:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.hole_added"
       hole-deleted:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.hole_deleted"
       hole-updated:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Courses.hole_updated"
 
       player-added:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Players.player_added"
       player-deleted:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Players.player_deleted"
       player-updated:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Players.player_updated"
 
       scorecard-added:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Scorecards.scorecard_added"
       scorecard-deleted:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Scorecards.scorecard_deleted"
       score-added:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Scorecards.score_added"
       score-deleted:
         auto:
           offset:
             reset: "earliest"
+        connector: smallrye-kafka
         topic: "Scorecards.score_deleted"

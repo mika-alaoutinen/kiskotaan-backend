@@ -6,7 +6,7 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.HolePayload;
+import mikaa.kiskotaan.domain.HolePayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

@@ -7,7 +7,7 @@ quarkus:
     migrate-at-start: true
     validate-on-migrate: true
   mongodb:
-    database: course
+    database: queries_db
 
 mp:
   messaging:

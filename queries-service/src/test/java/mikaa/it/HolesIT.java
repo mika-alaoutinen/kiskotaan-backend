@@ -9,7 +9,7 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.HolePayload;
+import mikaa.kiskotaan.domain.HolePayload;
 import mikaa.config.IncomingChannels;
 
 import static org.hamcrest.Matchers.is;

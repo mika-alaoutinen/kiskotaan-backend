@@ -9,8 +9,8 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.CoursePayload;
-import mikaa.CourseUpdated;
+import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.config.IncomingChannels;
 
 import static org.hamcrest.Matchers.is;

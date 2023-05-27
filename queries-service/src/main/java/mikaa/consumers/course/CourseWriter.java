@@ -1,8 +1,8 @@
 package mikaa.consumers.course;
 
 import io.smallrye.mutiny.Uni;
-import mikaa.CoursePayload;
-import mikaa.CourseUpdated;
+import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.feature.course.CourseEntity;
 
 public interface CourseWriter {

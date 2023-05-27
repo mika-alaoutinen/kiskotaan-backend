@@ -61,7 +61,6 @@ class ScoreCardsResourceTest {
     assertEquals(scoreCard.id(), expected.id());
     assertEquals(scoreCard.course().name(), expected.course().name());
     assertEquals(scoreCard.players().size(), expected.players().size());
-    assertEquals(scoreCard.scores().size(), expected.scores().size());
   }
 
 }

@@ -1,7 +1,7 @@
 package mikaa.consumers.player;
 
 import io.smallrye.mutiny.Uni;
-import mikaa.PlayerPayload;
+import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.feature.player.PlayerEntity;
 
 public interface PlayerWriter {

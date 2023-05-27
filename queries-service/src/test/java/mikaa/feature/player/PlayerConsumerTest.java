@@ -15,7 +15,7 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.PlayerPayload;
+import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.config.IncomingChannels;
 
 @QuarkusTest

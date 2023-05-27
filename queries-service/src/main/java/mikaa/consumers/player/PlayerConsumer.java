@@ -6,8 +6,8 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.PlayerPayload;
 import mikaa.config.IncomingChannels;
+import mikaa.kiskotaan.domain.PlayerPayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

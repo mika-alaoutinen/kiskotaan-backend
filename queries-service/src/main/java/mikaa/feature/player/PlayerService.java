@@ -5,7 +5,7 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import mikaa.PlayerPayload;
+import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.consumers.player.PlayerWriter;
 import mikaa.queries.player.PlayerReader;
 import mikaa.uni.UniDecorator;
@@ -23,10 +23,10 @@ class PlayerService implements PlayerReader, PlayerWriter {
 
   public Uni<PlayerEntity> update(PlayerPayload payload) {
     return UniDecorator
-        .from(repository.findByExternalId(payload.id()))
+        .from(repository.findByExternalId(payload.getId()))
         .map(player -> {
-          player.setFirstName(payload.firstName());
-          player.setLastName(payload.lastName());
+          player.setFirstName(payload.getFirstName());
+          player.setLastName(payload.getLastName());
           return player;
         })
         .flatMap(repository::update)
@@ -36,7 +36,7 @@ class PlayerService implements PlayerReader, PlayerWriter {
   @Override
   public Uni<Void> delete(PlayerPayload payload) {
     return UniDecorator
-        .from(repository.findByExternalId(payload.id()))
+        .from(repository.findByExternalId(payload.getId()))
         .ifPresent(repository::delete);
   }
 
@@ -53,7 +53,7 @@ class PlayerService implements PlayerReader, PlayerWriter {
   }
 
   private static PlayerEntity toPlayer(PlayerPayload payload) {
-    return new PlayerEntity(payload.id(), payload.firstName(), payload.lastName());
+    return new PlayerEntity(payload.getId(), payload.getFirstName(), payload.getLastName());
   }
 
 }

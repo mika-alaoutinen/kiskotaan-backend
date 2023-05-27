@@ -1,0 +1,68 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "add_score_cards_dev",
+        "author": "mikaa",
+        "changes": [
+          {
+            "insertMany": {
+              "collectionName": "scorecard",
+              "documents": {
+                "$rawJson": [
+                  {
+                    "externalId": 1,
+                    "course": {
+                      "externalId": 1,
+                      "name": "Frisbeegolf Laajis",
+                      "holes": [
+                        { "externalId": 1, "holeNumber": 1, "par": 3, "distance": 107 },
+                        { "externalId": 2, "holeNumber": 2, "par": 3, "distance": 127 },
+                        { "externalId": 3, "holeNumber": 3, "par": 3, "distance": 107 },
+                        { "externalId": 4, "holeNumber": 4, "par": 3, "distance": 49 },
+                        { "externalId": 5, "holeNumber": 5, "par": 3, "distance": 97 },
+                        { "externalId": 6, "holeNumber": 6, "par": 3, "distance": 100 },
+                        { "externalId": 7, "holeNumber": 7, "par": 3, "distance": 62 },
+                        { "externalId": 8, "holeNumber": 8, "par": 3, "distance": 90 },
+                        { "externalId": 9, "holeNumber": 9, "par": 4, "distance": 172 },
+                        { "externalId": 10, "holeNumber": 10, "par": 3, "distance": 100 },
+                        { "externalId": 11, "holeNumber": 11, "par": 4, "distance": 165 },
+                        { "externalId": 12, "holeNumber": 12, "par": 3, "distance": 80 },
+                        { "externalId": 13, "holeNumber": 13, "par": 3, "distance": 89 },
+                        { "externalId": 14, "holeNumber": 14, "par": 3, "distance": 76 },
+                        { "externalId": 15, "holeNumber": 15, "par": 4, "distance": 140 },
+                        { "externalId": 16, "holeNumber": 16, "par": 3, "distance": 107 },
+                        { "externalId": 17, "holeNumber": 17, "par": 4, "distance": 183 },
+                        { "externalId": 18, "holeNumber": 18, "par": 3, "distance": 164 }
+                      ]
+                    },
+                    "players": [
+                      {
+                        "externalId": 1,
+                        "firstName": "Aku",
+                        "lastName": "Ankka",
+                        "scores": [
+                          { "externalId": 1, "hole": 1, "score": 3 },
+                          { "externalId": 2, "hole": 2, "score": 4 }
+                        ]
+                      },
+                      {
+                        "externalId": 2,
+                        "firstName": "Iines",
+                        "lastName": "Ankka",
+                        "scores": [
+                          { "externalId": 3, "hole": 1, "score": 4 },
+                          { "externalId": 4, "hole": 2, "score": 5 }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

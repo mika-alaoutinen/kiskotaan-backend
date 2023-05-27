@@ -4,5 +4,5 @@ import jakarta.enterprise.context.ApplicationScoped;
 import mikaa.feature.KiskotaanRepository;
 
 @ApplicationScoped
-class ScorecardRepository extends KiskotaanRepository<ScoreCardEntity> {
+class ScoreCardRepository extends KiskotaanRepository<ScoreCardEntity> {
 }

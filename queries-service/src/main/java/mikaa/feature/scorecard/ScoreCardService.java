@@ -12,7 +12,7 @@ import mikaa.queries.scorecard.ScoreCardReader;
 @RequiredArgsConstructor
 class ScoreCardService implements ScoreCardReader, ScoreCardWriter {
 
-  private final ScorecardRepository repository;
+  private final ScoreCardRepository repository;
 
   @Override
   public Uni<ScoreCardEntity> add(ScoreCardPayload payload) {

@@ -24,6 +24,11 @@
                       { "externalId": 201, "holeNumber": 1, "par": 4, "distance": 110 },
                       { "externalId": 202, "holeNumber": 2, "par": 5, "distance": 200 }
                     ]
+                  },
+                  {
+                    "externalId": 102,
+                    "name": "Update my name",
+                    "holes": []
                   }
                 ]
               }

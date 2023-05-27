@@ -28,43 +28,46 @@ class CoursesIT {
 
   @Test
   void fetch_added_course() {
-    fetchByIdAndExpectNotFound(3);
+    long courseId = 3;
+    fetchByIdAndExpectNotFound(courseId);
 
     InMemorySource<CoursePayload> source = connector.source(IncomingChannels.Course.COURSE_ADDED);
-    source.send(new CoursePayload(3l, "New Course", List.of()));
+    source.send(new CoursePayload(courseId, "New Course", List.of()));
 
-    fetchById(3).body("name", is("New Course"));
+    fetchById(courseId).body("name", is("New Course"));
   }
 
   @Test
   void try_to_fetch_deleted_course() {
-    fetchById(100);
+    long courseId = 100;
+    fetchById(courseId);
 
     InMemorySource<CoursePayload> source = connector.source(IncomingChannels.Course.COURSE_DELETED);
-    source.send(new CoursePayload(100l, "Delete me 1", List.of()));
+    source.send(new CoursePayload(courseId, "Delete me 1", List.of()));
 
-    fetchByIdAndExpectNotFound(100);
+    fetchByIdAndExpectNotFound(courseId);
   }
 
   @Test
   void fetch_updated_course() {
-    fetchById(2);
+    long courseId = 102;
+    fetchById(courseId);
 
     InMemorySource<CourseUpdated> source = connector.source(IncomingChannels.Course.COURSE_UPDATED);
-    source.send(new CourseUpdated(2l, "Updated name"));
+    source.send(new CourseUpdated(courseId, "Updated name"));
 
-    fetchById(2).body("name", is("Updated name"));
+    fetchById(courseId).body("name", is("Updated name"));
   }
 
-  private ValidatableResponse fetchById(int id) {
+  private ValidatableResponse fetchById(long id) {
     return fetchByIdAndVerifyStatus(id, 200);
   }
 
-  private ValidatableResponse fetchByIdAndExpectNotFound(int id) {
+  private ValidatableResponse fetchByIdAndExpectNotFound(long id) {
     return fetchByIdAndVerifyStatus(id, 404);
   }
 
-  private ValidatableResponse fetchByIdAndVerifyStatus(int id, int expectedStatus) {
+  private ValidatableResponse fetchByIdAndVerifyStatus(long id, int expectedStatus) {
     return given()
         .when()
         .get("/courses/%d".formatted(id))

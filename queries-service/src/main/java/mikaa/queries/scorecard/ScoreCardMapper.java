@@ -20,6 +20,10 @@ interface ScoreCardMapper {
         players);
   }
 
+  static ScoreCardSummaryDTO toSummary(ScoreCardEntity entity) {
+    return new ScoreCardSummaryDTO(0, null, null);
+  }
+
   private static CourseDTO toCourse(Course course) {
     int coursePar = calculateCoursePar(course);
     var holes = course.getHoles().stream().map(ScoreCardMapper::toHole).toList();

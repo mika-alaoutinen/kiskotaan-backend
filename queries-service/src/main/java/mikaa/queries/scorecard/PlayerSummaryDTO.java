@@ -1,6 +1,6 @@
 package mikaa.queries.scorecard;
 
-public record PlayerSummaryDTO(
+record PlayerSummaryDTO(
     long id,
     String firstName,
     String lastName,

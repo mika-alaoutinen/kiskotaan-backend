@@ -1,6 +1,6 @@
 package mikaa.queries.scorecard;
 
-public record ScoreDTO(
+record ScoreDTO(
     long id,
     int hole,
     int score) {

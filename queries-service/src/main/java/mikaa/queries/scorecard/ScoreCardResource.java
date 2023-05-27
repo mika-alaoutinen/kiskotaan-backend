@@ -20,7 +20,7 @@ public class ScoreCardResource {
 
   @GET
   public Multi<ScoreCardSummaryDTO> getScoreCards() {
-    return scoreCards.findAll().map(ScoreCardSummaryMapper::toDto);
+    return scoreCards.findAll().map(ScoreCardMapper::toSummary);
   }
 
 }

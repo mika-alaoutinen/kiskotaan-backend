@@ -5,6 +5,5 @@ import java.util.List;
 public record ScoreCardSummaryDTO(
     long id,
     CourseSummaryDTO course,
-    List<PlayerDTO> players,
-    List<ScoreSummaryDTO> scores) {
+    List<PlayerSummaryDTO> players) {
 }

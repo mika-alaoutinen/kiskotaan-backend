@@ -26,12 +26,12 @@ class ScoreCardService implements ScoreCardReader, ScoreCardWriter {
 
   @Override
   public Uni<ScoreCardEntity> findOne(long externalId) {
-    throw new UnsupportedOperationException("Unimplemented method 'findOne'");
+    return repository.findByExternalId(externalId);
   }
 
   @Override
   public Multi<ScoreCardEntity> findAll() {
-    throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+    return repository.streamAll();
   }
 
 }

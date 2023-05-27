@@ -6,6 +6,7 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import mikaa.queries.dto.ScoreCardDTO;
+import mikaa.queries.dto.ScoreCardSummaryDTO;
 
 @Path("scorecards")
 @RequiredArgsConstructor
@@ -20,8 +21,8 @@ public class ScoreCardResource {
   }
 
   @GET
-  public Multi<ScoreCardDTO> getScoreCards() {
-    return scoreCards.findAll().map(ScoreCardMapper::toDto);
+  public Multi<ScoreCardSummaryDTO> getScoreCards() {
+    return scoreCards.findAll().map(ScoreCardSummaryMapper::toDto);
   }
 
 }

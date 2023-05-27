@@ -13,9 +13,12 @@ import mikaa.queries.dto.ScoreCardDTO;
 @RequiredArgsConstructor
 public class ScoreCardResource {
 
+  private final ScoreCardReader scoreCards;
+
   @GET
   @Path("/{id}")
   public Uni<ScoreCardDTO> getScoreCard(int id) {
+    scoreCards.findOne(id);
     return Uni.createFrom().item(MockData.SCORE_CARD);
   }
 

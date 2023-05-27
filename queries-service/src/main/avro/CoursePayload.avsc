@@ -1,0 +1,44 @@
+{
+  "namespace": "mikaa.kiskotaan.domain",
+  "name": "CoursePayload",
+  "type": "record",
+  "fields": [
+    {
+      "name": "id",
+      "type": "long"
+    },
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "holes",
+      "type": {
+        "type": "array",
+        "items": {
+          "name": "Hole",
+          "type": "record",
+          "fields": [
+            {
+              "name": "id",
+              "type": "long"
+            },
+            {
+              "name": "number",
+              "type": "int"
+            },
+            {
+              "name": "par",
+              "type": "int"
+            },
+            {
+              "name": "distance",
+              "type": "int"
+            }
+          ]
+        },
+        "default": []
+      }
+    }
+  ]
+}

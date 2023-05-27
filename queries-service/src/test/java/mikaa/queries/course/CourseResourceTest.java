@@ -11,9 +11,6 @@ import mikaa.queries.dto.CourseSummaryDTO;
 
 import static io.restassured.RestAssured.given;
 
-/**
- * Insert test data with Liquibase. See src/main/resources/db.
- */
 @QuarkusTest
 class CourseResourceTest {
 
@@ -30,7 +27,7 @@ class CourseResourceTest {
         .extract()
         .as(CourseSummaryDTO[].class);
 
-    assertEquals(4, courseSummaries.length);
+    assertEquals(5, courseSummaries.length);
 
     var laajis = courseSummaries[0];
     assertEquals(1, laajis.id());

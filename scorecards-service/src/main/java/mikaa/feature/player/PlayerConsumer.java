@@ -20,21 +20,21 @@ class PlayerConsumer {
   @Incoming(IncomingChannels.Player.PLAYER_ADDED)
   @Transactional
   void playerAdded(PlayerPayload payload) {
-    log.info("Player added %s".formatted(payload));
+    log.info("Player added {}", payload);
     service.add(payload);
   }
 
   @Incoming(IncomingChannels.Player.PLAYER_DELETED)
   @Transactional
   void playerDeleted(PlayerPayload payload) {
-    log.info("Player deleted %s".formatted(payload));
+    log.info("Player deleted {}", payload);
     service.delete(payload);
   }
 
   @Incoming(IncomingChannels.Player.PLAYER_UPDATED)
   @Transactional
   void playerUpdated(PlayerPayload payload) {
-    log.info("Player updated %s".formatted(payload));
+    log.info("Player updated {}", payload);
     service.update(payload);
   }
 

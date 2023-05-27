@@ -21,21 +21,21 @@ class CourseConsumer {
   @Incoming(IncomingChannels.Course.COURSE_ADDED)
   @Transactional
   void courseAdded(CoursePayload payload) {
-    log.info("Course added: %s".formatted(payload));
+    log.info("Course added: {}", payload);
     service.add(payload);
   }
 
   @Incoming(IncomingChannels.Course.COURSE_DELETED)
   @Transactional
   void courseDeleted(CoursePayload payload) {
-    log.info("Course deleted: %s".formatted(payload));
+    log.info("Course deleted: {}", payload);
     service.delete(payload);
   }
 
   @Incoming(IncomingChannels.Course.COURSE_UPDATED)
   @Transactional
   void courseUpdated(CourseUpdated payload) {
-    log.info("Course updated: %s".formatted(payload));
+    log.info("Course updated: {}", payload);
     service.update(payload);
   }
 

@@ -1,4 +1,4 @@
-package mikaa.it;
+package mikaa.queries.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

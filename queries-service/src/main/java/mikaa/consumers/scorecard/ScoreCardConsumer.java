@@ -17,13 +17,13 @@ class ScoreCardConsumer {
   @Incoming(IncomingChannels.ScoreCard.SCORECARD_ADDED)
   @Transactional
   void scoreCardAdded(ScoreCardPayload payload) {
-    log.info("received score card added event", payload);
+    log.info("received score card added event: {}", payload);
   }
 
   @Incoming(IncomingChannels.ScoreCard.SCORECARD_DELETED)
   @Transactional
   void scoreCardDeleted(ScoreCardPayload payload) {
-    log.info("received score card deleted event", payload);
+    log.info("received score card deleted event: {}", payload);
   }
 
 }

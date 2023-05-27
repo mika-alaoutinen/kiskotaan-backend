@@ -18,19 +18,19 @@ class PlayerConsumer {
 
   @Incoming(IncomingChannels.Player.PLAYER_ADDED)
   Uni<Void> playerAdded(PlayerPayload payload) {
-    log.info("received player added event: %s".formatted(payload));
+    log.info("received player added event: {}", payload);
     return writer.add(payload).replaceWithVoid();
   }
 
   @Incoming(IncomingChannels.Player.PLAYER_DELETED)
   Uni<Void> playerDeleted(PlayerPayload payload) {
-    log.info("received player deleted event: %s".formatted(payload));
+    log.info("received player deleted event: {}", payload);
     return writer.delete(payload).replaceWithVoid();
   }
 
   @Incoming(IncomingChannels.Player.PLAYER_UPDATED)
   Uni<Void> playerUpdated(PlayerPayload payload) {
-    log.info("received player updated event: %s".formatted(payload));
+    log.info("received player updated event: {}", payload);
     return writer.update(payload).replaceWithVoid();
   }
 

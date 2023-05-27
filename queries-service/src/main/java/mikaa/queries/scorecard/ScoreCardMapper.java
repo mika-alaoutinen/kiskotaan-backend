@@ -7,9 +7,6 @@ import mikaa.feature.scorecard.Score;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.queries.dto.CourseDTO;
 import mikaa.queries.dto.HoleDTO;
-import mikaa.queries.dto.ScoreCardDTO;
-import mikaa.queries.dto.ScoreCardPlayerDTO;
-import mikaa.queries.dto.ScoreDTO;
 
 interface ScoreCardMapper {
 
@@ -42,10 +39,10 @@ interface ScoreCardMapper {
         hole.getPar());
   }
 
-  private static ScoreCardPlayerDTO toPlayer(Player player) {
+  private static PlayerDTO toPlayer(Player player) {
     var scores = player.getScores().stream().map(ScoreCardMapper::toScore).toList();
 
-    return new ScoreCardPlayerDTO(
+    return new PlayerDTO(
         player.getExternalId(),
         player.getFirstName(),
         player.getLastName(),

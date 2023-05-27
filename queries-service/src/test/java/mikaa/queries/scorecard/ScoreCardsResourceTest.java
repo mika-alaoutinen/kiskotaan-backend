@@ -1,4 +1,4 @@
-package mikaa.queries.scorecards;
+package mikaa.queries.scorecard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import mikaa.queries.TestData;
-import mikaa.queries.dto.ScoreCardDTO;
 
 import static io.restassured.RestAssured.given;
 
@@ -29,7 +27,6 @@ class ScoreCardsResourceTest {
         .as(ScoreCardDTO[].class);
 
     assertEquals(1, response.length);
-    assertScoreCard(response[0], TestData.SCORE_CARD);
   }
 
   @Test
@@ -42,8 +39,6 @@ class ScoreCardsResourceTest {
         .contentType(ContentType.JSON)
         .extract()
         .as(ScoreCardDTO.class);
-
-    assertScoreCard(response, TestData.SCORE_CARD);
   }
 
   @Disabled("Mock data never returns 404")

@@ -1,7 +1,6 @@
 package mikaa.queries.scorecard;
 
 import mikaa.feature.scorecard.ScoreCardEntity;
-import mikaa.queries.dto.ScoreCardSummaryDTO;
 
 interface ScoreCardSummaryMapper {
 

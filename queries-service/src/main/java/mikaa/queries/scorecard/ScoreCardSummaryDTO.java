@@ -1,6 +1,8 @@
-package mikaa.queries.dto;
+package mikaa.queries.scorecard;
 
 import java.util.List;
+
+import mikaa.queries.dto.CourseSummaryDTO;
 
 public record ScoreCardSummaryDTO(
     long id,

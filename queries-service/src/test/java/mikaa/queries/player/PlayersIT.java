@@ -13,7 +13,6 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.config.IncomingChannels;
-import mikaa.queries.dto.PlayerDTO;
 
 import static io.restassured.RestAssured.given;
 

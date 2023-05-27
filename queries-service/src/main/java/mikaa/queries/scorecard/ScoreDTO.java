@@ -1,4 +1,4 @@
-package mikaa.queries.dto;
+package mikaa.queries.scorecard;
 
 public record ScoreDTO(
     long id,

@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import mikaa.queries.dto.PlayerDTO;
 
 import static org.hamcrest.Matchers.is;
 import static io.restassured.RestAssured.given;

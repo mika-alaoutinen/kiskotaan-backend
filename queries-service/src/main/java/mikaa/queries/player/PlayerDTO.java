@@ -1,6 +1,6 @@
-package mikaa.queries.dto;
+package mikaa.queries.player;
 
-public record PlayerDTO(
+record PlayerDTO(
     long id,
     String firstName,
     String lastName) {

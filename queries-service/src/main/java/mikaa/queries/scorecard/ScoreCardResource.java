@@ -5,8 +5,6 @@ import io.smallrye.mutiny.Uni;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
-import mikaa.queries.dto.ScoreCardDTO;
-import mikaa.queries.dto.ScoreCardSummaryDTO;
 
 @Path("scorecards")
 @RequiredArgsConstructor

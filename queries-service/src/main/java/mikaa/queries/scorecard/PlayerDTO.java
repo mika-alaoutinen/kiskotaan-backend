@@ -1,8 +1,8 @@
-package mikaa.queries.dto;
+package mikaa.queries.scorecard;
 
 import java.util.List;
 
-public record ScoreCardPlayerDTO(
+record PlayerDTO(
     long id,
     String firstName,
     String lastName,

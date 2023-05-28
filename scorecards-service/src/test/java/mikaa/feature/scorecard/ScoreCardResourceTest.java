@@ -35,7 +35,7 @@ import jakarta.ws.rs.NotFoundException;
 class ScoreCardResourceTest {
 
   private static final String ENDPOINT = "/scorecards";
-  private static final CourseEntity COURSE = new CourseEntity(321L, 18, "Laajis");
+  private static final CourseEntity COURSE = new CourseEntity(321L, 18, "Laajis", 59);
   private static final PlayerEntity PEKKA_KANA = new PlayerEntity(123L, "Pekka", "Kana");
 
   @InjectMock
@@ -64,7 +64,8 @@ class ScoreCardResourceTest {
         .body(
             "[0].id", is(1),
             "[0].course.holes", is(18),
-            "[0].course.name", is("Laajis"));
+            "[0].course.name", is("Laajis"),
+            "[0].course.par", is(59));
   }
 
   @Test
@@ -82,6 +83,7 @@ class ScoreCardResourceTest {
             "id", is(1),
             "course.holes", is(18),
             "course.name", is("Laajis"),
+            "[0].course.par", is(59),
             "players[0].id", is(123),
             "players[0].firstName", is("Pekka"),
             "players[0].lastName", is("Kana"),
@@ -119,6 +121,7 @@ class ScoreCardResourceTest {
         .body(
             "course.id", is(321),
             "course.holes", is(18),
+            "course.par", is(59),
             "players.size()", is(1),
             "players[0].id", is(123),
             "scores", empty());

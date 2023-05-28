@@ -94,7 +94,7 @@ class ScoreEventsTest {
   }
 
   private static CourseEntity courseMock() {
-    return new CourseEntity(1L, 1l, 18, "Course", null);
+    return new CourseEntity(1L, 1l, 18, "Course", 60, null);
   }
 
   private static PlayerEntity playerMock() {

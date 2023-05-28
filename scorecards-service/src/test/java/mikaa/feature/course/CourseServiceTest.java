@@ -38,16 +38,16 @@ class CourseServiceTest {
     var newCourse = new CoursePayload(111L, "Laajis", List.of(hole));
 
     service.add(newCourse);
-    verify(repository, atLeastOnce()).persist(new CourseEntity(111, 1, "Laajis"));
+    verify(repository, atLeastOnce()).persist(new CourseEntity(111, 1, "Laajis", 3));
   }
 
   @Test
   void should_update_course() {
-    var course = new CourseEntity(111L, 24, "Kaihu");
+    var course = new CourseEntity(111L, 20, "Kaihu", 68);
     when(repository.findByExternalId(anyLong())).thenReturn(Optional.of(course));
 
-    service.update(new CourseUpdated(111l, "Laajis"));
-    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 24, "Laajis"));
+    service.update(new CourseUpdated(111l, "Kaihu v2"));
+    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 20, "Kaihu v2", 68));
   }
 
   @Test

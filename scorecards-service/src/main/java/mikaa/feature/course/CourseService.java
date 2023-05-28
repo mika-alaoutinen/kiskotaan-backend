@@ -6,6 +6,7 @@ import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.kiskotaan.domain.CourseUpdated;
+import mikaa.kiskotaan.domain.Hole;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -19,7 +20,9 @@ class CourseService implements CourseFinder {
   }
 
   void add(CoursePayload course) {
-    var entity = new CourseEntity(course.getId(), course.getHoles().size(), course.getName());
+    var par = course.getHoles().stream().mapToInt(Hole::getPar).sum();
+    var holes = course.getHoles().size();
+    var entity = new CourseEntity(course.getId(), holes, course.getName(), par);
     repository.persist(entity);
   }
 

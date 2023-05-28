@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoreCardsApi;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.model.ScoreCardDTO;
+import mikaa.model.ScoreCardSummaryDTO;
 
 @RequiredArgsConstructor
 class ScoreCardResource implements ScoreCardsApi {
@@ -37,11 +38,8 @@ class ScoreCardResource implements ScoreCardsApi {
   }
 
   @Override
-  public List<ScoreCardDTO> getScoreCards() {
-    return service.findAll()
-        .stream()
-        .map(this::mapScoreCard)
-        .toList();
+  public List<ScoreCardSummaryDTO> getScoreCards() {
+    return List.of();
   }
 
   private ScoreCardDTO mapScoreCard(ScoreCardEntity scoreCard) {

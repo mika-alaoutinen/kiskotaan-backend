@@ -41,21 +41,37 @@ public class CourseEntity {
 
   private int holes;
   private String name;
+  private int par;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
   private Set<ScoreCardEntity> scorecards = new HashSet<>();
 
-  public CourseEntity(long externalId, int holes, String name) {
+  public CourseEntity(long externalId, int holes, String name, int par) {
     this.externalId = externalId;
     this.holes = holes;
     this.name = name;
+    this.par = par;
   }
 
+  CourseEntity addHole(int par) {
+    this.holes++;
+    this.par += par;
+    return this;
+  }
+
+  CourseEntity removeHole(int par) {
+    this.holes--;
+    this.par -= par;
+    return this;
+  }
+
+  // del
   CourseEntity incrementHoleCount() {
     holes++;
     return this;
   }
 
+  // del
   CourseEntity decrementHoleCount() {
     holes--;
     return this;

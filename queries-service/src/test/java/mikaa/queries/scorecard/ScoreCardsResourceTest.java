@@ -22,7 +22,20 @@ class ScoreCardsResourceTest {
         .statusCode(200)
         .contentType(ContentType.JSON)
         .body(
-            "$.size()", is(1));
+            "$.size()", is(1),
+
+            "[0].id", is(1),
+            "[0].course.id", is(1),
+            "[0].course.name", is("Frisbeegolf Laajis"),
+            "[0].course.par", is(58),
+            "[0].course.holes", is(18),
+
+            "[0].players.size()", is(2),
+            "[0].players[0].id", is(1),
+            "[0].players[0].firstName", is("Aku"),
+            "[0].players[0].lastName", is("Ankka"),
+            "[0].players[0].result", is(-51),
+            "[0].players[0].roundScore", is(7));
   }
 
   @Test
@@ -38,6 +51,8 @@ class ScoreCardsResourceTest {
 
             "course.id", is(1),
             "course.name", is("Frisbeegolf Laajis"),
+            "course.par", is(58),
+
             "course.holes.size()", is(18),
             "course.holes[17].number", is(18),
             "course.holes[17].par", is(3),
@@ -46,7 +61,12 @@ class ScoreCardsResourceTest {
             "players.size()", is(2),
             "players[1].id", is(2),
             "players[1].firstName", is("Iines"),
-            "players[1].lastName", is("Ankka"));
+            "players[1].lastName", is("Ankka"),
+
+            "players[1].scores.size()", is(2),
+            "players[1].scores[1].id", is(4),
+            "players[1].scores[1].hole", is(2),
+            "players[1].scores[1].score", is(5));
   }
 
   @Test

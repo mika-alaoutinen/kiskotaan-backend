@@ -1,4 +1,4 @@
-package mikaa.it;
+package mikaa.queries.player;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -13,7 +13,6 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.config.IncomingChannels;
-import mikaa.queries.dto.PlayerDTO;
 
 import static io.restassured.RestAssured.given;
 

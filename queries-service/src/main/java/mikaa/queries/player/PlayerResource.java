@@ -8,7 +8,6 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.player.PlayerEntity;
-import mikaa.queries.dto.PlayerDTO;
 
 @Path("players")
 @RequiredArgsConstructor

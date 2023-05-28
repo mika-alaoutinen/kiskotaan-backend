@@ -1,4 +1,4 @@
-package mikaa.it;
+package mikaa.queries.course;
 
 import org.junit.jupiter.api.Test;
 

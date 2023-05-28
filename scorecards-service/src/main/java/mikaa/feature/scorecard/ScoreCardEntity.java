@@ -22,14 +22,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.score.ScoreEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "scorecard")

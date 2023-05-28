@@ -1,7 +1,7 @@
 package mikaa.feature.scorecard;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +16,7 @@ public class Course {
 
   private long externalId;
   private String name;
-  private Set<Hole> holes = new HashSet<>();
+  private List<Hole> holes = new ArrayList<>();
 
   public void addHole(Hole hole) {
     holes.add(hole);

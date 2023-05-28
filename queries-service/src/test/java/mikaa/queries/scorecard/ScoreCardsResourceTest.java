@@ -1,13 +1,11 @@
 package mikaa.queries.scorecard;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 
+import static org.hamcrest.Matchers.is;
 import static io.restassured.RestAssured.given;
 
 @QuarkusTest
@@ -17,31 +15,40 @@ class ScoreCardsResourceTest {
 
   @Test
   void should_get_all_score_cards() {
-    var response = given()
+    given()
         .when()
         .get(ENDPOINT)
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON)
-        .extract()
-        .as(ScoreCardDTO[].class);
-
-    assertEquals(1, response.length);
+        .body(
+            "$.size()", is(1));
   }
 
   @Test
   void should_get_score_card_by_id() {
-    var response = given()
+    given()
         .when()
-        .get(ENDPOINT + "/3")
+        .get(ENDPOINT + "/1")
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON)
-        .extract()
-        .as(ScoreCardDTO.class);
+        .body(
+            "id", is(1),
+
+            "course.id", is(1),
+            "course.name", is("Frisbeegolf Laajis"),
+            "course.holes.size()", is(18),
+            "course.holes[17].number", is(18),
+            "course.holes[17].par", is(3),
+            "course.holes[17].distance", is(164),
+
+            "players.size()", is(2),
+            "players[1].id", is(2),
+            "players[1].firstName", is("Iines"),
+            "players[1].lastName", is("Ankka"));
   }
 
-  @Disabled("Mock data never returns 404")
   @Test
   void should_handle_score_card_not_found() {
     given()
@@ -50,12 +57,6 @@ class ScoreCardsResourceTest {
         .then()
         .statusCode(404)
         .contentType(ContentType.JSON);
-  }
-
-  private static void assertScoreCard(ScoreCardDTO scoreCard, ScoreCardDTO expected) {
-    assertEquals(scoreCard.id(), expected.id());
-    assertEquals(scoreCard.course().name(), expected.course().name());
-    assertEquals(scoreCard.players().size(), expected.players().size());
   }
 
 }

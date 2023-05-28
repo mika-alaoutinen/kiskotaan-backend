@@ -1,8 +1,8 @@
 package mikaa.feature.scorecard;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.bson.types.ObjectId;
 
@@ -20,7 +20,7 @@ public class ScoreCardEntity {
   private ObjectId id;
   private long externalId;
   private Course course;
-  private Set<Player> players = new HashSet<>();
+  private List<Player> players = new ArrayList<>();
 
   public ScoreCardEntity(long externalId) {
     this.externalId = externalId;

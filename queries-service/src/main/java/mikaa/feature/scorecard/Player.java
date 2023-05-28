@@ -1,6 +1,7 @@
 package mikaa.feature.scorecard;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class Player {
   private long externalId;
   private String firstName;
   private String lastName;
-  private Set<Score> scores;
+  private List<Score> scores = new ArrayList<>();
 
   public Score addScore(Score score) {
     scores.add(score);

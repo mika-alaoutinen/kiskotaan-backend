@@ -9,6 +9,7 @@ import io.restassured.response.ValidatableResponse;
 import mikaa.kiskotaan.domain.ScoreCardPayload;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
+import mikaa.feature.course.HoleEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.score.ScoreEntity;
@@ -35,7 +36,7 @@ import jakarta.ws.rs.NotFoundException;
 class ScoreCardResourceTest {
 
   private static final String ENDPOINT = "/scorecards";
-  private static final CourseEntity COURSE = new CourseEntity(321L, "Laajis");
+  private static final CourseEntity COURSE = courseMock();
   private static final PlayerEntity PEKKA_KANA = new PlayerEntity(123L, "Pekka", "Kana");
 
   @InjectMock
@@ -63,9 +64,9 @@ class ScoreCardResourceTest {
         .contentType(ContentType.JSON)
         .body(
             "[0].id", is(1),
-            "[0].course.holes", is(18),
+            "[0].course.holes", is(3),
             "[0].course.name", is("Laajis"),
-            "[0].course.par", is(59));
+            "[0].course.par", is(12));
   }
 
   @Test
@@ -80,9 +81,9 @@ class ScoreCardResourceTest {
         .contentType(ContentType.JSON)
         .body(
             "id", is(1),
-            "course.holes", is(18),
+            "course.holes", is(3),
             "course.name", is("Laajis"),
-            "course.par", is(59),
+            "course.par", is(12),
             "players[0].id", is(123),
             "players[0].firstName", is("Pekka"),
             "players[0].lastName", is("Kana"),
@@ -121,8 +122,8 @@ class ScoreCardResourceTest {
         .contentType(ContentType.JSON)
         .body(
             "course.id", is(321),
-            "course.holes", is(18),
-            "course.par", is(59),
+            "course.holes", is(3),
+            "course.par", is(12),
             "players.size()", is(1),
             "players[0].id", is(123),
             "scores", anEmptyMap());
@@ -199,6 +200,15 @@ class ScoreCardResourceTest {
             "error", is("Not Found"),
             "message", is("Could not find score card with id " + id),
             "path", containsString("/scorecards/" + id));
+  }
+
+  private static CourseEntity courseMock() {
+    var holes = List.of(
+        new HoleEntity(1, 4),
+        new HoleEntity(2, 5),
+        new HoleEntity(3, 3));
+
+    return new CourseEntity(321L, holes, "Laajis");
   }
 
   private static ScoreCardEntity scoreCardMock() {

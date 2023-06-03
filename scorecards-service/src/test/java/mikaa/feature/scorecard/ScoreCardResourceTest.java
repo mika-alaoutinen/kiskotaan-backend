@@ -9,14 +9,17 @@ import io.restassured.response.ValidatableResponse;
 import mikaa.kiskotaan.domain.ScoreCardPayload;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
+import mikaa.feature.course.HoleEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.score.ScoreEntity;
 import mikaa.model.NewScoreCardDTO;
+import mikaa.model.ScoreCardDTO;
 import mikaa.producers.scorecard.ScoreCardProducer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
@@ -35,7 +38,7 @@ import jakarta.ws.rs.NotFoundException;
 class ScoreCardResourceTest {
 
   private static final String ENDPOINT = "/scorecards";
-  private static final CourseEntity COURSE = new CourseEntity(321L, 18, "Laajis");
+  private static final CourseEntity COURSE = courseMock();
   private static final PlayerEntity PEKKA_KANA = new PlayerEntity(123L, "Pekka", "Kana");
 
   @InjectMock
@@ -63,30 +66,45 @@ class ScoreCardResourceTest {
         .contentType(ContentType.JSON)
         .body(
             "[0].id", is(1),
-            "[0].course.holes", is(18),
-            "[0].course.name", is("Laajis"));
+            "[0].course.holes", is(3),
+            "[0].course.name", is("Laajis"),
+            "[0].course.par", is(12));
   }
 
   @Test
   void should_get_score_card_by_id() {
-    var scoreCard = scoreCardMock();
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCard));
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCardMock()));
 
-    given()
+    var response = given()
         .when()
         .get(ENDPOINT + "/1")
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON)
         .body(
-            "id", is(1),
-            "course.holes", is(18),
-            "course.name", is("Laajis"),
-            "players[0].id", is(123),
-            "players[0].firstName", is("Pekka"),
-            "players[0].lastName", is("Kana"),
-            "scores[0].hole", is(1),
-            "scores[0].score", is(3));
+          "id", is(1),
+          "course.holes", is(3),
+          "course.name", is("Laajis"),
+          "course.par", is(12),
+          "players[0].id", is(123),
+          "players[0].firstName", is("Pekka"),
+          "players[0].lastName", is("Kana")
+        )
+        .extract()
+        .as(ScoreCardDTO.class);
+
+    // Examining maps seems like a pain with Hamcrest
+    var scores = response.getScores().get("123");
+    assertEquals(8, scores.getTotal());
+    assertEquals(-1, scores.getResult());
+
+    var entry1 = scores.getEntries().get(0);
+    assertEquals(1, entry1.getHole());
+    assertEquals(3, entry1.getScore());
+
+    var entry2 = scores.getEntries().get(1);
+    assertEquals(2, entry2.getHole());
+    assertEquals(5, entry2.getScore());
   }
 
   @Test
@@ -118,10 +136,11 @@ class ScoreCardResourceTest {
         .contentType(ContentType.JSON)
         .body(
             "course.id", is(321),
-            "course.holes", is(18),
+            "course.holes", is(3),
+            "course.par", is(12),
             "players.size()", is(1),
             "players[0].id", is(123),
-            "scores", empty());
+            "scores", anEmptyMap());
 
     verify(repository, atLeastOnce()).persist(any(ScoreCardEntity.class));
     verify(producer, atLeastOnce()).scoreCardAdded(any(ScoreCardPayload.class));
@@ -197,9 +216,21 @@ class ScoreCardResourceTest {
             "path", containsString("/scorecards/" + id));
   }
 
+  private static CourseEntity courseMock() {
+    var holes = List.of(
+        new HoleEntity(1, 4),
+        new HoleEntity(2, 5),
+        new HoleEntity(3, 3));
+
+    return new CourseEntity(321L, holes, "Laajis");
+  }
+
   private static ScoreCardEntity scoreCardMock() {
-    var score = new ScoreEntity(2L, 1, 3, PEKKA_KANA, null);
-    return new ScoreCardEntity(1L, COURSE, Set.of(PEKKA_KANA), List.of(score));
+    var scores = List.of(
+        new ScoreEntity(1, 3, PEKKA_KANA),
+        new ScoreEntity(2, 5, PEKKA_KANA));
+
+    return new ScoreCardEntity(1L, COURSE, Set.of(PEKKA_KANA), scores);
   }
 
 }

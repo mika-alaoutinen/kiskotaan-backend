@@ -6,7 +6,6 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -94,11 +93,11 @@ class ScoreEventsTest {
   }
 
   private static CourseEntity courseMock() {
-    return new CourseEntity(1L, 1l, 18, "Course", null);
+    return new CourseEntity(1l, "Course");
   }
 
   private static PlayerEntity playerMock() {
-    return new PlayerEntity(2L, 2l, "Pekka", "Kana", new HashSet<>(), null);
+    return new PlayerEntity(2l, "Pekka", "Kana");
   }
 
   private static ScoreCardEntity scoreCardMock() {

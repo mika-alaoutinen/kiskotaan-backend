@@ -48,11 +48,8 @@ class ScoreService {
   }
 
   private static ScorePayload fromEntity(ScoreEntity entity) {
-    // ID is only null in tests where repository is mocked
-    long id = entity.getId() == null ? 0 : entity.getId();
-
     return new ScorePayload(
-        id,
+        entity.getId(),
         entity.getPlayer().getExternalId(),
         entity.getScorecard().getId(),
         entity.getHole(),

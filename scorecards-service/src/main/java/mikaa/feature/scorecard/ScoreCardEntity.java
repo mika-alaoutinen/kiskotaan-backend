@@ -45,6 +45,7 @@ public class ScoreCardEntity {
   @JoinTable(name = "scorecard_player", joinColumns = @JoinColumn(name = "scorecard_id"), inverseJoinColumns = @JoinColumn(name = "player_id"))
   private Set<PlayerEntity> players = new HashSet<>();
 
+  // Change to Map<long, ScoreEntity> -> Map<player_id, Score>?
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "scorecard", orphanRemoval = true)
   private List<ScoreEntity> scores = new ArrayList<>();
 
@@ -71,6 +72,19 @@ public class ScoreCardEntity {
   public void removeScore(ScoreEntity score) {
     scores.remove(score);
     score.setScorecard(null);
+  }
+
+  /**
+   * Write default getter for ID, because Panache repository's persist method
+   * returns void. Therefore, a mocked repository will return null for an ID even
+   * though that does not happen in reality, and this is difficult to fix.
+   * 
+   * Thanks for this feature, I guess?
+   * 
+   * @return id or default value of "-1"
+   */
+  public long getId() {
+    return id != null ? id : -1;
   }
 
 }

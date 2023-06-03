@@ -12,14 +12,14 @@ class HoleService {
   private final CourseRepository repository;
 
   void add(HolePayload hole) {
-    repository.findByIdOptional(hole.getCourseId())
-        .map(CourseEntity::incrementHoleCount)
+    repository.findByExternalId(hole.getCourseId())
+        .map(course -> course.addHole(new HoleEntity(hole.getNumber(), hole.getPar())))
         .ifPresent(repository::persist);
   }
 
   void delete(HolePayload hole) {
-    repository.findByIdOptional(hole.getCourseId())
-        .map(CourseEntity::decrementHoleCount)
+    repository.findByExternalId(hole.getCourseId())
+        .map(course -> course.removeHole(hole.getNumber()))
         .ifPresent(repository::persist);
   }
 

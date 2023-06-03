@@ -19,7 +19,12 @@ class CourseService implements CourseFinder {
   }
 
   void add(CoursePayload course) {
-    var entity = new CourseEntity(course.getId(), course.getHoles().size(), course.getName());
+    var holes = course.getHoles()
+        .stream()
+        .map(h -> new HoleEntity(h.getNumber(), h.getPar()))
+        .toList();
+
+    var entity = new CourseEntity(course.getId(), holes, course.getName());
     repository.persist(entity);
   }
 

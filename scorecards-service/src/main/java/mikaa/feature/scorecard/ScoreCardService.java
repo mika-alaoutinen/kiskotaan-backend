@@ -69,11 +69,8 @@ class ScoreCardService implements ScoreCardFinder {
         .map(PlayerEntity::getExternalId)
         .toList();
 
-    // ID is only null in tests where repository is mocked
-    long id = entity.getId() == null ? 0 : entity.getId();
-
     return new ScoreCardPayload(
-        id,
+        entity.getId(),
         entity.getCourse().getExternalId(),
         playerIds);
   }

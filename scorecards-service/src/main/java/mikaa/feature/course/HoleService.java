@@ -13,7 +13,7 @@ class HoleService {
 
   void add(HolePayload hole) {
     repository.findByExternalId(hole.getCourseId())
-        .map(course -> course.addHole(hole.getNumber(), hole.getPar()))
+        .map(course -> course.addHole(new HoleEntity(hole.getNumber(), hole.getPar())))
         .ifPresent(repository::persist);
   }
 

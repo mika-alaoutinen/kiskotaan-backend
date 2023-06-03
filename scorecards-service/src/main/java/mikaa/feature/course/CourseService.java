@@ -1,14 +1,11 @@
 package mikaa.feature.course;
 
-import java.util.stream.Collectors;
-
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.kiskotaan.domain.CourseUpdated;
-import mikaa.kiskotaan.domain.Hole;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -24,7 +21,8 @@ class CourseService implements CourseFinder {
   void add(CoursePayload course) {
     var holes = course.getHoles()
         .stream()
-        .collect(Collectors.toMap(Hole::getNumber, Hole::getPar));
+        .map(h -> new HoleEntity(h.getNumber(), h.getPar()))
+        .toList();
 
     var entity = new CourseEntity(course.getId(), holes, course.getName());
     repository.persist(entity);

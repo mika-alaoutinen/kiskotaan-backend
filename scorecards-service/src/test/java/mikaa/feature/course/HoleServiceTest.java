@@ -7,8 +7,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +37,7 @@ class HoleServiceTest {
   void should_add_hole_to_course() {
     when(repository.findByExternalId(anyLong())).thenReturn(Optional.of(mockCourse()));
     service.add(HOLE);
-    var expectedCourse = new CourseEntity(111l, Map.of(1, 3, 2, 3), "Laajis");
+    var expectedCourse = new CourseEntity(111l, List.of(new HoleEntity(1, 3), new HoleEntity(2, 3)), "Laajis");
     verify(repository, atLeastOnce()).persist(expectedCourse);
   }
 
@@ -51,7 +51,7 @@ class HoleServiceTest {
   void should_remove_hole_from_course() {
     when(repository.findByExternalId(anyLong())).thenReturn(Optional.of(mockCourse()));
     service.delete(new HolePayload(999l, 111L, 1, 3, 85));
-    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, Map.of(), "Laajis"));
+    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, List.of(), "Laajis"));
   }
 
   @Test
@@ -61,8 +61,8 @@ class HoleServiceTest {
   }
 
   private static CourseEntity mockCourse() {
-    var holes = new HashMap<Integer, Integer>();
-    holes.put(1, 3);
+    var holes = new ArrayList<HoleEntity>();
+    holes.add(new HoleEntity(1, 3));
     return new CourseEntity(111L, holes, "Laajis");
   }
 

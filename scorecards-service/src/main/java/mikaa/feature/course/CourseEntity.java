@@ -1,8 +1,8 @@
 package mikaa.feature.course;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
@@ -15,7 +15,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 
 import lombok.AccessLevel;
@@ -45,12 +44,9 @@ public class CourseEntity {
   @Column(name = "external_id", nullable = false, unique = true)
   private long externalId;
 
-  // Holes persisted as number -> par entries
   @ElementCollection(fetch = FetchType.LAZY)
-  @CollectionTable(joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"), name = "course_holes")
-  @MapKeyColumn(name = "hole_number")
-  @Column(name = "par")
-  private Map<Integer, Integer> holes = new HashMap<>();
+  @CollectionTable(name = "course_holes", joinColumns = @JoinColumn(name = "course_id"))
+  private List<HoleEntity> holes = new ArrayList<>();
 
   private String name;
 
@@ -62,19 +58,19 @@ public class CourseEntity {
     this.name = name;
   }
 
-  public CourseEntity(long externalId, Map<Integer, Integer> holes, String name) {
+  public CourseEntity(long externalId, List<HoleEntity> holes, String name) {
     this.externalId = externalId;
     this.holes = holes;
     this.name = name;
   }
 
-  CourseEntity addHole(int number, int par) {
-    holes.put(number, par);
+  CourseEntity addHole(HoleEntity hole) {
+    holes.add(hole);
     return this;
   }
 
   CourseEntity removeHole(int number) {
-    holes.remove(number);
+    holes = holes.stream().filter(h -> h.getNumber() != number).toList();
     return this;
   }
 

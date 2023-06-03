@@ -48,6 +48,12 @@ public class ScoreEntity {
     this.score = score;
   }
 
+  public ScoreEntity(int hole, int score, PlayerEntity player) {
+    this.hole = hole;
+    this.score = score;
+    this.player = player;
+  }
+
   /**
    * Write default getter for ID, because Panache repository's persist method
    * returns void. Therefore, a mocked repository will return null for an ID even

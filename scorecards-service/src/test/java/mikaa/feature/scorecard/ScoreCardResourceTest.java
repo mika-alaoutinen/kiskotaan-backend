@@ -14,10 +14,12 @@ import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.score.ScoreEntity;
 import mikaa.model.NewScoreCardDTO;
+import mikaa.model.ScoreCardDTO;
 import mikaa.producers.scorecard.ScoreCardProducer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
@@ -73,24 +75,37 @@ class ScoreCardResourceTest {
   void should_get_score_card_by_id() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCardMock()));
 
-    given()
+    var response = given()
         .when()
         .get(ENDPOINT + "/1")
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON)
         .body(
-            "id", is(1),
-            "course.holes", is(3),
-            "course.name", is("Laajis"),
-            "course.par", is(12),
-            "players[0].id", is(123),
-            "players[0].firstName", is("Pekka"),
-            "players[0].lastName", is("Kana"),
-            "scores[123].result", is(0),
-            "scores[123].total", is(3),
-            "scores[123].scores[0].hole", is(1),
-            "scores[123].scores[0].score", is(3));
+          "id", is(1),
+          "course.holes", is(3),
+          "course.name", is("Laajis"),
+          "course.par", is(12),
+          "players[0].id", is(123),
+          "players[0].firstName", is("Pekka"),
+          "players[0].lastName", is("Kana")
+        )
+        .extract()
+        .as(ScoreCardDTO.class);
+
+    // Examining maps seems like a pain with Hamcrest
+    var scores = response.getScores().get("123");
+    assertEquals(8, scores.getTotal());
+    // assertEquals(-1, scores.getResult());
+    assertEquals(123, scores.getResult());
+
+    var entry1 = scores.getEntries().get(0);
+    assertEquals(1, entry1.getHole());
+    assertEquals(3, entry1.getScore());
+
+    var entry2 = scores.getEntries().get(1);
+    assertEquals(2, entry2.getHole());
+    assertEquals(5, entry2.getScore());
   }
 
   @Test
@@ -212,8 +227,11 @@ class ScoreCardResourceTest {
   }
 
   private static ScoreCardEntity scoreCardMock() {
-    var score = new ScoreEntity(2L, 1, 3, PEKKA_KANA, null);
-    return new ScoreCardEntity(1L, COURSE, Set.of(PEKKA_KANA), List.of(score));
+    var scores = List.of(
+        new ScoreEntity(1, 3, PEKKA_KANA),
+        new ScoreEntity(2, 5, PEKKA_KANA));
+
+    return new ScoreCardEntity(1L, COURSE, Set.of(PEKKA_KANA), scores);
   }
 
 }

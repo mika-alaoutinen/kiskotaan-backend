@@ -7,6 +7,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +21,7 @@ import mikaa.kiskotaan.domain.HolePayload;
 @QuarkusTest
 class HoleServiceTest {
 
-  static final HolePayload HOLE = new HolePayload(123L, 111L, 19, 3, 85);
+  static final HolePayload HOLE = new HolePayload(123L, 111L, 2, 3, 85);
 
   @InjectMock
   CourseRepository repository;
@@ -33,9 +35,10 @@ class HoleServiceTest {
 
   @Test
   void should_add_hole_to_course() {
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(mockCourse()));
+    when(repository.findByExternalId(anyLong())).thenReturn(Optional.of(mockCourse()));
     service.add(HOLE);
-    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 19, "Laajis", 62));
+    var expectedCourse = new CourseEntity(111l, Map.of(1, 3, 2, 3), "Laajis");
+    verify(repository, atLeastOnce()).persist(expectedCourse);
   }
 
   @Test
@@ -46,9 +49,9 @@ class HoleServiceTest {
 
   @Test
   void should_remove_hole_from_course() {
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(mockCourse()));
+    when(repository.findByExternalId(anyLong())).thenReturn(Optional.of(mockCourse()));
     service.delete(new HolePayload(999l, 111L, 1, 3, 85));
-    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 17, "Laajis", 56));
+    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, Map.of(), "Laajis"));
   }
 
   @Test
@@ -58,7 +61,9 @@ class HoleServiceTest {
   }
 
   private static CourseEntity mockCourse() {
-    return new CourseEntity(111L, 18, "Laajis", 59);
+    var holes = new HashMap<Integer, Integer>();
+    holes.put(1, 3);
+    return new CourseEntity(111L, holes, "Laajis");
   }
 
 }

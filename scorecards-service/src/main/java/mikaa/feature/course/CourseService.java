@@ -1,5 +1,7 @@
 package mikaa.feature.course;
 
+import java.util.stream.Collectors;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
@@ -20,9 +22,11 @@ class CourseService implements CourseFinder {
   }
 
   void add(CoursePayload course) {
-    var par = course.getHoles().stream().mapToInt(Hole::getPar).sum();
-    var holes = course.getHoles().size();
-    var entity = new CourseEntity(course.getId(), holes, course.getName(), par);
+    var holes = course.getHoles()
+        .stream()
+        .collect(Collectors.toMap(Hole::getNumber, Hole::getPar));
+
+    var entity = new CourseEntity(course.getId(), holes, course.getName());
     repository.persist(entity);
   }
 

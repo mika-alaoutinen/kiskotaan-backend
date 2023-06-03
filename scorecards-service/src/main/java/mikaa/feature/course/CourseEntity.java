@@ -1,15 +1,21 @@
 package mikaa.feature.course;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 
 import lombok.AccessLevel;
@@ -39,29 +45,36 @@ public class CourseEntity {
   @Column(name = "external_id", nullable = false, unique = true)
   private long externalId;
 
-  private int holes;
+  // Holes persisted as number -> par entries
+  @ElementCollection(fetch = FetchType.LAZY)
+  @CollectionTable(joinColumns = @JoinColumn(name = "course_id", referencedColumnName = "id"), name = "course_holes")
+  @MapKeyColumn(name = "hole_number")
+  @Column(name = "par")
+  private Map<Integer, Integer> holes = new HashMap<>();
+
   private String name;
-  private int par;
 
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
   private Set<ScoreCardEntity> scorecards = new HashSet<>();
 
-  public CourseEntity(long externalId, int holes, String name, int par) {
+  public CourseEntity(long externalId, String name) {
+    this.externalId = externalId;
+    this.name = name;
+  }
+
+  public CourseEntity(long externalId, Map<Integer, Integer> holes, String name) {
     this.externalId = externalId;
     this.holes = holes;
     this.name = name;
-    this.par = par;
   }
 
-  CourseEntity addHole(int par) {
-    this.holes++;
-    this.par += par;
+  CourseEntity addHole(int number, int par) {
+    holes.put(number, par);
     return this;
   }
 
-  CourseEntity removeHole(int par) {
-    this.holes--;
-    this.par -= par;
+  CourseEntity removeHole(int number) {
+    holes.remove(number);
     return this;
   }
 

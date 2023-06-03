@@ -96,8 +96,7 @@ class ScoreCardResourceTest {
     // Examining maps seems like a pain with Hamcrest
     var scores = response.getScores().get("123");
     assertEquals(8, scores.getTotal());
-    // assertEquals(-1, scores.getResult());
-    assertEquals(123, scores.getResult());
+    assertEquals(-1, scores.getResult());
 
     var entry1 = scores.getEntries().get(0);
     assertEquals(1, entry1.getHole());

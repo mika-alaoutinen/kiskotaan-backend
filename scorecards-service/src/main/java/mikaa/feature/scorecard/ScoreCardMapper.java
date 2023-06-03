@@ -33,7 +33,7 @@ class ScoreCardMapper {
         .id(BigDecimal.valueOf(scoreCard.getId()))
         .course(toCourse(scoreCard.getCourse()))
         .players(toPlayers(scoreCard.getPlayers()))
-        .scores(toPlayerScores(scoreCard.getScores()));
+        .scores(toPlayerScores(scoreCard));
   }
 
   private CourseDTO toCourse(CourseEntity course) {
@@ -50,24 +50,26 @@ class ScoreCardMapper {
     return players.stream().map(p -> mapper.map(p, PlayerDTO.class)).toList();
   }
 
-  private Map<String, PlayerScoreDTO> toPlayerScores(Collection<ScoreEntity> scores) {
-    return scoresByPlayers(scores)
-        .entrySet()
+  private Map<String, PlayerScoreDTO> toPlayerScores(ScoreCardEntity scoreCard) {
+    var course = scoreCard.getCourse();
+    var playerScores = scoresByPlayers(scoreCard.getScores());
+
+    return playerScores.entrySet()
         .stream()
         .collect(Collectors.toMap(
             Map.Entry::getKey,
-            entry -> toPlayerScore(entry.getValue())));
+            entry -> toPlayerScore(entry.getValue(), course)));
   }
 
-  private PlayerScoreDTO toPlayerScore(Collection<ScoreEntity> playerScores) {
+  private PlayerScoreDTO toPlayerScore(Collection<ScoreEntity> playerScores, CourseEntity course) {
     var entries = playerScores.stream()
         .map(s -> mapper.map(s, PlayerScoreEntryDTO.class))
         .toList();
 
     return new PlayerScoreDTO()
         .entries(entries)
-        .result(calculateResult(playerScores))
-        .total(calculateTotal(playerScores));
+        .result(ScoreCalculator.result(playerScores, course))
+        .total(ScoreCalculator.total(playerScores));
   }
 
   ScoreCardSummaryDTO toSummary(ScoreCardEntity scoreCard) {
@@ -75,31 +77,25 @@ class ScoreCardMapper {
         .id(BigDecimal.valueOf(scoreCard.getId()))
         .course(toCourse(scoreCard.getCourse()))
         .players(toPlayers(scoreCard.getPlayers()))
-        .scores(toScoreSummaries(scoreCard.getScores()));
+        .scores(toScoreSummaries(scoreCard));
   }
 
-  private static Map<String, PlayerScoreSummaryDTO> toScoreSummaries(Collection<ScoreEntity> playerScores) {
-    return scoresByPlayers(playerScores)
-        .entrySet()
+  private static Map<String, PlayerScoreSummaryDTO> toScoreSummaries(ScoreCardEntity scoreCard) {
+    var course = scoreCard.getCourse();
+    var playerScores = scoresByPlayers(scoreCard.getScores());
+
+    return playerScores.entrySet()
         .stream()
         .collect(Collectors.toMap(
             Map.Entry::getKey,
-            entry -> toPlayerScoreSummary(entry.getValue())));
+            entry -> toPlayerScoreSummary(entry.getValue(), course)));
   }
 
-  private static PlayerScoreSummaryDTO toPlayerScoreSummary(Collection<ScoreEntity> playerScores) {
+  private static PlayerScoreSummaryDTO toPlayerScoreSummary(Collection<ScoreEntity> playerScores, CourseEntity course) {
     return new PlayerScoreSummaryDTO()
         .holesPlayed(playerScores.size())
-        .result(calculateResult(playerScores))
-        .total(calculateTotal(playerScores));
-  }
-
-  private static int calculateResult(Collection<ScoreEntity> scores) {
-    return 123;
-  }
-
-  private static int calculateTotal(Collection<ScoreEntity> scores) {
-    return scores.stream().mapToInt(s -> s.getScore()).sum();
+        .result(ScoreCalculator.result(playerScores, course))
+        .total(ScoreCalculator.total(playerScores));
   }
 
   private static Map<String, List<ScoreEntity>> scoresByPlayers(Collection<ScoreEntity> scores) {

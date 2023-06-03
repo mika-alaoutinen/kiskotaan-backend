@@ -19,7 +19,7 @@ import mikaa.kiskotaan.domain.HolePayload;
 @QuarkusTest
 class HoleServiceTest {
 
-  static final HolePayload HOLE = new HolePayload(123l, 111l, 19, 3, 85);
+  static final HolePayload HOLE = new HolePayload(123L, 111L, 19, 3, 85);
 
   @InjectMock
   CourseRepository repository;
@@ -35,7 +35,7 @@ class HoleServiceTest {
   void should_add_hole_to_course() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(mockCourse()));
     service.add(HOLE);
-    verify(repository, atLeastOnce()).persist(new CourseEntity(111, 19, "Laajis", 62));
+    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 19, "Laajis", 62));
   }
 
   @Test
@@ -47,8 +47,8 @@ class HoleServiceTest {
   @Test
   void should_remove_hole_from_course() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(mockCourse()));
-    service.delete(new HolePayload(999l, 111l, 1, 3, 85));
-    verify(repository, atLeastOnce()).persist(new CourseEntity(111l, 17, "Laajis", 56));
+    service.delete(new HolePayload(999l, 111L, 1, 3, 85));
+    verify(repository, atLeastOnce()).persist(new CourseEntity(111L, 17, "Laajis", 56));
   }
 
   @Test
@@ -58,7 +58,7 @@ class HoleServiceTest {
   }
 
   private static CourseEntity mockCourse() {
-    return new CourseEntity(111, 18, "Laajis", 59);
+    return new CourseEntity(111L, 18, "Laajis", 59);
   }
 
 }

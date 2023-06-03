@@ -65,18 +65,6 @@ public class CourseEntity {
     return this;
   }
 
-  // del
-  CourseEntity incrementHoleCount() {
-    holes++;
-    return this;
-  }
-
-  // del
-  CourseEntity decrementHoleCount() {
-    holes--;
-    return this;
-  }
-
   void addScoreCard(ScoreCardEntity scoreCard) {
     scorecards.add(scoreCard);
     scoreCard.setCourse(this);

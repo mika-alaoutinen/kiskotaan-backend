@@ -70,8 +70,7 @@ class ScoreCardResourceTest {
 
   @Test
   void should_get_score_card_by_id() {
-    var scoreCard = scoreCardMock();
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCard));
+    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCardMock()));
 
     given()
         .when()
@@ -83,12 +82,14 @@ class ScoreCardResourceTest {
             "id", is(1),
             "course.holes", is(18),
             "course.name", is("Laajis"),
-            "[0].course.par", is(59),
+            "course.par", is(59),
             "players[0].id", is(123),
             "players[0].firstName", is("Pekka"),
             "players[0].lastName", is("Kana"),
-            "scores[0].hole", is(1),
-            "scores[0].score", is(3));
+            "scores[123].result", is(0),
+            "scores[123].total", is(3),
+            "scores[123].scores[0].hole", is(1),
+            "scores[123].scores[0].score", is(3));
   }
 
   @Test
@@ -124,7 +125,7 @@ class ScoreCardResourceTest {
             "course.par", is(59),
             "players.size()", is(1),
             "players[0].id", is(123),
-            "scores", empty());
+            "scores", anEmptyMap());
 
     verify(repository, atLeastOnce()).persist(any(ScoreCardEntity.class));
     verify(producer, atLeastOnce()).scoreCardAdded(any(ScoreCardPayload.class));

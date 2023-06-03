@@ -6,8 +6,6 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
-import org.modelmapper.ModelMapper;
-
 import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoreCardsApi;
 import mikaa.model.NewScoreCardDTO;
@@ -17,13 +15,14 @@ import mikaa.model.ScoreCardSummaryDTO;
 @RequiredArgsConstructor
 class ScoreCardResource implements ScoreCardsApi {
 
-  private final ModelMapper mapper;
+  private final ScoreCardMapper mapper;
   private final ScoreCardService service;
 
   @Override
   @Transactional
   public ScoreCardDTO addScoreCard(@Valid @NotNull NewScoreCardDTO newScoreCardDTO) {
-    return mapScoreCard(service.add(newScoreCardDTO));
+    var scoreCard = service.add(newScoreCardDTO);
+    return mapper.toDto(scoreCard);
   }
 
   @Override
@@ -34,16 +33,16 @@ class ScoreCardResource implements ScoreCardsApi {
 
   @Override
   public ScoreCardDTO getScoreCard(Integer id) {
-    return mapScoreCard(service.findOrThrow(id));
+    var scoreCard = service.findOrThrow(id);
+    return mapper.toDto(scoreCard);
   }
 
   @Override
   public List<ScoreCardSummaryDTO> getScoreCards() {
-    return List.of();
-  }
-
-  private ScoreCardDTO mapScoreCard(ScoreCardEntity scoreCard) {
-    return mapper.map(scoreCard, ScoreCardDTO.class);
+    return service.findAll()
+        .stream()
+        .map(mapper::toSummary)
+        .toList();
   }
 
 }

@@ -19,6 +19,10 @@ class KafkaProducer implements ScoreCardProducer {
   @Channel(OutgoingChannels.ScoreCard.SCORECARD_DELETED)
   Emitter<ScoreCardPayload> deleteEmitter;
 
+  @Inject
+  @Channel(OutgoingChannels.ScoreCard.SCORECARD_STATE)
+  Emitter<ScoreCardPayload> stateEmitter;
+
   @Override
   public void scoreCardAdded(ScoreCardPayload payload) {
     addEmitter.send(payload).toCompletableFuture().join();
@@ -27,6 +31,11 @@ class KafkaProducer implements ScoreCardProducer {
   @Override
   public void scoreCardDeleted(ScoreCardPayload payload) {
     deleteEmitter.send(payload).toCompletableFuture().join();
+  }
+
+  @Override
+  public void scoreCardStateUpdated(ScoreCardPayload payload) {
+    stateEmitter.send(payload).toCompletableFuture().join();
   }
 
 }

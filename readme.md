@@ -78,6 +78,7 @@ The list of Kafka topics published by the different services.
 - Players.player_updated
 
 ### Score cards service produces
+- Scorecards.scorecard_state
 - Scorecards.scorecard_added
 - Scorecards.scorecard_deleted
 - Scorecards.score_added

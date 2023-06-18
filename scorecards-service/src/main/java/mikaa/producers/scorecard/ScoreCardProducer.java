@@ -8,4 +8,6 @@ public interface ScoreCardProducer {
 
   void scoreCardDeleted(ScoreCardPayload payload);
 
+  void scoreCardStateUpdated(ScoreCardPayload payload);
+
 }

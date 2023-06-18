@@ -3,6 +3,7 @@ package mikaa.producers.scorecard;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
+import io.smallrye.reactive.messaging.annotations.Broadcast;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.ScoreCardPayload;
@@ -15,6 +16,7 @@ import mikaa.feature.scorecard.ScoreCardEntity;
 class KafkaProducer implements ScoreCardProducer {
 
   @Inject
+  @Broadcast
   @Channel(OutgoingChannels.ScoreCard.SCORECARD_ADDED)
   Emitter<ScoreCardPayload> addEmitter;
 
@@ -23,8 +25,8 @@ class KafkaProducer implements ScoreCardProducer {
   Emitter<ScoreCardPayload> deleteEmitter;
 
   @Inject
-  @Channel(OutgoingChannels.ScoreCard.SCORECARD_UPDATED)
-  Emitter<ScoreCardStatePayload> updateEmitter;
+  @Channel(OutgoingChannels.ScoreCard.SCORECARD_STATE)
+  Emitter<ScoreCardStatePayload> stateEmitter;
 
   @Override
   public void scoreCardAdded(ScoreCardEntity entity) {
@@ -41,7 +43,7 @@ class KafkaProducer implements ScoreCardProducer {
   @Override
   public void scoreCardUpdated(ScoreCardEntity entity) {
     var payload = toStatePayload(entity);
-    updateEmitter.send(payload).toCompletableFuture().join();
+    stateEmitter.send(payload).toCompletableFuture().join();
   }
 
   private static ScoreCardPayload toPayload(ScoreCardEntity entity) {

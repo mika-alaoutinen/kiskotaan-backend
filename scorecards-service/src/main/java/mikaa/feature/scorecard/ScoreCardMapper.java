@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
 import mikaa.feature.score.ScoreEntity;
+import mikaa.logic.ScoreCalculator;
 import mikaa.model.CourseDTO;
 import mikaa.model.PlayerDTO;
 import mikaa.model.PlayerScoreDTO;

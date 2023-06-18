@@ -7,7 +7,7 @@ import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
 import mikaa.feature.score.ScoreEntity;
 
-public class ScoreCalculator {
+class ScoreCalculator {
 
   private ScoreCalculator() {
     // Do not initiate
@@ -16,7 +16,7 @@ public class ScoreCalculator {
   private static record ScoreEntry(int par, int score) {
   }
 
-  public static int result(Collection<ScoreEntity> playerScores, CourseEntity course) {
+  static int result(Collection<ScoreEntity> playerScores, CourseEntity course) {
     var holePars = course.getHoles().stream().collect(
         Collectors.toMap(HoleEntity::getNumber, HoleEntity::getPar));
 
@@ -26,7 +26,7 @@ public class ScoreCalculator {
         .sum();
   }
 
-  public static int total(Collection<ScoreEntity> scores) {
+  static int total(Collection<ScoreEntity> scores) {
     return scores.stream().mapToInt(ScoreEntity::getScore).sum();
   }
 

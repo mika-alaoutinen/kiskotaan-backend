@@ -8,9 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.domain.ScoreCardPayload;
 import mikaa.feature.course.CourseFinder;
-import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.producers.scorecard.ScoreCardProducer;
@@ -45,34 +43,21 @@ class ScoreCardService implements ScoreCardFinder {
     var entity = new ScoreCardEntity(course, players);
 
     repository.persist(entity);
-    producer.scoreCardAdded(fromEntity(entity));
+    producer.scoreCardAdded(entity);
 
     return entity;
   }
 
   void delete(long id) {
     repository.findByIdOptional(id)
-        .map(ScoreCardService::fromEntity)
-        .ifPresent(payload -> {
+        .ifPresent(entity -> {
           repository.deleteById(id);
-          producer.scoreCardDeleted(payload);
+          producer.scoreCardDeleted(entity);
         });
   }
 
   private static NotFoundException notFound(long id) {
     return new NotFoundException("Could not find score card with id " + id);
-  }
-
-  private static ScoreCardPayload fromEntity(ScoreCardEntity entity) {
-    var playerIds = entity.getPlayers()
-        .stream()
-        .map(PlayerEntity::getExternalId)
-        .toList();
-
-    return new ScoreCardPayload(
-        entity.getId(),
-        entity.getCourse().getExternalId(),
-        playerIds);
   }
 
 }

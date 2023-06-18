@@ -7,6 +7,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.ScorePayload;
 import mikaa.config.OutgoingChannels;
+import mikaa.feature.score.ScoreEntity;
 
 @ApplicationScoped
 class KafkaProducer implements ScoreProducer {
@@ -20,13 +21,24 @@ class KafkaProducer implements ScoreProducer {
   Emitter<ScorePayload> deleteEmitter;
 
   @Override
-  public void scoreAdded(ScorePayload payload) {
+  public void scoreAdded(ScoreEntity entity) {
+    var payload = toPayload(entity);
     addEmitter.send(payload).toCompletableFuture().join();
   }
 
   @Override
-  public void scoreDeleted(ScorePayload payload) {
+  public void scoreDeleted(ScoreEntity entity) {
+    var payload = toPayload(entity);
     deleteEmitter.send(payload).toCompletableFuture().join();
+  }
+
+  private static ScorePayload toPayload(ScoreEntity entity) {
+    return new ScorePayload(
+        entity.getId(),
+        entity.getPlayer().getExternalId(),
+        entity.getScorecard().getId(),
+        entity.getHole(),
+        entity.getScore());
   }
 
 }

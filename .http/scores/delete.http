@@ -1,7 +1,7 @@
 @url = http://localhost:8083/scores
 
 ### Delete score
-DELETE {{url}}/301 HTTP/1.1
+DELETE {{url}}/1 HTTP/1.1
 
 ### Try to delete score that doesn't exist
 DELETE {{url}}/404 HTTP/1.1

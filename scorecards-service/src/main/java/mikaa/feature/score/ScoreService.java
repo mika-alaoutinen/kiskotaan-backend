@@ -4,7 +4,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.domain.ScorePayload;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
@@ -33,27 +32,17 @@ class ScoreService {
     player.addScore(score);
 
     repository.persist(score);
-    producer.scoreAdded(fromEntity(score));
+    producer.scoreAdded(score);
 
     return score;
   }
 
   void delete(long id) {
     repository.findByIdOptional(id)
-        .map(ScoreService::fromEntity)
-        .ifPresent(payload -> {
+        .ifPresent(entity -> {
           repository.deleteById(id);
-          producer.scoreDeleted(payload);
+          producer.scoreDeleted(entity);
         });
-  }
-
-  private static ScorePayload fromEntity(ScoreEntity entity) {
-    return new ScorePayload(
-        entity.getId(),
-        entity.getPlayer().getExternalId(),
-        entity.getScorecard().getId(),
-        entity.getHole(),
-        entity.getScore());
   }
 
 }

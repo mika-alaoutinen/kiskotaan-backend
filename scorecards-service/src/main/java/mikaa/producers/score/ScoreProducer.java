@@ -1,11 +1,11 @@
 package mikaa.producers.score;
 
-import mikaa.kiskotaan.domain.ScorePayload;
+import mikaa.feature.score.ScoreEntity;
 
 public interface ScoreProducer {
 
-  void scoreAdded(ScorePayload payload);
+  void scoreAdded(ScoreEntity entity);
 
-  void scoreDeleted(ScorePayload payload);
+  void scoreDeleted(ScoreEntity entity);
 
 }

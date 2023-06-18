@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
-import mikaa.kiskotaan.domain.ScorePayload;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
@@ -83,14 +82,14 @@ class ScoreResourceTest {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreMock()));
     delete();
     verify(repository, atLeastOnce()).deleteById(1L);
-    verify(producer, atLeastOnce()).scoreDeleted(any(ScorePayload.class));
+    verify(producer, atLeastOnce()).scoreDeleted(any(ScoreEntity.class));
   }
 
   @Test
   void should_do_nothing_on_delete_if_score_not_found() {
     delete();
     verify(repository, never()).deleteById(anyLong());
-    verify(producer, never()).scoreDeleted(any(ScorePayload.class));
+    verify(producer, never()).scoreDeleted(any(ScoreEntity.class));
   }
 
   private static void delete() {

@@ -19,7 +19,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.kiskotaan.domain.ScorePayload;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
@@ -67,7 +66,7 @@ class AddScoreResourceTest {
             "score", is(3));
 
     verify(repository, atLeastOnce()).persist(any(ScoreEntity.class));
-    verify(producer, atLeastOnce()).scoreAdded(any(ScorePayload.class));
+    verify(producer, atLeastOnce()).scoreAdded(any(ScoreEntity.class));
   }
 
   @Test
@@ -92,7 +91,7 @@ class AddScoreResourceTest {
           "path", containsString(path));
 
     verify(repository, never()).persist(any(ScoreEntity.class));
-    verify(producer, never()).scoreAdded(any(ScorePayload.class));
+    verify(producer, never()).scoreAdded(any(ScoreEntity.class));
   }
 
   @Test
@@ -104,7 +103,7 @@ class AddScoreResourceTest {
     assertNotFoundResponse(response, errorMsg, 1);
 
     verify(repository, never()).persist(any(ScoreEntity.class));
-    verify(producer, never()).scoreAdded(any(ScorePayload.class));
+    verify(producer, never()).scoreAdded(any(ScoreEntity.class));
   }
 
   @Test
@@ -116,7 +115,7 @@ class AddScoreResourceTest {
     assertNotFoundResponse(response, errorMsg, 1);
 
     verify(repository, never()).persist(any(ScoreEntity.class));
-    verify(producer, never()).scoreAdded(any(ScorePayload.class));
+    verify(producer, never()).scoreAdded(any(ScoreEntity.class));
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, String message, int scoreCardId) {

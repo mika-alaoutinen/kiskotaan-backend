@@ -1,19 +1,27 @@
 package mikaa.producers.scorecard;
 
+import java.util.stream.Collectors;
+
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
+import org.modelmapper.ModelMapper;
 
 import io.smallrye.reactive.messaging.annotations.Broadcast;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import mikaa.kiskotaan.domain.PlayerScore;
 import mikaa.kiskotaan.domain.ScoreCardPayload;
 import mikaa.kiskotaan.domain.ScoreCardStatePayload;
+import mikaa.logic.ScoreLogic;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.scorecard.ScoreCardEntity;
 
 @ApplicationScoped
 class KafkaProducer implements ScoreCardProducer {
+
+  @Inject
+  private ModelMapper mapper;
 
   @Inject
   @Broadcast
@@ -58,8 +66,24 @@ class KafkaProducer implements ScoreCardProducer {
         playerIds);
   }
 
-  private static ScoreCardStatePayload toStatePayload(ScoreCardEntity entity) {
-    return new ScoreCardStatePayload();
+  private ScoreCardStatePayload toStatePayload(ScoreCardEntity entity) {
+    var playerIds = entity.getPlayers()
+        .stream()
+        .map(PlayerEntity::getExternalId)
+        .toList();
+
+    var scores = ScoreLogic.calculatePlayerScores(entity)
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(
+            entry -> entry.getKey().toString(),
+            entry -> mapper.map(entry.getValue(), PlayerScore.class)));
+
+    return new ScoreCardStatePayload(
+        entity.getId(),
+        entity.getCourse().getExternalId(),
+        playerIds,
+        scores);
   }
 
 }

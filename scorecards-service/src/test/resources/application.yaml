@@ -50,6 +50,6 @@ mp:
       scorecard-deleted:
         connector: smallrye-in-memory
         topic: "Scorecards.scorecard_deleted"
-      scorecard-state:
+      scorecard-updated:
         connector: smallrye-in-memory
-        topic: "Scorecards.scorecard_state"
+        topic: "Scorecards.scorecard_updated"

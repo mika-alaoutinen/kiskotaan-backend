@@ -20,4 +20,8 @@ public interface IncomingChannels {
     static final String PLAYER_UPDATED = "player-updated";
   }
 
+  interface ScoreCard {
+    static final String SCORECARD_ADDED = "scorecard-added";
+  }
+
 }

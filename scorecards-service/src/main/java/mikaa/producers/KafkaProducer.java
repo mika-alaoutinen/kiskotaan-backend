@@ -6,7 +6,6 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.modelmapper.ModelMapper;
 
-import io.smallrye.reactive.messaging.annotations.Broadcast;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.PlayerScore;
@@ -24,7 +23,6 @@ class KafkaProducer implements ScoreCardProducer {
   private ModelMapper mapper;
 
   @Inject
-  @Broadcast
   @Channel(OutgoingChannels.SCORECARD_ADDED)
   Emitter<ScoreCardPayload> addEmitter;
 

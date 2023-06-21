@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -164,7 +165,7 @@ class ScoreCardResourceTest {
         .body("message", is("Could not find course with id 1"));
     
     verify(repository, never()).persist(any(ScoreCardEntity.class));
-    verify(producer, never()).scoreCardAdded(any(ScoreCardEntity.class));
+    verifyNoInteractions(producer);
   }
 
   @Test
@@ -187,7 +188,7 @@ class ScoreCardResourceTest {
         .body("message", is("Could not find player with id 999"));
     
     verify(repository, never()).persist(any(ScoreCardEntity.class));
-    verify(producer, never()).scoreCardAdded(any(ScoreCardEntity.class));
+    verifyNoInteractions(producer);
   }
 
   @Test

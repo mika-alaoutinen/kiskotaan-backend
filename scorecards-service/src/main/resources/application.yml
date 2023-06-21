@@ -93,5 +93,4 @@ mp:
         topic: "Scorecards.scorecard_deleted"
       scorecard-updated:
         connector: smallrye-kafka
-        merge: true
         topic: "Scorecards.scorecard_updated"

@@ -25,7 +25,7 @@ import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.model.NewScoreCardDTO;
-import mikaa.producers.scorecard.ScoreCardProducer;
+import mikaa.producers.ScoreCardProducer;
 
 @QuarkusTest
 class ScoreCardEventsTest {
@@ -58,7 +58,7 @@ class ScoreCardEventsTest {
     when(courseFinder.findOrThrow(anyLong())).thenReturn(courseMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(playerMock());
 
-    var sink = initSink(OutgoingChannels.ScoreCard.SCORECARD_ADDED);
+    var sink = initSink(OutgoingChannels.SCORECARD_ADDED);
 
     var dto = new NewScoreCardDTO()
         .courseId(BigDecimal.ONE)
@@ -73,7 +73,7 @@ class ScoreCardEventsTest {
     var scoreCard = new ScoreCardEntity(13L, courseMock(), Set.of(playerMock()), List.of());
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCard));
 
-    var sink = initSink(OutgoingChannels.ScoreCard.SCORECARD_DELETED);
+    var sink = initSink(OutgoingChannels.SCORECARD_DELETED);
 
     service.delete(13l);
     assertEvent(sink);

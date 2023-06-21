@@ -1,0 +1,66 @@
+{
+  "namespace": "mikaa.kiskotaan.domain",
+  "name": "ScoreCardStatePayload",
+  "type": "record",
+  "fields": [
+    {
+      "name": "id",
+      "type": "long"
+    },
+    {
+      "name": "courseId",
+      "type": "long"
+    },
+    {
+      "name": "playerIds",
+      "type": {
+        "type": "array",
+        "items": "long"
+      }
+    },
+    {
+      "name": "scores",
+      "type": {
+        "type": "map",
+        "values": {
+          "name": "PlayerScore",
+          "type": "record",
+          "fields": [
+            {
+              "name": "entries",
+              "type": {
+                "type": "array",
+                "items": {
+                  "name": "ScoreEntry",
+                  "type": "record",
+                  "fields": [
+                    {
+                      "name": "id",
+                      "type": "long"
+                    },
+                    {
+                      "name": "hole",
+                      "type": "int"
+                    },
+                    {
+                      "name": "score",
+                      "type": "int"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "name": "result",
+              "type": "int"
+            },
+            {
+              "name": "total",
+              "type": "int"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

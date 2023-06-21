@@ -4,11 +4,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.domain.ScorePayload;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
-import mikaa.producers.score.ScoreProducer;
+import mikaa.producers.ScoreCardProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -16,7 +15,7 @@ class ScoreService {
 
   private final PlayerFinder playerFinder;
   private final ScoreCardFinder scoreCardFinder;
-  private final ScoreProducer producer;
+  private final ScoreCardProducer producer;
   private final ScoreRepository repository;
 
   ScoreEntity findOrThrow(long id) {
@@ -33,27 +32,18 @@ class ScoreService {
     player.addScore(score);
 
     repository.persist(score);
-    producer.scoreAdded(fromEntity(score));
+    producer.scoreCardUpdated(scoreCard);
 
     return score;
   }
 
   void delete(long id) {
     repository.findByIdOptional(id)
-        .map(ScoreService::fromEntity)
-        .ifPresent(payload -> {
+        .map(score -> score.getScorecard().removeScore(score))
+        .ifPresent(scoreCard -> {
           repository.deleteById(id);
-          producer.scoreDeleted(payload);
+          producer.scoreCardUpdated(scoreCard);
         });
-  }
-
-  private static ScorePayload fromEntity(ScoreEntity entity) {
-    return new ScorePayload(
-        entity.getId(),
-        entity.getPlayer().getExternalId(),
-        entity.getScorecard().getId(),
-        entity.getHole(),
-        entity.getScore());
   }
 
 }

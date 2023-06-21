@@ -5,9 +5,10 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -16,12 +17,11 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
-import mikaa.kiskotaan.domain.ScorePayload;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.feature.scorecard.ScoreCardFinder;
-import mikaa.producers.score.ScoreProducer;
+import mikaa.producers.ScoreCardProducer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -38,7 +38,7 @@ class ScoreResourceTest {
   private PlayerFinder playerFinder;
 
   @InjectMock
-  private ScoreProducer producer;
+  private ScoreCardProducer producer;
 
   @InjectMock
   private ScoreRepository repository;
@@ -83,14 +83,14 @@ class ScoreResourceTest {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreMock()));
     delete();
     verify(repository, atLeastOnce()).deleteById(1L);
-    verify(producer, atLeastOnce()).scoreDeleted(any(ScorePayload.class));
+    verify(producer, atLeastOnce()).scoreCardUpdated(any(ScoreCardEntity.class));
   }
 
   @Test
   void should_do_nothing_on_delete_if_score_not_found() {
     delete();
     verify(repository, never()).deleteById(anyLong());
-    verify(producer, never()).scoreDeleted(any(ScorePayload.class));
+    verifyNoInteractions(producer);
   }
 
   private static void delete() {
@@ -103,7 +103,7 @@ class ScoreResourceTest {
 
   private static ScoreEntity scoreMock() {
     var player = new PlayerEntity(222, "Pekka", "Kana");
-    var scoreCard = new ScoreCardEntity(1L, null, Set.of(player), List.of());
+    var scoreCard = new ScoreCardEntity(1L, null, Set.of(player), new ArrayList<>());
     return new ScoreEntity(111L, 8, 4, player, scoreCard);
   }
 

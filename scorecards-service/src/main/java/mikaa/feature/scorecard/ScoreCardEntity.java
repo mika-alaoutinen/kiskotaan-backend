@@ -64,14 +64,16 @@ public class ScoreCardEntity {
     player.getScorecards().remove(this);
   }
 
-  public void addScore(ScoreEntity score) {
+  public ScoreCardEntity addScore(ScoreEntity score) {
     scores.add(score);
     score.setScorecard(this);
+    return this;
   }
 
-  public void removeScore(ScoreEntity score) {
+  public ScoreCardEntity removeScore(ScoreEntity score) {
     scores.remove(score);
     score.setScorecard(null);
+    return this;
   }
 
   /**

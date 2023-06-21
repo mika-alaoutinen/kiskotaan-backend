@@ -1,4 +1,4 @@
-package mikaa.feature.scorecard;
+package mikaa.logic;
 
 import java.util.Collection;
 import java.util.stream.Collectors;

@@ -8,20 +8,6 @@ quarkus:
 
 mp:
   messaging:
-    outgoing:
-      score-added:
-        connector: smallrye-in-memory
-        topic: "Scorecards.score_added"
-      score-deleted:
-        connector: smallrye-in-memory
-        topic: "Scorecards.score_deleted"
-      scorecard-added:
-        connector: smallrye-in-memory
-        topic: "Scorecards.scorecard_added"
-      scorecard-deleted:
-        connector: smallrye-in-memory
-        topic: "Scorecards.scorecard_deleted"
-
     incoming:
       course-added:
         connector: smallrye-in-memory
@@ -50,3 +36,14 @@ mp:
       player-updated:
         connector: smallrye-in-memory
         topic: "Players.player_updated"
+
+    outgoing:
+      scorecard-added:
+        connector: smallrye-in-memory
+        topic: "Scorecards.scorecard_added"
+      scorecard-deleted:
+        connector: smallrye-in-memory
+        topic: "Scorecards.scorecard_deleted"
+      scorecard-updated:
+        connector: smallrye-in-memory
+        topic: "Scorecards.scorecard_updated"

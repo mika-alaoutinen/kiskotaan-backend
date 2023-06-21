@@ -1,11 +1,13 @@
 package mikaa.feature.score;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -18,15 +20,16 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.kiskotaan.domain.ScorePayload;
+import mikaa.kiskotaan.domain.ScoreCardStatePayload;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
+import mikaa.feature.course.HoleEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
-import mikaa.producers.score.ScoreProducer;
+import mikaa.producers.ScoreCardProducer;
 
 @QuarkusTest
 class ScoreEventsTest {
@@ -36,7 +39,7 @@ class ScoreEventsTest {
   private InMemoryConnector connector;
 
   @Inject
-  private ScoreProducer producer;
+  private ScoreCardProducer producer;
 
   @InjectMock
   private ScoreRepository repository;
@@ -47,11 +50,14 @@ class ScoreEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
+  private InMemorySink<ScoreCardStatePayload> sink;
   private ScoreService service;
 
   @BeforeEach
   void setup() {
     service = new ScoreService(playerFinder, scoreCardFinder, producer, repository);
+    sink = connector.sink(OutgoingChannels.SCORECARD_UPDATED);
+    sink.clear();
   }
 
   @Test
@@ -59,16 +65,27 @@ class ScoreEventsTest {
     when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(playerMock());
 
-    var sink = initSink(OutgoingChannels.Score.SCORE_ADDED);
-
     var newScore = new NewScoreDTO()
-        .hole(9)
+        .hole(1)
         .playerId(BigDecimal.valueOf(2l))
         .score(4);
 
     service.addScore(13l, newScore);
-    // ID is set to 0 because of mocked repository. See stupid hack in ScoreService.fromEntity method.
-    assertEvent(sink, new ScorePayload(0l, 2l, 13l, 9, 4));
+
+    String playerId = playerMock().getExternalId() + "";
+    assertEquals(1, sink.received().size());
+
+    var payload = sink.received().get(0).getPayload();
+    assertEquals(scoreCardMock().getId(), payload.getId());
+
+    var score = payload.getScores().get(playerId);
+    assertEquals(-1, score.getResult());
+    assertEquals(4, score.getTotal());
+
+    assertEquals(1, score.getEntries().size());
+    var entry = score.getEntries().get(0);
+    assertEquals(1, entry.getHole());
+    assertEquals(4, entry.getScore());
   }
 
   @Test
@@ -76,24 +93,17 @@ class ScoreEventsTest {
     var score = new ScoreEntity(22l, 16, 5, playerMock(), scoreCardMock());
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(score));
 
-    var sink = initSink(OutgoingChannels.Score.SCORE_DELETED);
-
     service.delete(22);
-    assertEvent(sink, new ScorePayload(22l, 2l, 13l, 16, 5));
-  }
 
-  private static void assertEvent(InMemorySink<ScorePayload> sink, ScorePayload expected) {
     assertEquals(1, sink.received().size());
-    var payload = sink.received().get(0).getPayload();
 
-    assertEquals(expected.getHole(), payload.getHole());
-    assertEquals(expected.getPlayerId(), payload.getPlayerId());
-    assertEquals(expected.getScore(), payload.getScore());
-    assertEquals(expected.getScoreCardId(), payload.getScoreCardId());
+    var payload = sink.received().get(0).getPayload();
+    assertEquals(scoreCardMock().getId(), payload.getId());
+    assertTrue(payload.getScores().isEmpty());
   }
 
   private static CourseEntity courseMock() {
-    return new CourseEntity(1l, "Course");
+    return new CourseEntity(1l, List.of(new HoleEntity(1, 5)), "Course");
   }
 
   private static PlayerEntity playerMock() {
@@ -102,10 +112,6 @@ class ScoreEventsTest {
 
   private static ScoreCardEntity scoreCardMock() {
     return new ScoreCardEntity(13L, courseMock(), Set.of(playerMock()), new ArrayList<>());
-  }
-
-  private InMemorySink<ScorePayload> initSink(String channel) {
-    return connector.sink(channel);
   }
 
 }

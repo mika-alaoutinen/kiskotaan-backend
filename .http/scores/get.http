@@ -1,7 +1,7 @@
 @url = http://localhost:8083/scores
 
 ### Get score by ID
-GET {{url}}/301 HTTP/1.1
+GET {{url}}/1 HTTP/1.1
 
 ### Try to Get score that doesn't exist
 GET {{url}}/1337 HTTP/1.1

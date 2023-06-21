@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -19,14 +20,13 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.kiskotaan.domain.ScorePayload;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
-import mikaa.producers.score.ScoreProducer;
+import mikaa.producers.ScoreCardProducer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -48,7 +48,7 @@ class AddScoreResourceTest {
   private PlayerFinder playerFinder;
 
   @InjectMock
-  private ScoreProducer producer;
+  private ScoreCardProducer producer;
 
   @InjectMock
   private ScoreRepository repository;
@@ -67,7 +67,7 @@ class AddScoreResourceTest {
             "score", is(3));
 
     verify(repository, atLeastOnce()).persist(any(ScoreEntity.class));
-    verify(producer, atLeastOnce()).scoreAdded(any(ScorePayload.class));
+    verify(producer, atLeastOnce()).scoreCardUpdated(any(ScoreCardEntity.class));
   }
 
   @Test
@@ -92,7 +92,7 @@ class AddScoreResourceTest {
           "path", containsString(path));
 
     verify(repository, never()).persist(any(ScoreEntity.class));
-    verify(producer, never()).scoreAdded(any(ScorePayload.class));
+    verifyNoInteractions(producer);
   }
 
   @Test
@@ -104,7 +104,7 @@ class AddScoreResourceTest {
     assertNotFoundResponse(response, errorMsg, 1);
 
     verify(repository, never()).persist(any(ScoreEntity.class));
-    verify(producer, never()).scoreAdded(any(ScorePayload.class));
+    verifyNoInteractions(producer);
   }
 
   @Test
@@ -116,7 +116,7 @@ class AddScoreResourceTest {
     assertNotFoundResponse(response, errorMsg, 1);
 
     verify(repository, never()).persist(any(ScoreEntity.class));
-    verify(producer, never()).scoreAdded(any(ScorePayload.class));
+    verifyNoInteractions(producer);
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, String message, int scoreCardId) {

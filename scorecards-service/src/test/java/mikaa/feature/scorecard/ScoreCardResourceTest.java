@@ -6,7 +6,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.kiskotaan.domain.ScoreCardPayload;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.course.HoleEntity;
@@ -15,7 +14,7 @@ import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.score.ScoreEntity;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.model.ScoreCardDTO;
-import mikaa.producers.scorecard.ScoreCardProducer;
+import mikaa.producers.ScoreCardProducer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -25,6 +24,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -143,7 +143,7 @@ class ScoreCardResourceTest {
             "scores", anEmptyMap());
 
     verify(repository, atLeastOnce()).persist(any(ScoreCardEntity.class));
-    verify(producer, atLeastOnce()).scoreCardAdded(any(ScoreCardPayload.class));
+    verify(producer, atLeastOnce()).scoreCardAdded(any(ScoreCardEntity.class));
   }
 
   @Test
@@ -165,7 +165,7 @@ class ScoreCardResourceTest {
         .body("message", is("Could not find course with id 1"));
     
     verify(repository, never()).persist(any(ScoreCardEntity.class));
-    verify(producer, never()).scoreCardAdded(any(ScoreCardPayload.class));
+    verifyNoInteractions(producer);
   }
 
   @Test
@@ -188,7 +188,7 @@ class ScoreCardResourceTest {
         .body("message", is("Could not find player with id 999"));
     
     verify(repository, never()).persist(any(ScoreCardEntity.class));
-    verify(producer, never()).scoreCardAdded(any(ScoreCardPayload.class));
+    verifyNoInteractions(producer);
   }
 
   @Test
@@ -202,7 +202,7 @@ class ScoreCardResourceTest {
         .statusCode(204);
 
     verify(repository, atLeastOnce()).deleteById(1L);
-    verify(producer, atLeastOnce()).scoreCardDeleted(any(ScoreCardPayload.class));
+    verify(producer, atLeastOnce()).scoreCardDeleted(any(ScoreCardEntity.class));
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, int id) {

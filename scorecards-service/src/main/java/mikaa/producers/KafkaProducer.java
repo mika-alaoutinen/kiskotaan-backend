@@ -1,4 +1,4 @@
-package mikaa.producers.scorecard;
+package mikaa.producers;
 
 import java.util.stream.Collectors;
 

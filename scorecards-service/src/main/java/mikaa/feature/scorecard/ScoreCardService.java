@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.model.NewScoreCardDTO;
-import mikaa.producers.scorecard.ScoreCardProducer;
+import mikaa.producers.ScoreCardProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor

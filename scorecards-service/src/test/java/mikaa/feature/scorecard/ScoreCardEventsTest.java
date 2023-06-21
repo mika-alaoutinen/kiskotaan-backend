@@ -25,7 +25,7 @@ import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.model.NewScoreCardDTO;
-import mikaa.producers.scorecard.ScoreCardProducer;
+import mikaa.producers.ScoreCardProducer;
 
 @QuarkusTest
 class ScoreCardEventsTest {

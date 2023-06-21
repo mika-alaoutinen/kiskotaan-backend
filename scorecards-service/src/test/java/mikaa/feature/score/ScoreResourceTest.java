@@ -21,7 +21,7 @@ import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.feature.scorecard.ScoreCardFinder;
-import mikaa.producers.scorecard.ScoreCardProducer;
+import mikaa.producers.ScoreCardProducer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;

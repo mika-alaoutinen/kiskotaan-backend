@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
-import mikaa.producers.scorecard.ScoreCardProducer;
+import mikaa.producers.ScoreCardProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor

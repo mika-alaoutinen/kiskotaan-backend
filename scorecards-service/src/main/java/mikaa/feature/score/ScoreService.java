@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
-import mikaa.producers.score.ScoreProducer;
+import mikaa.producers.scorecard.ScoreCardProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -15,7 +15,7 @@ class ScoreService {
 
   private final PlayerFinder playerFinder;
   private final ScoreCardFinder scoreCardFinder;
-  private final ScoreProducer producer;
+  private final ScoreCardProducer producer;
   private final ScoreRepository repository;
 
   ScoreEntity findOrThrow(long id) {
@@ -32,16 +32,17 @@ class ScoreService {
     player.addScore(score);
 
     repository.persist(score);
-    producer.scoreAdded(score);
+    producer.scoreCardUpdated(scoreCard);
 
     return score;
   }
 
   void delete(long id) {
     repository.findByIdOptional(id)
-        .ifPresent(entity -> {
+        .map(score -> score.getScorecard().removeScore(score))
+        .ifPresent(scoreCard -> {
           repository.deleteById(id);
-          producer.scoreDeleted(entity);
+          producer.scoreCardUpdated(scoreCard);
         });
   }
 

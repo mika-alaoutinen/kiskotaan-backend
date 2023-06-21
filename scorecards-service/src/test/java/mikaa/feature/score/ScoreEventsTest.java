@@ -26,7 +26,7 @@ import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
-import mikaa.producers.score.ScoreProducer;
+import mikaa.producers.scorecard.ScoreCardProducer;
 
 @QuarkusTest
 class ScoreEventsTest {
@@ -36,7 +36,7 @@ class ScoreEventsTest {
   private InMemoryConnector connector;
 
   @Inject
-  private ScoreProducer producer;
+  private ScoreCardProducer producer;
 
   @InjectMock
   private ScoreRepository repository;

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.Set;
 
@@ -103,7 +103,7 @@ class ScoreResourceTest {
 
   private static ScoreEntity scoreMock() {
     var player = new PlayerEntity(222, "Pekka", "Kana");
-    var scoreCard = new ScoreCardEntity(1L, null, Set.of(player), List.of());
+    var scoreCard = new ScoreCardEntity(1L, null, Set.of(player), new ArrayList<>());
     return new ScoreEntity(111L, 8, 4, player, scoreCard);
   }
 

@@ -59,7 +59,7 @@ class ScoreEventsTest {
     when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(playerMock());
 
-    var sink = initSink(OutgoingChannels.Score.SCORE_ADDED);
+    var sink = initSink(OutgoingChannels.SCORECARD_UPDATED);
 
     var newScore = new NewScoreDTO()
         .hole(9)
@@ -76,7 +76,7 @@ class ScoreEventsTest {
     var score = new ScoreEntity(22l, 16, 5, playerMock(), scoreCardMock());
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(score));
 
-    var sink = initSink(OutgoingChannels.Score.SCORE_DELETED);
+    var sink = initSink(OutgoingChannels.SCORECARD_UPDATED);
 
     service.delete(22);
     assertEvent(sink, new ScorePayload(22l, 2l, 13l, 16, 5));

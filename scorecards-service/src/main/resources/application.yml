@@ -85,19 +85,13 @@ mp:
         topic: "Players.player_updated"
 
     outgoing:
-      score-added:
-        connector: smallrye-kafka
-        topic: "Scorecards.score_added"
-      score-deleted:
-        connector: smallrye-kafka
-        topic: "Scorecards.score_deleted"
       scorecard-added:
         connector: smallrye-kafka
         topic: "Scorecards.scorecard_added"
       scorecard-deleted:
         connector: smallrye-kafka
         topic: "Scorecards.scorecard_deleted"
-      scorecard-details:
+      scorecard-updated:
         connector: smallrye-kafka
         merge: true
-        topic: "Scorecards.scorecard_state"
+        topic: "Scorecards.scorecard_updated"

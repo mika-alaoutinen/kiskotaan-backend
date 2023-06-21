@@ -25,15 +25,15 @@ class KafkaProducer implements ScoreCardProducer {
 
   @Inject
   @Broadcast
-  @Channel(OutgoingChannels.ScoreCard.SCORECARD_ADDED)
+  @Channel(OutgoingChannels.SCORECARD_ADDED)
   Emitter<ScoreCardPayload> addEmitter;
 
   @Inject
-  @Channel(OutgoingChannels.ScoreCard.SCORECARD_DELETED)
+  @Channel(OutgoingChannels.SCORECARD_DELETED)
   Emitter<ScoreCardPayload> deleteEmitter;
 
   @Inject
-  @Channel(OutgoingChannels.ScoreCard.SCORECARD_STATE)
+  @Channel(OutgoingChannels.SCORECARD_UPDATED)
   Emitter<ScoreCardStatePayload> stateEmitter;
 
   @Override

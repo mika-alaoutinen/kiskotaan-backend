@@ -38,18 +38,12 @@ mp:
         topic: "Players.player_updated"
 
     outgoing:
-      score-added:
-        connector: smallrye-in-memory
-        topic: "Scorecards.score_added"
-      score-deleted:
-        connector: smallrye-in-memory
-        topic: "Scorecards.score_deleted"
       scorecard-added:
         connector: smallrye-in-memory
         topic: "Scorecards.scorecard_added"
       scorecard-deleted:
         connector: smallrye-in-memory
         topic: "Scorecards.scorecard_deleted"
-      scorecard-details:
+      scorecard-updated:
         connector: smallrye-in-memory
-        topic: "Scorecards.scorecard_state"
+        topic: "Scorecards.scorecard_updated"

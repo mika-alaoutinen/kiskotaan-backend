@@ -59,7 +59,7 @@ public class CourseEntity {
   public Optional<HoleEntity> findHole(int number) {
     return this.getHoles()
         .stream()
-        .filter(h -> h.getHoleNumber() == number)
+        .filter(h -> h.getNumber() == number)
         .findFirst();
   }
 

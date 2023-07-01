@@ -9,7 +9,7 @@ interface HoleValidator {
   static void validateUniqueHoleNumber(Integer holeNumber, CourseEntity course) {
     boolean duplicateHoleNumber = course.getHoles()
         .stream()
-        .map(HoleEntity::getHoleNumber)
+        .map(HoleEntity::getNumber)
         .anyMatch(holeNumber::equals);
 
     if (duplicateHoleNumber) {

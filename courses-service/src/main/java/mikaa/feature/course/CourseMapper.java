@@ -19,7 +19,7 @@ interface CourseMapper {
   private static Hole hole(HoleEntity entity) {
     return new Hole(
         entity.getId(),
-        entity.getHoleNumber(),
+        entity.getNumber(),
         entity.getPar(),
         entity.getDistance());
   }

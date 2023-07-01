@@ -34,7 +34,7 @@ class HoleService {
   HoleEntity add(long courseId, HoleEntity newHole) {
     var course = courseFinder.findCourseOrThrow(courseId);
 
-    HoleValidator.validateUniqueHoleNumber(newHole.getHoleNumber(), course);
+    HoleValidator.validateUniqueHoleNumber(newHole.getNumber(), course);
     course.addHole(newHole);
 
     repository.persist(newHole);
@@ -73,7 +73,7 @@ class HoleService {
     return new HolePayload(
         entity.getId(),
         entity.getCourse().getId(),
-        entity.getHoleNumber(),
+        entity.getNumber(),
         entity.getPar(),
         entity.getDistance());
   }

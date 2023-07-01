@@ -30,8 +30,8 @@ public class HoleEntity {
 
   @Min(1)
   @Max(30)
-  @Column(name = "hole_number")
-  private int holeNumber;
+  @Column(name = "number")
+  private int number;
 
   @Min(2)
   @Max(6)

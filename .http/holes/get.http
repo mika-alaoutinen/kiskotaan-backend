@@ -1,7 +1,13 @@
-@url = http://localhost:8082/holes
+@url = http://localhost:8082/courses
 
-### Find hole by ID
-GET {{url}}/3 HTTP/1.1
+### Find all holes for Laajavuori
+GET {{url}}/1/holes HTTP/1.1
+
+### Find hole 3 for Laajavuori
+GET {{url}}/1/holes/3 HTTP/1.1
+
+### Find hole for a course that doesn't exist
+GET {{url}}/99/holes/1 HTTP/1.1
 
 ### Find hole that doesn't exist
-GET {{url}}/99 HTTP/1.1
+GET {{url}}/1/holes/28 HTTP/1.1

@@ -54,12 +54,10 @@ class HoleService {
   }
 
   void delete(long courseId, int holeNumber) {
-    courseFinder.findCourse(courseId)
-        .flatMap(course -> course.findHole(holeNumber))
-        .map(HoleService::payload)
-        .ifPresent(payload -> {
-          repository.deleteById(courseId);
-          producer.holeDeleted(payload);
+    repository.findByCourseIdAndNumber(courseId, holeNumber)
+        .ifPresent(hole -> {
+          repository.deleteById(hole.getId());
+          producer.holeDeleted(payload(hole));
         });
   }
 

@@ -1,3 +1,4 @@
-@url = http://localhost:8082/holes
+@url = http://localhost:8082/courses
 
-DELETE {{url}}/3 HTTP/1.1
+### Delete hole 1 of Laajavuori
+DELETE {{url}}/1/holes/1 HTTP/1.1

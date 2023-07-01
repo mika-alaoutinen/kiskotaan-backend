@@ -98,16 +98,30 @@ Folder `.http` has http-files that contain example payloads that can be used to 
 
 # Discovered problems
 
+## No reactive support with code generation
+There doesn't seem to be a sensible way to generate reactive interfaces from an OpenAPI document. At best it's possible to generate interfaces that wrap return values in `CompletionStage`, but I definitely want to take advantage of Mutiny with Quarkus. I could generate the model classes and do the API interfaces by hand, but I'd rather just ditch code generation entirely. Spring probably has more mature code generation tools available.
+
 ## Score card service
 `org.jboss.resteasy.reactive.ResponseStatus` annotation does nothing. It should be possible to set the status code of a response using the annotation, but in reality the annotation does nothing. The workaround is to wrap responses in `Response` or `RestResponse` and set headers that way. Unfortunately OpenAPI code generation does not support RestResponse.
 
 # TODO
-- Change player scores to `Map<int, int>`, where key is hole number and value is score.
 - Implement `Queries service`.
 - Send course, player and score card events to `Queries service` on application launch to create initial test data.
   - Currently test data is loaded by using Liquibase Mongo extension.
   - It might be better to get rid of Liquibase, because it serves no other purpose besides seeding test data. Using Liquibase for that is overkill and error prone.
   - DB writes are supposed to only come from Kafka events, and therefore seeding test data this way also serves as a smoke test.
-- Implement paging in `Queries service`.
 - Implement search functionality for score cards.
-- Implement authentication and authorization.
+
+# Ideas for further development
+1. Add `Analytics service` that aggregates facts about played rounds. 
+  - Try out Kafka Streams? 
+  - Who has the most bogies and birdies? 
+  - What are the most popular courses?
+
+2. Try out the outbox pattern for sending messages to Kafka.
+  - Would have the benefit of automatically initializing Kafka topics using
+    Liquibase. 
+
+3. Add `Tournament service` that assigns players to scorecards and keeps track
+   of overall player scores.
+

@@ -18,16 +18,19 @@ class HoleService {
   private final HoleProducer producer;
   private final HoleRepository repository;
 
-  List<HoleEntity> findCourseHoles(long courseId) {
-    return Collections.emptyList();
+  List<HoleEntity> findHoles(long courseId) {
+    return courseFinder.findCourse(courseId)
+        .map(CourseEntity::getHoles)
+        .orElseGet(Collections::emptyList);
   }
 
   HoleEntity findOne(long courseId, int holeNumber) {
-    return repository.findByIdOptional(courseId).orElseThrow(() -> holeNotFound(courseId));
+    var course = courseFinder.findCourseOrThrow(courseId);
+    return findHoleOrThrow(course, holeNumber);
   }
 
   HoleEntity add(long courseId, HoleEntity newHole) {
-    var course = courseFinder.findCourse(courseId).orElseThrow(() -> courseNotFound(courseId));
+    var course = courseFinder.findCourseOrThrow(courseId);
 
     HoleValidator.validateUniqueHoleNumber(newHole.getHoleNumber(), course);
     course.addHole(newHole);
@@ -39,10 +42,10 @@ class HoleService {
   }
 
   HoleEntity update(long courseId, int holeNumber, HoleEntity updatedHole) {
-    var hole = repository.findByIdOptional(courseId).orElseThrow(() -> holeNotFound(courseId));
+    var course = courseFinder.findCourseOrThrow(courseId);
+    var hole = findHoleOrThrow(course, holeNumber);
 
     hole.setDistance(updatedHole.getDistance());
-    hole.setHoleNumber(updatedHole.getHoleNumber());
     hole.setPar(updatedHole.getPar());
 
     producer.holeUpdated(payload(hole));
@@ -51,7 +54,8 @@ class HoleService {
   }
 
   void delete(long courseId, int holeNumber) {
-    repository.findByIdOptional(courseId)
+    courseFinder.findCourse(courseId)
+        .flatMap(course -> course.findHole(holeNumber))
         .map(HoleService::payload)
         .ifPresent(payload -> {
           repository.deleteById(courseId);
@@ -59,14 +63,12 @@ class HoleService {
         });
   }
 
-  private static NotFoundException courseNotFound(long id) {
-    String msg = "Could not find course with id " + id;
-    return new NotFoundException(msg);
-  }
-
-  private static NotFoundException holeNotFound(long id) {
-    String msg = "Could not find hole with id " + id;
-    return new NotFoundException(msg);
+  private static HoleEntity findHoleOrThrow(CourseEntity course, int holeNumber) {
+    return course.findHole(holeNumber)
+        .orElseThrow(() -> {
+          String msg = String.format("Course %s has no hole %s", course.getId(), holeNumber);
+          return new NotFoundException(msg);
+        });
   }
 
   private static HolePayload payload(HoleEntity entity) {

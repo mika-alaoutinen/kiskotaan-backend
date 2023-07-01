@@ -39,7 +39,7 @@ class HoleResource implements HolesApi {
 
   @Override
   public List<HoleDTO> getHoles(Integer id) {
-    return service.findCourseHoles(id)
+    return service.findHoles(id)
         .stream()
         .map(HoleResource::mapHole)
         .toList();

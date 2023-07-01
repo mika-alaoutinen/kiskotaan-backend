@@ -2,6 +2,7 @@ package mikaa.feature;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -52,6 +53,13 @@ class CourseEntity {
   void removeHole(HoleEntity hole) {
     holes.remove(hole);
     hole.setCourse(null);
+  }
+
+  Optional<HoleEntity> findHole(int number) {
+    return this.getHoles()
+        .stream()
+        .filter(h -> h.getHoleNumber() == number)
+        .findFirst();
   }
 
 }

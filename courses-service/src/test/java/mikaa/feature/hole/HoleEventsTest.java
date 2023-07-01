@@ -2,6 +2,7 @@ package mikaa.feature.hole;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
@@ -31,7 +32,7 @@ class HoleEventsTest {
 
   private static final long COURSE_ID = 321;
   private static final long HOLE_ID = 123;
-  private static final int HOLE_NUMBER = 4;
+  private static final int HOLE_NUMBER = 2;
 
   @Any
   @Inject
@@ -69,17 +70,17 @@ class HoleEventsTest {
   void should_send_event_on_update() {
     var sink = initSink(OutgoingChannels.Hole.HOLE_UPDATED);
 
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
-    service.update(COURSE_ID, HOLE_NUMBER, new HoleEntity(null, 4, 5, 165, courseMock()));
+    when(courseFinder.findCourseOrThrow(anyLong())).thenReturn(courseMock());
+    service.update(COURSE_ID, HOLE_NUMBER, new HoleEntity(null, 0, 5, 165, courseMock()));
 
-    assertEvent(sink, new HolePayload(HOLE_ID, COURSE_ID, 4, 5, 165));
+    assertEvent(sink, new HolePayload(HOLE_ID, COURSE_ID, 2, 5, 165));
   }
 
   @Test
   void should_send_event_on_delete() {
     var sink = initSink(OutgoingChannels.Hole.HOLE_DELETED);
 
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
+    when(repository.findByCourseIdAndNumber(anyLong(), anyInt())).thenReturn(Optional.of(holeMock()));
     service.delete(COURSE_ID, HOLE_NUMBER);
 
     assertEvent(sink, new HolePayload(HOLE_ID, COURSE_ID, 2, 3, 123));
@@ -98,7 +99,9 @@ class HoleEventsTest {
   }
 
   private static CourseEntity courseMock() {
-    return new CourseEntity(COURSE_ID, "DG Course", new ArrayList<>());
+    var course = new CourseEntity(COURSE_ID, "DG Course", new ArrayList<HoleEntity>());
+    course.addHole(new HoleEntity(HOLE_ID, 2, 3, 123, null));
+    return course;
   }
 
   private static HoleEntity holeMock() {

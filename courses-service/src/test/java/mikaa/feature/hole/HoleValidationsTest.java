@@ -35,7 +35,7 @@ class HoleValidationsTest {
   @Test
   void should_reject_invalid_hole_number() {
     var response = postInvalidHole(new HoleDTO().number(0).par(3).distance(120));
-    assertBadRequest(response, "HoleDTO.number", "must be greater than or equal to 1");
+    assertBadRequest(response, "holeDTO.number", "must be greater than or equal to 1");
   }
 
   @Test

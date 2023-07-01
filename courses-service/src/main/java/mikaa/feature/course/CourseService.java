@@ -1,18 +1,23 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.modelmapper.ModelMapper;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.producers.courses.CourseProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class CourseService {
+class CourseService implements CourseFinder {
 
+  private static final ModelMapper MAPPER = new ModelMapper();
   private final CourseProducer producer;
   private final CourseRepository repository;
   private final CourseValidator validator;
@@ -24,15 +29,21 @@ class CourseService {
         .toList();
   }
 
-  CourseEntity findOne(long id) {
-    return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
+  @Override
+  public Optional<CourseEntity> findCourse(long id) {
+    return repository.findByIdOptional(id);
+  }
+
+  @Override
+  public CourseEntity findCourseOrThrow(long id) {
+    return findCourse(id).orElseThrow(() -> notFound(id));
   }
 
   CourseEntity add(CourseEntity newCourse) {
     validator.validate(newCourse);
     newCourse.getHoles().forEach(h -> h.setCourse(newCourse)); // For JPA to work correctly
     repository.persist(newCourse);
-    producer.courseAdded(CourseMapper.toPayload(newCourse));
+    producer.courseAdded(CourseService.toPayload(newCourse));
     return newCourse;
   }
 
@@ -48,7 +59,7 @@ class CourseService {
 
   void delete(long id) {
     repository.findByIdOptional(id)
-        .map(CourseMapper::toPayload)
+        .map(CourseService::toPayload)
         .ifPresent(payload -> {
           repository.deleteById(id);
           producer.courseDeleted(payload);
@@ -58,6 +69,10 @@ class CourseService {
   private static NotFoundException notFound(long id) {
     String msg = "Could not find course with id " + id;
     return new NotFoundException(msg);
+  }
+
+  private static CoursePayload toPayload(CourseEntity entity) {
+    return MAPPER.map(entity, CoursePayload.class);
   }
 
 }

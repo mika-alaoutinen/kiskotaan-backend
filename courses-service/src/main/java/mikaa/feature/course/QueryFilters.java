@@ -1,7 +1,8 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import mikaa.util.StringFilter;
 import lombok.RequiredArgsConstructor;
+import mikaa.feature.hole.HoleEntity;
 import mikaa.util.RangeFilter;
 
 @RequiredArgsConstructor

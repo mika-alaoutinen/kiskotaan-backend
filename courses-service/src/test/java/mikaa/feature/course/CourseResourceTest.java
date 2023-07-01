@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,24 +6,41 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.model.NewHoleDTO;
+import mikaa.model.HoleDTO;
+import mikaa.model.NewCourseNameDTO;
+import mikaa.producers.courses.CourseProducer;
 import mikaa.producers.holes.HoleProducer;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static io.restassured.RestAssured.given;
 
 @QuarkusTest
-class HoleResourceTest {
+class CourseResourceTest {
 
-  private static final String ENDPOINT = "/holes";
+  private static final String ENDPOINT = "/courses";
 
   @InjectMock
-  private HoleProducer producer;
+  private CourseProducer courseProducer;
+
+  @InjectMock
+  private HoleProducer holeProducer;
 
   @Test
-  void should_find_hole_by_id() {
+  void should_get_all_courses() {
+    given()
+        .when()
+        .get(ENDPOINT)
+        .then()
+        .statusCode(200)
+        .contentType(ContentType.JSON)
+        .body("$.size()", is(4));
+  }
+
+  @Test
+  void should_get_course_by_id() {
     given()
         .when()
         .get(ENDPOINT + "/1")
@@ -32,9 +49,8 @@ class HoleResourceTest {
         .contentType(ContentType.JSON)
         .body(
             "id", is(1),
-            "number", is(1),
-            "par", is(3),
-            "distance", is(107));
+            "name", is("Frisbeegolf Laajis"),
+            "holes.size()", is(18));
   }
 
   @Test
@@ -48,40 +64,40 @@ class HoleResourceTest {
   }
 
   @Test
-  void should_reject_update_with_invalid_payload() {
-    given()
-        .contentType(ContentType.JSON)
-        .body(new NewHoleDTO().number(0).par(3).distance(120))
-        .when()
-        .put(ENDPOINT + "/1")
-        .then()
-        .statusCode(400);
-
-    verifyNoInteractions(producer);
-  }
-
-  @Test
-  void put_returns_404() {
+  void add_hole_returns_404_if_course_not_found() {
     var response = given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO().number(2).par(4).distance(100))
+        .body(new HoleDTO().number(2).par(3).distance(120))
         .when()
-        .put(ENDPOINT + "/99")
+        .post(ENDPOINT + "/99/holes")
         .then();
 
     assertNotFoundResponse(response, 99);
-    verifyNoInteractions(producer);
+    verifyNoInteractions(holeProducer);
   }
 
   @Test
-  void should_do_nothing_on_delete_if_hole_not_found() {
+  void patch_returns_404() {
+    var response = given()
+        .contentType(ContentType.JSON)
+        .body(new NewCourseNameDTO().name("Updated name"))
+        .when()
+        .patch(ENDPOINT + "/99")
+        .then();
+
+    assertNotFoundResponse(response, 99);
+    verifyNoInteractions(courseProducer);
+  }
+
+  @Test
+  void should_do_nothing_on_delete_if_course_not_found() {
     given()
         .when()
         .delete(ENDPOINT + "/99")
         .then()
         .statusCode(204);
 
-    verifyNoInteractions(producer);
+    verifyNoInteractions(courseProducer);
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, int id) {
@@ -91,8 +107,8 @@ class HoleResourceTest {
             "timestamp", notNullValue(),
             "status", is(404),
             "error", is("Not Found"),
-            "message", is("Could not find hole with id " + id),
-            "path", is("/holes/" + id));
+            "message", is("Could not find course with id " + id),
+            "path", containsString("/courses/" + id));
   }
 
 }

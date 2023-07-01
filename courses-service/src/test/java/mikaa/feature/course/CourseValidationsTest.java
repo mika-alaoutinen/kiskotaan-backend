@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,9 +6,10 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.feature.hole.HoleEntity;
+import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
-import mikaa.model.NewHoleDTO;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -47,7 +48,7 @@ class CourseValidationsTest {
   void should_reject_new_course_with_duplicate_name() {
     when(repository.existsByName(anyString())).thenReturn(true);
     
-    var hole = new NewHoleDTO().number(1).par(3).distance(100);
+    var hole = new HoleDTO().number(1).par(3).distance(100);
     var invalidCourse = new NewCourseDTO().name("Duplicate name").holes(List.of(hole));
     var response = postInvalidCourse(invalidCourse);
 

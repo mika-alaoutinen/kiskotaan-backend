@@ -13,12 +13,10 @@ import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.kiskotaan.domain.CourseUpdated;
-import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
-import mikaa.model.NewHoleDTO;
 import mikaa.producers.courses.CourseProducer;
-import mikaa.producers.holes.HoleProducer;
 
 import static org.hamcrest.CoreMatchers.is;
 import static io.restassured.RestAssured.given;
@@ -31,12 +29,9 @@ class CoursesIT {
   @InjectMock
   private CourseProducer courseProducer;
 
-  @InjectMock
-  private HoleProducer holeProducer;
-
   @Test
   void should_add_new_course() {
-    var holes = List.of(new NewHoleDTO().number(1).par(3).distance(85));
+    var holes = List.of(new HoleDTO().number(1).par(3).distance(85));
     var newCourse = new NewCourseDTO().name("New Course").holes(holes);
 
     given()
@@ -52,24 +47,6 @@ class CoursesIT {
             "holes.size()", is(1));
 
     verify(courseProducer, atLeastOnce()).courseAdded(any(CoursePayload.class));
-  }
-
-  @Test
-  void should_add_hole_for_a_course() {
-    given()
-        .contentType(ContentType.JSON)
-        .body(new NewHoleDTO().number(3).par(3).distance(90))
-        .when()
-        .post(ENDPOINT + "/3/holes")
-        .then()
-        .statusCode(200)
-        .contentType(ContentType.JSON)
-        .body(
-            "number", is(3),
-            "par", is(3),
-            "distance", is(90));
-
-    verify(holeProducer, atLeastOnce()).holeAdded(any(HolePayload.class));
   }
 
   @Test

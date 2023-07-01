@@ -1,11 +1,19 @@
-@url = http://localhost:8082/holes
+@url = http://localhost:8082/courses
 
-### Update hole
-PUT {{url}}/3 HTTP/1.1
+### Update hole 1 for Laajavuori
+PUT {{url}}/1/holes/1 HTTP/1.1
 Content-Type: application/json
 
 {
-  "number": 1,
+  "par": 4,
+  "distance": 123
+}
+
+### Try to update hole that doesn't exist
+PUT {{url}}/1/holes/28 HTTP/1.1
+Content-Type: application/json
+
+{
   "par": 4,
   "distance": 123
 }

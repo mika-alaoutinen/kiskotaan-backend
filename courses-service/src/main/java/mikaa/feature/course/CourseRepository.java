@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import jakarta.enterprise.context.ApplicationScoped;
 

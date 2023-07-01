@@ -6,7 +6,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.model.NewHoleDTO;
+import mikaa.model.HoleDTO;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -33,18 +33,18 @@ class HoleValidationsTest {
 
   @Test
   void should_reject_invalid_hole_number() {
-    var response = postInvalidHole(new NewHoleDTO().number(0).par(3).distance(120));
-    assertBadRequest(response, "newHoleDTO.number", "must be greater than or equal to 1");
+    var response = postInvalidHole(new HoleDTO().number(0).par(3).distance(120));
+    assertBadRequest(response, "HoleDTO.number", "must be greater than or equal to 1");
   }
 
   @Test
   void should_not_add_hole_with_duplicate_number() {
     when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
-    var response = postInvalidHole(new NewHoleDTO().number(1).par(3).distance(120));
+    var response = postInvalidHole(new HoleDTO().number(1).par(3).distance(120));
     assertBadRequest(response, "hole.number", "Duplicate hole number");
   }
 
-  private ValidatableResponse postInvalidHole(NewHoleDTO hole) {
+  private ValidatableResponse postInvalidHole(HoleDTO hole) {
     return given()
         .contentType(ContentType.JSON)
         .body(hole)

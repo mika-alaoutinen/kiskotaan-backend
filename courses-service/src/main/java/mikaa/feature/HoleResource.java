@@ -1,5 +1,7 @@
 package mikaa.feature;
 
+import java.util.List;
+
 import org.modelmapper.ModelMapper;
 
 import jakarta.transaction.Transactional;
@@ -8,8 +10,8 @@ import jakarta.validation.constraints.NotNull;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.api.HolesApi;
-import mikaa.model.HoleDetailsDTO;
-import mikaa.model.NewHoleDTO;
+import mikaa.model.HoleDTO;
+import mikaa.model.UpdatedHoleDTO;
 
 @RequiredArgsConstructor
 class HoleResource implements HolesApi {
@@ -19,24 +21,31 @@ class HoleResource implements HolesApi {
 
   @Override
   @Transactional
-  public void deleteHole(Integer id) {
-    service.delete(id);
-  }
-
-  @Override
-  public HoleDetailsDTO getHole(Integer id) {
-    return mapHole(service.findOne(id));
+  public HoleDTO addHole(Integer id, @Valid @NotNull HoleDTO holeDTO) {
+    throw new UnsupportedOperationException("Unimplemented method 'addHole'");
   }
 
   @Override
   @Transactional
-  public HoleDetailsDTO updateHole(Integer id, @Valid @NotNull NewHoleDTO newHole) {
-    var hole = service.update(id, MAPPER.map(newHole, HoleEntity.class));
-    return mapHole(hole);
+  public void deleteHole(Integer id, Integer number) {
+    throw new UnsupportedOperationException("Unimplemented method 'deleteHole'");
   }
 
-  private static HoleDetailsDTO mapHole(HoleEntity hole) {
-    return MAPPER.map(hole, HoleDetailsDTO.class);
+  @Override
+  public HoleDTO getHole(Integer id, Integer number) {
+    throw new UnsupportedOperationException("Unimplemented method 'getHole'");
+  }
+
+  @Override
+  public List<HoleDTO> getHoles(Integer id) {
+    throw new UnsupportedOperationException("Unimplemented method 'getHoles'");
+
+  }
+
+  @Override
+  @Transactional
+  public HoleDTO updateHole(Integer id, Integer number, @Valid @NotNull UpdatedHoleDTO updatedHoleDTO) {
+    throw new UnsupportedOperationException("Unimplemented method 'updateHole'");
   }
 
 }

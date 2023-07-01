@@ -6,7 +6,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.model.NewHoleDTO;
+import mikaa.model.HoleDTO;
 import mikaa.producers.holes.HoleProducer;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -51,7 +51,7 @@ class HoleResourceTest {
   void should_reject_update_with_invalid_payload() {
     given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO().number(0).par(3).distance(120))
+        .body(new HoleDTO().number(0).par(3).distance(120))
         .when()
         .put(ENDPOINT + "/1")
         .then()
@@ -64,7 +64,7 @@ class HoleResourceTest {
   void put_returns_404() {
     var response = given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO().number(2).par(4).distance(100))
+        .body(new HoleDTO().number(2).par(4).distance(100))
         .when()
         .put(ENDPOINT + "/99")
         .then();

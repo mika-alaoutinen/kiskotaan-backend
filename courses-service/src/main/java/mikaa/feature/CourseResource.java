@@ -12,10 +12,8 @@ import mikaa.api.CoursesApi;
 import mikaa.model.CourseDTO;
 import mikaa.model.CourseNameDTO;
 import mikaa.model.CourseSummaryDTO;
-import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
-import mikaa.model.NewHoleDTO;
 import mikaa.util.StringFilter;
 import mikaa.util.RangeFilter;
 
@@ -24,20 +22,12 @@ class CourseResource implements CoursesApi {
 
   private static final ModelMapper MAPPER = new ModelMapper();
   private final CourseService service;
-  private final HoleService holeService;
 
   @Override
   @Transactional
   public CourseDTO addCourse(@Valid @NotNull NewCourseDTO newCourseDTO) {
     var course = service.add(MAPPER.map(newCourseDTO, CourseEntity.class));
     return MAPPER.map(course, CourseDTO.class);
-  }
-
-  @Override
-  @Transactional
-  public HoleDTO addHole(Integer id, @Valid @NotNull NewHoleDTO newHoleDTO) {
-    var hole = holeService.add(id, MAPPER.map(newHoleDTO, HoleEntity.class));
-    return MAPPER.map(hole, HoleDTO.class);
   }
 
   @Override

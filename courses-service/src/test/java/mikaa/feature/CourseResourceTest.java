@@ -6,8 +6,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseNameDTO;
-import mikaa.model.NewHoleDTO;
 import mikaa.producers.courses.CourseProducer;
 import mikaa.producers.holes.HoleProducer;
 
@@ -67,7 +67,7 @@ class CourseResourceTest {
   void add_hole_returns_404_if_course_not_found() {
     var response = given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO().number(2).par(3).distance(120))
+        .body(new HoleDTO().number(2).par(3).distance(120))
         .when()
         .post(ENDPOINT + "/99/holes")
         .then();

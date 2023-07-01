@@ -14,9 +14,9 @@ import io.restassured.http.ContentType;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
-import mikaa.model.NewHoleDTO;
 import mikaa.producers.courses.CourseProducer;
 import mikaa.producers.holes.HoleProducer;
 
@@ -36,7 +36,7 @@ class CoursesIT {
 
   @Test
   void should_add_new_course() {
-    var holes = List.of(new NewHoleDTO().number(1).par(3).distance(85));
+    var holes = List.of(new HoleDTO().number(1).par(3).distance(85));
     var newCourse = new NewCourseDTO().name("New Course").holes(holes);
 
     given()
@@ -58,7 +58,7 @@ class CoursesIT {
   void should_add_hole_for_a_course() {
     given()
         .contentType(ContentType.JSON)
-        .body(new NewHoleDTO().number(3).par(3).distance(90))
+        .body(new HoleDTO().number(3).par(3).distance(90))
         .when()
         .post(ENDPOINT + "/3/holes")
         .then()

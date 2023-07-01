@@ -29,6 +29,7 @@ class HoleEventsTest {
 
   private static final long COURSE_ID = 321;
   private static final long HOLE_ID = 123;
+  private static final int HOLE_NUMBER = 4;
 
   @Any
   @Inject
@@ -54,7 +55,7 @@ class HoleEventsTest {
   void should_send_event_on_add() {
     var sink = initSink(OutgoingChannels.Hole.HOLE_ADDED);
 
-    when(courseService.findOne(anyLong())).thenReturn(courseMock());
+    when(courseService.findCourseOrThrow(anyLong())).thenReturn(courseMock());
     var newHole = new HoleEntity(321l, 1, 3, 100, courseMock());
     service.add(COURSE_ID, newHole);
 
@@ -67,7 +68,7 @@ class HoleEventsTest {
     var sink = initSink(OutgoingChannels.Hole.HOLE_UPDATED);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
-    service.update(HOLE_ID, new HoleEntity(null, 4, 5, 165, courseMock()));
+    service.update(COURSE_ID, HOLE_NUMBER, new HoleEntity(null, 4, 5, 165, courseMock()));
 
     assertEvent(sink, new HolePayload(HOLE_ID, COURSE_ID, 4, 5, 165));
   }
@@ -77,7 +78,7 @@ class HoleEventsTest {
     var sink = initSink(OutgoingChannels.Hole.HOLE_DELETED);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(holeMock()));
-    service.delete(HOLE_ID);
+    service.delete(COURSE_ID, HOLE_NUMBER);
 
     assertEvent(sink, new HolePayload(HOLE_ID, COURSE_ID, 2, 3, 123));
     verify(repository, atLeastOnce()).deleteById(anyLong());

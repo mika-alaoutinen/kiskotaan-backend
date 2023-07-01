@@ -1,5 +1,8 @@
 package mikaa.feature;
 
+import java.util.Collections;
+import java.util.List;
+
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
@@ -11,16 +14,20 @@ import mikaa.producers.holes.HoleProducer;
 @RequiredArgsConstructor
 class HoleService {
 
-  private final CourseService courseService;
+  private final CourseFinder courseFinder;
   private final HoleProducer producer;
   private final HoleRepository repository;
 
-  HoleEntity findOne(long id) {
-    return repository.findByIdOptional(id).orElseThrow(() -> holeNotFound(id));
+  List<HoleEntity> findCourseHoles(long courseId) {
+    return Collections.emptyList();
+  }
+
+  HoleEntity findOne(long courseId, int holeNumber) {
+    return repository.findByIdOptional(courseId).orElseThrow(() -> holeNotFound(courseId));
   }
 
   HoleEntity add(long courseId, HoleEntity newHole) {
-    var course = courseService.findOne(courseId);
+    var course = courseFinder.findCourse(courseId).orElseThrow(() -> courseNotFound(courseId));
 
     HoleValidator.validateUniqueHoleNumber(newHole.getHoleNumber(), course);
     course.addHole(newHole);
@@ -31,8 +38,8 @@ class HoleService {
     return newHole;
   }
 
-  HoleEntity update(long id, HoleEntity updatedHole) {
-    var hole = repository.findByIdOptional(id).orElseThrow(() -> holeNotFound(id));
+  HoleEntity update(long courseId, int holeNumber, HoleEntity updatedHole) {
+    var hole = repository.findByIdOptional(courseId).orElseThrow(() -> holeNotFound(courseId));
 
     hole.setDistance(updatedHole.getDistance());
     hole.setHoleNumber(updatedHole.getHoleNumber());
@@ -43,13 +50,18 @@ class HoleService {
     return hole;
   }
 
-  void delete(long id) {
-    repository.findByIdOptional(id)
+  void delete(long courseId, int holeNumber) {
+    repository.findByIdOptional(courseId)
         .map(HoleService::payload)
         .ifPresent(payload -> {
-          repository.deleteById(id);
+          repository.deleteById(courseId);
           producer.holeDeleted(payload);
         });
+  }
+
+  private static NotFoundException courseNotFound(long id) {
+    String msg = "Could not find course with id " + id;
+    return new NotFoundException(msg);
   }
 
   private static NotFoundException holeNotFound(long id) {

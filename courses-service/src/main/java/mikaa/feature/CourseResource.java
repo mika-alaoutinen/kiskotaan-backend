@@ -38,7 +38,7 @@ class CourseResource implements CoursesApi {
 
   @Override
   public CourseDTO getCourse(Integer id) {
-    return MAPPER.map(service.findOne(id), CourseDTO.class);
+    return MAPPER.map(service.findCourseOrThrow(id), CourseDTO.class);
   }
 
   @Override

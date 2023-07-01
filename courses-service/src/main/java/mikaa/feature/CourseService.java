@@ -1,6 +1,7 @@
 package mikaa.feature;
 
 import java.util.List;
+import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
@@ -11,7 +12,7 @@ import mikaa.producers.courses.CourseProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class CourseService {
+class CourseService implements CourseFinder {
 
   private final CourseProducer producer;
   private final CourseRepository repository;
@@ -24,8 +25,13 @@ class CourseService {
         .toList();
   }
 
-  CourseEntity findOne(long id) {
-    return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
+  @Override
+  public Optional<CourseEntity> findCourse(long id) {
+    return repository.findByIdOptional(id);
+  }
+
+  CourseEntity findCourseOrThrow(long id) {
+    return findCourse(id).orElseThrow(() -> notFound(id));
   }
 
   CourseEntity add(CourseEntity newCourse) {

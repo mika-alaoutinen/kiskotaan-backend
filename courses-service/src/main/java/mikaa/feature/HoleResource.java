@@ -22,30 +22,38 @@ class HoleResource implements HolesApi {
   @Override
   @Transactional
   public HoleDTO addHole(Integer id, @Valid @NotNull HoleDTO holeDTO) {
-    throw new UnsupportedOperationException("Unimplemented method 'addHole'");
+    var hole = service.add(id, MAPPER.map(holeDTO, HoleEntity.class));
+    return mapHole(hole);
   }
 
   @Override
   @Transactional
   public void deleteHole(Integer id, Integer number) {
-    throw new UnsupportedOperationException("Unimplemented method 'deleteHole'");
+    service.delete(id, number);
   }
 
   @Override
   public HoleDTO getHole(Integer id, Integer number) {
-    throw new UnsupportedOperationException("Unimplemented method 'getHole'");
+    return mapHole(service.findOne(id, number));
   }
 
   @Override
   public List<HoleDTO> getHoles(Integer id) {
-    throw new UnsupportedOperationException("Unimplemented method 'getHoles'");
-
+    return service.findCourseHoles(id)
+        .stream()
+        .map(HoleResource::mapHole)
+        .toList();
   }
 
   @Override
   @Transactional
-  public HoleDTO updateHole(Integer id, Integer number, @Valid @NotNull UpdatedHoleDTO updatedHoleDTO) {
-    throw new UnsupportedOperationException("Unimplemented method 'updateHole'");
+  public HoleDTO updateHole(Integer id, Integer number, @Valid @NotNull UpdatedHoleDTO updatedHole) {
+    var hole = service.update(id, number, MAPPER.map(updatedHole, HoleEntity.class));
+    return mapHole(hole);
+  }
+
+  private static HoleDTO mapHole(HoleEntity entity) {
+    return MAPPER.map(entity, HoleDTO.class);
   }
 
 }

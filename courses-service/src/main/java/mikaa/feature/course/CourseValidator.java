@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import java.util.Optional;
 import java.util.stream.Stream;

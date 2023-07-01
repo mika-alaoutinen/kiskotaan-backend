@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import mikaa.feature.hole.HoleEntity;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +27,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false, exclude = "holes")
 @ToString(exclude = "holes")
 @Entity(name = "course")
-class CourseEntity {
+public class CourseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,21 +42,21 @@ class CourseEntity {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
   private List<HoleEntity> holes = new ArrayList<>();
 
-  static CourseEntity fromName(String name) {
+  public static CourseEntity fromName(String name) {
     return new CourseEntity(null, name, new ArrayList<>());
   }
 
-  void addHole(HoleEntity hole) {
+  public void addHole(HoleEntity hole) {
     holes.add(hole);
     hole.setCourse(this);
   }
 
-  void removeHole(HoleEntity hole) {
+  public void removeHole(HoleEntity hole) {
     holes.remove(hole);
     hole.setCourse(null);
   }
 
-  Optional<HoleEntity> findHole(int number) {
+  public Optional<HoleEntity> findHole(int number) {
     return this.getHoles()
         .stream()
         .filter(h -> h.getHoleNumber() == number)

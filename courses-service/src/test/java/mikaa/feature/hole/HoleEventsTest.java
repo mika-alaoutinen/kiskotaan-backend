@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.hole;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -12,6 +12,8 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.feature.course.CourseEntity;
+import mikaa.feature.course.CourseFinder;
 import mikaa.kiskotaan.domain.HolePayload;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.holes.HoleProducer;
@@ -39,7 +41,7 @@ class HoleEventsTest {
   private HoleProducer producer;
 
   @InjectMock
-  private CourseService courseService;
+  private CourseFinder courseFinder;
 
   @InjectMock
   private HoleRepository repository;
@@ -48,14 +50,14 @@ class HoleEventsTest {
 
   @BeforeEach
   void setup() {
-    service = new HoleService(courseService, producer, repository);
+    service = new HoleService(courseFinder, producer, repository);
   }
 
   @Test
   void should_send_event_on_add() {
     var sink = initSink(OutgoingChannels.Hole.HOLE_ADDED);
 
-    when(courseService.findCourseOrThrow(anyLong())).thenReturn(courseMock());
+    when(courseFinder.findCourseOrThrow(anyLong())).thenReturn(courseMock());
     var newHole = new HoleEntity(321l, 1, 3, 100, courseMock());
     service.add(COURSE_ID, newHole);
 

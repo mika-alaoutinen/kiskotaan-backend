@@ -1,7 +1,8 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import java.util.List;
 
+import mikaa.feature.hole.HoleEntity;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.kiskotaan.domain.Hole;
 

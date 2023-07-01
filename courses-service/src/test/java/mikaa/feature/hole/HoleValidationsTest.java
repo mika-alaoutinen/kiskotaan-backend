@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.hole;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,6 +6,8 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.feature.course.CourseEntity;
+import mikaa.feature.course.CourseFinder;
 import mikaa.model.HoleDTO;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -18,7 +20,6 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static io.restassured.RestAssured.given;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 @QuarkusTest
 class HoleValidationsTest {
@@ -26,7 +27,7 @@ class HoleValidationsTest {
   static final String ENDPOINT = "/courses/1/holes";
 
   @InjectMock
-  CourseRepository courseRepository;
+  CourseFinder courseRepository;
 
   @InjectMock
   HoleRepository holeRepository;
@@ -39,7 +40,7 @@ class HoleValidationsTest {
 
   @Test
   void should_not_add_hole_with_duplicate_number() {
-    when(courseRepository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
+    when(courseRepository.findCourseOrThrow(anyLong())).thenReturn(courseMock());
     var response = postInvalidHole(new HoleDTO().number(1).par(3).distance(120));
     assertBadRequest(response, "hole.number", "Duplicate hole number");
   }

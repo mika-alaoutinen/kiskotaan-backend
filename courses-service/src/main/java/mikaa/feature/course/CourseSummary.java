@@ -1,8 +1,9 @@
-package mikaa.feature;
+package mikaa.feature.course;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import mikaa.feature.hole.HoleEntity;
 
 /*
  * Use value class over record due to ModelMapper compatibility.

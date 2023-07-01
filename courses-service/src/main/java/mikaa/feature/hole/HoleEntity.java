@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.hole;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import mikaa.feature.course.CourseEntity;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,7 +22,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false, exclude = "course")
 @ToString(exclude = "course")
 @Entity(name = "hole")
-class HoleEntity {
+public class HoleEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,7 +45,7 @@ class HoleEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private CourseEntity course;
 
-  static HoleEntity from(int holeNumber, int par, int distance) {
+  public static HoleEntity from(int holeNumber, int par, int distance) {
     return new HoleEntity(null, holeNumber, par, distance, null);
   }
 

@@ -1,4 +1,4 @@
-package mikaa.feature;
+package mikaa.feature.hole;
 
 import java.util.Collections;
 import java.util.List;
@@ -7,6 +7,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.feature.course.CourseEntity;
+import mikaa.feature.course.CourseFinder;
 import mikaa.kiskotaan.domain.HolePayload;
 import mikaa.producers.holes.HoleProducer;
 

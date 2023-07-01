@@ -30,7 +30,8 @@ class CourseService implements CourseFinder {
     return repository.findByIdOptional(id);
   }
 
-  CourseEntity findCourseOrThrow(long id) {
+  @Override
+  public CourseEntity findCourseOrThrow(long id) {
     return findCourse(id).orElseThrow(() -> notFound(id));
   }
 

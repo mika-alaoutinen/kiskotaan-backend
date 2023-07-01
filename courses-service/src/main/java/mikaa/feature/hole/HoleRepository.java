@@ -10,7 +10,7 @@ import io.quarkus.hibernate.orm.panache.PanacheRepository;
 class HoleRepository implements PanacheRepository<HoleEntity> {
 
   Optional<HoleEntity> findByCourseIdAndNumber(long courseId, int number) {
-    return find("course.id = ?1 and holeNumber = ?2", courseId, number).firstResultOptional();
+    return find("course.id = ?1 and number = ?2", courseId, number).firstResultOptional();
   }
 
 }

@@ -55,18 +55,16 @@ class HoleService {
 
   void delete(long courseId, int holeNumber) {
     repository.findByCourseIdAndNumber(courseId, holeNumber)
-        .ifPresent(hole -> {
-          repository.deleteById(hole.getId());
-          producer.holeDeleted(payload(hole));
+        .map(HoleService::payload)
+        .ifPresent(payload -> {
+          repository.deleteById(payload.getId());
+          producer.holeDeleted(payload);
         });
   }
 
   private static HoleEntity findHoleOrThrow(CourseEntity course, int holeNumber) {
-    return course.findHole(holeNumber)
-        .orElseThrow(() -> {
-          String msg = String.format("Course %s has no hole %s", course.getId(), holeNumber);
-          return new NotFoundException(msg);
-        });
+    return course.findHole(holeNumber).orElseThrow(
+        () -> new NotFoundException(String.format("Course %s has no hole %s", course.getId(), holeNumber)));
   }
 
   private static HolePayload payload(HoleEntity entity) {

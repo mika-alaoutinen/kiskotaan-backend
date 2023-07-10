@@ -105,23 +105,19 @@ There doesn't seem to be a sensible way to generate reactive interfaces from an 
 `org.jboss.resteasy.reactive.ResponseStatus` annotation does nothing. It should be possible to set the status code of a response using the annotation, but in reality the annotation does nothing. The workaround is to wrap responses in `Response` or `RestResponse` and set headers that way. Unfortunately OpenAPI code generation does not support RestResponse.
 
 # TODO
-- Implement `Queries service`.
-- Send course, player and score card events to `Queries service` on application launch to create initial test data.
-  - Currently test data is loaded by using Liquibase Mongo extension.
-  - It might be better to get rid of Liquibase, because it serves no other purpose besides seeding test data. Using Liquibase for that is overkill and error prone.
-  - DB writes are supposed to only come from Kafka events, and therefore seeding test data this way also serves as a smoke test.
+- Try out the `outbox` pattern in `Courses service` to share course state to a Kafka topic. Use the Debezium connector for Postgres. 
+- Implement `Queries service`. 
+  - Use Kafka Streams to query the state of different domain entities.
+  - MongoDB won't be needed anymore.
+  - Figure out how to send course, player and score card events to Kafka on application launch to create initial test data.
 - Implement search functionality for score cards.
 
 # Ideas for further development
 1. Add `Analytics service` that aggregates facts about played rounds. 
-  - Try out Kafka Streams? 
+  - Try out Kafka Streams.
   - Who has the most bogies and birdies? 
   - What are the most popular courses?
 
-2. Try out the outbox pattern for sending messages to Kafka.
-  - Would have the benefit of automatically initializing Kafka topics using
-    Liquibase. 
-
-3. Add `Tournament service` that assigns players to scorecards and keeps track
+2. Add `Tournament service` that assigns players to scorecards and keeps track
    of overall player scores.
 

@@ -4,11 +4,14 @@ services:
   # Kafka cluster
   apicurio:
     container_name: apicurio
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:9091
     expose:
       - 8001
     image: apicurio/apicurio-registry-mem:latest-release
     networks:
       - apicurio_network
+      - kafka_network
     ports:
       - 8001:8080
 
@@ -29,7 +32,6 @@ services:
     networks:
       - kafka_network
     ports:
-      - 9091:9091
       - 9092:9092
 
   kafka-ui:
@@ -93,7 +95,7 @@ services:
       - postgres
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9091
-      MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_APICURIO_REGISTRY_URL: apicurio:8001/apis/registry/v2
+      MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_APICURIO_REGISTRY_URL: http://apicurio:8001/apis/registry/v2
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/courses_db
       QUARKUS_DATASOURCE_USERNAME: admin
       QUARKUS_DATASOURCE_PASSWORD: admin
@@ -115,7 +117,7 @@ services:
       - postgres
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9091
-      MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_APICURIO_REGISTRY_URL: apicurio:8001/apis/registry/v2
+      MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_APICURIO_REGISTRY_URL: http://apicurio:8001/apis/registry/v2
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/scorecards_db
       QUARKUS_DATASOURCE_USERNAME: admin
       QUARKUS_DATASOURCE_PASSWORD: admin

@@ -4,8 +4,6 @@ services:
   # Kafka cluster
   apicurio:
     container_name: apicurio
-    environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9091
     expose:
       - 8001
     image: apicurio/apicurio-registry-mem:latest-release

@@ -5,12 +5,12 @@ services:
   apicurio:
     container_name: apicurio
     expose:
-      - 8002
+      - 8001
     image: apicurio/apicurio-registry-mem:latest-release
     networks:
       - apicurio_network
     ports:
-      - 8002:8080
+      - 8001:8080
 
   debezium:
     container_name: debezium-connect
@@ -24,12 +24,12 @@ services:
       OFFSET_STORAGE_TOPIC: connect_offsets
       STATUS_STORAGE_TOPIC: connect_statuses
     expose:
-      - 8001
+      - 8002
     image: debezium/connect
     networks:
       - kafka_network
     ports:
-      - 8001:8083
+      - 8002:8083
 
   kafka:
     container_name: kafka

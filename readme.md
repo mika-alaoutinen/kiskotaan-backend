@@ -34,14 +34,14 @@ In addition to the microservices listed above, `Kiskotaan backend` requires seve
 
 ### `Apicurio`
 - The microservices use Apicurio schema registry to store event schemas.
-- Apicurio registry run on `localhost:8002`.
+- Apicurio registry run on `localhost:8001`.
 - Schemas are described as Avro documents that are stored under `src/main/avro`.
 - Message payload Java classes are generated from the Avro schemas.
 
 ### `Debezium connector for Postgres`
 - Debezium connector is used for change data capture to share data between the different microservices. The connector streams changes to database into Kafka topics.
 - The connector is used to implement the [transactional outbox pattern](https://microservices.io/patterns/data/transactional-outbox.html).
-- Runs on `localhost:8001`.
+- Runs on `localhost:8002`.
 
 ### `Kafka`
 - The microservices use Kafka as a message broker.

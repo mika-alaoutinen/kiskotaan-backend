@@ -70,7 +70,7 @@ services:
       - kafka
       - postgres
     environment:
-      apicurio_url: apicurio:8001
+      apicurio_url: http://apicurio:8080
       db_url: jdbc:postgresql://postgres:5432/players_db
       db_username: admin
       db_password: admin

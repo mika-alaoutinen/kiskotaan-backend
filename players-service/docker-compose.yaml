@@ -5,7 +5,7 @@ services:
     container_name: apicurio
     image: apicurio/apicurio-registry-mem:latest-release
     ports:
-      - 8000:8080
+      - 8001:8080
 
   kafka:
     container_name: kafka

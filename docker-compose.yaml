@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # Kafka infra
   apicurio:
     container_name: apicurio
     image: apicurio/apicurio-registry-mem:latest-release
@@ -29,6 +30,20 @@ services:
       - 9091:9091
       - 9092:9092
 
+  debezium:
+    image: debezium/connect:latest
+    depends_on:
+      - kafka
+      - postgres
+    ports:
+      - 8001:8083 # Expose port 8001
+    networks:
+      - kafka_network
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: 1
+
+  # Database
   postgres:
     container_name: postgres
     environment:
@@ -42,6 +57,7 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d
 
+  # Kiskotaan applications
   # Add Queries service
   players_service:
     container_name: players_service

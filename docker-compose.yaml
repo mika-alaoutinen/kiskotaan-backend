@@ -12,25 +12,6 @@ services:
     ports:
       - 8001:8080
 
-  debezium:
-    container_name: debezium-connect
-    depends_on:
-      - kafka
-      - postgres
-    environment:
-      BOOTSTRAP_SERVERS: kafka:9092
-      GROUP_ID: 1
-      CONFIG_STORAGE_TOPIC: connect_configs
-      OFFSET_STORAGE_TOPIC: connect_offsets
-      STATUS_STORAGE_TOPIC: connect_statuses
-    expose:
-      - 8002
-    image: debezium/connect
-    networks:
-      - kafka_network
-    ports:
-      - 8002:8083
-
   kafka:
     container_name: kafka
     environment:
@@ -56,8 +37,8 @@ services:
     depends_on:
       - kafka
     environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+      KAFKA_CLUSTERS_0_NAME: kiskotaan-local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9091
     expose:
       - 8000
     image: provectuslabs/kafka-ui
@@ -112,7 +93,7 @@ services:
       - postgres
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9091
-      MP_MESSAGING_CONNECTOR_SMALLRYE-KAFKA_APICURIO_REGISTRY_URL: apicurio:8000/apis/registry/v2
+      MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_APICURIO_REGISTRY_URL: apicurio:8001/apis/registry/v2
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/courses_db
       QUARKUS_DATASOURCE_USERNAME: admin
       QUARKUS_DATASOURCE_PASSWORD: admin
@@ -134,7 +115,7 @@ services:
       - postgres
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9091
-      MP_MESSAGING_CONNECTOR_SMALLRYE-KAFKA_APICURIO_REGISTRY_URL: apicurio:8000/apis/registry/v2
+      MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_APICURIO_REGISTRY_URL: apicurio:8001/apis/registry/v2
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/scorecards_db
       QUARKUS_DATASOURCE_USERNAME: admin
       QUARKUS_DATASOURCE_PASSWORD: admin

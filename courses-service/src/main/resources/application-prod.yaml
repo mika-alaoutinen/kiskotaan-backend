@@ -4,12 +4,8 @@ quarkus:
     password: admin
     jdbc:
       url: jdbc:postgresql://localhost:5432/courses_db
-  http:
-    port: 8082
   liquibase:
-    change-log: db/changelog.yaml
     contexts: all
-    migrate-at-start: true
 
 kafka:
   bootstrap:

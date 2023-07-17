@@ -15,7 +15,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
+import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;

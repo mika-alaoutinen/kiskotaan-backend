@@ -17,7 +17,7 @@ import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
+import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import mikaa.feature.course.CourseEntity;

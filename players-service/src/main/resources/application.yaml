@@ -1,4 +1,4 @@
-apicurio-url: ${apicurio_url:http://localhost:8000}
+apicurio-url: ${apicurio_url:http://localhost:8001}
 
 server:
   port: 8081

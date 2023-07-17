@@ -10,10 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import io.quarkus.test.junit.QuarkusTest;
 import mikaa.feature.hole.HoleEntity;
 import mikaa.util.RangeFilter;
 import mikaa.util.StringFilter;
 
+@QuarkusTest
 class QueryFiltersTest {
 
   private static final CourseEntity COURSE = courseMock();

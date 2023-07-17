@@ -1,34 +1,51 @@
 version: '3.8'
 
 services:
+  # Kafka cluster
   apicurio:
     container_name: apicurio
+    expose:
+      - 8001
     image: apicurio/apicurio-registry-mem:latest-release
     networks:
-      - apicurio_network
+      - kafka_network
     ports:
-      - 8000:8080
+      - 8001:8080
 
   kafka:
     container_name: kafka
     environment:
-      ALLOW_PLAINTEXT_LISTENER: yes
-      KAFKA_BROKER_ID: 1
-      KAFKA_ENABLE_KRAFT: yes
-      KAFKA_CFG_NODE_ID: 1
-      KAFKA_CFG_PROCESS_ROLES: broker,controller
-      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_CFG_LISTENERS: PLAINTEXT://:9091,CONTROLLER://:9093,LOCALHOST://:9092
-      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,LOCALHOST:PLAINTEXT
-      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091,LOCALHOST://localhost:9092
-      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@127.0.0.1:9093
+      ALLOW_PLAINTEXT_LISTENER: true
+      KAFKA_ENABLE_KRAFT: true
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENERS: PLAINTEXT://:9091,CONTROLLER://:9093,LOCALHOST://:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,LOCALHOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9091,LOCALHOST://localhost:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@127.0.0.1:9093
     image: bitnami/kafka
     networks:
       - kafka_network
     ports:
-      - 9091:9091
       - 9092:9092
 
+  kafka-ui:
+    container_name: kafka-ui
+    depends_on:
+      - kafka
+    environment:
+      KAFKA_CLUSTERS_0_NAME: kiskotaan-local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9091
+      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://apicurio:8080/apis/ccompat/v6
+    expose:
+      - 8000
+    image: provectuslabs/kafka-ui
+    networks:
+      - kafka_network
+    ports:
+      - 8000:8080
+
+  # Database
   postgres:
     container_name: postgres
     environment:
@@ -42,7 +59,7 @@ services:
     volumes:
       - ./db:/docker-entrypoint-initdb.d
 
-  # Add Queries service
+  # Kiskotaan applications
   players_service:
     container_name: players_service
     depends_on:
@@ -50,7 +67,7 @@ services:
       - kafka
       - postgres
     environment:
-      apicurio_url: apicurio:8000
+      apicurio_url: http://apicurio:8080
       db_url: jdbc:postgresql://postgres:5432/players_db
       db_username: admin
       db_password: admin
@@ -59,7 +76,6 @@ services:
       - 8081
     image: mikaalaoutinen/players-service
     networks:
-      - apicurio_network
       - kafka_network
       - postgres_network
     ports:
@@ -73,7 +89,7 @@ services:
       - postgres
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9091
-      MP_MESSAGING_CONNECTOR_SMALLRYE-KAFKA_APICURIO_REGISTRY_URL: apicurio:8000/apis/registry/v2
+      MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_APICURIO_REGISTRY_URL: http://apicurio:8080/apis/registry/v2
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/courses_db
       QUARKUS_DATASOURCE_USERNAME: admin
       QUARKUS_DATASOURCE_PASSWORD: admin
@@ -81,7 +97,6 @@ services:
       - 8082
     image: mikaalaoutinen/courses-service
     networks:
-      - apicurio_network
       - kafka_network
       - postgres_network
     ports:
@@ -95,7 +110,7 @@ services:
       - postgres
     environment:
       KAFKA_BOOTSTRAP_SERVERS: kafka:9091
-      MP_MESSAGING_CONNECTOR_SMALLRYE-KAFKA_APICURIO_REGISTRY_URL: apicurio:8000/apis/registry/v2
+      MP_MESSAGING_CONNECTOR_SMALLRYE_KAFKA_APICURIO_REGISTRY_URL: http://apicurio:8080/apis/registry/v2
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://postgres:5432/scorecards_db
       QUARKUS_DATASOURCE_USERNAME: admin
       QUARKUS_DATASOURCE_PASSWORD: admin
@@ -103,7 +118,6 @@ services:
       - 8083
     image: mikaalaoutinen/scorecards-service
     networks:
-      - apicurio_network
       - kafka_network
       - postgres_network
     ports:
@@ -124,8 +138,6 @@ services:
       - 8085:8085
 
 networks:
-  apicurio_network:
-    driver: bridge
   kafka_network:
     driver: bridge
   postgres_network:

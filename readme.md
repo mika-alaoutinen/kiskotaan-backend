@@ -34,14 +34,23 @@ In addition to the microservices listed above, `Kiskotaan backend` requires seve
 
 ### `Apicurio`
 - The microservices use Apicurio schema registry to store event schemas.
-- Apicurio registry run on `localhost:8000`.
+- Apicurio registry run on `localhost:8001`.
 - Schemas are described as Avro documents that are stored under `src/main/avro`.
 - Message payload Java classes are generated from the Avro schemas.
+
+### `Debezium connector for Postgres`
+- Debezium connector is used for change data capture to share data between the different microservices. The connector streams changes to database into Kafka topics.
+- The connector is used to implement the [transactional outbox pattern](https://microservices.io/patterns/data/transactional-outbox.html).
+- Runs on `localhost:8002`.
 
 ### `Kafka`
 - The microservices use Kafka as a message broker.
 - Kafka bootstrap server runs on `localhost:9092`. Services in the Docker network (i.e. containers) connects to port `9091` instead.
 - Kafka is run with KRaft, which allows using it without a ZooKeeper instance.
+
+### `Kafka UI`
+- Pretty self-explanatory. Used to conveniently view information about the Kafka cluster.
+- Runs on `localhost:8000`
 
 ### `MongoDB`
 - Microservices that want to operate in a non-blocking manner use MongoDB instead of Postgres as their database.

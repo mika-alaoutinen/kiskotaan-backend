@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
-import io.quarkus.test.junit.mockito.InjectMock;
+import io.quarkus.test.InjectMock;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.kiskotaan.domain.Hole;

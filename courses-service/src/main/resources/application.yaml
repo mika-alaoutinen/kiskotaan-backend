@@ -18,20 +18,14 @@ mp:
 
     outgoing:
       course-added:
-        connector: smallrye-kafka
         topic: "Courses.course_added"
       course-deleted:
-        connector: smallrye-kafka
         topic: "Courses.course_deleted"
       course-updated:
-        connector: smallrye-kafka
         topic: "Courses.course_updated"
       hole-added:
-        connector: smallrye-kafka
         topic: "Courses.hole_added"
       hole-deleted:
-        connector: smallrye-kafka
         topic: "Courses.hole_deleted"
       hole-updated:
-        connector: smallrye-kafka
         topic: "Courses.hole_updated"

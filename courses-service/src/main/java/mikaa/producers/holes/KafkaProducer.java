@@ -8,34 +8,43 @@ import mikaa.producers.OutgoingChannels;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
+import io.smallrye.reactive.messaging.kafka.Record;
+
 @ApplicationScoped
 class KafkaProducer implements HoleProducer {
 
   @Inject
   @Channel(OutgoingChannels.Hole.HOLE_ADDED)
-  Emitter<HolePayload> addEmitter;
+  Emitter<Record<Long, HolePayload>> addEmitter;
 
   @Inject
   @Channel(OutgoingChannels.Hole.HOLE_DELETED)
-  Emitter<HolePayload> deleteEmitter;
+  Emitter<Record<Long, HolePayload>> deleteEmitter;
 
   @Inject
   @Channel(OutgoingChannels.Hole.HOLE_UPDATED)
-  Emitter<HolePayload> updateEmitter;
+  Emitter<Record<Long, HolePayload>> updateEmitter;
 
   @Override
   public void holeAdded(HolePayload payload) {
-    addEmitter.send(payload).toCompletableFuture().join();
+    var record = toRecord(payload);
+    addEmitter.send(record).toCompletableFuture().join();
   }
 
   @Override
   public void holeDeleted(HolePayload payload) {
-    deleteEmitter.send(payload).toCompletableFuture().join();
+    var record = toRecord(payload);
+    deleteEmitter.send(record).toCompletableFuture().join();
   }
 
   @Override
   public void holeUpdated(HolePayload payload) {
-    updateEmitter.send(payload).toCompletableFuture().join();
+    var record = toRecord(payload);
+    updateEmitter.send(record).toCompletableFuture().join();
+  }
+
+  private static Record<Long, HolePayload> toRecord(HolePayload payload) {
+    return Record.of(payload.getId(), payload);
   }
 
 }

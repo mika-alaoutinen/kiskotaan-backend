@@ -2,6 +2,7 @@ package mikaa.producers;
 
 import java.util.stream.Collectors;
 
+import io.smallrye.reactive.messaging.kafka.Record;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.modelmapper.ModelMapper;
@@ -24,32 +25,33 @@ class KafkaProducer implements ScoreCardProducer {
 
   @Inject
   @Channel(OutgoingChannels.SCORECARD_ADDED)
-  Emitter<ScoreCardPayload> addEmitter;
+  Emitter<Record<Long, ScoreCardPayload>> addEmitter;
 
   @Inject
   @Channel(OutgoingChannels.SCORECARD_DELETED)
-  Emitter<ScoreCardPayload> deleteEmitter;
+  Emitter<Record<Long, ScoreCardPayload>> deleteEmitter;
 
   @Inject
   @Channel(OutgoingChannels.SCORECARD_UPDATED)
-  Emitter<ScoreCardStatePayload> stateEmitter;
+  Emitter<Record<Long, ScoreCardStatePayload>> stateEmitter;
 
   @Override
   public void scoreCardAdded(ScoreCardEntity entity) {
-    var payload = toPayload(entity);
-    addEmitter.send(payload).toCompletableFuture().join();
+    var record = toRecord(toPayload(entity));
+    addEmitter.send(record).toCompletableFuture().join();
   }
 
   @Override
   public void scoreCardDeleted(ScoreCardEntity entity) {
-    var payload = toPayload(entity);
-    deleteEmitter.send(payload).toCompletableFuture().join();
+    var record = toRecord(toPayload(entity));
+    deleteEmitter.send(record).toCompletableFuture().join();
   }
 
   @Override
   public void scoreCardUpdated(ScoreCardEntity entity) {
     var payload = toStatePayload(entity);
-    stateEmitter.send(payload).toCompletableFuture().join();
+    var record = Record.of(payload.getId(), payload);
+    stateEmitter.send(record).toCompletableFuture().join();
   }
 
   private static ScoreCardPayload toPayload(ScoreCardEntity entity) {
@@ -82,6 +84,10 @@ class KafkaProducer implements ScoreCardProducer {
         entity.getCourse().getExternalId(),
         playerIds,
         scores);
+  }
+
+  private static Record<Long, ScoreCardPayload> toRecord(ScoreCardPayload payload) {
+    return Record.of(payload.getId(), payload);
   }
 
 }

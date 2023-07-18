@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
+import io.smallrye.reactive.messaging.kafka.Record;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
@@ -79,10 +80,12 @@ class ScoreCardEventsTest {
     assertEvent(sink);
   }
 
-  private void assertEvent(InMemorySink<ScoreCardPayload> sink) {
+  private void assertEvent(InMemorySink<Record<Long, ScoreCardPayload>> sink) {
     assertEquals(1, sink.received().size());
-    var payload = sink.received().get(0).getPayload();
+    var record = sink.received().get(0).getPayload();
+    var payload = record.value();
 
+    assertEquals(payload.getId(), record.key());
     assertEquals(1l, payload.getCourseId());
     assertEquals(1, payload.getPlayerIds().size());
     assertEquals(2l, payload.getPlayerIds().get(0));
@@ -96,7 +99,7 @@ class ScoreCardEventsTest {
     return new PlayerEntity(2L, 2l, "Pekka", "Kana", Set.of(), null);
   }
 
-  private InMemorySink<ScoreCardPayload> initSink(String channel) {
+  private InMemorySink<Record<Long, ScoreCardPayload>> initSink(String channel) {
     return connector.sink(channel);
   }
 

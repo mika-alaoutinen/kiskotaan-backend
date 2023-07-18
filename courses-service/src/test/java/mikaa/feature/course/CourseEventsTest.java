@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.smallrye.reactive.messaging.kafka.Record;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 
@@ -51,7 +52,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    InMemorySink<CoursePayload> sink = connector.sink(OutgoingChannels.Course.COURSE_ADDED);
+    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.Course.COURSE_ADDED);
 
     var course = new CourseEntity(1L, "New Course", List.of(new HoleEntity(1L, 1, 3, 90, null)));
     service.add(course);
@@ -62,19 +63,20 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_course_name_update() {
-    InMemorySink<CourseUpdated> sink = connector.sink(OutgoingChannels.Course.COURSE_UPDATED);
+    InMemorySink<Record<Long, CourseUpdated>> sink = connector.sink(OutgoingChannels.Course.COURSE_UPDATED);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.updateCourseName(1, "Updated Name");
 
     assertEquals(1, sink.received().size());
-    var payload = sink.received().get(0).getPayload();
-    assertEquals("Updated Name", payload.getName());
+    var record = sink.received().get(0).getPayload();
+    assertEquals(1L, record.key());
+    assertEquals("Updated Name", record.value().getName());
   }
 
   @Test
   void should_send_event_on_delete() {
-    InMemorySink<CoursePayload> sink = connector.sink(OutgoingChannels.Course.COURSE_DELETED);
+    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.Course.COURSE_DELETED);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.delete(1);
@@ -83,10 +85,12 @@ class CourseEventsTest {
     verify(repository, atLeastOnce()).deleteById(anyLong());
   }
 
-  private static void assertEvent(InMemorySink<CoursePayload> sink, String name, int holeCount) {
+  private static void assertEvent(InMemorySink<Record<Long, CoursePayload>> sink, String name, int holeCount) {
     assertEquals(1, sink.received().size());
-    var payload = sink.received().get(0).getPayload();
+    var record = sink.received().get(0).getPayload();
+    var payload = record.value();
 
+    assertEquals(1L, record.key());
     assertEquals(name, payload.getName());
     assertEquals(holeCount, payload.getHoles().size());
   }

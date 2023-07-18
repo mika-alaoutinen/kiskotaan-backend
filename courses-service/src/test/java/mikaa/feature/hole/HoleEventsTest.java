@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
+import io.smallrye.reactive.messaging.kafka.Record;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 
@@ -87,9 +88,12 @@ class HoleEventsTest {
     verify(repository, atLeastOnce()).deleteById(anyLong());
   }
 
-  private void assertEvent(InMemorySink<HolePayload> sink, HolePayload expected) {
+  private void assertEvent(InMemorySink<Record<Long, HolePayload>> sink, HolePayload expected) {
     assertEquals(1, sink.received().size());
-    var payload = sink.received().get(0).getPayload();
+    var record = sink.received().get(0).getPayload();
+    var payload = record.value();
+
+    assertEquals(payload.getId(), record.key());
 
     assertEquals(expected.getId(), payload.getId());
     assertEquals(expected.getCourseId(), payload.getCourseId());
@@ -111,7 +115,7 @@ class HoleEventsTest {
     return hole;
   }
 
-  private InMemorySink<HolePayload> initSink(String channel) {
+  private InMemorySink<Record<Long, HolePayload>> initSink(String channel) {
     return connector.sink(channel);
   }
 

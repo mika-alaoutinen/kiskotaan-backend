@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
+import io.smallrye.reactive.messaging.kafka.Record;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
@@ -50,7 +51,7 @@ class ScoreEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
-  private InMemorySink<ScoreCardStatePayload> sink;
+  private InMemorySink<Record<Long, ScoreCardStatePayload>> sink;
   private ScoreService service;
 
   @BeforeEach
@@ -75,7 +76,10 @@ class ScoreEventsTest {
     String playerId = playerMock().getExternalId() + "";
     assertEquals(1, sink.received().size());
 
-    var payload = sink.received().get(0).getPayload();
+    var record = sink.received().get(0).getPayload();
+    var payload = record.value();
+
+    assertEquals(payload.getId(), record.key());
     assertEquals(scoreCardMock().getId(), payload.getId());
 
     var score = payload.getScores().get(playerId);
@@ -97,7 +101,9 @@ class ScoreEventsTest {
 
     assertEquals(1, sink.received().size());
 
-    var payload = sink.received().get(0).getPayload();
+    var record = sink.received().get(0).getPayload();
+    var payload = record.value();
+    assertEquals(payload.getId(), record.key());
     assertEquals(scoreCardMock().getId(), payload.getId());
     assertTrue(payload.getScores().isEmpty());
   }

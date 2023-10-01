@@ -170,6 +170,7 @@
         </executions>
       </plugin>
 
+      <!-- OpenAPI code generation -->
       <plugin>
         <groupId>org.openapitools</groupId>
         <artifactId>openapi-generator-maven-plugin</artifactId>

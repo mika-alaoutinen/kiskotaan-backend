@@ -31,12 +31,8 @@ mp:
         topic: "Courses.hole_deleted"
       hole-updated:
         topic: "Courses.hole_updated"
-      player-added:
-        topic: "Players.player_added"
-      player-deleted:
-        topic: "Players.player_deleted"
-      player-updated:
-        topic: "Players.player_updated"
+      player-state:
+        topic: "Players.player_state"
 
     outgoing:
       scorecard-added:

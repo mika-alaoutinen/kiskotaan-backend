@@ -7,6 +7,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
+import mikaa.kiskotaan.domain.PlayerEvent;
 import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.players.producers.PlayerTopics;
 
@@ -25,22 +26,25 @@ public class PlayerConsumer {
   private PlayerPayload playerDeleted;
   private PlayerPayload playerUpdated;
 
-  @KafkaListener(containerFactory = "playerListenerFactory", topics = PlayerTopics.PLAYER_ADDED)
-  void playerAdded(PlayerPayload payload) {
-    log.info("Player added {}", payload);
-    this.playerAdded = payload;
-  }
+  @KafkaListener(containerFactory = "playerListenerFactory", topics = PlayerTopics.PLAYER_STATE)
+  void playerEvent(PlayerEvent event) {
+    var payload = event.getPayload();
 
-  @KafkaListener(containerFactory = "playerListenerFactory", topics = PlayerTopics.PLAYER_DELETED)
-  void playerDeleted(PlayerPayload payload) {
-    log.info("Player deleted {}", payload);
-    this.playerDeleted = payload;
-  }
-
-  @KafkaListener(containerFactory = "playerListenerFactory", topics = PlayerTopics.PLAYER_UPDATED)
-  void playerUpdated(PlayerPayload payload) {
-    log.info("Player updated {}", payload);
-    this.playerUpdated = payload;
+    switch (event.getAction()) {
+      case ADD:
+        playerAdded(payload);
+        break;
+      case UPDATE:
+        playerUpdated(payload);
+        break;
+      case DELETE:
+        playerDeleted(payload);
+        break;
+      case UNKNOWN:
+      default:
+        log.warn("Unknown player action {}", event.getAction());
+        break;
+    }
   }
 
   public PlayerPayload getPlayerAddedAwait() throws InterruptedException {
@@ -60,6 +64,21 @@ public class PlayerConsumer {
 
   private boolean await() throws InterruptedException {
     return latch.await(1, TimeUnit.SECONDS);
+  }
+
+  private void playerAdded(PlayerPayload payload) {
+    log.info("Player added {}", payload);
+    this.playerAdded = payload;
+  }
+
+  private void playerUpdated(PlayerPayload payload) {
+    log.info("Player updated {}", payload);
+    this.playerUpdated = payload;
+  }
+
+  private void playerDeleted(PlayerPayload payload) {
+    log.info("Player deleted {}", payload);
+    this.playerDeleted = payload;
   }
 
 }

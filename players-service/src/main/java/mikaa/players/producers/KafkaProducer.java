@@ -16,20 +16,22 @@ class KafkaProducer implements PlayerProducer {
 
   @Override
   public void playerAdded(PlayerPayload payload) {
-    var event = new PlayerEvent(payload.getId(), Action.ADD, payload);
-    template.send(PlayerTopics.PLAYER_ADDED, payload.getId(), event);
+    send(Action.ADD, payload);
   }
 
   @Override
   public void playerDeleted(PlayerPayload payload) {
-    var event = new PlayerEvent(payload.getId(), Action.DELETE, payload);
-    template.send(PlayerTopics.PLAYER_DELETED, payload.getId(), event);
+    send(Action.DELETE, payload);
   }
 
   @Override
   public void playerUpdated(PlayerPayload payload) {
-    var event = new PlayerEvent(payload.getId(), Action.UPDATE, payload);
-    template.send(PlayerTopics.PLAYER_UPDATED, payload.getId(), event);
+    send(Action.UPDATE, payload);
+  }
+
+  private void send(Action action, PlayerPayload payload) {
+    var event = new PlayerEvent(payload.getId(), action, payload);
+    template.send(PlayerTopics.PLAYER_STATE, payload.getId(), event);
   }
 
 }

@@ -1,0 +1,16 @@
+{
+  "namespace": "mikaa.kiskotaan.domain",
+  "name": "PlayerEvent",
+  "type": "record",
+  "fields": [
+    {
+      "name": "action",
+      "type": "Action",
+      "default": "UNKNOWN"
+    },
+    {
+      "name": "payload",
+      "type": "PlayerPayload"
+    }
+  ]
+}

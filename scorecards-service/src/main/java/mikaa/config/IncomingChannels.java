@@ -14,10 +14,6 @@ public interface IncomingChannels {
     static final String HOLE_UPDATED = "hole-updated";
   }
 
-  interface Player {
-    static final String PLAYER_ADDED = "player-added";
-    static final String PLAYER_DELETED = "player-deleted";
-    static final String PLAYER_UPDATED = "player-updated";
-  }
+  static final String PLAYER_STATE = "player-state";
 
 }

@@ -4,10 +4,6 @@
   "type": "record",
   "fields": [
     {
-      "name": "id",
-      "type": "long"
-    },
-    {
       "name": "action",
       "type": "Action",
       "default": "UNKNOWN"

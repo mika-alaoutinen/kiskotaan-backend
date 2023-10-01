@@ -30,7 +30,7 @@ class KafkaProducer implements PlayerProducer {
   }
 
   private void send(Action action, PlayerPayload payload) {
-    var event = new PlayerEvent(payload.getId(), action, payload);
+    var event = new PlayerEvent(action, payload);
     template.send(PlayerTopics.PLAYER_STATE, payload.getId(), event);
   }
 

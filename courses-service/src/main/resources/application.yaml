@@ -1,3 +1,11 @@
+avro:
+  codegen:
+    avsc:
+      imports:
+        - Action.avsc
+        - CoursePayload.avsc
+        - HolePayload.avsc
+
 quarkus:
   hibernate-orm:
     validate-in-dev-mode: true

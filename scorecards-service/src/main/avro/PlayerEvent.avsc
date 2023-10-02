@@ -5,33 +5,11 @@
   "fields": [
     {
       "name": "action",
-      "type": {
-        "name": "Action",
-        "type": "enum",
-        "symbols": ["ADD", "UPDATE", "DELETE", "UNKNOWN"],
-        "default": "UNKNOWN"
-      }
+      "type": "Action"
     },
     {
       "name": "payload",
-      "type": {
-        "name": "PlayerPayload",
-        "type": "record",
-        "fields": [
-          {
-            "name": "id",
-            "type": "long"
-          },
-          {
-            "name": "firstName",
-            "type": "string"
-          },
-          {
-            "name": "lastName",
-            "type": "string"
-          }
-        ]
-      }
+      "type": "PlayerPayload"
     }
   ]
 }

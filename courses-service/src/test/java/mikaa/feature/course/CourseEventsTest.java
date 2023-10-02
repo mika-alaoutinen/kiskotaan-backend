@@ -13,7 +13,7 @@ import java.util.Optional;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.feature.hole.HoleEntity;
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.courses.CourseProducer;
 
@@ -42,52 +42,49 @@ class CourseEventsTest {
   @InjectMock
   private CourseRepository repository;
 
+  private InMemorySink<Record<Long, CourseEvent>> sink;
   private CourseService service;
 
   @BeforeEach
   void setup() {
+    sink = connector.sink(OutgoingChannels.COURSE_STATE);
+    sink.clear();
     service = new CourseService(producer, repository, validator);
   }
 
   @Test
   void should_send_event_on_add() {
-    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.COURSE_STATE);
-
     var course = new CourseEntity(1L, "New Course", List.of(new HoleEntity(1L, 1, 3, 90, null)));
     service.add(course);
 
-    assertEvent(sink, "New Course", 1);
+    assertEvent("New Course", 1);
     verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
   }
 
   @Test
   void should_send_event_on_course_name_update() {
-    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.COURSE_STATE);
-
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.updateCourseName(1, "Updated Name");
 
     assertEquals(1, sink.received().size());
     var record = sink.received().get(0).getPayload();
     assertEquals(1L, record.key());
-    assertEquals("Updated Name", record.value().getName());
+    assertEquals("Updated Name", record.value().getPayload().getName());
   }
 
   @Test
   void should_send_event_on_delete() {
-    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.COURSE_STATE);
-
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.delete(1);
 
-    assertEvent(sink, "DG Course", 0);
+    assertEvent("DG Course", 0);
     verify(repository, atLeastOnce()).deleteById(anyLong());
   }
 
-  private static void assertEvent(InMemorySink<Record<Long, CoursePayload>> sink, String name, int holeCount) {
+  private void assertEvent(String name, int holeCount) {
     assertEquals(1, sink.received().size());
     var record = sink.received().get(0).getPayload();
-    var payload = record.value();
+    var payload = record.value().getPayload();
 
     assertEquals(1L, record.key());
     assertEquals(name, payload.getName());

@@ -51,7 +51,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.Course.COURSE_ADDED);
+    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.COURSE_STATE);
 
     var course = new CourseEntity(1L, "New Course", List.of(new HoleEntity(1L, 1, 3, 90, null)));
     service.add(course);
@@ -62,7 +62,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_course_name_update() {
-    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.Course.COURSE_UPDATED);
+    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.COURSE_STATE);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.updateCourseName(1, "Updated Name");
@@ -75,7 +75,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_delete() {
-    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.Course.COURSE_DELETED);
+    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.COURSE_STATE);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.delete(1);

@@ -57,7 +57,7 @@ class HoleEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    var sink = initSink(OutgoingChannels.Hole.HOLE_ADDED);
+    var sink = initSink(OutgoingChannels.HOLE_STATE);
 
     when(courseFinder.findCourseOrThrow(anyLong())).thenReturn(courseMock());
     var newHole = new HoleEntity(321l, 1, 3, 100, courseMock());
@@ -69,7 +69,7 @@ class HoleEventsTest {
 
   @Test
   void should_send_event_on_update() {
-    var sink = initSink(OutgoingChannels.Hole.HOLE_UPDATED);
+    var sink = initSink(OutgoingChannels.HOLE_STATE);
 
     when(courseFinder.findCourseOrThrow(anyLong())).thenReturn(courseMock());
     service.update(COURSE_ID, HOLE_NUMBER, new HoleEntity(null, 0, 5, 165, courseMock()));
@@ -79,7 +79,7 @@ class HoleEventsTest {
 
   @Test
   void should_send_event_on_delete() {
-    var sink = initSink(OutgoingChannels.Hole.HOLE_DELETED);
+    var sink = initSink(OutgoingChannels.HOLE_STATE);
 
     when(repository.findByCourseIdAndNumber(anyLong(), anyInt())).thenReturn(Optional.of(holeMock()));
     service.delete(COURSE_ID, HOLE_NUMBER);

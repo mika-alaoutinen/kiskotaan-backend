@@ -3,7 +3,6 @@ package mikaa.producers.courses;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.CoursePayload;
-import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.producers.OutgoingChannels;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -24,7 +23,7 @@ class KafkaProducer implements CourseProducer {
 
   @Inject
   @Channel(OutgoingChannels.Course.COURSE_UPDATED)
-  Emitter<Record<Long, CourseUpdated>> updateEmitter;
+  Emitter<Record<Long, CoursePayload>> updateEmitter;
 
   @Override
   public void courseAdded(CoursePayload payload) {
@@ -33,7 +32,7 @@ class KafkaProducer implements CourseProducer {
   }
 
   @Override
-  public void courseUpdated(CourseUpdated payload) {
+  public void courseUpdated(CoursePayload payload) {
     var record = Record.of(payload.getId(), payload);
     updateEmitter.send(record).toCompletableFuture().join();
   }

@@ -14,7 +14,6 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.feature.hole.HoleEntity;
 import mikaa.kiskotaan.domain.CoursePayload;
-import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.courses.CourseProducer;
 
@@ -63,7 +62,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_course_name_update() {
-    InMemorySink<Record<Long, CourseUpdated>> sink = connector.sink(OutgoingChannels.Course.COURSE_UPDATED);
+    InMemorySink<Record<Long, CoursePayload>> sink = connector.sink(OutgoingChannels.Course.COURSE_UPDATED);
 
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     service.updateCourseName(1, "Updated Name");

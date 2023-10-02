@@ -10,7 +10,6 @@ import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.domain.CoursePayload;
-import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.producers.courses.CourseProducer;
 
 @ApplicationScoped
@@ -52,7 +51,7 @@ class CourseService implements CourseFinder {
     validator.validate(CourseEntity.fromName(name));
 
     course.setName(name);
-    producer.courseUpdated(new CourseUpdated(course.getId(), name));
+    producer.courseUpdated(CourseService.toPayload(course));
 
     return course;
   }

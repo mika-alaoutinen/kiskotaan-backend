@@ -1,6 +1,6 @@
 {
   "namespace": "mikaa.kiskotaan.domain",
-  "name": "PlayerEvent",
+  "name": "HoleEvent",
   "type": "record",
   "fields": [
     {
@@ -9,7 +9,7 @@
     },
     {
       "name": "payload",
-      "type": "PlayerPayload"
+      "type": "HolePayload"
     }
   ]
 }

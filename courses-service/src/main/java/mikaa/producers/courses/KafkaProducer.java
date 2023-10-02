@@ -2,8 +2,9 @@ package mikaa.producers.courses;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.kiskotaan.domain.CoursePayload;
-import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.producers.OutgoingChannels;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -15,33 +16,27 @@ import io.smallrye.reactive.messaging.kafka.Record;
 class KafkaProducer implements CourseProducer {
 
   @Inject
-  @Channel(OutgoingChannels.Course.COURSE_ADDED)
-  Emitter<Record<Long, CoursePayload>> addEmitter;
-
-  @Inject
-  @Channel(OutgoingChannels.Course.COURSE_DELETED)
-  Emitter<Record<Long, CoursePayload>> deleteEmitter;
-
-  @Inject
-  @Channel(OutgoingChannels.Course.COURSE_UPDATED)
-  Emitter<Record<Long, CourseUpdated>> updateEmitter;
+  @Channel(OutgoingChannels.COURSE_STATE)
+  Emitter<Record<Long, CourseEvent>> emitter;
 
   @Override
   public void courseAdded(CoursePayload payload) {
-    var record = Record.of(payload.getId(), payload);
-    addEmitter.send(record).toCompletableFuture().join();
+    send(Action.ADD, payload);
   }
 
   @Override
-  public void courseUpdated(CourseUpdated payload) {
-    var record = Record.of(payload.getId(), payload);
-    updateEmitter.send(record).toCompletableFuture().join();
+  public void courseUpdated(CoursePayload payload) {
+    send(Action.UPDATE, payload);
   }
 
   @Override
   public void courseDeleted(CoursePayload payload) {
-    var record = Record.of(payload.getId(), payload);
-    deleteEmitter.send(record).toCompletableFuture().join();
+    send(Action.DELETE, payload);
+  }
+
+  private void send(Action action, CoursePayload payload) {
+    var record = Record.of(payload.getId(), new CourseEvent(action, payload));
+    emitter.send(record).toCompletableFuture().join();
   }
 
 }

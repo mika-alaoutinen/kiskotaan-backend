@@ -1,6 +1,6 @@
 {
   "namespace": "mikaa.kiskotaan.domain",
-  "name": "CourseUpdated",
+  "name": "PlayerPayload",
   "type": "record",
   "fields": [
     {
@@ -8,7 +8,11 @@
       "type": "long"
     },
     {
-      "name": "name",
+      "name": "firstName",
+      "type": "string"
+    },
+    {
+      "name": "lastName",
       "type": "string"
     }
   ]

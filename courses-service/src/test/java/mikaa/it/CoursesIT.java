@@ -12,7 +12,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
 import mikaa.kiskotaan.domain.CoursePayload;
-import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
@@ -61,7 +60,7 @@ class CoursesIT {
         .contentType(ContentType.JSON)
         .body("name", is("Updated name"));
 
-    verify(courseProducer, atLeastOnce()).courseUpdated(any(CourseUpdated.class));
+    verify(courseProducer, atLeastOnce()).courseUpdated(any(CoursePayload.class));
   }
 
   @Test

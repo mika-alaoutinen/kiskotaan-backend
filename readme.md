@@ -74,17 +74,11 @@ Topic name consists of the domain/service name, a descriptive event type and a v
 The list of Kafka topics published by the different services.
 
 ### Courses service produces
-- Courses.course_added
-- Courses.course_deleted
-- Courses.course_updated
-- Courses.hole_added
-- Courses.hole_deleted
-- Courses.hole_updated
+- Courses.course_state
+- Courses.hole_state
 
 ### Players service produces
-- Players.player_added
-- Players.player_deleted
-- Players.player_updated
+- Players.player_state
 
 ### Score cards service produces
 - Scorecards.scorecard_added

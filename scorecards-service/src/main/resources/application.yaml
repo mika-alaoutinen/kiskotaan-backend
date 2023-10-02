@@ -1,3 +1,10 @@
+avro:
+  codegen:
+    avsc:
+      imports:
+        - Action.avsc
+        - PlayerPayload.avsc
+
 quarkus:
   hibernate-orm:
     validate-in-dev-mode: true

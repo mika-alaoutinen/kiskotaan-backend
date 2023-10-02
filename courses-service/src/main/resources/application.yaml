@@ -19,15 +19,7 @@ mp:
             auto-register: true
 
     outgoing:
-      course-added:
-        topic: "Courses.course_added"
-      course-deleted:
-        topic: "Courses.course_deleted"
-      course-updated:
-        topic: "Courses.course_updated"
-      hole-added:
-        topic: "Courses.hole_added"
-      hole-deleted:
-        topic: "Courses.hole_deleted"
-      hole-updated:
-        topic: "Courses.hole_updated"
+      course-state:
+        topic: "Courses.course_state"
+      hole-state:
+        topic: "Courses.hole_state"

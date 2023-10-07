@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import mikaa.kiskotaan.domain.CoursePayload;
-import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.kiskotaan.domain.Hole;
 
 @QuarkusTest
@@ -48,13 +47,13 @@ class CourseServiceTest {
     var course = new CourseEntity(123l, 20l, List.of(), "Kaihu", Set.of());
     when(repository.findByExternalId(anyLong())).thenReturn(Optional.of(course));
 
-    service.update(new CourseUpdated(123l, "Kaihu v2"));
+    service.update(new CoursePayload(123l, "Kaihu v2", List.of()));
     verify(repository, atLeastOnce()).persist(new CourseEntity(123l, 20l, List.of(), "Kaihu v2", Set.of()));
   }
 
   @Test
   void should_do_nothing_on_update_if_course_not_found() {
-    service.update(new CourseUpdated(111l, "Laajis"));
+    service.update(new CoursePayload(111l, "Laajis", List.of()));
     verify(repository, never()).persist(any(CourseEntity.class));
   }
 

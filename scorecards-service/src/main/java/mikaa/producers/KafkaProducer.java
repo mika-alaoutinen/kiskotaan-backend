@@ -11,6 +11,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.domain.PlayerScore;
+import mikaa.kiskotaan.domain.ScoreCardEvent;
 import mikaa.kiskotaan.domain.ScoreCardStatePayload;
 import mikaa.logic.ScoreLogic;
 import mikaa.config.OutgoingChannels;
@@ -25,32 +26,26 @@ class KafkaProducer implements ScoreCardProducer {
 
   @Inject
   @Channel(OutgoingChannels.SCORECARD_STATE)
-  Emitter<Record<Long, ScoreCardStatePayload>> emitter;
+  Emitter<Record<Long, ScoreCardEvent>> emitter;
 
   @Override
   public void scoreCardAdded(ScoreCardEntity entity) {
-    var payload = toStatePayload(entity);
-    var record = Record.of(payload.getId(), payload);
-    emitter.send(record).toCompletableFuture().join();
+    send(Action.ADD, entity);
   }
 
   @Override
   public void scoreCardDeleted(ScoreCardEntity entity) {
-    var payload = toStatePayload(entity);
-    var record = Record.of(payload.getId(), payload);
-    emitter.send(record).toCompletableFuture().join();
+    send(Action.DELETE, entity);
   }
 
   @Override
   public void scoreCardUpdated(ScoreCardEntity entity) {
-    var payload = toStatePayload(entity);
-    var record = Record.of(payload.getId(), payload);
-    emitter.send(record).toCompletableFuture().join();
+    send(Action.UPDATE, entity);
   }
 
   private void send(Action action, ScoreCardEntity entity) {
-    var payload = toStatePayload(entity);
-    var record = Record.of(payload.getId(), payload);
+    var event = new ScoreCardEvent(action, toStatePayload(entity));
+    var record = Record.of(entity.getId(), event);
     emitter.send(record).toCompletableFuture().join();
   }
 

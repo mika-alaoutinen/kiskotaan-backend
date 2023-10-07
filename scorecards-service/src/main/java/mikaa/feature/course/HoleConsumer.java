@@ -25,12 +25,14 @@ class HoleConsumer {
 
     switch (event.getAction()) {
       case ADD:
-        courseAdded(payload);
+        holeAdded(payload);
         break;
       case DELETE:
-        courseDeleted(payload);
+        holeDeleted(payload);
+        break;
       case UPDATE:
-        courseUpdated(payload);
+        holeUpdated(payload);
+        break;
       case UNKNOWN:
       default:
         log.warn("Unknown hole event type {}", event.getAction());
@@ -38,17 +40,17 @@ class HoleConsumer {
     }
   }
 
-  private void courseAdded(HolePayload payload) {
+  private void holeAdded(HolePayload payload) {
     log.info("Hole added: {}", payload);
     service.add(payload);
   }
 
-  private void courseDeleted(HolePayload payload) {
+  private void holeDeleted(HolePayload payload) {
     log.info("Hole deleted: {}", payload);
     service.delete(payload);
   }
 
-  private void courseUpdated(HolePayload payload) {
+  private void holeUpdated(HolePayload payload) {
     log.info("Hole updated: {}", payload);
     // Do nothing
   }

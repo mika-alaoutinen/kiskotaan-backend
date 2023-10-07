@@ -5,7 +5,6 @@ import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.domain.CoursePayload;
-import mikaa.kiskotaan.domain.CourseUpdated;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ class CourseService implements CourseFinder {
     repository.deleteByExternalId(payload.getId());
   }
 
-  void update(CourseUpdated course) {
+  void update(CoursePayload course) {
     repository.findByExternalId(course.getId())
         .map(entity -> {
           entity.setName(course.getName());

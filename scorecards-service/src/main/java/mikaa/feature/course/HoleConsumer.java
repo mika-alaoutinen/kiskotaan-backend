@@ -7,6 +7,8 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mikaa.config.IncomingChannels;
+import mikaa.kiskotaan.domain.HoleEvent;
 import mikaa.kiskotaan.domain.HolePayload;
 
 @ApplicationScoped
@@ -16,22 +18,39 @@ class HoleConsumer {
 
   private final HoleService service;
 
-  @Incoming("hole-added")
+  @Incoming(IncomingChannels.HOLE_STATE)
   @Transactional
-  void courseAdded(HolePayload payload) {
+  void holeEvent(HoleEvent event) {
+    var payload = event.getPayload();
+
+    switch (event.getAction()) {
+      case ADD:
+        holeAdded(payload);
+        break;
+      case DELETE:
+        holeDeleted(payload);
+        break;
+      case UPDATE:
+        holeUpdated(payload);
+        break;
+      case UNKNOWN:
+      default:
+        log.warn("Unknown hole event type {}", event.getAction());
+        break;
+    }
+  }
+
+  private void holeAdded(HolePayload payload) {
     log.info("Hole added: {}", payload);
     service.add(payload);
   }
 
-  @Incoming("hole-deleted")
-  @Transactional
-  void courseDeleted(HolePayload payload) {
+  private void holeDeleted(HolePayload payload) {
     log.info("Hole deleted: {}", payload);
     service.delete(payload);
   }
 
-  @Incoming("hole-updated")
-  void courseUpdated(HolePayload payload) {
+  private void holeUpdated(HolePayload payload) {
     log.info("Hole updated: {}", payload);
     // Do nothing
   }

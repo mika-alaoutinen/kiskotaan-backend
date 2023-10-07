@@ -81,9 +81,7 @@ The list of Kafka topics published by the different services.
 - Players.player_state
 
 ### Score cards service produces
-- Scorecards.scorecard_added
-- Scorecards.scorecard_deleted
-- Scorecards.scorecard_updated
+- Scorecards.scorecard_state
 
 # Running `Kiskotaan backend`
 The entire stack, including Kafka and a Postgres database, can be spun up with Docker compose:

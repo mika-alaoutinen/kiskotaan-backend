@@ -6,6 +6,7 @@ avro:
         - CoursePayload.avsc
         - HolePayload.avsc
         - PlayerPayload.avsc
+        - ScoreCardPayload.avsc
 
 quarkus:
   hibernate-orm:
@@ -36,9 +37,5 @@ mp:
         topic: "Players.player_state"
 
     outgoing:
-      scorecard-added:
-        topic: "Scorecards.scorecard_added"
-      scorecard-deleted:
-        topic: "Scorecards.scorecard_deleted"
-      scorecard-updated:
-        topic: "Scorecards.scorecard_updated"
+      scorecard-state:
+        topic: "Scorecards.scorecard_state"

@@ -21,7 +21,8 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.kiskotaan.domain.ScoreCardPayload;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.ScoreCardEvent;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
@@ -51,7 +52,7 @@ class ScoreEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
-  private InMemorySink<Record<Long, ScoreCardPayload>> sink;
+  private InMemorySink<Record<Long, ScoreCardEvent>> sink;
   private ScoreService service;
 
   @BeforeEach
@@ -77,7 +78,9 @@ class ScoreEventsTest {
     assertEquals(1, sink.received().size());
 
     var record = sink.received().get(0).getPayload();
-    var payload = record.value();
+    assertEquals(Action.UPDATE, record.value().getAction());
+
+    var payload = record.value().getPayload();
 
     assertEquals(payload.getId(), record.key());
     assertEquals(scoreCardMock().getId(), payload.getId());
@@ -102,7 +105,9 @@ class ScoreEventsTest {
     assertEquals(1, sink.received().size());
 
     var record = sink.received().get(0).getPayload();
-    var payload = record.value();
+    assertEquals(Action.UPDATE, record.value().getAction());
+
+    var payload = record.value().getPayload();
     assertEquals(payload.getId(), record.key());
     assertEquals(scoreCardMock().getId(), payload.getId());
     assertTrue(payload.getScores().isEmpty());

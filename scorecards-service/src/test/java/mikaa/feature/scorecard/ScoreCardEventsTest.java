@@ -1,6 +1,7 @@
 package mikaa.feature.scorecard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -24,7 +25,8 @@ import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
-import mikaa.kiskotaan.domain.ScoreCardPayload;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.ScoreCardEvent;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.producers.ScoreCardProducer;
 
@@ -47,7 +49,7 @@ class ScoreCardEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
-  private InMemorySink<Record<Long, ScoreCardPayload>> sink;
+  private InMemorySink<Record<Long, ScoreCardEvent>> sink;
   private ScoreCardService service;
 
   @BeforeEach
@@ -67,7 +69,7 @@ class ScoreCardEventsTest {
         .playerIds(Set.of(BigDecimal.TEN));
 
     service.add(dto);
-    assertEvent(sink);
+    assertEvent(Action.ADD);
   }
 
   @Test
@@ -76,18 +78,21 @@ class ScoreCardEventsTest {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCard));
 
     service.delete(13l);
-    assertEvent(sink);
+    assertEvent(Action.DELETE);
   }
 
-  private void assertEvent(InMemorySink<Record<Long, ScoreCardPayload>> sink) {
+  private void assertEvent(Action action) {
     assertEquals(1, sink.received().size());
     var record = sink.received().get(0).getPayload();
-    var payload = record.value();
+    assertEquals(action, record.value().getAction());
+
+    var payload = record.value().getPayload();
 
     assertEquals(payload.getId(), record.key());
     assertEquals(1l, payload.getCourseId());
     assertEquals(1, payload.getPlayerIds().size());
     assertEquals(2l, payload.getPlayerIds().get(0));
+    assertTrue(payload.getScores().isEmpty());
   }
 
   private static CourseEntity courseMock() {

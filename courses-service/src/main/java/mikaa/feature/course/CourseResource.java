@@ -42,6 +42,7 @@ class CourseResource implements CoursesApi {
   }
 
   @Override
+  @Transactional
   public List<CourseSummaryDTO> getCourses(
       String name,
       Integer holesMin,

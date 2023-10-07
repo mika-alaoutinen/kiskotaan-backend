@@ -19,7 +19,7 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.kiskotaan.domain.ScoreCardPayload;
+import mikaa.kiskotaan.domain.ScoreCardStatePayload;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
@@ -47,19 +47,20 @@ class ScoreCardEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
+  private InMemorySink<Record<Long, ScoreCardStatePayload>> sink;
   private ScoreCardService service;
 
   @BeforeEach
   void setup() {
     service = new ScoreCardService(courseFinder, playerFinder, producer, repository);
+    sink = connector.sink(OutgoingChannels.SCORECARD_STATE);
+    sink.clear();
   }
 
   @Test
   void sends_event_on_add() {
     when(courseFinder.findOrThrow(anyLong())).thenReturn(courseMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(playerMock());
-
-    var sink = initSink(OutgoingChannels.SCORECARD_ADDED);
 
     var dto = new NewScoreCardDTO()
         .courseId(BigDecimal.ONE)
@@ -74,13 +75,11 @@ class ScoreCardEventsTest {
     var scoreCard = new ScoreCardEntity(13L, courseMock(), Set.of(playerMock()), List.of());
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCard));
 
-    var sink = initSink(OutgoingChannels.SCORECARD_DELETED);
-
     service.delete(13l);
     assertEvent(sink);
   }
 
-  private void assertEvent(InMemorySink<Record<Long, ScoreCardPayload>> sink) {
+  private void assertEvent(InMemorySink<Record<Long, ScoreCardStatePayload>> sink) {
     assertEquals(1, sink.received().size());
     var record = sink.received().get(0).getPayload();
     var payload = record.value();
@@ -97,10 +96,6 @@ class ScoreCardEventsTest {
 
   private static PlayerEntity playerMock() {
     return new PlayerEntity(2L, 2l, "Pekka", "Kana", Set.of(), null);
-  }
-
-  private InMemorySink<Record<Long, ScoreCardPayload>> initSink(String channel) {
-    return connector.sink(channel);
   }
 
 }

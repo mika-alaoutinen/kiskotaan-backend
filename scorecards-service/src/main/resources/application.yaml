@@ -6,7 +6,7 @@ avro:
         - CoursePayload.avsc
         - HolePayload.avsc
         - PlayerPayload.avsc
-        - ScoreCardStatePayload.avsc
+        - ScoreCardPayload.avsc
 
 quarkus:
   hibernate-orm:

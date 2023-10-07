@@ -12,7 +12,7 @@ import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.domain.PlayerScore;
 import mikaa.kiskotaan.domain.ScoreCardEvent;
-import mikaa.kiskotaan.domain.ScoreCardStatePayload;
+import mikaa.kiskotaan.domain.ScoreCardPayload;
 import mikaa.logic.ScoreLogic;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.player.PlayerEntity;
@@ -49,7 +49,7 @@ class KafkaProducer implements ScoreCardProducer {
     emitter.send(record).toCompletableFuture().join();
   }
 
-  private ScoreCardStatePayload toStatePayload(ScoreCardEntity entity) {
+  private ScoreCardPayload toStatePayload(ScoreCardEntity entity) {
     var playerIds = entity.getPlayers()
         .stream()
         .map(PlayerEntity::getExternalId)
@@ -62,7 +62,7 @@ class KafkaProducer implements ScoreCardProducer {
             entry -> entry.getKey().toString(),
             entry -> mapper.map(entry.getValue(), PlayerScore.class)));
 
-    return new ScoreCardStatePayload(
+    return new ScoreCardPayload(
         entity.getId(),
         entity.getCourse().getExternalId(),
         playerIds,

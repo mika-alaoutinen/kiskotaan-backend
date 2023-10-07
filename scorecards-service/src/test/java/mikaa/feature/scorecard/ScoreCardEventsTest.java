@@ -19,12 +19,12 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.kiskotaan.domain.ScoreCardStatePayload;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
+import mikaa.kiskotaan.domain.ScoreCardPayload;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.producers.ScoreCardProducer;
 
@@ -47,7 +47,7 @@ class ScoreCardEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
-  private InMemorySink<Record<Long, ScoreCardStatePayload>> sink;
+  private InMemorySink<Record<Long, ScoreCardPayload>> sink;
   private ScoreCardService service;
 
   @BeforeEach
@@ -79,7 +79,7 @@ class ScoreCardEventsTest {
     assertEvent(sink);
   }
 
-  private void assertEvent(InMemorySink<Record<Long, ScoreCardStatePayload>> sink) {
+  private void assertEvent(InMemorySink<Record<Long, ScoreCardPayload>> sink) {
     assertEquals(1, sink.received().size());
     var record = sink.received().get(0).getPayload();
     var payload = record.value();

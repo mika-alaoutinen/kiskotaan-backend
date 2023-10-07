@@ -1,3 +1,0 @@
-@url = http://localhost:8085
-
-GET {{url}}/logging HTTP/1.1

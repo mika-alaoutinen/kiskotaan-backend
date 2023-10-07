@@ -123,20 +123,6 @@ services:
     ports:
       - 8083:8083
 
-  logging_service:
-    container_name: logging_service
-    depends_on:
-      - kafka
-    environment:
-      KAFKA_BOOTSTRAP_SERVERS: kafka:9091
-    expose:
-      - 8085
-    image: mikaalaoutinen/logging-service
-    networks:
-      - kafka_network
-    ports:
-      - 8085:8085
-
 networks:
   kafka_network:
     driver: bridge

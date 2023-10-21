@@ -19,7 +19,7 @@
 		<java.version>17</java.version>
 		<apicurio.version>2.4.12.Final</apicurio.version>
 		<avro.version>1.11.3</avro.version>
-		<modelmapper.version>3.1.1</modelmapper.version>
+		<modelmapper.version>3.2.0</modelmapper.version>
 		<testcontainers.version>1.19.1</testcontainers.version>
 	</properties>
 	

@@ -1,3 +1,13 @@
+avro:
+  codegen:
+    avsc:
+      imports:
+        - Action.avsc
+        - CoursePayload.avsc
+        - HolePayload.avsc
+        - PlayerPayload.avsc
+        - ScoreCardPayload.avsc
+
 quarkus:
   http:
     port: 8080

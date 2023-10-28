@@ -6,7 +6,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.domain.CoursePayload;
-import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.kiskotaan.domain.Hole;
 import mikaa.consumers.course.CourseWriter;
 import mikaa.queries.course.CourseReader;
@@ -36,7 +35,7 @@ class CourseService implements CourseReader, CourseWriter {
   }
 
   @Override
-  public Uni<CourseEntity> update(CourseUpdated payload) {
+  public Uni<CourseEntity> update(CoursePayload payload) {
     return UniDecorator
         .from(repository.findByExternalId(payload.getId()))
         .map(course -> {

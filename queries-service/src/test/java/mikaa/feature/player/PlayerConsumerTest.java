@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,8 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.PlayerEvent;
 import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.config.IncomingChannels;
 
@@ -32,8 +35,8 @@ class PlayerConsumerTest {
 
   @Test
   void handles_add_player_event() {
-    InMemorySource<PlayerPayload> source = connector.source(IncomingChannels.Player.PLAYER_ADDED);
-    source.send(new PlayerPayload(1l, "New", "Player"));
+    var payload = new PlayerPayload(1l, "New", "Player");
+    sendEvent(new PlayerEvent(Action.ADD, payload));
     verify(repository, atLeastOnce()).persist(any(PlayerEntity.class));
   }
 
@@ -63,14 +66,25 @@ class PlayerConsumerTest {
     verify(repository, never()).delete(any(PlayerEntity.class));
   }
 
+  @Test
+  void ignores_unknown_event_types() {
+    sendEvent(new PlayerEvent(Action.UNKNOWN, null));
+    verifyNoInteractions(repository);
+  }
+
+  private void sendEvent(PlayerEvent event) {
+    InMemorySource<PlayerEvent> source = connector.source(IncomingChannels.PLAYER_STATE);
+    source.send(event);
+  }
+
   private void sendUpdateEvent() {
-    InMemorySource<PlayerPayload> source = connector.source(IncomingChannels.Player.PLAYER_UPDATED);
-    source.send(new PlayerPayload(1l, "Aku", "Ankka"));
+    var payload = new PlayerPayload(1l, "Aku", "Ankka");
+    sendEvent(new PlayerEvent(Action.UPDATE, payload));
   }
 
   private void sendDeleteEvent() {
-    InMemorySource<PlayerPayload> source = connector.source(IncomingChannels.Player.PLAYER_DELETED);
-    source.send(new PlayerPayload(1l, "Aku", "Ankka"));
+    var payload = new PlayerPayload(1l, "Aku", "Ankka");
+    sendEvent(new PlayerEvent(Action.DELETE, payload));
   }
 
 }

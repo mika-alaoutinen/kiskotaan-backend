@@ -9,12 +9,14 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.kiskotaan.domain.CoursePayload;
-import mikaa.kiskotaan.domain.CourseUpdated;
 import mikaa.config.IncomingChannels;
 
 import static org.hamcrest.Matchers.is;
 
+import java.util.Collections;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
@@ -31,8 +33,8 @@ class CoursesIT {
     long courseId = 3;
     fetchByIdAndExpectNotFound(courseId);
 
-    InMemorySource<CoursePayload> source = connector.source(IncomingChannels.Course.COURSE_ADDED);
-    source.send(new CoursePayload(courseId, "New Course", List.of()));
+    var payload = new CoursePayload(courseId, "New Course", List.of());
+    sendEvent(new CourseEvent(Action.ADD, payload));
 
     fetchById(courseId).body("name", is("New Course"));
   }
@@ -42,8 +44,8 @@ class CoursesIT {
     long courseId = 100;
     fetchById(courseId);
 
-    InMemorySource<CoursePayload> source = connector.source(IncomingChannels.Course.COURSE_DELETED);
-    source.send(new CoursePayload(courseId, "Delete me 1", List.of()));
+    var payload = new CoursePayload(courseId, "Delete me 1", List.of());
+    sendEvent(new CourseEvent(Action.DELETE, payload));
 
     fetchByIdAndExpectNotFound(courseId);
   }
@@ -53,10 +55,15 @@ class CoursesIT {
     long courseId = 102;
     fetchById(courseId);
 
-    InMemorySource<CourseUpdated> source = connector.source(IncomingChannels.Course.COURSE_UPDATED);
-    source.send(new CourseUpdated(courseId, "Updated name"));
+    var payload = new CoursePayload(courseId, "Updated name", Collections.emptyList());
+    sendEvent(new CourseEvent(Action.UPDATE, payload));
 
     fetchById(courseId).body("name", is("Updated name"));
+  }
+
+  private void sendEvent(CourseEvent event) {
+    InMemorySource<CourseEvent> source = connector.source(IncomingChannels.COURSE_STATE);
+    source.send(event);
   }
 
   private ValidatableResponse fetchById(long id) {

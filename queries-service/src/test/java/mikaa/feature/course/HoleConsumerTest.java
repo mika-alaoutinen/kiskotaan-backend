@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.HoleEvent;
 import mikaa.kiskotaan.domain.HolePayload;
 import mikaa.config.IncomingChannels;
 
@@ -71,19 +74,27 @@ class HoleConsumerTest {
     verifyNoUpdate();
   }
 
+  @Test
+  void ignores_unknown_event_types() {
+    sendEvent(new HoleEvent(Action.UNKNOWN, null));
+    verifyNoInteractions(repository);
+  }
+
+  private void sendEvent(HoleEvent event) {
+    InMemorySource<HoleEvent> source = connector.source(IncomingChannels.HOLE_STATE);
+    source.send(event);
+  }
+
   private void sendAddEvent() {
-    InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_ADDED);
-    source.send(PAYLOAD);
+    sendEvent(new HoleEvent(Action.ADD, PAYLOAD));
   }
 
   private void sendDeleteEvent() {
-    InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_DELETED);
-    source.send(PAYLOAD);
+    sendEvent(new HoleEvent(Action.DELETE, PAYLOAD));
   }
 
   private void sendUpdateEvent() {
-    InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_UPDATED);
-    source.send(PAYLOAD);
+    sendEvent(new HoleEvent(Action.UPDATE, PAYLOAD));
   }
 
   private void verifyUpdate() {

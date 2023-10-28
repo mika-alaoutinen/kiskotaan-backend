@@ -11,6 +11,9 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.CourseEvent;
+import mikaa.kiskotaan.domain.PlayerEvent;
 import mikaa.kiskotaan.domain.PlayerPayload;
 import mikaa.config.IncomingChannels;
 
@@ -28,8 +31,8 @@ class PlayersIT {
     var playerId = 10l;
     fetchByIdAndExpectNotFound(playerId);
 
-    var source = initSource(IncomingChannels.Player.PLAYER_ADDED);
-    source.send(new PlayerPayload(playerId, "New", "Player"));
+    var payload = new PlayerPayload(playerId, "New", "Player");
+    sendEvent(new PlayerEvent(Action.ADD, payload));
 
     var response = fetchById(playerId);
     assertPlayer(new PlayerDTO(playerId, "New", "Player"), response);
@@ -40,8 +43,8 @@ class PlayersIT {
     var playerId = 101l;
     fetchById(playerId);
 
-    var source = initSource(IncomingChannels.Player.PLAYER_DELETED);
-    source.send(new PlayerPayload(playerId, "Deleted", "Player"));
+    var payload = new PlayerPayload(playerId, "Deleted", "Player");
+    sendEvent(new PlayerEvent(Action.DELETE, payload));
 
     fetchByIdAndExpectNotFound(playerId);
   }
@@ -51,11 +54,16 @@ class PlayersIT {
     var playerId = 100l;
     fetchById(playerId);
 
-    var source = initSource(IncomingChannels.Player.PLAYER_UPDATED);
-    source.send(new PlayerPayload(playerId, "Updated", "Player"));
+    var payload = new PlayerPayload(playerId, "Updated", "Player");
+    sendEvent(new PlayerEvent(Action.UPDATE, payload));
 
     var response = fetchById(playerId);
     assertPlayer(new PlayerDTO(playerId, "Updated", "Player"), response);
+  }
+
+  private void sendEvent(PlayerEvent event) {
+    InMemorySource<PlayerEvent> source = connector.source(IncomingChannels.PLAYER_STATE);
+    source.send(event);
   }
 
   private static void assertPlayer(PlayerDTO expected, PlayerDTO actual) {
@@ -79,10 +87,6 @@ class PlayersIT {
         .then()
         .statusCode(expectedStatus)
         .contentType(ContentType.JSON);
-  }
-
-  private InMemorySource<PlayerPayload> initSource(String channel) {
-    return connector.source(channel);
   }
 
 }

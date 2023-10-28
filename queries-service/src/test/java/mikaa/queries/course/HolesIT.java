@@ -9,6 +9,8 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.HoleEvent;
 import mikaa.kiskotaan.domain.HolePayload;
 import mikaa.config.IncomingChannels;
 
@@ -26,8 +28,8 @@ class HolesIT {
   void fetch_course_with_new_hole() {
     fetchLaajis().body("holes.size()", is(18));
 
-    InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_ADDED);
-    source.send(new HolePayload(100l, 1l, 19, 5, 200));
+    var payload = new HolePayload(100l, 1l, 19, 5, 200);
+    sendEvent(new HoleEvent(Action.ADD, payload));
 
     fetchLaajis().body(
         "holes[18].par", is(5),
@@ -40,8 +42,8 @@ class HolesIT {
         "holes[0].par", is(3),
         "holes[0].distance", is(107));
 
-    InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_UPDATED);
-    source.send(new HolePayload(1l, 1l, 1, 4, 123));
+    var payload = new HolePayload(1l, 1l, 1, 4, 123);
+    sendEvent(new HoleEvent(Action.UPDATE, payload));
 
     fetchLaajis().body(
         "holes[0].par", is(4),
@@ -52,11 +54,16 @@ class HolesIT {
   void fetch_course_after_hole_delete() {
     fetchCourse(101).body("holes[0].par", is(4));
 
-    InMemorySource<HolePayload> source = connector.source(IncomingChannels.Hole.HOLE_DELETED);
-    source.send(new HolePayload(201l, 101l, 1, 4, 110));
+    var payload = new HolePayload(201l, 101l, 1, 4, 110);
+    sendEvent(new HoleEvent(Action.DELETE, payload));
 
     // First hole was deleted, hole 2 is now the only hole in the course
     fetchCourse(101).body("holes[0].number", is(2));
+  }
+
+  private void sendEvent(HoleEvent event) {
+    InMemorySource<HoleEvent> source = connector.source(IncomingChannels.HOLE_STATE);
+    source.send(event);
   }
 
   private ValidatableResponse fetchLaajis() {

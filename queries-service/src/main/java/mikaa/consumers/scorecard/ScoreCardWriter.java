@@ -8,6 +8,8 @@ public interface ScoreCardWriter {
 
   Uni<ScoreCardEntity> add(ScoreCardPayload payload);
 
+  Uni<ScoreCardEntity> update(ScoreCardPayload payload);
+
   Uni<Void> delete(ScoreCardPayload payload);
 
 }

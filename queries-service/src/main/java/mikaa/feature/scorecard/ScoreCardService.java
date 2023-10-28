@@ -22,6 +22,11 @@ class ScoreCardService implements ScoreCardReader, ScoreCardWriter {
   }
 
   @Override
+  public Uni<ScoreCardEntity> update(ScoreCardPayload payload) {
+    throw new UnsupportedOperationException("Unimplemented method 'update'");
+  }
+
+  @Override
   public Uni<Void> delete(ScoreCardPayload payload) {
     throw new UnsupportedOperationException("Unimplemented method 'delete'");
   }

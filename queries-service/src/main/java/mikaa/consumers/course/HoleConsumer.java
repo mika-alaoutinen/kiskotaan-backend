@@ -6,6 +6,9 @@ import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mikaa.config.IncomingChannels;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.HoleEvent;
 import mikaa.kiskotaan.domain.HolePayload;
 
 @ApplicationScoped
@@ -15,22 +18,36 @@ class HoleConsumer {
 
   private final HoleWriter writer;
 
-  @Incoming("hole-added")
-  Uni<Void> holeAdded(HolePayload payload) {
+  @Incoming(IncomingChannels.HOLE_STATE)
+  Uni<Void> consumeEvent(HoleEvent event) {
+    var payload = event.getPayload();
+
+    return switch (event.getAction()) {
+      case ADD -> holeAdded(payload);
+      case UPDATE -> holeUpdated(payload);
+      case DELETE -> holeDeleted(payload);
+      case UNKNOWN -> handleUnknown(event.getAction());
+    };
+  }
+
+  private Uni<Void> holeAdded(HolePayload payload) {
     log.info("received hole added event: {}", payload);
     return writer.add(payload).replaceWithVoid();
   }
 
-  @Incoming("hole-deleted")
-  Uni<Void> holeDeleted(HolePayload payload) {
+  private Uni<Void> holeDeleted(HolePayload payload) {
     log.info("received hole deleted event: {}", payload);
     return writer.delete(payload).replaceWithVoid();
   }
 
-  @Incoming("hole-updated")
-  Uni<Void> holeUpdated(HolePayload payload) {
+  private Uni<Void> holeUpdated(HolePayload payload) {
     log.info("received hole updated event: {}", payload);
     return writer.update(payload).replaceWithVoid();
+  }
+
+  private Uni<Void> handleUnknown(Action action) {
+    log.warn("Unknown hole event type {}", action);
+    return Uni.createFrom().voidItem();
   }
 
 }

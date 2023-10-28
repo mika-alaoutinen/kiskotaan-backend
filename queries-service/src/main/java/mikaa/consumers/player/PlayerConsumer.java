@@ -7,6 +7,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.config.IncomingChannels;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.PlayerEvent;
 import mikaa.kiskotaan.domain.PlayerPayload;
 
 @ApplicationScoped
@@ -16,22 +18,36 @@ class PlayerConsumer {
 
   private final PlayerWriter writer;
 
-  @Incoming(IncomingChannels.Player.PLAYER_ADDED)
-  Uni<Void> playerAdded(PlayerPayload payload) {
+  @Incoming(IncomingChannels.PLAYER_STATE)
+  Uni<Void> consumeEvent(PlayerEvent event) {
+    var payload = event.getPayload();
+
+    return switch (event.getAction()) {
+      case ADD -> playerAdded(payload);
+      case UPDATE -> playerUpdated(payload);
+      case DELETE -> playerDeleted(payload);
+      case UNKNOWN -> handleUnknown(event.getAction());
+    };
+  }
+
+  private Uni<Void> playerAdded(PlayerPayload payload) {
     log.info("received player added event: {}", payload);
     return writer.add(payload).replaceWithVoid();
   }
 
-  @Incoming(IncomingChannels.Player.PLAYER_DELETED)
-  Uni<Void> playerDeleted(PlayerPayload payload) {
+  private Uni<Void> playerDeleted(PlayerPayload payload) {
     log.info("received player deleted event: {}", payload);
     return writer.delete(payload).replaceWithVoid();
   }
 
-  @Incoming(IncomingChannels.Player.PLAYER_UPDATED)
-  Uni<Void> playerUpdated(PlayerPayload payload) {
+  private Uni<Void> playerUpdated(PlayerPayload payload) {
     log.info("received player updated event: {}", payload);
     return writer.update(payload).replaceWithVoid();
+  }
+
+  private Uni<Void> handleUnknown(Action action) {
+    log.warn("Unknown player event type {}", action);
+    return Uni.createFrom().voidItem();
   }
 
 }

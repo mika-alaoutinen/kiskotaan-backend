@@ -1,0 +1,41 @@
+avro:
+  codegen:
+    avsc:
+      imports:
+        - Action.avsc
+        - CoursePayload.avsc
+        - HolePayload.avsc
+        - PlayerPayload.avsc
+        - ScoreCardPayload.avsc
+
+quarkus:
+  http:
+    port: 8080
+
+mp:
+  messaging:
+    incoming:
+      course-state:
+        auto:
+          offset:
+            reset: "earliest"
+        connector: smallrye-kafka
+        topic: "Courses.course_state"
+      hole-state:
+        auto:
+          offset:
+            reset: "earliest"
+        connector: smallrye-kafka
+        topic: "Courses.hole_state"
+      player-state:
+        auto:
+          offset:
+            reset: "earliest"
+        connector: smallrye-kafka
+        topic: "Players.player_state"
+      scorecard-state:
+        auto:
+          offset:
+            reset: "earliest"
+        connector: smallrye-kafka
+        topic: "Scorecards.scorecard_state"

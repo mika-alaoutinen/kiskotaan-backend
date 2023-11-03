@@ -1,0 +1,9 @@
+@url = http://localhost:8080/graphql
+
+POST {{url}}
+Content-Type: application/json
+X-REQUEST-TYPE: GraphQL
+
+{
+  hello
+}

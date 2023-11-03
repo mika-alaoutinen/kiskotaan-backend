@@ -1,0 +1,15 @@
+{
+  "namespace": "mikaa.kiskotaan.domain",
+  "name": "ScoreCardEvent",
+  "type": "record",
+  "fields": [
+    {
+      "name": "action",
+      "type": "Action"
+    },
+    {
+      "name": "payload",
+      "type": "ScoreCardPayload"
+    }
+  ]
+}

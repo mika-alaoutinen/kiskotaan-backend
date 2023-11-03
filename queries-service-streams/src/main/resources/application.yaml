@@ -8,34 +8,21 @@ avro:
         - PlayerPayload.avsc
         - ScoreCardPayload.avsc
 
+kafka-streams:
+  auto:
+    offset:
+      reset: earliest
+
 quarkus:
   http:
     port: 8080
 
-mp:
-  messaging:
-    incoming:
-      course-state:
-        auto:
-          offset:
-            reset: "earliest"
-        connector: smallrye-kafka
-        topic: "Courses.course_state"
-      hole-state:
-        auto:
-          offset:
-            reset: "earliest"
-        connector: smallrye-kafka
-        topic: "Courses.hole_state"
-      player-state:
-        auto:
-          offset:
-            reset: "earliest"
-        connector: smallrye-kafka
-        topic: "Players.player_state"
-      scorecard-state:
-        auto:
-          offset:
-            reset: "earliest"
-        connector: smallrye-kafka
-        topic: "Scorecards.scorecard_state"
+mikaa:
+  kafka-streams:
+    input-topics:
+      courses: Courses.course_state
+      holes: Courses.hole_state
+      players: Players.player_state
+      scorecards: Scorecards.scorecard_state
+    state-stores:
+      courses: courses_v1

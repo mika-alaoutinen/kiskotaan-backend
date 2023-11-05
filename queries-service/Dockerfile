@@ -1,5 +1,5 @@
 # Builder image
-FROM maven:3.8-openjdk-17-slim AS build
+FROM maven:3.9-eclipse-temurin-21-alpine AS build
 WORKDIR /code
 
 COPY pom.xml /code/
@@ -8,14 +8,19 @@ COPY src /code/src
 RUN mvn package -f /code/pom.xml -B -DskipTests
 
 # Application image
-FROM registry.access.redhat.com/ubi8/ubi-minimal:8.6
-WORKDIR /work/
-RUN chown 1001 /work \
-  && chmod "g+rwX" /work \
-  && chown 1001:root /work
-COPY --chown=1001:root build/*-runner /work/application
+FROM eclipse-temurin:21
+WORKDIR /work
 
-EXPOSE 8080
-USER 1001
+RUN chmod 775 /work
 
-CMD ["./application", "-Dquarkus.http.host=0.0.0.0"]
+ARG APP=/code/target/quarkus-app
+COPY --chown=185 --from=build ${APP}/lib/ /deployments/lib/
+COPY --chown=185 --from=build ${APP}/*.jar /deployments/
+COPY --chown=185 --from=build ${APP}/app/ /deployments/app/
+COPY --chown=185 --from=build ${APP}/quarkus/ /deployments/quarkus/
+
+USER 185
+EXPOSE 8082
+
+ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"

@@ -10,6 +10,10 @@ Kiskotaan backend is a disc golf scorekeeping application that consists of sever
 - Consolidates GET requests to different resources into one service.
 - Maintains a read-only replica of the datasets (courses, players and score cards) in other services.
 
+### `Queries streams` service
+- An alternative implementation to `Queries service`, using Kafka Streams instead of Kafka Consumers.
+- Port `8080`.
+
 ### `Players` service
 - Port `8081`.
 - CRUD operations for players.

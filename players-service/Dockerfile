@@ -1,5 +1,5 @@
 # Build jar package with Maven:
-FROM maven:3.8-openjdk-17-slim as build
+FROM maven:3.9-eclipse-temurin-21-alpine AS build
 WORKDIR /app
 
 COPY pom.xml .
@@ -9,10 +9,10 @@ RUN mvn clean package -f /app/pom.xml -B -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 # Create the Docker image:
-FROM openjdk:17-alpine
+FROM eclipse-temurin:21
 
 # Run application as user "spring"
-RUN addgroup -S spring && adduser -S spring -G spring
+RUN addgroup --system spring && useradd -g spring spring
 USER spring:spring
 
 # Copy dependencies from build stage

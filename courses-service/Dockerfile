@@ -1,5 +1,5 @@
 # Builder image
-FROM maven:3.8-openjdk-17-slim AS build
+FROM maven:3.9-eclipse-temurin-21-alpine AS build
 WORKDIR /code
 
 COPY pom.xml /code/
@@ -8,7 +8,7 @@ COPY src /code/src
 RUN mvn package -f /code/pom.xml -B -DskipTests
 
 # Application image
-FROM registry.access.redhat.com/ubi8/openjdk-17
+FROM eclipse-temurin:21
 WORKDIR /work
 
 RUN chmod 775 /work

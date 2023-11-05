@@ -1,3 +1,13 @@
+mikaa:
+  kafka-streams:
+    input-topics:
+      courses: Courses.course_state
+      holes: Courses.hole_state
+      players: Players.player_state
+      scorecards: Scorecards.scorecard_state
+    state-stores:
+      courses: courses_v1
+
 avro:
   codegen:
     avsc:
@@ -16,13 +26,9 @@ kafka-streams:
 quarkus:
   http:
     port: 8080
-
-mikaa:
   kafka-streams:
-    input-topics:
-      courses: Courses.course_state
-      holes: Courses.hole_state
-      players: Players.player_state
-      scorecards: Scorecards.scorecard_state
-    state-stores:
-      courses: courses_v1
+    topics:
+      - ${mikaa.kafka-streams.input-topics.courses}
+      - ${mikaa.kafka-streams.input-topics.holes}
+      - ${mikaa.kafka-streams.input-topics.players}
+      - ${mikaa.kafka-streams.input-topics.scorecards}

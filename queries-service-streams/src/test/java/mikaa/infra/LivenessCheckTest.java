@@ -11,13 +11,13 @@ import static org.hamcrest.CoreMatchers.is;
 class LivenessCheckTest {
 
   @Test
-  void has_liveness_endpoint() {
+  void status_down_when_streams_not_started() {
     given()
         .when()
         .get("/q/health/live")
         .then()
-        .statusCode(200)
-        .body("status", is("UP"));
+        .statusCode(503)
+        .body("status", is("DOWN"));
   }
 
 }

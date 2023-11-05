@@ -13,7 +13,8 @@ class LivenessCheckTest {
   @Test
   void has_liveness_endpoint() {
     given()
-        .when().get("/q/health/live")
+        .when()
+        .get("/q/health/live")
         .then()
         .statusCode(200)
         .body("status", is("UP"));

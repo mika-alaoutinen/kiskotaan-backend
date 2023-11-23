@@ -26,4 +26,21 @@ class CourseResourceTest {
         .body("data.courses[0].name", Matchers.is("Laajis"));
   }
 
+  @Test
+  void should_return_course_by_id() {
+    String query = """
+        {
+          course(id: 1) {
+            id
+            name
+            par
+          }
+        }
+        """;
+
+    QueryClient.query(query)
+        .statusCode(200)
+        .body("data.course.name", Matchers.is("Laajis"));
+  }
+
 }

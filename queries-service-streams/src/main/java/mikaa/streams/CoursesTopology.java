@@ -6,7 +6,7 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.state.Stores;
 
-import io.apicurio.registry.serde.avro.AvroSerde;
+import io.quarkus.kafka.client.serialization.ObjectMapperSerde;
 import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.kiskotaan.domain.CoursePayload;
 
@@ -18,11 +18,11 @@ interface CoursesTopology {
     var outputTopic = config.stateStores().courses();
 
     builder
-        .stream(inputTopic, Consumed.with(keySerde, new AvroSerde<CourseEvent>()))
+        .stream(inputTopic, Consumed.with(keySerde, new ObjectMapperSerde<>(CourseEvent.class)))
         .mapValues(CourseEvent::getPayload)
         .toTable(Materialized.<Long, CoursePayload>as(Stores.persistentKeyValueStore(outputTopic))
             .withKeySerde(keySerde)
-            .withValueSerde(new AvroSerde<CoursePayload>()));
+            .withValueSerde(new ObjectMapperSerde<>(CoursePayload.class)));
   }
 
 }

@@ -21,7 +21,7 @@ class CourseStore {
   }
 
   Optional<CoursePayload> findById(long id) {
-    return queries.findById(id, storeName());
+    return queries.findByKey(id, storeName());
   }
 
   private String storeName() {

@@ -19,13 +19,13 @@ public class InteractiveQueries {
 
   private final KafkaStreams streams;
 
-  public <T extends SpecificRecord> Optional<T> findById(long id, String storeName) {
-    ReadOnlyKeyValueStore<Long, T> store = tryGetStateStore(storeName);
-    return Optional.ofNullable(store.get(id));
+  public <K, V extends SpecificRecord> Optional<V> findByKey(K key, String storeName) {
+    ReadOnlyKeyValueStore<K, V> store = tryGetStateStore(storeName);
+    return Optional.ofNullable(store.get(key));
   }
 
-  public <T extends SpecificRecord> Stream<T> streamAll(String storeName) {
-    ReadOnlyKeyValueStore<Long, T> store = tryGetStateStore(storeName);
+  public <K, V extends SpecificRecord> Stream<V> streamAll(String storeName) {
+    ReadOnlyKeyValueStore<K, V> store = tryGetStateStore(storeName);
     var iterator = store.all();
 
     return Stream.generate(() -> null)
@@ -34,7 +34,7 @@ public class InteractiveQueries {
         .map(keyValue -> keyValue.value);
   }
 
-  private <T extends SpecificRecord> ReadOnlyKeyValueStore<Long, T> tryGetStateStore(String storeName) {
+  private <K, V extends SpecificRecord> ReadOnlyKeyValueStore<K, V> tryGetStateStore(String storeName) {
     var time = System.currentTimeMillis();
     var end = time + 3000;
 

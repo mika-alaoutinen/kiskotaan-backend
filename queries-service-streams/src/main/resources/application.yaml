@@ -24,8 +24,12 @@ kafka-streams:
       reset: earliest
 
 quarkus:
+  apicurio-registry:
+    devservices:
+      port: 8888
   http:
     port: 8080
   kafka-streams:
+    schema-registry-key: apicurio.registry.url
     topics:
       - ${mikaa.kafka-streams.input-topics.courses}

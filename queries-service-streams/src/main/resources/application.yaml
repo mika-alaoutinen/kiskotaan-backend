@@ -29,6 +29,3 @@ quarkus:
   kafka-streams:
     topics:
       - ${mikaa.kafka-streams.input-topics.courses}
-      - ${mikaa.kafka-streams.input-topics.holes}
-      - ${mikaa.kafka-streams.input-topics.players}
-      - ${mikaa.kafka-streams.input-topics.scorecards}

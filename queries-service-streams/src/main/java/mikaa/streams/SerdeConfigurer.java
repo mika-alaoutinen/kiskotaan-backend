@@ -21,7 +21,7 @@ class SerdeConfigurer {
   <T extends SpecificRecord> Serde<T> inputSerde(Class<T> type) {
     Map<String, Object> config = new HashMap<>();
     config.put(AvroKafkaSerdeConfig.USE_SPECIFIC_AVRO_READER, true);
-    config.put(SerdeConfig.REGISTRY_URL, "http://localhost:8888/apis/registry/v2");
+    config.put(SerdeConfig.REGISTRY_URL, apicurioUrl);
 
     var serde = new AvroSerde<T>();
     serde.configure(config, false);

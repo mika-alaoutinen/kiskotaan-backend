@@ -3,7 +3,8 @@ package mikaa.streams;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.Consumed;
-import org.apache.kafka.streams.kstream.Produced;
+import org.apache.kafka.streams.kstream.Materialized;
+import org.apache.kafka.streams.state.Stores;
 
 import io.apicurio.registry.serde.avro.AvroSerde;
 import mikaa.kiskotaan.domain.CourseEvent;
@@ -19,7 +20,9 @@ interface CoursesTopology {
     builder
         .stream(inputTopic, Consumed.with(keySerde, new AvroSerde<CourseEvent>()))
         .mapValues(CourseEvent::getPayload)
-        .to(outputTopic, Produced.with(keySerde, new AvroSerde<CoursePayload>()));
+        .toTable(Materialized.<Long, CoursePayload>as(Stores.persistentKeyValueStore(outputTopic))
+            .withKeySerde(keySerde)
+            .withValueSerde(new AvroSerde<CoursePayload>()));
   }
 
 }

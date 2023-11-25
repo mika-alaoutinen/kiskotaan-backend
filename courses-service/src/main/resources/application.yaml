@@ -28,6 +28,6 @@ mp:
 
     outgoing:
       course-state:
-        topic: "Courses.course_state"
+        topic: "Courses-course_state"
       hole-state:
-        topic: "Courses.hole_state"
+        topic: "Courses-hole_state"

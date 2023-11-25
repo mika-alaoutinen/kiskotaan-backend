@@ -1,10 +1,10 @@
 mikaa:
   kafka-streams:
     input-topics:
-      courses: Courses.course_state
-      holes: Courses.hole_state
-      players: Players.player_state
-      scorecards: Scorecards.scorecard_state
+      courses: Courses-course_state
+      holes: Courses-hole_state
+      players: Players-player_state
+      scorecards: Scorecards-scorecard_state
     state-stores:
       courses: courses_v1
 

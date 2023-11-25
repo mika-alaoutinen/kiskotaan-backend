@@ -30,12 +30,12 @@ mp:
 
     incoming:
       course-state:
-        topic: "Courses.course_state"
+        topic: "Courses-course_state"
       hole-state:
-        topic: "Courses.hole_state"
+        topic: "Courses-hole_state"
       player-state:
-        topic: "Players.player_state"
+        topic: "Players-player_state"
 
     outgoing:
       scorecard-state:
-        topic: "Scorecards.scorecard_state"
+        topic: "Scorecards-scorecard_state"

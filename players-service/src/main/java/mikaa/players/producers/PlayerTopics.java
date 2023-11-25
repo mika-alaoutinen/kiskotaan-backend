@@ -8,7 +8,7 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class PlayerTopics {
 
-  public static final String PLAYER_STATE = "Players.player_state";
+  public static final String PLAYER_STATE = "Players-player_state";
 
   @Bean
   NewTopic playerStateTopic() {

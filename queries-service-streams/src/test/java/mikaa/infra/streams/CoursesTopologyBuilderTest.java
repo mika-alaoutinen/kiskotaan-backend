@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.TestInputTopic;
+import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.TopologyTestDriver;
 import org.apache.kafka.streams.state.KeyValueStore;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,14 +17,13 @@ import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.kiskotaan.domain.Hole;
-import mikaa.streams.KafkaStreamsConfig;
 
 @QuarkusTest
 @RequiredArgsConstructor
 class CoursesTopologyBuilderTest {
 
-  private final KafkaStreamsConfig kafkaConfig;
-  private final SerdeConfigurer serdes;
+  private final CoursesTopologyBuilder coursesTopology;
+  private final Topology topology;
 
   private TopologyTestDriver testDriver;
   private TestInputTopic<Long, CourseEvent> inputTopic;
@@ -32,10 +31,7 @@ class CoursesTopologyBuilderTest {
 
   @BeforeEach
   void init() {
-    var builder = new StreamsBuilder();
-    var coursesTopology = new CoursesTopologyBuilder(kafkaConfig, serdes);
-    coursesTopology.build(builder);
-    testDriver = new TopologyTestDriver(builder.build());
+    testDriver = new TopologyTestDriver(topology);
 
     var input = coursesTopology.description().input();
     inputTopic = testDriver.createInputTopic(

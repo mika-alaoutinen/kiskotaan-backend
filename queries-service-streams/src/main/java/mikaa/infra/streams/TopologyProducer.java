@@ -1,4 +1,4 @@
-package mikaa.streams;
+package mikaa.infra.streams;
 
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
@@ -13,14 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 class TopologyProducer {
 
-  private final KafkaStreamsConfig kafkaConfig;
-  private final SerdeConfigurer serdes;
+  private final CoursesTopologyBuilder coursesTopology;
 
   @Produces
   Topology topology() {
     var builder = new StreamsBuilder();
 
-    CoursesTopology.build(builder, kafkaConfig, serdes);
+    coursesTopology.build(builder);
 
     var topology = builder.build();
     log.info("topology {}", topology.describe());

@@ -1,4 +1,4 @@
-package mikaa.infra;
+package mikaa.infra.health;
 
 import org.eclipse.microprofile.health.HealthCheck;
 import org.eclipse.microprofile.health.HealthCheckResponse;

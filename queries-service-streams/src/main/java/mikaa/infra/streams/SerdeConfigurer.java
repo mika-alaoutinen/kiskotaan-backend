@@ -1,4 +1,4 @@
-package mikaa.streams;
+package mikaa.infra.streams;
 
 import java.util.HashMap;
 import java.util.Map;

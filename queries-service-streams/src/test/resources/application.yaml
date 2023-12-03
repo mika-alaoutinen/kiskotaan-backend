@@ -1,3 +1,0 @@
-kafka-streams:
-  state:
-    dir: target/data/kafka-data/stores

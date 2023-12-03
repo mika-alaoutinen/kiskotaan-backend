@@ -1,14 +1,13 @@
 package mikaa.infra.streams;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 
+import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.TestInputTopic;
-import org.apache.kafka.streams.TestOutputTopic;
-import org.apache.kafka.streams.Topology;
 import org.apache.kafka.streams.TopologyTestDriver;
+import org.apache.kafka.streams.state.KeyValueStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,21 +17,25 @@ import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.kiskotaan.domain.Hole;
+import mikaa.streams.KafkaStreamsConfig;
 
 @QuarkusTest
 @RequiredArgsConstructor
-class CoursesTopologyTest {
+class CoursesTopologyBuilderTest {
 
-  private final CoursesTopologyBuilder coursesTopology;
-  private final Topology topology;
+  private final KafkaStreamsConfig kafkaConfig;
+  private final SerdeConfigurer serdes;
 
   private TopologyTestDriver testDriver;
   private TestInputTopic<Long, CourseEvent> inputTopic;
-  private TestOutputTopic<Long, CoursePayload> outputTopic;
+  private KeyValueStore<Long, CoursePayload> stateStore;
 
   @BeforeEach
   void init() {
-    testDriver = new TopologyTestDriver(topology);
+    var builder = new StreamsBuilder();
+    var coursesTopology = new CoursesTopologyBuilder(kafkaConfig, serdes);
+    coursesTopology.build(builder);
+    testDriver = new TopologyTestDriver(builder.build());
 
     var input = coursesTopology.description().input();
     inputTopic = testDriver.createInputTopic(
@@ -40,22 +43,18 @@ class CoursesTopologyTest {
         input.keySerde().serializer(),
         input.valueSerde().serializer());
 
-    var output = coursesTopology.description().output();
-    outputTopic = testDriver.createOutputTopic(
-        output.topicName(),
-        output.keySerde().deserializer(),
-        output.valueSerde().deserializer());
+    var stateStoreName = coursesTopology.description().output().topicName();
+    stateStore = testDriver.getKeyValueStore(stateStoreName);
   }
 
   @Test
   void should_have_courses_state_store() {
-    var course = new CoursePayload(1l, "Laajis", List.of(new Hole(2l, 1, 3, 90)));
-    inputTopic.pipeInput(1l, new CourseEvent(Action.ADD, course));
+    var payload = new CoursePayload(1l, "Laajis", List.of(new Hole(2l, 1, 3, 90)));
+    inputTopic.pipeInput(1l, new CourseEvent(Action.ADD, payload));
 
-    var message = outputTopic.readKeyValue();
-    assertEquals(1l, message.key);
-    assertEquals("Laajis", message.value.getName());
-    assertTrue(outputTopic.isEmpty());
+    var course = stateStore.get(1l);
+    assertEquals(1l, course.getId());
+    assertEquals("Laajis", course.getName());
   }
 
 }

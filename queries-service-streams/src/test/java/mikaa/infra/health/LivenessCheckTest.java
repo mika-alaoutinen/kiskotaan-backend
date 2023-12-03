@@ -1,4 +1,4 @@
-package mikaa.infra;
+package mikaa.infra.health;
 
 import io.quarkus.test.junit.QuarkusTest;
 

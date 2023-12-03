@@ -3,7 +3,7 @@ package mikaa.streams;
 import io.smallrye.config.ConfigMapping;
 
 @ConfigMapping(prefix = "mikaa.kafka-streams")
-interface KafkaStreamsConfig {
+public interface KafkaStreamsConfig {
 
   InputTopics inputTopics();
 

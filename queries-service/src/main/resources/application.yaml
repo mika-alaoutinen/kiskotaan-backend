@@ -27,22 +27,22 @@ mp:
           offset:
             reset: "earliest"
         connector: smallrye-kafka
-        topic: "Courses.course_state"
+        topic: "Courses-course_state"
       hole-state:
         auto:
           offset:
             reset: "earliest"
         connector: smallrye-kafka
-        topic: "Courses.hole_state"
+        topic: "Courses-hole_state"
       player-state:
         auto:
           offset:
             reset: "earliest"
         connector: smallrye-kafka
-        topic: "Players.player_state"
+        topic: "Players-player_state"
       scorecard-state:
         auto:
           offset:
             reset: "earliest"
         connector: smallrye-kafka
-        topic: "Scorecards.scorecard_state"
+        topic: "Scorecards-scorecard_state"

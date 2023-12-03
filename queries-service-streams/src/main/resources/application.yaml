@@ -1,10 +1,10 @@
 mikaa:
   kafka-streams:
     input-topics:
-      courses: Courses.course_state
-      holes: Courses.hole_state
-      players: Players.player_state
-      scorecards: Scorecards.scorecard_state
+      courses: Courses-course_state
+      holes: Courses-hole_state
+      players: Players-player_state
+      scorecards: Scorecards-scorecard_state
     state-stores:
       courses: courses_v1
 
@@ -18,17 +18,29 @@ avro:
         - PlayerPayload.avsc
         - ScoreCardPayload.avsc
 
+# These settings are only suitable for local development and testing
 kafka-streams:
   auto:
     offset:
       reset: earliest
+  commit:
+    interval:
+      ms: 1000
+  metadata:
+    max:
+      age:
+        ms: 500
+  state:
+    dir: target/kafka-streams-data
+  statestore:
+    cache:
+      max:
+        bytes: 10240
 
 quarkus:
   http:
     port: 8080
   kafka-streams:
+    schema-registry-key: apicurio.registry.url
     topics:
       - ${mikaa.kafka-streams.input-topics.courses}
-      - ${mikaa.kafka-streams.input-topics.holes}
-      - ${mikaa.kafka-streams.input-topics.players}
-      - ${mikaa.kafka-streams.input-topics.scorecards}

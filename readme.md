@@ -67,20 +67,20 @@ Messages will be sent to the following topics when resources are modified. Modif
 ## Topic naming pattern:
 Topic name consists of the domain/service name, a descriptive event type and a version number. The version number `v1` may be omitted from the topic name. Hence, topic names follow the pattern of
 
-> Domain.event-type.version
+> Domain-event_type-version
 
 ## Current topics
 The list of Kafka topics published by the different services.
 
 ### Courses service produces
-- Courses.course_state
-- Courses.hole_state
+- Courses-course_state
+- Courses-hole_state
 
 ### Players service produces
-- Players.player_state
+- Players-player_state
 
 ### Score cards service produces
-- Scorecards.scorecard_state
+- Scorecards-scorecard_state
 
 # Running `Kiskotaan backend`
 The entire stack, including Kafka and a Postgres database, can be spun up with Docker compose:

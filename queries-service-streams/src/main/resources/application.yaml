@@ -18,10 +18,24 @@ avro:
         - PlayerPayload.avsc
         - ScoreCardPayload.avsc
 
+# These settings are only suitable for local development and testing
 kafka-streams:
   auto:
     offset:
       reset: earliest
+  cache:
+    max:
+      bytes:
+        buffering: 10240
+  commit:
+    interval:
+      ms: 1000
+  metadata:
+    max:
+      age:
+        ms: 500
+  state:
+    dir: target/kafka-streams-data
 
 quarkus:
   http:

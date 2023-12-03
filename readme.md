@@ -101,9 +101,6 @@ Folder `.http` has http-files that contain example payloads that can be used to 
 ## No reactive support with code generation
 There doesn't seem to be a sensible way to generate reactive interfaces from an OpenAPI document. At best it's possible to generate interfaces that wrap return values in `CompletionStage`, but I definitely want to take advantage of Mutiny with Quarkus. I could generate the model classes and do the API interfaces by hand, but I'd rather just ditch code generation entirely. Spring probably has more mature code generation tools available.
 
-## No documentation on how to use Kafka Streams with Apicurio
-There is literally nothing on how to use Quarkus, Kafka Streams and Apicurio registry together. All examples of Quarkus and Kafka Streams use an ObjectMapperSerde for serialization. Red Hat please fix!
-
 ## Score card service
 `org.jboss.resteasy.reactive.ResponseStatus` annotation does nothing. It should be possible to set the status code of a response using the annotation, but in reality the annotation does nothing. The workaround is to wrap responses in `Response` or `RestResponse` and set headers that way. Unfortunately OpenAPI code generation does not support RestResponse.
 

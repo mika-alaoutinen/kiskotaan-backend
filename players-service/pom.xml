@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.1.5</version>
+		<version>3.2.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	
@@ -17,7 +17,7 @@
 
 	<properties>
 		<java.version>21</java.version>
-		<apicurio.version>2.5.2.Final</apicurio.version>
+		<apicurio.version>2.5.3.Final</apicurio.version>
 		<avro.version>1.11.3</avro.version>
 		<modelmapper.version>3.2.0</modelmapper.version>
 		<testcontainers.version>1.19.3</testcontainers.version>

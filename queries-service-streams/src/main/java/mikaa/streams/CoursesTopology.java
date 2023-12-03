@@ -6,7 +6,6 @@ import org.apache.kafka.streams.kstream.Consumed;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.state.Stores;
 
-import io.quarkus.kafka.client.serialization.ObjectMapperSerde;
 import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.kiskotaan.domain.CoursePayload;
 
@@ -15,10 +14,10 @@ interface CoursesTopology {
   static void build(StreamsBuilder builder, KafkaStreamsConfig kafkaConfig, SerdeConfigurer serdes) {
     var keySerde = Serdes.Long();
 
-    var inputSerde = serdes.inputSerde(CourseEvent.class);
+    var inputSerde = serdes.specificSerde(CourseEvent.class);
     var inputTopic = kafkaConfig.inputTopics().courses();
 
-    var outputSerde = new ObjectMapperSerde<>(CoursePayload.class);
+    var outputSerde = serdes.specificSerde(CoursePayload.class);
     var outputTopic = kafkaConfig.stateStores().courses();
 
     builder

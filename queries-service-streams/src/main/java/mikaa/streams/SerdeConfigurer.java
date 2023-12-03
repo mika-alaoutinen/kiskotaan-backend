@@ -15,13 +15,14 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 class SerdeConfigurer {
 
-  @ConfigProperty(name = "mp.messaging.connector.smallrye-kafka.apicurio.registry.url", defaultValue = "invalid")
+  @ConfigProperty(name = "mp.messaging.connector.smallrye-kafka.apicurio.registry.url", defaultValue = "empty")
   private String apicurioUrl;
 
-  <T extends SpecificRecord> Serde<T> inputSerde(Class<T> type) {
+  <T extends SpecificRecord> Serde<T> specificSerde(Class<T> type) {
     Map<String, Object> config = new HashMap<>();
     config.put(AvroKafkaSerdeConfig.USE_SPECIFIC_AVRO_READER, true);
     config.put(SerdeConfig.REGISTRY_URL, apicurioUrl);
+    config.put(SerdeConfig.AUTO_REGISTER_ARTIFACT, true);
 
     var serde = new AvroSerde<T>();
     serde.configure(config, false);

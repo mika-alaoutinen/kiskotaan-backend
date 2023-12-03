@@ -23,10 +23,6 @@ kafka-streams:
   auto:
     offset:
       reset: earliest
-  cache:
-    max:
-      bytes:
-        buffering: 10240
   commit:
     interval:
       ms: 1000
@@ -36,6 +32,10 @@ kafka-streams:
         ms: 500
   state:
     dir: target/kafka-streams-data
+  statestore:
+    cache:
+      max:
+        bytes: 10240
 
 quarkus:
   http:

@@ -16,10 +16,10 @@ public interface QueryClient {
         """.stripIndent().replace("$query", query);
   }
 
-  public static ValidatableResponse query(String query) {
+  public static ValidatableResponse query(String body) {
     return given()
         .when()
-        .body(buildQuery(query))
+        .body(buildQuery(body))
         .post("/graphql")
         .then();
   }

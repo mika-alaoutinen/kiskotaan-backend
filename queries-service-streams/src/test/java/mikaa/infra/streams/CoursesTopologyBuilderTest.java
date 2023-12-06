@@ -17,12 +17,13 @@ import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.kiskotaan.domain.Hole;
+import mikaa.streams.TopologyDescription.CoursesTopology;
 
 @QuarkusTest
 @RequiredArgsConstructor
 class CoursesTopologyBuilderTest {
 
-  private final CoursesTopologyBuilder coursesTopology;
+  private final CoursesTopology coursesTopology;
   private final Topology topology;
 
   private TopologyTestDriver testDriver;

@@ -12,11 +12,11 @@ import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.streams.KafkaStreamsConfig;
-import mikaa.streams.TopologyDescription;
+import mikaa.streams.TopologyDescription.CoursesTopology;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class CoursesTopologyBuilder implements TopologyDescription<Long, CourseEvent, CoursePayload> {
+class CoursesTopologyBuilder implements CoursesTopology {
 
   private final KafkaStreamsConfig config;
   private final SerdeConfigurer serdes;

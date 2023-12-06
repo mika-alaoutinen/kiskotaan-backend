@@ -35,11 +35,11 @@ class CoursesTopologyBuilderTest {
 
     var input = coursesTopology.description().input();
     inputTopic = testDriver.createInputTopic(
-        input.topicName(),
+        input.name(),
         input.keySerde().serializer(),
         input.valueSerde().serializer());
 
-    var stateStoreName = coursesTopology.description().output().topicName();
+    var stateStoreName = coursesTopology.description().output().name();
     stateStore = testDriver.getKeyValueStore(stateStoreName);
   }
 

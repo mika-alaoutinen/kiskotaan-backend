@@ -35,8 +35,7 @@ public class InteractiveQueries {
   }
 
   private <K, V extends SpecificRecord> ReadOnlyKeyValueStore<K, V> tryGetStateStore(String storeName) {
-    var time = System.currentTimeMillis();
-    var end = time + 3000;
+    var end = System.currentTimeMillis() + 3000;
 
     // Wait for 3 seconds
     while (System.currentTimeMillis() < end) {

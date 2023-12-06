@@ -1,6 +1,5 @@
 package mikaa.infra.streams;
 
-import org.apache.avro.specific.SpecificRecord;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -13,13 +12,22 @@ import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.streams.KafkaStreamsConfig;
+import mikaa.streams.TopologyDescription.CoursesTopology;
 
 @ApplicationScoped
 @RequiredArgsConstructor
-class CoursesTopologyBuilder {
+class CoursesTopologyBuilder implements CoursesTopology {
 
-  private final KafkaStreamsConfig kafkaConfig;
+  private final KafkaStreamsConfig config;
   private final SerdeConfigurer serdes;
+
+  @Override
+  public Description<Long, CourseEvent, CoursePayload> description() {
+    var keySerde = Serdes.Long();
+    var input = new Topic<>(inputTopic(), keySerde, inputSerde());
+    var output = new Topic<>(outputTopic(), keySerde, outputSerde());
+    return new Description<>(input, output);
+  }
 
   void build(StreamsBuilder builder) {
     var keySerde = Serdes.Long();
@@ -32,26 +40,8 @@ class CoursesTopologyBuilder {
             .withValueSerde(outputSerde()));
   }
 
-  record CourseTopic<K, V extends SpecificRecord>(
-      String topicName,
-      Serde<K> keySerde,
-      Serde<V> valueSerde) {
-  }
-
-  record Description(
-      CourseTopic<Long, CourseEvent> input,
-      CourseTopic<Long, CoursePayload> output) {
-  }
-
-  Description description() {
-    var keySerde = Serdes.Long();
-    var input = new CourseTopic<>(inputTopic(), keySerde, inputSerde());
-    var output = new CourseTopic<>(outputTopic(), keySerde, outputSerde());
-    return new Description(input, output);
-  }
-
   private String inputTopic() {
-    return kafkaConfig.inputTopics().courses();
+    return config.inputTopics().courses();
   }
 
   private Serde<CourseEvent> inputSerde() {
@@ -59,7 +49,7 @@ class CoursesTopologyBuilder {
   }
 
   private String outputTopic() {
-    return kafkaConfig.stateStores().courses();
+    return config.stateStores().courses();
   }
 
   private Serde<CoursePayload> outputSerde() {

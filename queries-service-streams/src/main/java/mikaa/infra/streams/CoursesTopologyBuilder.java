@@ -38,6 +38,7 @@ class CoursesTopologyBuilder implements CoursesTopology {
     builder
         .stream(inputTopic(), Consumed.with(keySerde, inputSerde()))
         .peek((id, event) -> logEvent(event))
+        .filterNot((id, event) -> event.getAction() == Action.UNKNOWN)
         .mapValues(CoursesTopologyBuilder::processEvent)
         .toTable(Materialized.<Long, CoursePayload>as(Stores.persistentKeyValueStore(outputTopic()))
             .withKeySerde(keySerde)
@@ -48,8 +49,8 @@ class CoursesTopologyBuilder implements CoursesTopology {
     log.info("Received course event: [ action {}, course ID {} ]", event.getAction(), event.getPayload().getId());
   }
 
-  // If a record has been deleted, discard the payload and replace it with a
-  // tombstone
+  // If a record has been deleted upstream, discard the payload and replace it
+  // with a tombstone in the state store
   private static CoursePayload processEvent(CourseEvent event) {
     return event.getAction() == Action.DELETE ? null : event.getPayload();
   }

@@ -1,5 +1,6 @@
 package mikaa.infra.streams;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
@@ -23,6 +24,8 @@ import mikaa.streams.TopologyDescription.CoursesTopology;
 @RequiredArgsConstructor
 class CoursesTopologyBuilderTest {
 
+  private static final long LAAJIS_ID = 1;
+
   private final CoursesTopology coursesTopology;
   private final Topology topology;
 
@@ -42,16 +45,46 @@ class CoursesTopologyBuilderTest {
 
     var stateStoreName = coursesTopology.description().output().name();
     stateStore = testDriver.getKeyValueStore(stateStoreName);
+
+    // Add Laajis to state store
+    inputTopic.pipeInput(LAAJIS_ID, event(Action.ADD, LAAJIS_ID, "Laajis"));
   }
 
   @Test
-  void should_have_courses_state_store() {
-    var payload = new CoursePayload(1l, "Laajis", List.of(new Hole(2l, 1, 3, 90)));
-    inputTopic.pipeInput(1l, new CourseEvent(Action.ADD, payload));
+  void should_add_laajis_to_state_store() {
+    assertCourse(LAAJIS_ID, "Laajis");
+  }
 
-    var course = stateStore.get(1l);
-    assertEquals(1l, course.getId());
-    assertEquals("Laajis", course.getName());
+  @Test
+  void should_update_course_in_state_store() {
+    assertCourse(LAAJIS_ID, "Laajis");
+    inputTopic.pipeInput(LAAJIS_ID, event(Action.UPDATE, LAAJIS_ID, "Updated"));
+    assertCourse(LAAJIS_ID, "Updated");
+  }
+
+  @Test
+  void should_delete_course_from_state_store() {
+    assertCourse(LAAJIS_ID, "Laajis");
+    inputTopic.pipeInput(LAAJIS_ID, event(Action.DELETE, LAAJIS_ID, "Deleted"));
+    assertNull(stateStore.get(LAAJIS_ID));
+  }
+
+  @Test
+  void should_ignore_unknown_event_types() {
+    long id = 4;
+    inputTopic.pipeInput(id, event(Action.UNKNOWN, id, "Invalid"));
+    assertNull(stateStore.get(id));
+  }
+
+  private static CourseEvent event(Action action, long id, String name) {
+    var course = new CoursePayload(id, name, List.of(new Hole(2l, 1, 3, 90)));
+    return new CourseEvent(action, course);
+  }
+
+  private void assertCourse(long expectedId, String expectedName) {
+    var course = stateStore.get(expectedId);
+    assertEquals(expectedId, course.getId());
+    assertEquals(expectedName, course.getName());
   }
 
 }

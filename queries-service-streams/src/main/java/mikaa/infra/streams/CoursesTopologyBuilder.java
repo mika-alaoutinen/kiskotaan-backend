@@ -9,6 +9,8 @@ import org.apache.kafka.streams.state.Stores;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.domain.CourseEvent;
 import mikaa.kiskotaan.domain.CoursePayload;
 import mikaa.streams.KafkaStreamsConfig;
@@ -16,6 +18,7 @@ import mikaa.streams.TopologyDescription.CoursesTopology;
 
 @ApplicationScoped
 @RequiredArgsConstructor
+@Slf4j
 class CoursesTopologyBuilder implements CoursesTopology {
 
   private final KafkaStreamsConfig config;
@@ -34,10 +37,21 @@ class CoursesTopologyBuilder implements CoursesTopology {
 
     builder
         .stream(inputTopic(), Consumed.with(keySerde, inputSerde()))
-        .mapValues(CourseEvent::getPayload)
+        .peek((id, event) -> logEvent(event))
+        .mapValues(CoursesTopologyBuilder::processEvent)
         .toTable(Materialized.<Long, CoursePayload>as(Stores.persistentKeyValueStore(outputTopic()))
             .withKeySerde(keySerde)
             .withValueSerde(outputSerde()));
+  }
+
+  private static void logEvent(CourseEvent event) {
+    log.info("Received course event: [ action {}, course ID {} ]", event.getAction(), event.getPayload().getId());
+  }
+
+  // If a record has been deleted, discard the payload and replace it with a
+  // tombstone
+  private static CoursePayload processEvent(CourseEvent event) {
+    return event.getAction() == Action.DELETE ? null : event.getPayload();
   }
 
   private String inputTopic() {

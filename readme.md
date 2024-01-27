@@ -37,11 +37,6 @@ In addition to the microservices listed above, `Kiskotaan backend` requires seve
 - Schemas are described as Avro documents that are stored under `src/main/avro`.
 - Message payload Java classes are generated from the Avro schemas.
 
-### `Debezium connector for Postgres`
-- Debezium connector is used for change data capture to share data between the different microservices. The connector streams changes to database into Kafka topics.
-- The connector is used to implement the [transactional outbox pattern](https://microservices.io/patterns/data/transactional-outbox.html).
-- Runs on `localhost:8002`.
-
 ### `Kafka`
 - The microservices use Kafka as a message broker.
 - Kafka bootstrap server runs on `localhost:9092`. Services in the Docker network (i.e. containers) connects to port `9091` instead.
@@ -105,19 +100,19 @@ There doesn't seem to be a sensible way to generate reactive interfaces from an 
 `org.jboss.resteasy.reactive.ResponseStatus` annotation does nothing. It should be possible to set the status code of a response using the annotation, but in reality the annotation does nothing. The workaround is to wrap responses in `Response` or `RestResponse` and set headers that way. Unfortunately OpenAPI code generation does not support RestResponse.
 
 # TODO
-- Try out the `outbox` pattern in `Courses service` to share course state to a Kafka topic. Use the Debezium connector for Postgres. 
-- Implement `Queries service`. 
+- Implement `Queries service`.
   - Use Kafka Streams to query the state of different domain entities.
   - MongoDB won't be needed anymore.
   - Figure out how to send course, player and score card events to Kafka on application launch to create initial test data.
 - Implement search functionality for score cards.
 
 # Ideas for further development
-1. Add `Analytics service` that aggregates facts about played rounds. 
+1. Try out the `outbox` pattern in `Courses service` to share course state to a Kafka topic. Use the Debezium connector for Postgres. 
+
+2. Add `Analytics service` that aggregates facts about played rounds. 
   - Try out Kafka Streams.
   - Who has the most bogies and birdies? 
   - What are the most popular courses?
 
-2. Add `Tournament service` that assigns players to scorecards and keeps track
+3. Add `Tournament service` that assigns players to scorecards and keeps track
    of overall player scores.
-

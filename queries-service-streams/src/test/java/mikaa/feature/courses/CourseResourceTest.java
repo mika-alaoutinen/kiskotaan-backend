@@ -27,6 +27,16 @@ import mikaa.streams.TopologyDescription.CoursesTopology;
 @TestInstance(Lifecycle.PER_CLASS)
 class CourseResourceTest {
 
+  private static final String ALL_COURSES_QUERY = """
+      {
+        courses {
+          id
+          name
+          par
+        }
+      }
+      """;
+
   @Inject
   private CoursesTopology topology;
 
@@ -35,29 +45,18 @@ class CourseResourceTest {
 
   @BeforeAll
   void sendKafkaEvents() throws InterruptedException {
-    var inputTopic = topology.description().input();
-
-    kafka.produce(inputTopic.keySerde(), inputTopic.valueSerde())
-        .fromRecords(createRecord(1, "Laajis"), createRecord(2, "Kippis"));
-
-    Thread.sleep(5000);
+    sendRecords(createRecord(Action.ADD, 1, "Laajis"), createRecord(Action.ADD, 2, "Kippis"));
   }
 
   @Test
   void should_return_courses() {
-    String query = """
-        {
-          courses {
-            id
-            name
-            par
-          }
-        }
-        """;
-
-    QueryClient.query(query)
+    QueryClient.query(ALL_COURSES_QUERY)
         .statusCode(200)
-        .body("data.courses[0].name", Matchers.is("Laajis"));
+        .body(
+            "data.courses[0].name",
+            Matchers.is("Laajis"),
+            "data.courses[1].name",
+            Matchers.is("Kippis"));
   }
 
   @Test
@@ -77,10 +76,26 @@ class CourseResourceTest {
         .body("data.course.name", Matchers.is("Laajis"));
   }
 
-  private ProducerRecord<Long, CourseEvent> createRecord(long id, String name) {
+  @Test
+  void should_not_show_deleted_course() throws InterruptedException {
+    sendRecords(createRecord(Action.DELETE, 2, "Kippis"));
+
+    QueryClient.query(ALL_COURSES_QUERY)
+        .statusCode(200)
+        .body("data.courses.size()", Matchers.is(1));
+  }
+
+  private ProducerRecord<Long, CourseEvent> createRecord(Action action, long id, String name) {
     var inputTopic = topology.description().input();
     var payload = new CoursePayload(id, name, List.of(new Hole(111l, 1, 4, 120)));
-    return new ProducerRecord<>(inputTopic.name(), id, new CourseEvent(Action.ADD, payload));
+    return new ProducerRecord<>(inputTopic.name(), id, new CourseEvent(action, payload));
+  }
+
+  @SafeVarargs
+  private void sendRecords(ProducerRecord<Long, CourseEvent>... records) throws InterruptedException {
+    var inputTopic = topology.description().input();
+    kafka.produce(inputTopic.keySerde(), inputTopic.valueSerde()).fromRecords(records);
+    Thread.sleep(5000);
   }
 
 }

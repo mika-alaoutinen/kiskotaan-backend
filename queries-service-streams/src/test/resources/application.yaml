@@ -1,0 +1,3 @@
+kafka-streams:
+  state:
+    dir: target/kafka-streams-test

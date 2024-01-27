@@ -17,12 +17,10 @@ public interface KafkaStreamsConfig {
     String players();
 
     String scorecards();
-
   }
 
   interface StateStores {
     String courses();
-
   }
 
 }

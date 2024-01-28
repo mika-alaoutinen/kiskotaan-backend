@@ -1,6 +1,5 @@
 package mikaa.producers;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
@@ -15,8 +14,11 @@ import mikaa.config.InternalChannels;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.scorecard.ScoreCardEntity;
+import mikaa.kiskotaan.domain.Result;
+import mikaa.kiskotaan.domain.Score;
 import mikaa.kiskotaan.domain.ScoreCardByHoleEvent;
 import mikaa.kiskotaan.domain.ScoreCardByHolePayload;
+import mikaa.logic.ScoreLogic;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -38,12 +40,26 @@ class ScoreCardByHoleProducer {
         .map(PlayerEntity::getExternalId)
         .toList();
 
+    var results = ScoreLogic.calculatePlayerScores(entity)
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(
+            entry -> entry.getKey().toString(),
+            entry -> mapper.map(entry.getValue(), Result.class)));
+
+    var scoresByHole = ScoreLogic.calculateScoresByHole(entity)
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(
+            entry -> entry.getKey().toString(),
+            entry -> mapper.map(entry.getValue(), Score.class)));
+
     return new ScoreCardByHolePayload(
         entity.getId(),
         entity.getCourse().getExternalId(),
         playerIds,
-        Map.of(),
-        Map.of());
+        results,
+        scoresByHole);
   }
 
 }

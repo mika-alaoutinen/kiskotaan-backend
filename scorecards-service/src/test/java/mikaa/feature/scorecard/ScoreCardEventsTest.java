@@ -55,7 +55,7 @@ class ScoreCardEventsTest {
   @BeforeEach
   void setup() {
     service = new ScoreCardService(courseFinder, playerFinder, producer, repository);
-    sink = connector.sink(OutgoingChannels.SCORECARD_STATE);
+    sink = connector.sink(OutgoingChannels.SCORECARD_BY_PLAYER_STATE);
     sink.clear();
   }
 

@@ -2,6 +2,7 @@ package mikaa.producers;
 
 import io.smallrye.reactive.messaging.kafka.Record;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -68,11 +69,6 @@ class KafkaProducer implements ScoreCardProducer {
   }
 
   private ScoreCardByHolePayload toPayload(ScoreCardEntity entity) {
-    var playerIds = entity.getPlayers()
-        .stream()
-        .map(PlayerEntity::getExternalId)
-        .toList();
-
     var results = ScoreLogic.calculatePlayerScores(entity)
         .entrySet()
         .stream()
@@ -90,17 +86,12 @@ class KafkaProducer implements ScoreCardProducer {
     return new ScoreCardByHolePayload(
         entity.getId(),
         entity.getCourse().getExternalId(),
-        playerIds,
+        getPlayerIds(entity),
         results,
         scoresByHole);
   }
 
   private ScoreCardPayload toStatePayload(ScoreCardEntity entity) {
-    var playerIds = entity.getPlayers()
-        .stream()
-        .map(PlayerEntity::getExternalId)
-        .toList();
-
     var scores = ScoreLogic.calculatePlayerScores(entity)
         .entrySet()
         .stream()
@@ -111,8 +102,15 @@ class KafkaProducer implements ScoreCardProducer {
     return new ScoreCardPayload(
         entity.getId(),
         entity.getCourse().getExternalId(),
-        playerIds,
+        getPlayerIds(entity),
         scores);
+  }
+
+  private static List<Long> getPlayerIds(ScoreCardEntity scoreCard) {
+    return scoreCard.getPlayers()
+        .stream()
+        .map(PlayerEntity::getExternalId)
+        .toList();
   }
 
 }

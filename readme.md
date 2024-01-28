@@ -1,28 +1,28 @@
 # Kiskotaan backend
-Kiskotaan backend is a disc golf scorekeeping application that consists of several microservices. The services are written in Java using Quarkus and Spring Boot frameworks.
+`Kiskotaan backend` is a (disc) golf scorekeeping application that consists of several microservices. The services are written in Java using Quarkus and Spring Boot frameworks.
 
 
 # Microservices
 `Kiskotaan backend` consists of multiple microservices that implement a part of the overall domain context. The services are:
 
-### `Queries` service
+### Queries service
 - Port `8080`.
 - Consolidates GET requests to different resources into one service.
 - Maintains a read-only replica of the datasets (courses, players and score cards) in other services.
 
-### `Queries streams` service
-- An alternative implementation to `Queries service`, using Kafka Streams instead of Kafka Consumers.
+### Queries streams service
 - Port `8080`.
+- An alternative implementation to `Queries service`, using Kafka Streams instead of Kafka Consumers.
 
-### `Players` service
+### Players service
 - Port `8081`.
 - CRUD operations for players.
 
-### `Courses` service
+### Courses service
 - Port `8082`.
 - CRUD operations for courses and holes.
 
-### `Score cards` service
+### Score cards service
 - Port `8083`.
 - CRUD operations for score cards.
 - A score card is always for a single course and a single score card can have many players.
@@ -31,26 +31,26 @@ Kiskotaan backend is a disc golf scorekeeping application that consists of sever
 # Other components
 In addition to the microservices listed above, `Kiskotaan backend` requires several infrastructure components.
 
-### `Apicurio`
+### Apicurio
 - The microservices use Apicurio schema registry to store event schemas.
 - Apicurio registry run on `localhost:8001`.
 - Schemas are described as Avro documents that are stored under `src/main/avro`.
 - Message payload Java classes are generated from the Avro schemas.
 
-### `Kafka`
+### Kafka
 - The microservices use Kafka as a message broker.
 - Kafka bootstrap server runs on `localhost:9092`. Services in the Docker network (i.e. containers) connects to port `9091` instead.
 - Kafka is run with KRaft, which allows using it without a ZooKeeper instance.
 
-### `Kafka UI`
+### Kafka UI
 - Pretty self-explanatory. Used to conveniently view information about the Kafka cluster.
 - Runs on `localhost:8000`
 
-### `MongoDB`
+### MongoDB
 - Microservices that want to operate in a non-blocking manner use MongoDB instead of Postgres as their database.
 - At the moment, used in `Queries` service.
 
-### `Postgres`
+### Postgres
 - Microservices primarily use Postgres as their database.
 - Each service has its own database. In the interest of local development all databases are in the same Postgres instance.
 - Postgres uses the default `5432` port.
@@ -77,7 +77,7 @@ The list of Kafka topics published by the different services.
 ### Score cards service produces
 - Scorecards-scorecard_state
 
-# Running `Kiskotaan backend`
+# Running Kiskotaan backend
 The entire stack, including Kafka and a Postgres database, can be spun up with Docker compose:
 
 ```bash
@@ -100,6 +100,14 @@ There doesn't seem to be a sensible way to generate reactive interfaces from an 
 `org.jboss.resteasy.reactive.ResponseStatus` annotation does nothing. It should be possible to set the status code of a response using the annotation, but in reality the annotation does nothing. The workaround is to wrap responses in `Response` or `RestResponse` and set headers that way. Unfortunately OpenAPI code generation does not support RestResponse.
 
 # TODO
+- Probably have to get rid of `Courses-hole_state` topic?
+  - Instead of sending events regarding holes, simply always send full course events?
+- Add `CourseSummary.avsc` to Courses service.
+  - A course summary contains course name, hole count and course par.
+  - Try reading emitted course events from Kafka and map them to a new `Courses-course_summary` topic?
+- Play around with GraphQL in Queries service streams.
+  - It should be possible to dynamically create summarized or full views using GraphQL's `@Source` feature.
+  - For example, display course hole count or a list of holes based on what the client requests.
 - Implement `Queries service`.
   - Use Kafka Streams to query the state of different domain entities.
   - MongoDB won't be needed anymore.

@@ -6,6 +6,7 @@ avro:
         - CoursePayload.avsc
         - HolePayload.avsc
         - PlayerPayload.avsc
+        - RoundResult.avsc
         - ScoreCardPayload.avsc
         - ScoreCardByHolePayload.avsc
 

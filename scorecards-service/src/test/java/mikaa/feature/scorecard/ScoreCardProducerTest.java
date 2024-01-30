@@ -100,7 +100,6 @@ class ScoreCardProducerTest {
     assertEquals(1l, payload.getCourseId());
     assertEquals(1, payload.getPlayerIds().size());
     assertEquals(2l, payload.getPlayerIds().get(0));
-    assertTrue(payload.getScores().isEmpty());
   }
 
   private void assertByPlayerEvent(Action action) {

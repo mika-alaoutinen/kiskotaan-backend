@@ -22,43 +22,7 @@
       "name": "results",
       "type": {
         "type": "map",
-        "values": {
-          "name": "Result",
-          "type": "record",
-          "fields": [
-            {
-              "name": "result",
-              "type": "int"
-            },
-            {
-              "name": "total",
-              "type": "int"
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "scores",
-      "type": {
-        "type": "map",
-        "values": {
-          "name": "Score",
-          "type": "record",
-          "fields": [
-            {
-              "name": "par",
-              "type": "int"
-            },
-            {
-              "name": "playerScores",
-              "type": {
-                "type": "map",
-                "values": "int"
-              }
-            }
-          ]
-        }
+        "values": "RoundResult"
       }
     }
   ]

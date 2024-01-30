@@ -2,6 +2,7 @@ package mikaa.producers;
 
 import io.smallrye.reactive.messaging.kafka.Record;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,13 +13,12 @@ import org.modelmapper.ModelMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.PlayerScore;
-import mikaa.kiskotaan.domain.Result;
-import mikaa.kiskotaan.domain.Score;
+import mikaa.kiskotaan.domain.RoundResult;
 import mikaa.kiskotaan.domain.ScoreCardByHoleEvent;
 import mikaa.kiskotaan.domain.ScoreCardByHolePayload;
 import mikaa.kiskotaan.domain.ScoreCardEvent;
 import mikaa.kiskotaan.domain.ScoreCardPayload;
+import mikaa.kiskotaan.domain.ScoreEntry;
 import mikaa.logic.ScoreLogic;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.player.PlayerEntity;
@@ -69,6 +69,22 @@ class KafkaProducer implements ScoreCardProducer {
   }
 
   private ScoreCardByHolePayload toPayload(ScoreCardEntity entity) {
+    var results = ScoreLogic.calculateScoresByHole(entity)
+        .getResults()
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(
+            entry -> entry.getKey().toString(),
+            entry -> mapper.map(entry.getValue(), RoundResult.class)));
+
+    return new ScoreCardByHolePayload(
+        entity.getId(),
+        entity.getCourse().getExternalId(),
+        getPlayerIds(entity),
+        results);
+  }
+
+  private ScoreCardPayload toStatePayload(ScoreCardEntity entity) {
     var scoresByHole = ScoreLogic.calculateScoresByHole(entity);
 
     var results = scoresByHole.getResults()
@@ -76,36 +92,21 @@ class KafkaProducer implements ScoreCardProducer {
         .stream()
         .collect(Collectors.toMap(
             entry -> entry.getKey().toString(),
-            entry -> mapper.map(entry.getValue(), Result.class)));
+            entry -> mapper.map(entry.getValue(), RoundResult.class)));
 
-    var scores = scoresByHole.getScores()
-        .entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            entry -> entry.getKey().toString(),
-            entry -> mapper.map(entry.getValue(), Score.class)));
-
-    return new ScoreCardByHolePayload(
-        entity.getId(),
-        entity.getCourse().getExternalId(),
-        getPlayerIds(entity),
-        results,
-        scores);
-  }
-
-  private ScoreCardPayload toStatePayload(ScoreCardEntity entity) {
     var scores = ScoreLogic.calculateScoresByPlayer(entity)
         .getScores()
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
             entry -> entry.getKey().toString(),
-            entry -> mapper.map(entry.getValue(), PlayerScore.class)));
+            entry -> mapMany(entry.getValue(), ScoreEntry.class)));
 
     return new ScoreCardPayload(
         entity.getId(),
         entity.getCourse().getExternalId(),
         getPlayerIds(entity),
+        results,
         scores);
   }
 
@@ -114,6 +115,10 @@ class KafkaProducer implements ScoreCardProducer {
         .stream()
         .map(PlayerEntity::getExternalId)
         .toList();
+  }
+
+  private <T, R> List<R> mapMany(Collection<T> entities, Class<R> type) {
+    return entities.stream().map(e -> mapper.map(e, type)).toList();
   }
 
 }

@@ -85,14 +85,9 @@ class ScoreEventsTest {
     assertEquals(payload.getId(), record.key());
     assertEquals(scoreCardMock().getId(), payload.getId());
 
-    var score = payload.getScores().get(playerId);
-    assertEquals(-1, score.getResult());
-    assertEquals(4, score.getTotal());
-
-    assertEquals(1, score.getEntries().size());
-    var entry = score.getEntries().get(0);
-    assertEquals(1, entry.getHole());
-    assertEquals(4, entry.getScore());
+    var result = payload.getResults().get(playerId);
+    assertEquals(-1, result.getResult());
+    assertEquals(4, result.getTotal());
   }
 
   @Test

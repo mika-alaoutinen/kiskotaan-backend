@@ -12,7 +12,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
-import mikaa.logic.PlayerScore;
 import mikaa.logic.ScoreLogic;
 import mikaa.model.CourseDTO;
 import mikaa.model.PlayerDTO;
@@ -46,7 +45,8 @@ class ScoreCardMapper {
   }
 
   private Map<String, PlayerScoreDTO> scoresByPlayer(ScoreCardEntity scoreCard) {
-    return ScoreLogic.calculatePlayerScores(scoreCard)
+    return ScoreLogic.calculateScoresByPlayer(scoreCard)
+        .getScores()
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
@@ -62,20 +62,14 @@ class ScoreCardMapper {
         .scores(toScoreSummaries(scoreCard));
   }
 
-  private static Map<String, PlayerScoreSummaryDTO> toScoreSummaries(ScoreCardEntity scoreCard) {
-    return ScoreLogic.calculatePlayerScores(scoreCard)
+  private Map<String, PlayerScoreSummaryDTO> toScoreSummaries(ScoreCardEntity scoreCard) {
+    return ScoreLogic.calculateScoresByPlayer(scoreCard)
+        .getResults()
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
             entry -> entry.getKey().toString(),
-            entry -> toPlayerScoreSummary(entry.getValue(), scoreCard.getCourse())));
-  }
-
-  private static PlayerScoreSummaryDTO toPlayerScoreSummary(PlayerScore playerScore, CourseEntity course) {
-    return new PlayerScoreSummaryDTO()
-        .holesPlayed(playerScore.getEntries().size())
-        .result(playerScore.getResult())
-        .total(playerScore.getTotal());
+            entry -> mapper.map(entry.getValue(), PlayerScoreSummaryDTO.class)));
   }
 
   private <T, R> List<R> mapMany(Collection<T> entities, Class<R> type) {

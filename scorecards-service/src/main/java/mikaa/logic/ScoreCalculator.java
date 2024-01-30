@@ -1,7 +1,6 @@
 package mikaa.logic;
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import mikaa.feature.course.CourseEntity;
@@ -17,10 +16,6 @@ class ScoreCalculator {
   private static record ScoreEntry(int par, int score) {
   }
 
-  static int getPar(int holeNumber, CourseEntity course) {
-    return holePars(course).getOrDefault(holeNumber, 0);
-  }
-
   static int result(Collection<ScoreEntity> playerScores, CourseEntity course) {
     return playerScores.stream()
         .map(s -> new ScoreEntry(getPar(s.getHole(), course), s.getScore()))
@@ -32,9 +27,11 @@ class ScoreCalculator {
     return scores.stream().mapToInt(ScoreEntity::getScore).sum();
   }
 
-  private static Map<Integer, Integer> holePars(CourseEntity course) {
-    return course.getHoles().stream().collect(
+  private static int getPar(int holeNumber, CourseEntity course) {
+    var coursePars = course.getHoles().stream().collect(
         Collectors.toMap(HoleEntity::getNumber, HoleEntity::getPar));
+
+    return coursePars.getOrDefault(holeNumber, 0);
   }
 
 }

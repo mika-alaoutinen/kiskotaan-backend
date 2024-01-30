@@ -69,14 +69,16 @@ class KafkaProducer implements ScoreCardProducer {
   }
 
   private ScoreCardByHolePayload toPayload(ScoreCardEntity entity) {
-    var results = ScoreLogic.calculatePlayerScores(entity)
+    var scoresByHole = ScoreLogic.calculateScoresByHole(entity);
+
+    var results = scoresByHole.getResults()
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
             entry -> entry.getKey().toString(),
             entry -> mapper.map(entry.getValue(), Result.class)));
 
-    var scoresByHole = ScoreLogic.calculateScoresByHole(entity)
+    var scores = scoresByHole.getScores()
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
@@ -88,11 +90,12 @@ class KafkaProducer implements ScoreCardProducer {
         entity.getCourse().getExternalId(),
         getPlayerIds(entity),
         results,
-        scoresByHole);
+        scores);
   }
 
   private ScoreCardPayload toStatePayload(ScoreCardEntity entity) {
-    var scores = ScoreLogic.calculatePlayerScores(entity)
+    var scores = ScoreLogic.calculateScoresByPlayer(entity)
+        .getScores()
         .entrySet()
         .stream()
         .collect(Collectors.toMap(

@@ -31,7 +31,7 @@ import mikaa.model.NewScoreCardDTO;
 import mikaa.producers.ScoreCardProducer;
 
 @QuarkusTest
-class ScoreCardEventsTest {
+class ScoreCardProducerTest {
 
   @Any
   @Inject

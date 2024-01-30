@@ -1,8 +1,11 @@
 package mikaa.producers;
 
+import io.smallrye.reactive.messaging.kafka.Record;
+
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import io.smallrye.reactive.messaging.kafka.Record;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.modelmapper.ModelMapper;
@@ -10,9 +13,12 @@ import org.modelmapper.ModelMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.PlayerScore;
+import mikaa.kiskotaan.domain.RoundResult;
+import mikaa.kiskotaan.domain.ScoreCardByHoleEvent;
+import mikaa.kiskotaan.domain.ScoreCardByHolePayload;
 import mikaa.kiskotaan.domain.ScoreCardEvent;
 import mikaa.kiskotaan.domain.ScoreCardPayload;
+import mikaa.kiskotaan.domain.ScoreEntry;
 import mikaa.logic.ScoreLogic;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.player.PlayerEntity;
@@ -25,48 +31,94 @@ class KafkaProducer implements ScoreCardProducer {
   private ModelMapper mapper;
 
   @Inject
-  @Channel(OutgoingChannels.SCORECARD_STATE)
-  Emitter<Record<Long, ScoreCardEvent>> emitter;
+  @Channel(OutgoingChannels.SCORECARD_BY_HOLE_STATE)
+  Emitter<Record<Long, ScoreCardByHoleEvent>> byHoleEmitter;
+
+  @Inject
+  @Channel(OutgoingChannels.SCORECARD_BY_PLAYER_STATE)
+  Emitter<Record<Long, ScoreCardEvent>> byPlayerEmitter;
 
   @Override
   public void scoreCardAdded(ScoreCardEntity entity) {
-    send(Action.ADD, entity);
+    sendByPlayerEvent(Action.ADD, entity);
+    sendByHoleEvent(Action.ADD, entity);
   }
 
   @Override
   public void scoreCardDeleted(ScoreCardEntity entity) {
-    send(Action.DELETE, entity);
+    sendByPlayerEvent(Action.DELETE, entity);
+    sendByHoleEvent(Action.DELETE, entity);
   }
 
   @Override
   public void scoreCardUpdated(ScoreCardEntity entity) {
-    send(Action.UPDATE, entity);
+    sendByPlayerEvent(Action.UPDATE, entity);
+    sendByHoleEvent(Action.UPDATE, entity);
   }
 
-  private void send(Action action, ScoreCardEntity entity) {
+  private void sendByHoleEvent(Action action, ScoreCardEntity entity) {
+    var event = new ScoreCardByHoleEvent(action, toPayload(entity));
+    var record = Record.of(entity.getId(), event);
+    byHoleEmitter.send(record).toCompletableFuture().join();
+  }
+
+  private void sendByPlayerEvent(Action action, ScoreCardEntity entity) {
     var event = new ScoreCardEvent(action, toStatePayload(entity));
     var record = Record.of(entity.getId(), event);
-    emitter.send(record).toCompletableFuture().join();
+    byPlayerEmitter.send(record).toCompletableFuture().join();
   }
 
-  private ScoreCardPayload toStatePayload(ScoreCardEntity entity) {
-    var playerIds = entity.getPlayers()
-        .stream()
-        .map(PlayerEntity::getExternalId)
-        .toList();
-
-    var scores = ScoreLogic.calculatePlayerScores(entity)
+  private ScoreCardByHolePayload toPayload(ScoreCardEntity entity) {
+    var results = ScoreLogic.calculateScoresByHole(entity)
+        .getResults()
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
             entry -> entry.getKey().toString(),
-            entry -> mapper.map(entry.getValue(), PlayerScore.class)));
+            entry -> mapper.map(entry.getValue(), RoundResult.class)));
+
+    return new ScoreCardByHolePayload(
+        entity.getId(),
+        entity.getCourse().getExternalId(),
+        getPlayerIds(entity),
+        results);
+  }
+
+  private ScoreCardPayload toStatePayload(ScoreCardEntity entity) {
+    var scoresByHole = ScoreLogic.calculateScoresByHole(entity);
+
+    var results = scoresByHole.getResults()
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(
+            entry -> entry.getKey().toString(),
+            entry -> mapper.map(entry.getValue(), RoundResult.class)));
+
+    var scores = ScoreLogic.calculateScoresByPlayer(entity)
+        .getScores()
+        .entrySet()
+        .stream()
+        .collect(Collectors.toMap(
+            entry -> entry.getKey().toString(),
+            entry -> mapMany(entry.getValue(), ScoreEntry.class)));
 
     return new ScoreCardPayload(
         entity.getId(),
         entity.getCourse().getExternalId(),
-        playerIds,
+        getPlayerIds(entity),
+        results,
         scores);
+  }
+
+  private static List<Long> getPlayerIds(ScoreCardEntity scoreCard) {
+    return scoreCard.getPlayers()
+        .stream()
+        .map(PlayerEntity::getExternalId)
+        .toList();
+  }
+
+  private <T, R> List<R> mapMany(Collection<T> entities, Class<R> type) {
+    return entities.stream().map(e -> mapper.map(e, type)).toList();
   }
 
 }

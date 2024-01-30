@@ -1,0 +1,15 @@
+{
+  "namespace": "mikaa.kiskotaan.domain",
+  "name": "RoundResult",
+  "type": "record",
+  "fields": [
+    {
+      "name": "result",
+      "type": "int"
+    },
+    {
+      "name": "total",
+      "type": "int"
+    }
+  ]
+}

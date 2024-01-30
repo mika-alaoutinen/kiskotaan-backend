@@ -17,17 +17,21 @@ class ScoreCalculator {
   }
 
   static int result(Collection<ScoreEntity> playerScores, CourseEntity course) {
-    var holePars = course.getHoles().stream().collect(
-        Collectors.toMap(HoleEntity::getNumber, HoleEntity::getPar));
-
     return playerScores.stream()
-        .map(s -> new ScoreEntry(holePars.getOrDefault(s.getHole(), 0), s.getScore()))
+        .map(s -> new ScoreEntry(getPar(s.getHole(), course), s.getScore()))
         .mapToInt(entry -> entry.score - entry.par)
         .sum();
   }
 
   static int total(Collection<ScoreEntity> scores) {
     return scores.stream().mapToInt(ScoreEntity::getScore).sum();
+  }
+
+  private static int getPar(int holeNumber, CourseEntity course) {
+    var coursePars = course.getHoles().stream().collect(
+        Collectors.toMap(HoleEntity::getNumber, HoleEntity::getPar));
+
+    return coursePars.getOrDefault(holeNumber, 0);
   }
 
 }

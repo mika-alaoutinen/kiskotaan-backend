@@ -82,27 +82,28 @@ class ScoreCardResourceTest {
         .statusCode(200)
         .contentType(ContentType.JSON)
         .body(
-          "id", is(1),
-          "course.holes", is(3),
-          "course.name", is("Laajis"),
-          "course.par", is(12),
-          "players[0].id", is(123),
-          "players[0].firstName", is("Pekka"),
-          "players[0].lastName", is("Kana")
-        )
+            "id", is(1),
+            "course.holes", is(3),
+            "course.name", is("Laajis"),
+            "course.par", is(12),
+            "players[0].id", is(123),
+            "players[0].firstName", is("Pekka"),
+            "players[0].lastName", is("Kana"))
         .extract()
         .as(ScoreCardDTO.class);
 
     // Examining maps seems like a pain with Hamcrest
-    var scores = response.getScores().get("123");
-    assertEquals(8, scores.getTotal());
-    assertEquals(-1, scores.getResult());
+    var results = response.getResults().get("123");
+    assertEquals(2, results.getHolesPlayed());
+    assertEquals(8, results.getTotal());
+    assertEquals(-1, results.getResult());
 
-    var entry1 = scores.getEntries().get(0);
+    var scores = response.getScores().get("123");
+    var entry1 = scores.get(0);
     assertEquals(1, entry1.getHole());
     assertEquals(3, entry1.getScore());
 
-    var entry2 = scores.getEntries().get(1);
+    var entry2 = scores.get(1);
     assertEquals(2, entry2.getHole());
     assertEquals(5, entry2.getScore());
   }
@@ -121,7 +122,7 @@ class ScoreCardResourceTest {
   void should_add_new_score_card() {
     when(courseFinder.findOrThrow(anyLong())).thenReturn(COURSE);
     when(playerFinder.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
-    
+
     var newScoreCard = new NewScoreCardDTO()
         .courseId(BigDecimal.valueOf(1))
         .playerIds(Set.of(BigDecimal.valueOf(123)));
@@ -163,7 +164,7 @@ class ScoreCardResourceTest {
         .statusCode(404)
         .contentType(ContentType.JSON)
         .body("message", is("Could not find course with id 1"));
-    
+
     verify(repository, never()).persist(any(ScoreCardEntity.class));
     verifyNoInteractions(producer);
   }
@@ -186,7 +187,7 @@ class ScoreCardResourceTest {
         .statusCode(404)
         .contentType(ContentType.JSON)
         .body("message", is("Could not find player with id 999"));
-    
+
     verify(repository, never()).persist(any(ScoreCardEntity.class));
     verifyNoInteractions(producer);
   }
@@ -194,7 +195,7 @@ class ScoreCardResourceTest {
   @Test
   void should_delete_score_card() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCardMock()));
-    
+
     given()
         .when()
         .delete(ENDPOINT + "/1")

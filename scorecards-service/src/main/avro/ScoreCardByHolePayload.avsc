@@ -1,0 +1,29 @@
+{
+  "namespace": "mikaa.kiskotaan.domain",
+  "name": "ScoreCardByHolePayload",
+  "type": "record",
+  "fields": [
+    {
+      "name": "id",
+      "type": "long"
+    },
+    {
+      "name": "courseId",
+      "type": "long"
+    },
+    {
+      "name": "playerIds",
+      "type": {
+        "type": "array",
+        "items": "long"
+      }
+    },
+    {
+      "name": "results",
+      "type": {
+        "type": "map",
+        "values": "RoundResult"
+      }
+    }
+  ]
+}

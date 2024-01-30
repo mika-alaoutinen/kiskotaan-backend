@@ -6,7 +6,9 @@ avro:
         - CoursePayload.avsc
         - HolePayload.avsc
         - PlayerPayload.avsc
+        - RoundResult.avsc
         - ScoreCardPayload.avsc
+        - ScoreCardByHolePayload.avsc
 
 quarkus:
   hibernate-orm:
@@ -36,6 +38,9 @@ mp:
       player-state:
         topic: "Players-player_state"
 
+    # Send scorecards to two topics with different formats
     outgoing:
-      scorecard-state:
-        topic: "Scorecards-scorecard_state"
+      scorecard-by-hole-state:
+        topic: "Scorecards-scorecard_by_hole_state"
+      scorecard-by-player-state:
+        topic: "Scorecards-scorecard_by_player_state"

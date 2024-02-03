@@ -7,7 +7,7 @@ avro:
         - HolePayload.avsc
         - PlayerPayload.avsc
         - RoundResult.avsc
-        - ScoreCardPayload.avsc
+        - ScoreCardByPlayerPayload.avsc
         - ScoreCardByHolePayload.avsc
 
 quarkus:

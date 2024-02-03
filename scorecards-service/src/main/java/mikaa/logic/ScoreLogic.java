@@ -74,8 +74,8 @@ public interface ScoreLogic {
   }
 
   private static PlayerScore toPlayerScore(Collection<ScoreEntity> playerScores, CourseEntity course) {
-    var result = ScoreCalculator.result(playerScores, course);
-    var total = ScoreCalculator.total(playerScores);
+    int result = ScoreCalculator.result(playerScores, course);
+    int total = ScoreCalculator.total(playerScores);
     return new PlayerScore(playerScores.size(), result, total);
   }
 

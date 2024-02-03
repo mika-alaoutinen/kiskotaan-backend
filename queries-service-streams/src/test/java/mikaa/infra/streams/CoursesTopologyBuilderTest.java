@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.courses.CourseEvent;
 import mikaa.kiskotaan.courses.CoursePayload;
-import mikaa.kiskotaan.domain.Hole;
+import mikaa.kiskotaan.courses.Hole;
 import mikaa.streams.TopologyDescription.CoursesTopology;
 
 @QuarkusTest

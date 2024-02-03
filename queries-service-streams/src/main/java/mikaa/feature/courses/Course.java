@@ -1,7 +1,7 @@
 package mikaa.feature.courses;
 
 import mikaa.kiskotaan.courses.CoursePayload;
-import mikaa.kiskotaan.domain.Hole;
+import mikaa.kiskotaan.courses.Hole;
 
 public record Course(long id, String name, int par) {
 

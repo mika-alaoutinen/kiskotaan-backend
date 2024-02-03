@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
+import mikaa.feature.score.ScoreEntity;
+import mikaa.kiskotaan.scorecards.ScoreEntry;
 import mikaa.model.CourseDTO;
 import mikaa.model.PlayerDTO;
 
@@ -25,6 +27,10 @@ class MapperConfig {
     // Map entity external id -> DTO id
     mapper.typeMap(PlayerEntity.class, PlayerDTO.class)
         .addMapping(PlayerEntity::getExternalId, PlayerDTO::setId);
+
+    // Map entity external id -> DTO id
+    mapper.typeMap(ScoreEntity.class, ScoreEntry.class)
+        .addMapping(scoreEntity -> scoreEntity.getPlayer().getExternalId(), ScoreEntry::setPlayerId);
 
     return mapper;
   }

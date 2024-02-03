@@ -1,11 +1,11 @@
 {
-  "namespace": "mikaa.kiskotaan.domain",
+  "namespace": "mikaa.kiskotaan.scorecards",
   "name": "ScoreCardByHoleEvent",
   "type": "record",
   "fields": [
     {
       "name": "action",
-      "type": "Action"
+      "type": "mikaa.kiskotaan.domain.Action"
     },
     {
       "name": "payload",

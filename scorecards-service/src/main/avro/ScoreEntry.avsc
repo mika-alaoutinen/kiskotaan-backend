@@ -1,0 +1,23 @@
+{
+  "namespace": "mikaa.kiskotaan.scorecards",
+  "name": "ScoreEntry",
+  "type": "record",
+  "fields": [
+    {
+      "name": "id",
+      "type": "long"
+    },
+    {
+      "name": "playerId",
+      "type": "long"
+    },
+    {
+      "name": "hole",
+      "type": "int"
+    },
+    {
+      "name": "score",
+      "type": "int"
+    }
+  ]
+}

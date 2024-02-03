@@ -3,10 +3,12 @@ avro:
     avsc:
       imports:
         - Action.avsc
+        - RoundResult.avsc
+        - ScoreEntry.avsc
         - CoursePayload.avsc
         - HolePayload.avsc
         - PlayerPayload.avsc
-        - RoundResult.avsc
+        - ScoreCardPayload.avsc
         - ScoreCardByPlayerPayload.avsc
         - ScoreCardByHolePayload.avsc
 
@@ -38,9 +40,10 @@ mp:
       player-state:
         topic: "Players-player_state"
 
-    # Send scorecards to two topics with different formats
     outgoing:
-      scorecard-by-hole-state:
-        topic: "Scorecards-scorecard_by_hole_state"
-      scorecard-by-player-state:
-        topic: "Scorecards-scorecard_by_player_state"
+      scorecard-state:
+        topic: "Scorecards-scorecard_state"
+      # scorecard-by-hole-state:
+      #   topic: "Scorecards-scorecard_by_hole_state"
+      # scorecard-by-player-state:
+      #   topic: "Scorecards-scorecard_by_player_state"

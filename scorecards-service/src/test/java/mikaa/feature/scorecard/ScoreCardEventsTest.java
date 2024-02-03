@@ -26,8 +26,7 @@ import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.ScoreCardByHoleEvent;
-import mikaa.kiskotaan.domain.ScoreCardByPlayerEvent;
+import mikaa.kiskotaan.scorecards.ScoreCardEvent;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.producers.ScoreCardProducer;
 
@@ -50,19 +49,14 @@ class ScoreCardEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
-  private InMemorySink<Record<Long, ScoreCardByHoleEvent>> byHoleSink;
-  private InMemorySink<Record<Long, ScoreCardByPlayerEvent>> byPlayerSink;
+  private InMemorySink<Record<Long, ScoreCardEvent>> sink;
   private ScoreCardService service;
 
   @BeforeEach
   void setup() {
     service = new ScoreCardService(courseFinder, playerFinder, producer, repository);
-
-    byHoleSink = connector.sink(OutgoingChannels.SCORECARD_BY_HOLE_STATE);
-    byHoleSink.clear();
-
-    byPlayerSink = connector.sink(OutgoingChannels.SCORECARD_BY_PLAYER_STATE);
-    byPlayerSink.clear();
+    sink = connector.sink(OutgoingChannels.SCORECARD_STATE);
+    sink.clear();
   }
 
   @Test
@@ -75,8 +69,7 @@ class ScoreCardEventsTest {
         .playerIds(Set.of(BigDecimal.TEN));
 
     service.add(dto);
-    assertByHoleEvent(Action.ADD);
-    assertByPlayerEvent(Action.ADD);
+    assertEvent(Action.ADD);
   }
 
   @Test
@@ -85,30 +78,16 @@ class ScoreCardEventsTest {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCard));
 
     service.delete(13l);
-    assertByHoleEvent(Action.DELETE);
-    assertByPlayerEvent(Action.DELETE);
+    assertEvent(Action.DELETE);
   }
 
-  private void assertByHoleEvent(Action action) {
-    assertEquals(1, byHoleSink.received().size());
-    var record = byHoleSink.received().get(0).getPayload();
+  private void assertEvent(Action action) {
+    assertEquals(1, sink.received().size());
+
+    var record = sink.received().get(0).getPayload();
     assertEquals(action, record.value().getAction());
 
     var payload = record.value().getPayload();
-
-    assertEquals(payload.getId(), record.key());
-    assertEquals(1l, payload.getCourseId());
-    assertEquals(1, payload.getPlayerIds().size());
-    assertEquals(2l, payload.getPlayerIds().get(0));
-  }
-
-  private void assertByPlayerEvent(Action action) {
-    assertEquals(1, byPlayerSink.received().size());
-    var record = byPlayerSink.received().get(0).getPayload();
-    assertEquals(action, record.value().getAction());
-
-    var payload = record.value().getPayload();
-
     assertEquals(payload.getId(), record.key());
     assertEquals(1l, payload.getCourseId());
     assertEquals(1, payload.getPlayerIds().size());

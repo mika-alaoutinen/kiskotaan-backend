@@ -1,6 +1,6 @@
 {
   "namespace": "mikaa.kiskotaan.scorecards",
-  "name": "ScoreCardByPlayerPayload",
+  "name": "ScoreCardPayload",
   "type": "record",
   "fields": [
     {
@@ -28,13 +28,8 @@
     {
       "name": "scores",
       "type": {
-        "type": "map",
-        "values": {
-          "type": "array",
-          "items": {
-            "type": "ScoreEntry"
-          }
-        }
+        "type": "array",
+        "items": "ScoreEntry"
       }
     }
   ]

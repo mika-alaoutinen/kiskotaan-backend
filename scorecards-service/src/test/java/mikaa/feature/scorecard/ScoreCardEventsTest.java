@@ -26,7 +26,7 @@ import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.scorecards.ScoreCardEvent;
+import mikaa.kiskotaan.scorecard.ScoreCardEvent;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.producers.ScoreCardProducer;
 

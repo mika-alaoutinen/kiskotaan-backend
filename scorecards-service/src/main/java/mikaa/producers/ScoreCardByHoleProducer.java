@@ -7,8 +7,8 @@ import org.modelmapper.ModelMapper;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.scorecard.ScoreCardEntity;
-import mikaa.kiskotaan.scorecards.RoundResult;
-import mikaa.kiskotaan.scorecards.ScoreCardByHolePayload;
+import mikaa.kiskotaan.scorecard.RoundResult;
+import mikaa.kiskotaan.scorecard.ScoreCardByHolePayload;
 import mikaa.logic.ScoreLogic;
 
 @ApplicationScoped

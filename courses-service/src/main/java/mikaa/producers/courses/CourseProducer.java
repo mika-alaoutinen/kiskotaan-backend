@@ -1,6 +1,6 @@
 package mikaa.producers.courses;
 
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.course.CoursePayload;
 
 public interface CourseProducer {
 

@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.domain.PlayerPayload;
+import mikaa.kiskotaan.player.PlayerPayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

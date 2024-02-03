@@ -12,7 +12,7 @@ import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import io.apicurio.registry.serde.avro.AvroKafkaDeserializer;
 import io.apicurio.registry.serde.avro.AvroKafkaSerdeConfig;
-import mikaa.kiskotaan.domain.PlayerPayload;
+import mikaa.kiskotaan.player.PlayerPayload;
 
 @Configuration
 class PlayerConsumerConfig {

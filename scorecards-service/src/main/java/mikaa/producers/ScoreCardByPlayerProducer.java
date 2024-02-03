@@ -8,9 +8,9 @@ import org.modelmapper.ModelMapper;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.scorecards.RoundResult;
-import mikaa.kiskotaan.scorecards.ScoreCardByPlayerPayload;
-import mikaa.kiskotaan.scorecards.ScoreEntry;
+import mikaa.kiskotaan.scorecard.RoundResult;
+import mikaa.kiskotaan.scorecard.ScoreCardByPlayerPayload;
+import mikaa.kiskotaan.scorecard.ScoreEntry;
 import mikaa.logic.ScoreLogic;
 import mikaa.feature.scorecard.ScoreCardEntity;
 

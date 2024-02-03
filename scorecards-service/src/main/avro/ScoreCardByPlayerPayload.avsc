@@ -1,5 +1,5 @@
 {
-  "namespace": "mikaa.kiskotaan.scorecards",
+  "namespace": "mikaa.kiskotaan.scorecard",
   "name": "ScoreCardByPlayerPayload",
   "type": "record",
   "fields": [

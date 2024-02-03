@@ -3,8 +3,8 @@ package mikaa.streams;
 import org.apache.avro.specific.SpecificRecord;
 import org.apache.kafka.common.serialization.Serde;
 
-import mikaa.kiskotaan.domain.CourseEvent;
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.course.CourseEvent;
+import mikaa.kiskotaan.course.CoursePayload;
 
 public interface TopologyDescription<K, V extends SpecificRecord, U extends SpecificRecord> {
 

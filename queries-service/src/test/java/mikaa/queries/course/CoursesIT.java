@@ -10,8 +10,8 @@ import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.CourseEvent;
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.course.CourseEvent;
+import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.config.IncomingChannels;
 
 import static org.hamcrest.Matchers.is;

@@ -1,6 +1,6 @@
 package mikaa.players.producers;
 
-import mikaa.kiskotaan.domain.PlayerPayload;
+import mikaa.kiskotaan.player.PlayerPayload;
 
 public interface PlayerProducer {
 

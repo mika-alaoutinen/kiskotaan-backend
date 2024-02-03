@@ -9,7 +9,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.producers.courses.CourseProducer;
 
 @ApplicationScoped

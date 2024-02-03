@@ -8,8 +8,8 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.config.IncomingChannels;
-import mikaa.kiskotaan.domain.HoleEvent;
-import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.kiskotaan.course.HoleEvent;
+import mikaa.kiskotaan.course.HolePayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

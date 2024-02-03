@@ -7,8 +7,8 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.kiskotaan.domain.CourseEvent;
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.course.CourseEvent;
+import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.config.IncomingChannels;
 
 @ApplicationScoped

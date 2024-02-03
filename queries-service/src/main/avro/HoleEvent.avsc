@@ -1,11 +1,11 @@
 {
-  "namespace": "mikaa.kiskotaan.domain",
+  "namespace": "mikaa.kiskotaan.course",
   "name": "HoleEvent",
   "type": "record",
   "fields": [
     {
       "name": "action",
-      "type": "Action"
+      "type": "mikaa.kiskotaan.domain.Action"
     },
     {
       "name": "payload",

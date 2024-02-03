@@ -13,7 +13,7 @@ import java.util.Optional;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.feature.hole.HoleEntity;
-import mikaa.kiskotaan.domain.CourseEvent;
+import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.courses.CourseProducer;
 

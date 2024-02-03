@@ -12,9 +12,9 @@ import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.CourseEvent;
-import mikaa.kiskotaan.domain.PlayerEvent;
-import mikaa.kiskotaan.domain.PlayerPayload;
+import mikaa.kiskotaan.course.CourseEvent;
+import mikaa.kiskotaan.player.PlayerEvent;
+import mikaa.kiskotaan.player.PlayerPayload;
 import mikaa.config.IncomingChannels;
 
 import static io.restassured.RestAssured.given;

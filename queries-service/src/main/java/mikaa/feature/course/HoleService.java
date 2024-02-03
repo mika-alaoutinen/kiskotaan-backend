@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.kiskotaan.course.HolePayload;
 import mikaa.consumers.course.HoleWriter;
 import mikaa.queries.course.CourseReader;
 

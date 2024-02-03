@@ -18,8 +18,8 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.config.IncomingChannels;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.PlayerEvent;
-import mikaa.kiskotaan.domain.PlayerPayload;
+import mikaa.kiskotaan.player.PlayerEvent;
+import mikaa.kiskotaan.player.PlayerPayload;
 
 @QuarkusTest
 class PlayerConsumerTest {

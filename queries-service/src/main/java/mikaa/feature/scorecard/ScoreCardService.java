@@ -6,7 +6,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import mikaa.consumers.scorecard.ScoreCardWriter;
-import mikaa.kiskotaan.domain.ScoreCardPayload;
+import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.queries.scorecard.ScoreCardReader;
 import mikaa.uni.UniDecorator;
 

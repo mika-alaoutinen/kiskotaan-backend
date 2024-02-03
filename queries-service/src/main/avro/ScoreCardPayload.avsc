@@ -1,5 +1,5 @@
 {
-  "namespace": "mikaa.kiskotaan.domain",
+  "namespace": "mikaa.kiskotaan.scorecard",
   "name": "ScoreCardPayload",
   "type": "record",
   "fields": [
@@ -19,47 +19,17 @@
       }
     },
     {
-      "name": "scores",
+      "name": "results",
       "type": {
         "type": "map",
-        "values": {
-          "name": "PlayerScore",
-          "type": "record",
-          "fields": [
-            {
-              "name": "entries",
-              "type": {
-                "type": "array",
-                "items": {
-                  "name": "ScoreEntry",
-                  "type": "record",
-                  "fields": [
-                    {
-                      "name": "id",
-                      "type": "long"
-                    },
-                    {
-                      "name": "hole",
-                      "type": "int"
-                    },
-                    {
-                      "name": "score",
-                      "type": "int"
-                    }
-                  ]
-                }
-              }
-            },
-            {
-              "name": "result",
-              "type": "int"
-            },
-            {
-              "name": "total",
-              "type": "int"
-            }
-          ]
-        }
+        "values": "RoundResult"
+      }
+    },
+    {
+      "name": "scores",
+      "type": {
+        "type": "array",
+        "items": "ScoreEntry"
       }
     }
   ]

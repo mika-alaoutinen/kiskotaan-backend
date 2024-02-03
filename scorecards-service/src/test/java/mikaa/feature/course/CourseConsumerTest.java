@@ -19,9 +19,9 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.config.IncomingChannels;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.CourseEvent;
-import mikaa.kiskotaan.domain.CoursePayload;
-import mikaa.kiskotaan.domain.Hole;
+import mikaa.kiskotaan.course.CourseEvent;
+import mikaa.kiskotaan.course.CoursePayload;
+import mikaa.kiskotaan.course.Hole;
 
 @QuarkusTest
 class CourseConsumerTest {

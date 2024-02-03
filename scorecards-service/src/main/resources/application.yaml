@@ -3,10 +3,12 @@ avro:
     avsc:
       imports:
         - Action.avsc
+        - RoundResult.avsc
+        - ScoreEntry.avsc
         - CoursePayload.avsc
         - HolePayload.avsc
         - PlayerPayload.avsc
-        - RoundResult.avsc
+        - ScoreCardPayload.avsc
         - ScoreCardByPlayerPayload.avsc
         - ScoreCardByHolePayload.avsc
 

@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.config.IncomingChannels;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.PlayerEvent;
-import mikaa.kiskotaan.domain.PlayerPayload;
+import mikaa.kiskotaan.player.PlayerEvent;
+import mikaa.kiskotaan.player.PlayerPayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

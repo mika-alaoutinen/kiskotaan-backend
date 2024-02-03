@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.PlayerEvent;
-import mikaa.kiskotaan.domain.PlayerPayload;
+import mikaa.kiskotaan.player.PlayerEvent;
+import mikaa.kiskotaan.player.PlayerPayload;
 
 @Component
 @RequiredArgsConstructor

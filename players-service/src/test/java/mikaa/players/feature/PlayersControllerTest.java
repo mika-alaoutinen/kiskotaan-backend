@@ -13,7 +13,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import mikaa.kiskotaan.domain.PlayerPayload;
+import mikaa.kiskotaan.player.PlayerPayload;
 import mikaa.model.NewPlayerDTO;
 import mikaa.players.errors.BadRequestException;
 import mikaa.players.infra.GlobalExceptionHandler;
@@ -158,7 +158,7 @@ class PlayersControllerTest {
   @Test
   void put_should_return_404_when_player_not_found() throws Exception {
     when(repository.findById(anyLong())).thenReturn(Optional.empty());
-    
+
     mvc
         .perform(put(ENDPOINT + "/1")
             .contentType(MediaType.APPLICATION_JSON)
@@ -202,11 +202,11 @@ class PlayersControllerTest {
   @Test
   void should_delete_player_by_id() throws Exception {
     when(repository.findById(anyLong())).thenReturn(Optional.of(PLAYER));
-    
+
     mvc
         .perform(delete(ENDPOINT + "/1"))
         .andExpect(status().isNoContent());
-    
+
     verify(repository, atLeastOnce()).deleteById(1L);
     verify(producer, atLeastOnce()).playerDeleted(any(PlayerPayload.class));
   }
@@ -214,11 +214,11 @@ class PlayersControllerTest {
   @Test
   void should_do_nothing_on_delete_when_id_not_found() throws Exception {
     when(repository.findById(anyLong())).thenReturn(Optional.empty());
-    
+
     mvc
         .perform(delete(ENDPOINT + "/1"))
         .andExpect(status().isNoContent());
-    
+
     verify(repository, never()).deleteById(anyLong());
     verifyNoInteractions(producer);
   }

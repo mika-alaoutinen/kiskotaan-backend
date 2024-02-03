@@ -15,8 +15,8 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
-import mikaa.kiskotaan.domain.HoleEvent;
-import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.kiskotaan.courses.HoleEvent;
+import mikaa.kiskotaan.courses.HolePayload;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.holes.HoleProducer;
 

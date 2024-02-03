@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.courses.CoursePayload;
 import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;

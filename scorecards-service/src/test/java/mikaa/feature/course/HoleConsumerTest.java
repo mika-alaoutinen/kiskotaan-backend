@@ -19,8 +19,8 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.config.IncomingChannels;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.HoleEvent;
-import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.kiskotaan.courses.HoleEvent;
+import mikaa.kiskotaan.courses.HolePayload;
 
 @QuarkusTest
 class HoleConsumerTest {

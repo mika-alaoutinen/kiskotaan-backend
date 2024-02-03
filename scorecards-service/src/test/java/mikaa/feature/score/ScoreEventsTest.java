@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -22,7 +23,9 @@ import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.domain.RoundResult;
 import mikaa.kiskotaan.domain.ScoreCardByHoleEvent;
+import mikaa.kiskotaan.domain.ScoreCardByHolePayload;
 import mikaa.kiskotaan.domain.ScoreCardByPlayerEvent;
 import mikaa.kiskotaan.domain.ScoreCardByPlayerPayload;
 import mikaa.config.OutgoingChannels;
@@ -81,11 +84,19 @@ class ScoreEventsTest {
 
     service.addScore(13l, newScore);
 
-    var payload = assertByPlayerEvent();
     String playerId = playerMock().getExternalId() + "";
-    var result = payload.getResults().get(playerId);
-    assertEquals(-1, result.getResult());
-    assertEquals(4, result.getTotal());
+    var byPlayerPayload = assertByPlayerEvent();
+    assertResults(byPlayerPayload.getResults(), playerId);
+
+    var scores = byPlayerPayload.getScores().get(playerId);
+    assertEquals(1, scores.size());
+
+    var hole1Score = scores.get(0);
+    assertEquals(1, hole1Score.getHole());
+    assertEquals(4, hole1Score.getScore());
+
+    var byHolePayload = assertByHoleEvent();
+    assertResults(byHolePayload.getResults(), playerId);
   }
 
   @Test
@@ -95,8 +106,26 @@ class ScoreEventsTest {
 
     service.delete(22);
 
-    var payload = assertByPlayerEvent();
-    assertTrue(payload.getScores().isEmpty());
+    var byPlayerPayload = assertByPlayerEvent();
+    assertTrue(byPlayerPayload.getResults().isEmpty());
+    assertTrue(byPlayerPayload.getScores().isEmpty());
+
+    var byHolePayload = assertByHoleEvent();
+    assertTrue(byHolePayload.getResults().isEmpty());
+  }
+
+  private ScoreCardByHolePayload assertByHoleEvent() {
+    assertEquals(1, byHoleSink.received().size());
+
+    var record = byHoleSink.received().get(0).getPayload();
+    assertEquals(Action.UPDATE, record.value().getAction());
+
+    var payload = record.value().getPayload();
+    assertEquals(record.key(), payload.getId());
+    assertEquals(scoreCardMock().getId(), payload.getId());
+    assertEquals(List.of(playerMock().getExternalId()), payload.getPlayerIds());
+
+    return payload;
   }
 
   private ScoreCardByPlayerPayload assertByPlayerEvent() {
@@ -106,10 +135,17 @@ class ScoreEventsTest {
     assertEquals(Action.UPDATE, record.value().getAction());
 
     var payload = record.value().getPayload();
-    assertEquals(payload.getId(), record.key());
+    assertEquals(record.key(), payload.getId());
     assertEquals(scoreCardMock().getId(), payload.getId());
+    assertEquals(List.of(playerMock().getExternalId()), payload.getPlayerIds());
 
     return payload;
+  }
+
+  private static void assertResults(Map<String, RoundResult> results, String playerId) {
+    var result = results.get(playerId);
+    assertEquals(-1, result.getResult());
+    assertEquals(4, result.getTotal());
   }
 
   private static CourseEntity courseMock() {

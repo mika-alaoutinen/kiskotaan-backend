@@ -89,4 +89,8 @@ public class ScoreCardEntity {
     return id != null ? id : -1;
   }
 
+  public List<Long> getPlayerIds() {
+    return players.stream().map(PlayerEntity::getExternalId).toList();
+  }
+
 }

@@ -16,8 +16,8 @@ import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.domain.RoundResult;
 import mikaa.kiskotaan.domain.ScoreCardByHoleEvent;
 import mikaa.kiskotaan.domain.ScoreCardByHolePayload;
-import mikaa.kiskotaan.domain.ScoreCardEvent;
-import mikaa.kiskotaan.domain.ScoreCardPayload;
+import mikaa.kiskotaan.domain.ScoreCardByPlayerEvent;
+import mikaa.kiskotaan.domain.ScoreCardByPlayerPayload;
 import mikaa.kiskotaan.domain.ScoreEntry;
 import mikaa.logic.ScoreLogic;
 import mikaa.config.OutgoingChannels;
@@ -36,7 +36,7 @@ class KafkaProducer implements ScoreCardProducer {
 
   @Inject
   @Channel(OutgoingChannels.SCORECARD_BY_PLAYER_STATE)
-  Emitter<Record<Long, ScoreCardEvent>> byPlayerEmitter;
+  Emitter<Record<Long, ScoreCardByPlayerEvent>> byPlayerEmitter;
 
   @Override
   public void scoreCardAdded(ScoreCardEntity entity) {
@@ -63,7 +63,7 @@ class KafkaProducer implements ScoreCardProducer {
   }
 
   private void sendByPlayerEvent(Action action, ScoreCardEntity entity) {
-    var event = new ScoreCardEvent(action, toStatePayload(entity));
+    var event = new ScoreCardByPlayerEvent(action, toStatePayload(entity));
     var record = Record.of(entity.getId(), event);
     byPlayerEmitter.send(record).toCompletableFuture().join();
   }
@@ -84,7 +84,7 @@ class KafkaProducer implements ScoreCardProducer {
         results);
   }
 
-  private ScoreCardPayload toStatePayload(ScoreCardEntity entity) {
+  private ScoreCardByPlayerPayload toStatePayload(ScoreCardEntity entity) {
     var scoresByHole = ScoreLogic.calculateScoresByHole(entity);
 
     var results = scoresByHole.getResults()
@@ -102,7 +102,7 @@ class KafkaProducer implements ScoreCardProducer {
             entry -> entry.getKey().toString(),
             entry -> mapMany(entry.getValue(), ScoreEntry.class)));
 
-    return new ScoreCardPayload(
+    return new ScoreCardByPlayerPayload(
         entity.getId(),
         entity.getCourse().getExternalId(),
         getPlayerIds(entity),

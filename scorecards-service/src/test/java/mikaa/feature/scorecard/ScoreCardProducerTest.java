@@ -27,7 +27,7 @@ import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.domain.ScoreCardByHoleEvent;
-import mikaa.kiskotaan.domain.ScoreCardEvent;
+import mikaa.kiskotaan.domain.ScoreCardByPlayerEvent;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.producers.ScoreCardProducer;
 
@@ -51,7 +51,7 @@ class ScoreCardProducerTest {
   private PlayerFinder playerFinder;
 
   private InMemorySink<Record<Long, ScoreCardByHoleEvent>> byHoleSink;
-  private InMemorySink<Record<Long, ScoreCardEvent>> byPlayerSink;
+  private InMemorySink<Record<Long, ScoreCardByPlayerEvent>> byPlayerSink;
   private ScoreCardService service;
 
   @BeforeEach

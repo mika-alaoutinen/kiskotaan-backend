@@ -1,6 +1,6 @@
 {
   "namespace": "mikaa.kiskotaan.domain",
-  "name": "ScoreCardEvent",
+  "name": "ScoreCardByPlayerEvent",
   "type": "record",
   "fields": [
     {
@@ -9,7 +9,7 @@
     },
     {
       "name": "payload",
-      "type": "ScoreCardPayload"
+      "type": "ScoreCardByPlayerPayload"
     }
   ]
 }

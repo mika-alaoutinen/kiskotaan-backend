@@ -22,7 +22,7 @@ import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.ScoreCardEvent;
+import mikaa.kiskotaan.domain.ScoreCardByPlayerEvent;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
@@ -52,7 +52,7 @@ class ScoreEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
-  private InMemorySink<Record<Long, ScoreCardEvent>> sink;
+  private InMemorySink<Record<Long, ScoreCardByPlayerEvent>> sink;
   private ScoreService service;
 
   @BeforeEach

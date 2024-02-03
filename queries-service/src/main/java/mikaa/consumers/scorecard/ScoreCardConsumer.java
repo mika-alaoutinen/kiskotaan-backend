@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.config.IncomingChannels;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.scorecards.ScoreCardEvent;
-import mikaa.kiskotaan.scorecards.ScoreCardPayload;
+import mikaa.kiskotaan.scorecard.ScoreCardEvent;
+import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

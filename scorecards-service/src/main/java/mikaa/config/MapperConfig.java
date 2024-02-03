@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.score.ScoreEntity;
-import mikaa.kiskotaan.scorecards.ScoreEntry;
+import mikaa.kiskotaan.scorecard.ScoreEntry;
 import mikaa.model.CourseDTO;
 import mikaa.model.PlayerDTO;
 

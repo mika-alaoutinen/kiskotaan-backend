@@ -2,7 +2,7 @@ package mikaa.consumers.scorecard;
 
 import io.smallrye.mutiny.Uni;
 import mikaa.feature.scorecard.ScoreCardEntity;
-import mikaa.kiskotaan.scorecards.ScoreCardPayload;
+import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 
 public interface ScoreCardWriter {
 

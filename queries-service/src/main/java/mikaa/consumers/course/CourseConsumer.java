@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.config.IncomingChannels;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.courses.CourseEvent;
-import mikaa.kiskotaan.courses.CoursePayload;
+import mikaa.kiskotaan.course.CourseEvent;
+import mikaa.kiskotaan.course.CoursePayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor

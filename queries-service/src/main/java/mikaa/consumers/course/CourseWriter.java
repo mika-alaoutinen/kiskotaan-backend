@@ -1,7 +1,7 @@
 package mikaa.consumers.course;
 
 import io.smallrye.mutiny.Uni;
-import mikaa.kiskotaan.courses.CoursePayload;
+import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.feature.course.CourseEntity;
 
 public interface CourseWriter {

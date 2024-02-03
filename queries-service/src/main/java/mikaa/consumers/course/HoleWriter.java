@@ -1,7 +1,7 @@
 package mikaa.consumers.course;
 
 import io.smallrye.mutiny.Uni;
-import mikaa.kiskotaan.courses.HolePayload;
+import mikaa.kiskotaan.course.HolePayload;
 import mikaa.feature.course.HoleEntity;
 
 public interface HoleWriter {

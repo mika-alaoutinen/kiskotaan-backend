@@ -1,6 +1,6 @@
 package mikaa.producers.holes;
 
-import mikaa.kiskotaan.courses.HolePayload;
+import mikaa.kiskotaan.course.HolePayload;
 
 public interface HoleProducer {
 

@@ -1,5 +1,5 @@
 {
-  "namespace": "mikaa.kiskotaan.courses",
+  "namespace": "mikaa.kiskotaan.course",
   "name": "HolePayload",
   "type": "record",
   "fields": [

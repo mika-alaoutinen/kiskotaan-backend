@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.courses.CoursePayload;
+import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.streams.InteractiveQueries;
 import mikaa.streams.KafkaStreamsConfig;
 

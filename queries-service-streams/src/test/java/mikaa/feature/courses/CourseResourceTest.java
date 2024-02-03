@@ -17,8 +17,8 @@ import io.smallrye.reactive.messaging.kafka.companion.KafkaCompanion;
 import jakarta.inject.Inject;
 import mikaa.graphql.QueryClient;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.CourseEvent;
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.courses.CourseEvent;
+import mikaa.kiskotaan.courses.CoursePayload;
 import mikaa.kiskotaan.domain.Hole;
 import mikaa.streams.TopologyDescription.CoursesTopology;
 

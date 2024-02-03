@@ -19,8 +19,8 @@ import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.HoleEvent;
-import mikaa.kiskotaan.domain.HolePayload;
+import mikaa.kiskotaan.courses.HoleEvent;
+import mikaa.kiskotaan.courses.HolePayload;
 import mikaa.config.IncomingChannels;
 
 @QuarkusTest

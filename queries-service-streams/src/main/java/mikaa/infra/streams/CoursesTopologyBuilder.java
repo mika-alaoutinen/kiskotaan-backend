@@ -11,8 +11,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.CourseEvent;
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.courses.CourseEvent;
+import mikaa.kiskotaan.courses.CoursePayload;
 import mikaa.streams.KafkaStreamsConfig;
 import mikaa.streams.TopologyDescription.CoursesTopology;
 

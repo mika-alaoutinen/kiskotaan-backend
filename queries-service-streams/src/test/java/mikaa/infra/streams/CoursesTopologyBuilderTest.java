@@ -15,8 +15,8 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.domain.CourseEvent;
-import mikaa.kiskotaan.domain.CoursePayload;
+import mikaa.kiskotaan.courses.CourseEvent;
+import mikaa.kiskotaan.courses.CoursePayload;
 import mikaa.kiskotaan.domain.Hole;
 import mikaa.streams.TopologyDescription.CoursesTopology;
 

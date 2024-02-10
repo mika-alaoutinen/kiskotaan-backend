@@ -4,22 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
-
-import mikaa.feature.course.CourseEntity;
-import mikaa.feature.course.HoleEntity;
-import mikaa.feature.player.PlayerEntity;
-import mikaa.feature.score.ScoreEntity;
-import mikaa.feature.scorecard.ScoreCardEntity;
 
 class ScoreLogicTest {
 
   @Test
   void returns_player_results_and_scores_by_player() {
-    var scoresByPlayer = ScoreLogic.calculateScoresByPlayer(scoreCard());
+    var scoresByPlayer = ScoreLogic.scoresByPlayer(input());
 
     var akuScores = scoresByPlayer.getScores().get(313l);
     assertEquals(2, akuScores.get(1).getHole());
@@ -34,11 +27,13 @@ class ScoreLogicTest {
 
   @Test
   void returns_player_results_and_scores_by_hole() {
-    var scoresByHole = ScoreLogic.calculateScoresByHole(scoreCard());
+    var scoresByHole = ScoreLogic.scoresByHole(input());
 
     var hole1Scores = scoresByHole.getScores().get(1);
-    assertEquals(3, hole1Scores.get(313l));
-    assertEquals(4, hole1Scores.get(314l));
+    assertEquals(3, hole1Scores.get(0).getScore());
+    assertEquals(313, hole1Scores.get(0).getPlayerId());
+    assertEquals(4, hole1Scores.get(1).getScore());
+    assertEquals(314, hole1Scores.get(1).getPlayerId());
 
     assertResults(scoresByHole.getResults());
   }
@@ -55,26 +50,20 @@ class ScoreLogicTest {
     assertEquals(3, iinesResult.getHolesPlayed());
   }
 
-  private static ScoreCardEntity scoreCard() {
+  private static ScoreCardInput input() {
     var holes = IntStream.rangeClosed(1, 3)
-        .mapToObj(i -> new HoleEntity(i, i + 2))
+        .mapToObj(i -> new HoleInput(i, i + 2))
         .toList();
 
-    var course = new CourseEntity(1, holes, "Course");
-
-    var aku = new PlayerEntity(313, "Aku", "Ankka");
-    var iines = new PlayerEntity(314, "Iines", "Ankka");
-    var players = Set.of(aku, iines);
-
     var scores = List.of(
-        new ScoreEntity(1, 3, aku),
-        new ScoreEntity(2, 3, aku),
-        new ScoreEntity(3, 5, aku),
-        new ScoreEntity(1, 4, iines),
-        new ScoreEntity(2, 4, iines),
-        new ScoreEntity(3, 5, iines));
+        new ScoreInput(1, 313, 1, 3),
+        new ScoreInput(2, 313, 2, 3),
+        new ScoreInput(3, 313, 3, 5),
+        new ScoreInput(4, 314, 1, 4),
+        new ScoreInput(5, 314, 2, 4),
+        new ScoreInput(6, 314, 3, 5));
 
-    return new ScoreCardEntity(10L, course, players, scores);
+    return new ScoreCardInput(10l, holes, scores);
   }
 
 }

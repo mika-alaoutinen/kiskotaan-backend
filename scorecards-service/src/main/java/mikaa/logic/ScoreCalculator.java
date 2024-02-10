@@ -25,7 +25,7 @@ class ScoreCalculator {
 
   private static int getPar(int holeNumber, Collection<HoleInput> holes) {
     var coursePars = holes.stream().collect(
-        Collectors.toMap(HoleInput::getNumber, HoleInput::getPar));
+        Collectors.toMap(HoleInput::number, HoleInput::par));
 
     return coursePars.getOrDefault(holeNumber, 0);
   }

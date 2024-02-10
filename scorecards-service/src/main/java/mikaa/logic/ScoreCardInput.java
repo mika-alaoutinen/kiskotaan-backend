@@ -3,15 +3,13 @@ package mikaa.logic;
 import java.util.Collection;
 import java.util.List;
 
-import lombok.Value;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 
-@Value
-public class ScoreCardInput {
-  private final long id;
-  private final Collection<HoleInput> holes;
-  private final Collection<ScoreInput> scores;
+public record ScoreCardInput(
+    long id,
+    Collection<HoleInput> holes,
+    Collection<ScoreInput> scores) {
 
   public static ScoreCardInput from(ScoreCardEntity entity) {
     var holes = entity.getCourse()

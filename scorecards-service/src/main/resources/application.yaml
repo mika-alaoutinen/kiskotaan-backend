@@ -9,8 +9,7 @@ avro:
         - HolePayload.avsc
         - PlayerPayload.avsc
         - ScoreCardPayload.avsc
-        - ScoreCardByPlayerPayload.avsc
-        - ScoreCardByHolePayload.avsc
+        - ScoreCardGroupedScoresPayload.avsc
 
 quarkus:
   hibernate-orm:
@@ -28,8 +27,6 @@ mp:
       smallrye-kafka:
         apicurio:
           registry:
-            avro:
-              encoding: JSON
             auto-register: true
 
     incoming:
@@ -43,7 +40,7 @@ mp:
     outgoing:
       scorecard-state:
         topic: "Scorecards-scorecard_state"
-      # scorecard-by-hole-state:
-      #   topic: "Scorecards-scorecard_by_hole_state"
+      scorecard-by-hole-state:
+        topic: "Scorecards-scorecard_by_hole_state"
       scorecard-by-player-state:
         topic: "Scorecards-scorecard_by_player_state"

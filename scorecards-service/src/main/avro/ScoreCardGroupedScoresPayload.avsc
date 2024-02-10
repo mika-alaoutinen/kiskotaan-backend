@@ -1,6 +1,6 @@
 {
   "namespace": "mikaa.kiskotaan.scorecard",
-  "name": "ScoreCardByPlayerPayload",
+  "name": "ScoreCardGroupedScoresPayload",
   "type": "record",
   "fields": [
     {

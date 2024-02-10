@@ -3,80 +3,44 @@ package mikaa.logic;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
-
-import mikaa.feature.course.CourseEntity;
-import mikaa.feature.score.ScoreEntity;
-import mikaa.feature.scorecard.ScoreCardEntity;
+import java.util.stream.Stream;
 
 public interface ScoreLogic {
 
-  static ScoresByPlayer calculateScoresByPlayer(ScoreCardEntity scoreCard) {
+  static ScoresByPlayer scoresByPlayer(ScoreCardInput scoreCard) {
     var results = calculateRoundScores(scoreCard);
-
-    var playerScores = scoreCard.getScores()
-        .stream()
-        .collect(Collectors.groupingBy(score -> score.getPlayer().getExternalId()));
-
-    var scores = playerScores.entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            Map.Entry::getKey,
-            entry -> mapScoreEntries(entry.getValue())));
-
+    var scores = groupScoresByPlayer(scoreCard.getScores());
     return new ScoresByPlayer(results, scores);
   }
 
-  private static List<ScoreEntry> mapScoreEntries(Collection<ScoreEntity> scores) {
-    return scores.stream()
-        .map(score -> new ScoreEntry(
-            score.getId(),
-            score.getPlayer().getExternalId(),
-            score.getHole(),
-            score.getScore()))
-        .toList();
-  }
-
-  static ScoresByHole calculateScoresByHole(ScoreCardEntity scoreCard) {
+  static ScoresByHole scoresByHole(ScoreCardInput scoreCard) {
     var results = calculateRoundScores(scoreCard);
-
-    var scoresByHole = scoreCard.getScores()
-        .stream()
-        .collect(Collectors.groupingBy(ScoreEntity::getHole));
-
-    var scores = scoresByHole.entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            Entry::getKey,
-            entry -> toScoresByHole(entry.getValue())));
-
+    var scores = scoreEntries(scoreCard.getScores()).collect(Collectors.groupingBy(ScoreEntry::getHole));
     return new ScoresByHole(results, scores);
   }
 
-  private static Map<Long, Integer> toScoresByHole(Collection<ScoreEntity> scoresForHole) {
-    return scoresForHole.stream().collect(
-        Collectors.toMap(
-            score -> score.getPlayer().getExternalId(),
-            score -> score.getScore()));
-  }
-
-  private static Map<Long, PlayerScore> calculateRoundScores(ScoreCardEntity scoreCard) {
-    var playerScores = scoreCard.getScores()
-        .stream()
-        .collect(Collectors.groupingBy(score -> score.getPlayer().getExternalId()));
-
-    return playerScores.entrySet()
+  private static Map<Long, PlayerScore> calculateRoundScores(ScoreCardInput scoreCard) {
+    return groupScoresByPlayer(scoreCard.getScores())
+        .entrySet()
         .stream()
         .collect(Collectors.toMap(
             Map.Entry::getKey,
-            entry -> toPlayerScore(entry.getValue(), scoreCard.getCourse())));
+            entry -> calculatePlayerScores(entry.getValue(), scoreCard.getHoles())));
   }
 
-  private static PlayerScore toPlayerScore(Collection<ScoreEntity> playerScores, CourseEntity course) {
-    int result = ScoreCalculator.result(playerScores, course);
+  private static PlayerScore calculatePlayerScores(Collection<ScoreEntry> playerScores, Collection<HoleInput> holes) {
+    int result = ScoreCalculator.result(playerScores, holes);
     int total = ScoreCalculator.total(playerScores);
     return new PlayerScore(playerScores.size(), result, total);
+  }
+
+  private static Map<Long, List<ScoreEntry>> groupScoresByPlayer(Collection<ScoreInput> scores) {
+    return scoreEntries(scores).collect(Collectors.groupingBy(ScoreEntry::getPlayerId));
+  }
+
+  private static Stream<ScoreEntry> scoreEntries(Collection<ScoreInput> scores) {
+    return scores.stream().map(s -> new ScoreEntry(s.getId(), s.getPlayerId(), s.getHole(), s.getScore()));
   }
 
 }

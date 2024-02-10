@@ -15,6 +15,7 @@ import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
 import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
+import mikaa.logic.Mapper;
 import mikaa.logic.ScoreLogic;
 import mikaa.config.OutgoingChannels;
 import mikaa.feature.scorecard.ScoreCardEntity;
@@ -51,7 +52,7 @@ class KafkaProducer implements ScoreCardProducer {
   }
 
   private ScoreCardPayload toPayload(ScoreCardEntity entity) {
-    var results = ScoreLogic.calculateScoresByHole(entity)
+    var results = ScoreLogic.scoresByHole(Mapper.toInput(entity))
         .getResults()
         .entrySet()
         .stream()

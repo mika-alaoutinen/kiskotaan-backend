@@ -10,9 +10,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardByPlayerPayload;
+import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
+import mikaa.logic.Mapper;
 import mikaa.logic.ScoreLogic;
-import mikaa.feature.scorecard.ScoreCardEntity;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -20,9 +21,9 @@ class ScoreCardByPlayerProducer {
 
   private final ModelMapper mapper;
 
-  // ScoreCardByPlayerPayload mapPayload(ScoreCardPayload scoreCard) { ... }
-  ScoreCardByPlayerPayload mapPayload(ScoreCardEntity scoreCard) {
-    var scoresByHole = ScoreLogic.calculateScoresByHole(scoreCard);
+  ScoreCardByPlayerPayload mapPayload(ScoreCardPayload scoreCard) {
+    var input = Mapper.toInput(scoreCard);
+    var scoresByHole = ScoreLogic.scoresByHole(input);
 
     var results = scoresByHole.getResults()
         .entrySet()
@@ -31,7 +32,7 @@ class ScoreCardByPlayerProducer {
             entry -> entry.getKey().toString(),
             entry -> mapper.map(entry.getValue(), RoundResult.class)));
 
-    var scores = ScoreLogic.calculateScoresByPlayer(scoreCard)
+    var scores = ScoreLogic.scoresByPlayer(input)
         .getScores()
         .entrySet()
         .stream()
@@ -41,7 +42,7 @@ class ScoreCardByPlayerProducer {
 
     return new ScoreCardByPlayerPayload(
         scoreCard.getId(),
-        scoreCard.getCourse().getExternalId(),
+        scoreCard.getCourseId(),
         scoreCard.getPlayerIds(),
         results,
         scores);

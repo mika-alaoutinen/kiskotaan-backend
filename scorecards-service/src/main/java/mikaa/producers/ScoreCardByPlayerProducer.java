@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
+import io.smallrye.reactive.messaging.kafka.Record;
 import jakarta.enterprise.context.ApplicationScoped;
 import mikaa.config.OutgoingChannels;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
@@ -16,7 +17,7 @@ class ScoreCardByPlayerProducer {
 
   @Incoming(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL)
   @Outgoing(OutgoingChannels.SCORECARD_BY_PLAYER_STATE)
-  ScoreCardGroupedScoresEvent process(ScoreCardEvent event) {
+  Record<Long, ScoreCardGroupedScoresEvent> process(ScoreCardEvent event) {
     var scoreCard = event.getPayload();
 
     var scores = scoreCard.getScores().stream().collect(
@@ -29,7 +30,9 @@ class ScoreCardByPlayerProducer {
         scoreCard.getResults(),
         scores);
 
-    return new ScoreCardGroupedScoresEvent(event.getAction(), payload);
+    var scoreEvent = new ScoreCardGroupedScoresEvent(event.getAction(), payload);
+
+    return Record.of(event.getPayload().getId(), scoreEvent);
   }
 
 }

@@ -1,55 +1,32 @@
 package mikaa.producers;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
+import org.eclipse.microprofile.reactive.messaging.Incoming;
+import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
 import jakarta.enterprise.context.ApplicationScoped;
-import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.scorecard.RoundResult;
+import mikaa.config.OutgoingChannels;
 import mikaa.kiskotaan.scorecard.ScoreCardByPlayerPayload;
-import mikaa.kiskotaan.scorecard.ScoreCardPayload;
-import mikaa.kiskotaan.scorecard.ScoreEntry;
-import mikaa.logic.ScoreCardInput;
-import mikaa.logic.ScoreLogic;
+import mikaa.kiskotaan.scorecard.ScoreCardEvent;
 
 @ApplicationScoped
-@RequiredArgsConstructor
 class ScoreCardByPlayerProducer {
 
-  private final ModelMapper mapper;
+  @Incoming(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL)
+  @Outgoing(OutgoingChannels.SCORECARD_BY_PLAYER_STATE)
+  ScoreCardByPlayerPayload groupScoresByPlayer(ScoreCardEvent event) {
+    var scoreCard = event.getPayload();
 
-  ScoreCardByPlayerPayload mapPayload(ScoreCardPayload scoreCard) {
-    var input = ScoreCardInput.from(scoreCard);
-    var scoresByHole = ScoreLogic.scoresByHole(input);
-
-    var results = scoresByHole.getResults()
-        .entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            entry -> entry.getKey().toString(),
-            entry -> mapper.map(entry.getValue(), RoundResult.class)));
-
-    var scores = ScoreLogic.scoresByPlayer(input)
-        .getScores()
-        .entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            entry -> entry.getKey().toString(),
-            entry -> mapMany(entry.getValue(), ScoreEntry.class)));
+    var scores = scoreCard.getScores().stream().collect(
+        Collectors.groupingBy(score -> score.getPlayerId() + ""));
 
     return new ScoreCardByPlayerPayload(
         scoreCard.getId(),
         scoreCard.getCourseId(),
         scoreCard.getPlayerIds(),
-        results,
+        scoreCard.getResults(),
         scores);
-  }
-
-  private <T, R> List<R> mapMany(Collection<T> entities, Class<R> type) {
-    return entities.stream().map(e -> mapper.map(e, type)).toList();
   }
 
 }

@@ -3,7 +3,7 @@ package mikaa.logic;
 import lombok.Value;
 
 @Value
-public class ScoreEntry {
+public class ScoreInput {
   private final long id;
   private final long playerId;
   private final int hole;

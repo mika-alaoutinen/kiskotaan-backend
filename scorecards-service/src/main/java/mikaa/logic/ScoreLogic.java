@@ -10,18 +10,18 @@ public interface ScoreLogic {
 
   static ScoresByPlayer scoresByPlayer(ScoreCardInput scoreCard) {
     var results = calculateRoundScores(scoreCard);
-    var scores = groupScoresByPlayer(scoreCard.scores());
+    var scores = groupScoresByPlayer(scoreCard);
     return new ScoresByPlayer(results, scores);
   }
 
   static ScoresByHole scoresByHole(ScoreCardInput scoreCard) {
     var results = calculateRoundScores(scoreCard);
-    var scores = scoreEntries(scoreCard.scores()).collect(Collectors.groupingBy(ScoreEntry::getHole));
+    var scores = scoreEntries(scoreCard).collect(Collectors.groupingBy(ScoreEntry::getHole));
     return new ScoresByHole(results, scores);
   }
 
   private static Map<Long, PlayerScore> calculateRoundScores(ScoreCardInput scoreCard) {
-    return groupScoresByPlayer(scoreCard.scores())
+    return groupScoresByPlayer(scoreCard)
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
@@ -35,12 +35,21 @@ public interface ScoreLogic {
     return new PlayerScore(playerScores.size(), result, total);
   }
 
-  private static Map<Long, List<ScoreEntry>> groupScoresByPlayer(Collection<ScoreInput> scores) {
-    return scoreEntries(scores).collect(Collectors.groupingBy(ScoreEntry::getPlayerId));
+  private static Map<Long, List<ScoreEntry>> groupScoresByPlayer(ScoreCardInput scoreCard) {
+    return scoreEntries(scoreCard).collect(Collectors.groupingBy(ScoreEntry::getPlayerId));
   }
 
-  private static Stream<ScoreEntry> scoreEntries(Collection<ScoreInput> scores) {
-    return scores.stream().map(s -> new ScoreEntry(s.id(), s.playerId(), s.hole(), s.score()));
+  private static Stream<ScoreEntry> scoreEntries(ScoreCardInput scoreCard) {
+    return scoreCard.scores().stream().map(score -> {
+      int par = scoreCard.holes()
+          .stream()
+          .filter(hole -> hole.number() == score.hole())
+          .findFirst()
+          .map(HoleInput::par)
+          .orElse(0);
+
+      return new ScoreEntry(score.id(), score.playerId(), score.hole(), par, score.score());
+    });
   }
 
 }

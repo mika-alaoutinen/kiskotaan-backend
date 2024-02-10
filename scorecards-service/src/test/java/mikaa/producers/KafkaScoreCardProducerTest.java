@@ -25,6 +25,7 @@ import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
 import mikaa.kiskotaan.scorecard.ScoreCardGroupedScoresEvent;
+import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 
 @QuarkusTest
 class KafkaScoreCardProducerTest {
@@ -41,15 +42,7 @@ class KafkaScoreCardProducerTest {
     InMemorySink<Record<Long, ScoreCardEvent>> sink = connector.sink(OutgoingChannels.SCORECARD_STATE);
     sink.clear();
     producer.scoreCardAdded(scoreCardMock());
-
-    assertEquals(1, sink.received().size());
-
-    var record = sink.received().getFirst().getPayload();
-    assertEquals(13L, record.key());
-    assertEquals(Action.ADD, record.value().getAction());
-
-    var payload = record.value().getPayload();
-    assertEquals(1, payload.getPlayerIds().size());
+    assertStateEvent(sink, Action.ADD);
   }
 
   @ParameterizedTest
@@ -61,15 +54,7 @@ class KafkaScoreCardProducerTest {
     InMemorySink<Record<Long, ScoreCardGroupedScoresEvent>> sink = connector.sink(channel);
     sink.clear();
     producer.scoreCardAdded(scoreCardMock());
-
-    assertEquals(1, sink.received().size());
-
-    var record = sink.received().getFirst().getPayload();
-    assertEquals(13L, record.key());
-    assertEquals(Action.ADD, record.value().getAction());
-
-    var payload = record.value().getPayload();
-    assertEquals(1, payload.getPlayerIds().size());
+    assertGroupedByEvent(sink, Action.ADD);
   }
 
   @Test
@@ -77,15 +62,7 @@ class KafkaScoreCardProducerTest {
     InMemorySink<Record<Long, ScoreCardEvent>> sink = connector.sink(OutgoingChannels.SCORECARD_STATE);
     sink.clear();
     producer.scoreCardDeleted(scoreCardMock());
-
-    assertEquals(1, sink.received().size());
-
-    var record = sink.received().getFirst().getPayload();
-    assertEquals(13L, record.key());
-    assertEquals(Action.DELETE, record.value().getAction());
-
-    var payload = record.value().getPayload();
-    assertEquals(1, payload.getPlayerIds().size());
+    assertStateEvent(sink, Action.DELETE);
   }
 
   @ParameterizedTest
@@ -97,15 +74,7 @@ class KafkaScoreCardProducerTest {
     InMemorySink<Record<Long, ScoreCardGroupedScoresEvent>> sink = connector.sink(channel);
     sink.clear();
     producer.scoreCardDeleted(scoreCardMock());
-
-    assertEquals(1, sink.received().size());
-
-    var record = sink.received().getFirst().getPayload();
-    assertEquals(13L, record.key());
-    assertEquals(Action.DELETE, record.value().getAction());
-
-    var payload = record.value().getPayload();
-    assertEquals(1, payload.getPlayerIds().size());
+    assertGroupedByEvent(sink, Action.DELETE);
   }
 
   @Test
@@ -120,35 +89,47 @@ class KafkaScoreCardProducerTest {
     assertEquals(13L, record.key());
     assertEquals(Action.UPDATE, record.value().getAction());
 
-    var payload = record.value().getPayload();
+    var payload = assertStateEvent(sink, Action.UPDATE);
     assertEquals(1, payload.getResults().size());
     assertEquals(1, payload.getScores().size());
   }
 
   @Test
   void sends_update_event_to_grouped_by_hole_topic() {
-    InMemorySink<Record<Long, ScoreCardGroupedScoresEvent>> sink = connector
-        .sink(OutgoingChannels.SCORECARD_BY_HOLE_STATE);
-    sink.clear();
-    producer.scoreCardUpdated(scoreCardWithScores());
-
-    assertEquals(1, sink.received().size());
-
-    var record = sink.received().getFirst().getPayload();
-    assertEquals(13L, record.key());
-    assertEquals(Action.UPDATE, record.value().getAction());
-
-    var payload = record.value().getPayload();
-    assertEquals(1, payload.getResults().size());
-
-    var scoresByHole = payload.getScores().get("1");
-    assertEquals(1, scoresByHole.size());
+    assertScoreUpdateEvent(OutgoingChannels.SCORECARD_BY_HOLE_STATE, "1");
   }
 
   @Test
   void sends_update_event_to_grouped_by_player_topic() {
-    InMemorySink<Record<Long, ScoreCardGroupedScoresEvent>> sink = connector
-        .sink(OutgoingChannels.SCORECARD_BY_PLAYER_STATE);
+    assertScoreUpdateEvent(OutgoingChannels.SCORECARD_BY_PLAYER_STATE, "2");
+  }
+
+  private ScoreCardPayload assertStateEvent(InMemorySink<Record<Long, ScoreCardEvent>> sink, Action action) {
+    assertEquals(1, sink.received().size());
+
+    var record = sink.received().getFirst().getPayload();
+    assertEquals(13L, record.key());
+    assertEquals(action, record.value().getAction());
+
+    var payload = record.value().getPayload();
+    assertEquals(1, payload.getPlayerIds().size());
+
+    return payload;
+  }
+
+  private void assertGroupedByEvent(InMemorySink<Record<Long, ScoreCardGroupedScoresEvent>> sink, Action action) {
+    assertEquals(1, sink.received().size());
+
+    var record = sink.received().getFirst().getPayload();
+    assertEquals(13L, record.key());
+    assertEquals(action, record.value().getAction());
+
+    var payload = record.value().getPayload();
+    assertEquals(1, payload.getPlayerIds().size());
+  }
+
+  private void assertScoreUpdateEvent(String channel, String scoreKey) {
+    InMemorySink<Record<Long, ScoreCardGroupedScoresEvent>> sink = connector.sink(channel);
     sink.clear();
     producer.scoreCardUpdated(scoreCardWithScores());
 
@@ -161,7 +142,7 @@ class KafkaScoreCardProducerTest {
     var payload = record.value().getPayload();
     assertEquals(1, payload.getResults().size());
 
-    var scoresByPlayer = payload.getScores().get("2");
+    var scoresByPlayer = payload.getScores().get(scoreKey);
     assertEquals(1, scoresByPlayer.size());
   }
 

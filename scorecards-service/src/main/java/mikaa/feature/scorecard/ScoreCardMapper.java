@@ -12,6 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
+import mikaa.logic.Mapper;
 import mikaa.logic.PlayerScore;
 import mikaa.logic.ScoreLogic;
 import mikaa.model.CourseDTO;
@@ -28,7 +29,8 @@ class ScoreCardMapper {
   private final ModelMapper mapper;
 
   ScoreCardDTO toDto(ScoreCardEntity scoreCard) {
-    var scoresByPlayer = ScoreLogic.calculateScoresByPlayer(scoreCard);
+    var input = Mapper.toInput(scoreCard);
+    var scoresByPlayer = ScoreLogic.scoresByPlayer(input);
 
     var scores = scoresByPlayer.getScores()
         .entrySet()
@@ -46,7 +48,8 @@ class ScoreCardMapper {
   }
 
   ScoreCardSummaryDTO toSummary(ScoreCardEntity scoreCard) {
-    var scoresByPlayer = ScoreLogic.calculateScoresByPlayer(scoreCard);
+    var input = Mapper.toInput(scoreCard);
+    var scoresByPlayer = ScoreLogic.scoresByPlayer(input);
 
     return new ScoreCardSummaryDTO()
         .id(BigDecimal.valueOf(scoreCard.getId()))

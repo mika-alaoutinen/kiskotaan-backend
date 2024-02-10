@@ -3,33 +3,29 @@ package mikaa.logic;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import mikaa.feature.course.CourseEntity;
-import mikaa.feature.course.HoleEntity;
-import mikaa.feature.score.ScoreEntity;
-
 class ScoreCalculator {
 
   private ScoreCalculator() {
     // Do not initiate
   }
 
-  private static record ScoreEntry(int par, int score) {
+  private static record Score(int par, int score) {
   }
 
-  static int result(Collection<ScoreEntity> playerScores, CourseEntity course) {
+  static int result(Collection<ScoreEntry> playerScores, Collection<HoleInput> holes) {
     return playerScores.stream()
-        .map(s -> new ScoreEntry(getPar(s.getHole(), course), s.getScore()))
+        .map(s -> new Score(getPar(s.getHole(), holes), s.getScore()))
         .mapToInt(entry -> entry.score - entry.par)
         .sum();
   }
 
-  static int total(Collection<ScoreEntity> scores) {
-    return scores.stream().mapToInt(ScoreEntity::getScore).sum();
+  static int total(Collection<ScoreEntry> scores) {
+    return scores.stream().mapToInt(ScoreEntry::getScore).sum();
   }
 
-  private static int getPar(int holeNumber, CourseEntity course) {
-    var coursePars = course.getHoles().stream().collect(
-        Collectors.toMap(HoleEntity::getNumber, HoleEntity::getPar));
+  private static int getPar(int holeNumber, Collection<HoleInput> holes) {
+    var coursePars = holes.stream().collect(
+        Collectors.toMap(HoleInput::getNumber, HoleInput::getPar));
 
     return coursePars.getOrDefault(holeNumber, 0);
   }

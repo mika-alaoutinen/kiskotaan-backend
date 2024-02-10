@@ -6,9 +6,10 @@ import org.modelmapper.ModelMapper;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardByHolePayload;
+import mikaa.kiskotaan.scorecard.ScoreCardPayload;
+import mikaa.logic.ScoreCardInput;
 import mikaa.logic.ScoreLogic;
 
 @ApplicationScoped
@@ -17,9 +18,8 @@ class ScoreCardByHoleProducer {
 
   private final ModelMapper mapper;
 
-  // ScoreCardByHolePayload mapPayload(ScoreCardPayload scoreCard) { ... }
-  ScoreCardByHolePayload mapPayload(ScoreCardEntity scoreCard) {
-    var results = ScoreLogic.calculateScoresByHole(scoreCard)
+  ScoreCardByHolePayload mapPayload(ScoreCardPayload scoreCard) {
+    var results = ScoreLogic.scoresByHole(ScoreCardInput.from(scoreCard))
         .getResults()
         .entrySet()
         .stream()
@@ -29,7 +29,7 @@ class ScoreCardByHoleProducer {
 
     return new ScoreCardByHolePayload(
         scoreCard.getId(),
-        scoreCard.getCourse().getExternalId(),
+        scoreCard.getCourseId(),
         scoreCard.getPlayerIds(),
         results);
   }

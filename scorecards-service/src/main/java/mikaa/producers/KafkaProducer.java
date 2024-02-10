@@ -15,8 +15,12 @@ import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
 import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
+import mikaa.logic.ScoreCardInput;
 import mikaa.logic.ScoreLogic;
 import mikaa.config.OutgoingChannels;
+import mikaa.feature.course.CourseEntity;
+import mikaa.feature.course.HoleEntity;
+import mikaa.feature.score.ScoreEntity;
 import mikaa.feature.scorecard.ScoreCardEntity;
 
 @ApplicationScoped
@@ -51,7 +55,7 @@ class KafkaProducer implements ScoreCardProducer {
   }
 
   private ScoreCardPayload toPayload(ScoreCardEntity entity) {
-    var results = ScoreLogic.calculateScoresByHole(entity)
+    var results = ScoreLogic.scoresByHole(ScoreCardInput.from(entity))
         .getResults()
         .entrySet()
         .stream()
@@ -61,7 +65,7 @@ class KafkaProducer implements ScoreCardProducer {
 
     var scores = entity.getScores()
         .stream()
-        .map(score -> mapper.map(score, ScoreEntry.class))
+        .map(score -> mapScore(score, entity.getCourse()))
         .toList();
 
     return new ScoreCardPayload(
@@ -70,6 +74,19 @@ class KafkaProducer implements ScoreCardProducer {
         entity.getPlayerIds(),
         results,
         scores);
+  }
+
+  private ScoreEntry mapScore(ScoreEntity score, CourseEntity course) {
+    var entry = mapper.map(score, ScoreEntry.class);
+    int par = course.getHoles()
+        .stream()
+        .filter(hole -> hole.getNumber() == score.getHole())
+        .findFirst()
+        .map(HoleEntity::getPar)
+        .orElse(0);
+
+    entry.setPar(par);
+    return entry;
   }
 
 }

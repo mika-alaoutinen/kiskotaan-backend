@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
-import io.smallrye.reactive.messaging.kafka.Record;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
@@ -24,7 +23,6 @@ import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
 import mikaa.kiskotaan.scorecard.ScoreCardPayload;
-import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
 import mikaa.feature.player.PlayerEntity;
@@ -53,13 +51,13 @@ class ScoreEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
-  private InMemorySink<Record<Long, ScoreCardEvent>> sink;
+  private InMemorySink<ScoreCardEvent> sink;
   private ScoreService service;
 
   @BeforeEach
   void setup() {
     service = new ScoreService(playerFinder, scoreCardFinder, producer, repository);
-    sink = connector.sink(OutgoingChannels.SCORECARD_STATE);
+    sink = connector.sink(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL);
     sink.clear();
   }
 
@@ -106,10 +104,9 @@ class ScoreEventsTest {
     assertEquals(1, sink.received().size());
 
     var record = sink.received().get(0).getPayload();
-    assertEquals(Action.UPDATE, record.value().getAction());
+    assertEquals(Action.UPDATE, record.getAction());
 
-    var payload = record.value().getPayload();
-    assertEquals(record.key(), payload.getId());
+    var payload = record.getPayload();
     assertEquals(scoreCardMock().getId(), payload.getId());
     assertEquals(List.of(playerMock().getExternalId()), payload.getPlayerIds());
 

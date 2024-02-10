@@ -11,15 +11,18 @@ mp:
     incoming:
       course-state:
         connector: smallrye-in-memory
-        topic: "Courses.course_state"
+        topic: "Courses-course_state"
       hole-state:
         connector: smallrye-in-memory
-        topic: "Courses.hole_state"
+        topic: "Courses-hole_state"
       player-state:
         connector: smallrye-in-memory
-        topic: "Players.player_state"
+        topic: "Players-player_state"
 
     outgoing:
+      internal-scorecard-events:
+        connector: smallrye-in-memory
+        topic: internal-scorecard-events
       scorecard-state:
         connector: smallrye-in-memory
         topic: "Scorecards-scorecard_state"

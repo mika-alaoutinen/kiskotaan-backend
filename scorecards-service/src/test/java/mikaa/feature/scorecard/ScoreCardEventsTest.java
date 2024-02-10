@@ -15,12 +15,10 @@ import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
-import io.smallrye.reactive.messaging.kafka.Record;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
@@ -49,13 +47,13 @@ class ScoreCardEventsTest {
   @InjectMock
   private PlayerFinder playerFinder;
 
-  private InMemorySink<Record<Long, ScoreCardEvent>> sink;
+  private InMemorySink<ScoreCardEvent> sink;
   private ScoreCardService service;
 
   @BeforeEach
   void setup() {
     service = new ScoreCardService(courseFinder, playerFinder, producer, repository);
-    sink = connector.sink(OutgoingChannels.SCORECARD_STATE);
+    sink = connector.sink(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL);
     sink.clear();
   }
 
@@ -85,10 +83,9 @@ class ScoreCardEventsTest {
     assertEquals(1, sink.received().size());
 
     var record = sink.received().get(0).getPayload();
-    assertEquals(action, record.value().getAction());
+    assertEquals(action, record.getAction());
 
-    var payload = record.value().getPayload();
-    assertEquals(payload.getId(), record.key());
+    var payload = record.getPayload();
     assertEquals(1l, payload.getCourseId());
     assertEquals(1, payload.getPlayerIds().size());
     assertEquals(2l, payload.getPlayerIds().get(0));

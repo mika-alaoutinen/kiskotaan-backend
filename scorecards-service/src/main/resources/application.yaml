@@ -27,6 +27,8 @@ mp:
       smallrye-kafka:
         apicurio:
           registry:
+            avro:
+              encoding: JSON
             auto-register: true
 
     incoming:

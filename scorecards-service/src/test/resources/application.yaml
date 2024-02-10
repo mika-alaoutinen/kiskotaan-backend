@@ -23,9 +23,9 @@ mp:
       scorecard-state:
         connector: smallrye-in-memory
         topic: "Scorecards-scorecard_state"
-      # scorecard-by-hole-state:
-      #   connector: smallrye-in-memory
-      #   topic: "Scorecards-scorecard_by_hole_state"
-      # scorecard-by-player-state:
-      #   connector: smallrye-in-memory
-      #   topic: "Scorecards-scorecard_by_player_state"
+      scorecard-by-hole-state:
+        connector: smallrye-in-memory
+        topic: "Scorecards-scorecard_by_hole_state"
+      scorecard-by-player-state:
+        connector: smallrye-in-memory
+        topic: "Scorecards-scorecard_by_player_state"

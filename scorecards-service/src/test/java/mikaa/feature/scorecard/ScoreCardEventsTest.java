@@ -89,6 +89,7 @@ class ScoreCardEventsTest {
     assertEquals(1l, payload.getCourseId());
     assertEquals(1, payload.getPlayerIds().size());
     assertEquals(2l, payload.getPlayerIds().get(0));
+    assertTrue(payload.getResults().isEmpty());
     assertTrue(payload.getScores().isEmpty());
   }
 

@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardByHolePayload;
 import mikaa.kiskotaan.scorecard.ScoreCardPayload;
-import mikaa.logic.Mapper;
+import mikaa.logic.ScoreCardInput;
 import mikaa.logic.ScoreLogic;
 
 @ApplicationScoped
@@ -19,7 +19,7 @@ class ScoreCardByHoleProducer {
   private final ModelMapper mapper;
 
   ScoreCardByHolePayload mapPayload(ScoreCardPayload scoreCard) {
-    var results = ScoreLogic.scoresByHole(Mapper.toInput(scoreCard))
+    var results = ScoreLogic.scoresByHole(ScoreCardInput.from(scoreCard))
         .getResults()
         .entrySet()
         .stream()

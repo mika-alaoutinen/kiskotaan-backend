@@ -12,7 +12,7 @@ import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardByPlayerPayload;
 import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
-import mikaa.logic.Mapper;
+import mikaa.logic.ScoreCardInput;
 import mikaa.logic.ScoreLogic;
 
 @ApplicationScoped
@@ -22,7 +22,7 @@ class ScoreCardByPlayerProducer {
   private final ModelMapper mapper;
 
   ScoreCardByPlayerPayload mapPayload(ScoreCardPayload scoreCard) {
-    var input = Mapper.toInput(scoreCard);
+    var input = ScoreCardInput.from(scoreCard);
     var scoresByHole = ScoreLogic.scoresByHole(input);
 
     var results = scoresByHole.getResults()

@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Test;
 
@@ -51,19 +50,15 @@ class ScoreLogicTest {
   }
 
   private static ScoreCardInput input() {
-    var holes = IntStream.rangeClosed(1, 3)
-        .mapToObj(i -> new HoleInput(i, i + 2))
-        .toList();
-
     var scores = List.of(
-        new ScoreInput(1, 313, 1, 3),
-        new ScoreInput(2, 313, 2, 3),
-        new ScoreInput(3, 313, 3, 5),
-        new ScoreInput(4, 314, 1, 4),
-        new ScoreInput(5, 314, 2, 4),
-        new ScoreInput(6, 314, 3, 5));
+        new ScoreInput(1, 313, 1, 3, 3),
+        new ScoreInput(2, 313, 2, 4, 3),
+        new ScoreInput(3, 313, 3, 5, 5),
+        new ScoreInput(4, 314, 1, 3, 4),
+        new ScoreInput(5, 314, 2, 4, 4),
+        new ScoreInput(6, 314, 3, 5, 5));
 
-    return new ScoreCardInput(10l, holes, scores);
+    return new ScoreCardInput(10l, scores);
   }
 
 }

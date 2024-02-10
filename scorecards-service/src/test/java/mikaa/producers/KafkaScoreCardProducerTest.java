@@ -20,6 +20,7 @@ import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
 import mikaa.feature.player.PlayerEntity;
+import mikaa.feature.score.ScoreEntity;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
@@ -107,6 +108,63 @@ class KafkaScoreCardProducerTest {
     assertEquals(1, payload.getPlayerIds().size());
   }
 
+  @Test
+  void sends_update_event_to_kafka_state_topic() {
+    InMemorySink<Record<Long, ScoreCardEvent>> sink = connector.sink(OutgoingChannels.SCORECARD_STATE);
+    sink.clear();
+    producer.scoreCardUpdated(scoreCardWithScores());
+
+    assertEquals(1, sink.received().size());
+
+    var record = sink.received().getFirst().getPayload();
+    assertEquals(13L, record.key());
+    assertEquals(Action.UPDATE, record.value().getAction());
+
+    var payload = record.value().getPayload();
+    assertEquals(1, payload.getResults().size());
+    assertEquals(1, payload.getScores().size());
+  }
+
+  @Test
+  void sends_update_event_to_grouped_by_hole_topic() {
+    InMemorySink<Record<Long, ScoreCardGroupedScoresEvent>> sink = connector
+        .sink(OutgoingChannels.SCORECARD_BY_HOLE_STATE);
+    sink.clear();
+    producer.scoreCardUpdated(scoreCardWithScores());
+
+    assertEquals(1, sink.received().size());
+
+    var record = sink.received().getFirst().getPayload();
+    assertEquals(13L, record.key());
+    assertEquals(Action.UPDATE, record.value().getAction());
+
+    var payload = record.value().getPayload();
+    assertEquals(1, payload.getResults().size());
+
+    var scoresByHole = payload.getScores().get("1");
+    assertEquals(1, scoresByHole.size());
+  }
+
+  @Test
+  void sends_update_event_to_grouped_by_player_topic() {
+    InMemorySink<Record<Long, ScoreCardGroupedScoresEvent>> sink = connector
+        .sink(OutgoingChannels.SCORECARD_BY_PLAYER_STATE);
+    sink.clear();
+    producer.scoreCardUpdated(scoreCardWithScores());
+
+    assertEquals(1, sink.received().size());
+
+    var record = sink.received().getFirst().getPayload();
+    assertEquals(13L, record.key());
+    assertEquals(Action.UPDATE, record.value().getAction());
+
+    var payload = record.value().getPayload();
+    assertEquals(1, payload.getResults().size());
+
+    var scoresByPlayer = payload.getScores().get("2");
+    assertEquals(1, scoresByPlayer.size());
+  }
+
   private static CourseEntity courseMock() {
     return new CourseEntity(1l, List.of(new HoleEntity(1, 5)), "Course");
   }
@@ -117,6 +175,12 @@ class KafkaScoreCardProducerTest {
 
   private static ScoreCardEntity scoreCardMock() {
     return new ScoreCardEntity(13L, courseMock(), Set.of(playerMock()), new ArrayList<>());
+  }
+
+  private static ScoreCardEntity scoreCardWithScores() {
+    var scoreCard = scoreCardMock();
+    scoreCard.addScore(new ScoreEntity(1, 4, playerMock()));
+    return scoreCard;
   }
 
 }

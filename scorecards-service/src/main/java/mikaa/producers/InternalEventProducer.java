@@ -1,6 +1,6 @@
 package mikaa.producers;
 
-import io.smallrye.reactive.messaging.kafka.Record;
+import io.smallrye.reactive.messaging.annotations.Broadcast;
 
 import java.util.stream.Collectors;
 
@@ -17,21 +17,26 @@ import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
 import mikaa.logic.ScoreCardInput;
 import mikaa.logic.ScoreLogic;
-import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
 import mikaa.feature.score.ScoreEntity;
 import mikaa.feature.scorecard.ScoreCardEntity;
 
+/**
+ * Broadcasts messages about score card events to an internal application
+ * channel. These messages can then be consumed by other producers, such as a
+ * Kafka producer, and sent to external message brokers.
+ */
 @ApplicationScoped
-class KafkaProducer implements ScoreCardProducer {
+class InternalEventProducer implements ScoreCardProducer {
 
   @Inject
   private ModelMapper mapper;
 
   @Inject
-  @Channel(OutgoingChannels.SCORECARD_STATE)
-  Emitter<Record<Long, ScoreCardEvent>> emitter;
+  @Broadcast
+  @Channel(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL)
+  Emitter<ScoreCardEvent> emitter;
 
   @Override
   public void scoreCardAdded(ScoreCardEntity entity) {
@@ -50,8 +55,7 @@ class KafkaProducer implements ScoreCardProducer {
 
   private void sendEvent(Action action, ScoreCardEntity entity) {
     var event = new ScoreCardEvent(action, toPayload(entity));
-    var record = Record.of(entity.getId(), event);
-    emitter.send(record).toCompletableFuture().join();
+    emitter.send(event).toCompletableFuture().join();
   }
 
   private ScoreCardPayload toPayload(ScoreCardEntity entity) {

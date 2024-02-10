@@ -24,7 +24,7 @@ import mikaa.feature.score.ScoreEntity;
 import mikaa.feature.scorecard.ScoreCardEntity;
 
 @ApplicationScoped
-class KafkaProducer implements ScoreCardProducer {
+class ScoreCardStateProducer implements ScoreCardProducer {
 
   @Inject
   private ModelMapper mapper;

@@ -22,13 +22,8 @@ import mikaa.feature.course.HoleEntity;
 import mikaa.feature.score.ScoreEntity;
 import mikaa.feature.scorecard.ScoreCardEntity;
 
-/**
- * Broadcasts messages about score card events to an internal application
- * channel. These messages can then be consumed by other producers, such as a
- * Kafka producer, and sent to external message brokers.
- */
 @ApplicationScoped
-class InternalEventProducer implements ScoreCardProducer {
+class ScoreCardStateProducer implements ScoreCardProducer {
 
   @Inject
   private ModelMapper mapper;

@@ -17,12 +17,16 @@ import mikaa.kiskotaan.scorecard.ScoreCardGroupedScoresEvent;
 import mikaa.kiskotaan.scorecard.ScoreCardGroupedScoresPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
 
+/**
+ * Listens to the scorecard state topic and processes events sent to that topic
+ * into two downstream topics.
+ */
 @ApplicationScoped
-class KafkaScoreCardProducer {
+class ScoreCardProcessor {
 
   @Incoming(IncomingChannels.SCORECARD_STATE)
   @Outgoing(OutgoingChannels.SCORECARD_BY_HOLE_STATE)
-  Uni<Record<Long, ScoreCardGroupedScoresEvent>> processScoresByHoleEvent(ScoreCardEvent event) {
+  Uni<Record<Long, ScoreCardGroupedScoresEvent>> sendScoresByHoleEvent(ScoreCardEvent event) {
     var scores = event.getPayload()
         .getScores()
         .stream()
@@ -33,7 +37,7 @@ class KafkaScoreCardProducer {
 
   @Incoming(IncomingChannels.SCORECARD_STATE)
   @Outgoing(OutgoingChannels.SCORECARD_BY_PLAYER_STATE)
-  Uni<Record<Long, ScoreCardGroupedScoresEvent>> processScoresByPlayerEvent(ScoreCardEvent event) {
+  Uni<Record<Long, ScoreCardGroupedScoresEvent>> sendScoresByPlayerEvent(ScoreCardEvent event) {
     var scores = event.getPayload()
         .getScores()
         .stream()

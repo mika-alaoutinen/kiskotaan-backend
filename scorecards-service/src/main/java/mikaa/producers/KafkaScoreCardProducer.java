@@ -19,19 +19,12 @@ import mikaa.kiskotaan.scorecard.ScoreEntry;
 class KafkaScoreCardProducer {
 
   @Incoming(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL)
-  @Outgoing(OutgoingChannels.SCORECARD_STATE)
-  Record<Long, ScoreCardEvent> processStateEvent(ScoreCardEvent event) {
-    return Record.of(event.getPayload().getId(), event);
-  }
-
-  @Incoming(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL)
   @Outgoing(OutgoingChannels.SCORECARD_BY_HOLE_STATE)
   Record<Long, ScoreCardGroupedScoresEvent> processScoresByHoleEvent(ScoreCardEvent event) {
     var scores = event.getPayload()
         .getScores()
         .stream()
-        .collect(
-            Collectors.groupingBy(score -> score.getHole() + ""));
+        .collect(Collectors.groupingBy(score -> score.getHole() + ""));
 
     return sendEvent(event, scores);
   }

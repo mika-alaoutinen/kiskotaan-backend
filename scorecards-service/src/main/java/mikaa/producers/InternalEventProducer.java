@@ -8,6 +8,7 @@ import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.modelmapper.ModelMapper;
 
+import io.smallrye.reactive.messaging.kafka.Record;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
@@ -17,6 +18,7 @@ import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
 import mikaa.logic.ScoreCardInput;
 import mikaa.logic.ScoreLogic;
+import mikaa.config.OutgoingChannels;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
 import mikaa.feature.score.ScoreEntity;
@@ -38,19 +40,31 @@ class InternalEventProducer implements ScoreCardProducer {
   @Channel(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL)
   Emitter<ScoreCardEvent> emitter;
 
+  @Inject
+  @Channel(OutgoingChannels.SCORECARD_STATE)
+  Emitter<Record<Long, ScoreCardEvent>> stateEmitter;
+
   @Override
   public void scoreCardAdded(ScoreCardEntity entity) {
+    sendStateEvent(new ScoreCardEvent(Action.ADD, toPayload(entity)));
     sendEvent(Action.ADD, entity);
   }
 
   @Override
   public void scoreCardDeleted(ScoreCardEntity entity) {
+    sendStateEvent(new ScoreCardEvent(Action.DELETE, toPayload(entity)));
     sendEvent(Action.DELETE, entity);
   }
 
   @Override
   public void scoreCardUpdated(ScoreCardEntity entity) {
+    sendStateEvent(new ScoreCardEvent(Action.UPDATE, toPayload(entity)));
     sendEvent(Action.UPDATE, entity);
+  }
+
+  private void sendStateEvent(ScoreCardEvent event) {
+    var record = Record.of(event.getPayload().getId(), event);
+    stateEmitter.send(record).toCompletableFuture().join();
   }
 
   private void sendEvent(Action action, ScoreCardEntity entity) {

@@ -1,7 +1,5 @@
 package mikaa.producers;
 
-import io.smallrye.reactive.messaging.annotations.Broadcast;
-
 import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -36,40 +34,28 @@ class InternalEventProducer implements ScoreCardProducer {
   private ModelMapper mapper;
 
   @Inject
-  @Broadcast
-  @Channel(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL)
-  Emitter<ScoreCardEvent> emitter;
-
-  @Inject
   @Channel(OutgoingChannels.SCORECARD_STATE)
-  Emitter<Record<Long, ScoreCardEvent>> stateEmitter;
+  Emitter<Record<Long, ScoreCardEvent>> emitter;
 
   @Override
   public void scoreCardAdded(ScoreCardEntity entity) {
-    sendStateEvent(new ScoreCardEvent(Action.ADD, toPayload(entity)));
     sendEvent(Action.ADD, entity);
   }
 
   @Override
   public void scoreCardDeleted(ScoreCardEntity entity) {
-    sendStateEvent(new ScoreCardEvent(Action.DELETE, toPayload(entity)));
     sendEvent(Action.DELETE, entity);
   }
 
   @Override
   public void scoreCardUpdated(ScoreCardEntity entity) {
-    sendStateEvent(new ScoreCardEvent(Action.UPDATE, toPayload(entity)));
     sendEvent(Action.UPDATE, entity);
-  }
-
-  private void sendStateEvent(ScoreCardEvent event) {
-    var record = Record.of(event.getPayload().getId(), event);
-    stateEmitter.send(record).toCompletableFuture().join();
   }
 
   private void sendEvent(Action action, ScoreCardEntity entity) {
     var event = new ScoreCardEvent(action, toPayload(entity));
-    emitter.send(event).toCompletableFuture().join();
+    var record = Record.of(entity.getId(), event);
+    emitter.send(record).toCompletableFuture().join();
   }
 
   private ScoreCardPayload toPayload(ScoreCardEntity entity) {

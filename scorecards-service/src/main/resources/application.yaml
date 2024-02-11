@@ -38,6 +38,9 @@ mp:
         topic: "Courses-hole_state"
       player-state:
         topic: "Players-player_state"
+      scorecard-state-incoming: # channels need to have unique names
+        broadcast: true
+        topic: "Scorecards-scorecard_state"
 
     outgoing:
       scorecard-state:

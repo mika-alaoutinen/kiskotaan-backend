@@ -18,11 +18,12 @@ mp:
       player-state:
         connector: smallrye-in-memory
         topic: "Players-player_state"
+      scorecard-state-incoming:
+        broadcast: true
+        connector: smallrye-in-memory
+        topic: "Scorecards-scorecard_state"
 
     outgoing:
-      internal-scorecard-events:
-        connector: smallrye-in-memory
-        topic: internal-scorecard-events
       scorecard-state:
         connector: smallrye-in-memory
         topic: "Scorecards-scorecard_state"

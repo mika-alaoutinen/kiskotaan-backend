@@ -7,38 +7,37 @@ import java.util.stream.Collectors;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
+import io.smallrye.mutiny.Uni;
 import io.smallrye.reactive.messaging.kafka.Record;
 import jakarta.enterprise.context.ApplicationScoped;
+import mikaa.config.IncomingChannels;
 import mikaa.config.OutgoingChannels;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
 import mikaa.kiskotaan.scorecard.ScoreCardGroupedScoresEvent;
 import mikaa.kiskotaan.scorecard.ScoreCardGroupedScoresPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
 
+/**
+ * Listens to the scorecard state topic and processes events sent to that topic
+ * into two downstream topics.
+ */
 @ApplicationScoped
-class KafkaScoreCardProducer {
+class ScoreCardProcessor {
 
-  @Incoming(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL)
-  @Outgoing(OutgoingChannels.SCORECARD_STATE)
-  Record<Long, ScoreCardEvent> processStateEvent(ScoreCardEvent event) {
-    return Record.of(event.getPayload().getId(), event);
-  }
-
-  @Incoming(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL)
+  @Incoming(IncomingChannels.SCORECARD_STATE)
   @Outgoing(OutgoingChannels.SCORECARD_BY_HOLE_STATE)
-  Record<Long, ScoreCardGroupedScoresEvent> processScoresByHoleEvent(ScoreCardEvent event) {
+  Uni<Record<Long, ScoreCardGroupedScoresEvent>> sendScoresByHoleEvent(ScoreCardEvent event) {
     var scores = event.getPayload()
         .getScores()
         .stream()
-        .collect(
-            Collectors.groupingBy(score -> score.getHole() + ""));
+        .collect(Collectors.groupingBy(score -> score.getHole() + ""));
 
     return sendEvent(event, scores);
   }
 
-  @Incoming(ScoreCardProducer.INTERNAL_SCORECARD_CHANNEL)
+  @Incoming(IncomingChannels.SCORECARD_STATE)
   @Outgoing(OutgoingChannels.SCORECARD_BY_PLAYER_STATE)
-  Record<Long, ScoreCardGroupedScoresEvent> processScoresByPlayerEvent(ScoreCardEvent event) {
+  Uni<Record<Long, ScoreCardGroupedScoresEvent>> sendScoresByPlayerEvent(ScoreCardEvent event) {
     var scores = event.getPayload()
         .getScores()
         .stream()
@@ -47,7 +46,7 @@ class KafkaScoreCardProducer {
     return sendEvent(event, scores);
   }
 
-  private static Record<Long, ScoreCardGroupedScoresEvent> sendEvent(
+  private static Uni<Record<Long, ScoreCardGroupedScoresEvent>> sendEvent(
       ScoreCardEvent event,
       Map<String, List<ScoreEntry>> groupedScores) {
     var scoreCard = event.getPayload();
@@ -60,8 +59,9 @@ class KafkaScoreCardProducer {
         groupedScores);
 
     var scoreEvent = new ScoreCardGroupedScoresEvent(event.getAction(), payload);
+    var record = Record.of(event.getPayload().getId(), scoreEvent);
 
-    return Record.of(event.getPayload().getId(), scoreEvent);
+    return Uni.createFrom().item(record);
   }
 
 }

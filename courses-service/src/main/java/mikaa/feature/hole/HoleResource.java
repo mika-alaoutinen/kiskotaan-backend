@@ -2,27 +2,28 @@ package mikaa.feature.hole;
 
 import java.util.List;
 
-import org.modelmapper.ModelMapper;
-
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.api.HolesApi;
+import mikaa.domain.Hole;
+import mikaa.domain.NewHole;
+import mikaa.domain.UpdatedHole;
 import mikaa.model.HoleDTO;
 import mikaa.model.UpdatedHoleDTO;
 
 @RequiredArgsConstructor
 class HoleResource implements HolesApi {
 
-  private static final ModelMapper MAPPER = new ModelMapper();
   private final HoleService service;
 
   @Override
   @Transactional
   public HoleDTO addHole(Integer id, @Valid @NotNull HoleDTO holeDTO) {
-    var hole = service.add(id, MAPPER.map(holeDTO, HoleEntity.class));
+    var newHole = new NewHole(holeDTO.getNumber(), holeDTO.getPar(), holeDTO.getDistance());
+    var hole = service.add(id, newHole);
     return mapHole(hole);
   }
 
@@ -48,12 +49,16 @@ class HoleResource implements HolesApi {
   @Override
   @Transactional
   public HoleDTO updateHole(Integer id, Integer number, @Valid @NotNull UpdatedHoleDTO updatedHole) {
-    var hole = service.update(id, number, MAPPER.map(updatedHole, HoleEntity.class));
+    var hole = service.update(id, number, new UpdatedHole(updatedHole.getPar(), updatedHole.getDistance()));
     return mapHole(hole);
   }
 
-  private static HoleDTO mapHole(HoleEntity entity) {
-    return MAPPER.map(entity, HoleDTO.class);
+  private static HoleDTO mapHole(Hole hole) {
+    var dto = new HoleDTO();
+    dto.setNumber(hole.number());
+    dto.setPar(hole.par());
+    dto.setDistance(hole.distance());
+    return dto;
   }
 
 }

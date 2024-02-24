@@ -7,6 +7,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.domain.Hole;
+import mikaa.domain.NewHole;
+import mikaa.domain.UpdatedHole;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.kiskotaan.course.HolePayload;
@@ -20,39 +23,43 @@ class HoleService {
   private final HoleProducer producer;
   private final HoleRepository repository;
 
-  List<HoleEntity> findHoles(long courseId) {
-    return courseFinder.findCourse(courseId)
+  List<Hole> findHoles(long courseId) {
+    var holes = courseFinder.findCourse(courseId)
         .map(CourseEntity::getHoles)
         .orElseGet(Collections::emptyList);
+
+    return holes.stream().map(HoleService::toHole).toList();
   }
 
-  HoleEntity findOne(long courseId, int holeNumber) {
+  Hole findOne(long courseId, int holeNumber) {
     var course = courseFinder.findCourseOrThrow(courseId);
-    return findHoleOrThrow(course, holeNumber);
+    var hole = findHoleOrThrow(course, holeNumber);
+    return toHole(hole);
   }
 
-  HoleEntity add(long courseId, HoleEntity newHole) {
+  Hole add(long courseId, NewHole newHole) {
     var course = courseFinder.findCourseOrThrow(courseId);
+    HoleValidator.validateUniqueHoleNumber(newHole.number(), course);
 
-    HoleValidator.validateUniqueHoleNumber(newHole.getNumber(), course);
-    course.addHole(newHole);
+    var holeEntity = new HoleEntity(newHole.number(), newHole.par(), newHole.distance());
+    course.addHole(holeEntity);
 
-    repository.persist(newHole);
-    producer.holeAdded(payload(newHole));
+    repository.persist(holeEntity);
+    producer.holeAdded(payload(holeEntity));
 
-    return newHole;
+    return toHole(holeEntity);
   }
 
-  HoleEntity update(long courseId, int holeNumber, HoleEntity updatedHole) {
+  Hole update(long courseId, int holeNumber, UpdatedHole updatedHole) {
     var course = courseFinder.findCourseOrThrow(courseId);
     var hole = findHoleOrThrow(course, holeNumber);
 
-    hole.setDistance(updatedHole.getDistance());
-    hole.setPar(updatedHole.getPar());
+    hole.setDistance(updatedHole.distance());
+    hole.setPar(updatedHole.par());
 
     producer.holeUpdated(payload(hole));
 
-    return hole;
+    return toHole(hole);
   }
 
   void delete(long courseId, int holeNumber) {
@@ -76,6 +83,10 @@ class HoleService {
         entity.getNumber(),
         entity.getPar(),
         entity.getDistance());
+  }
+
+  private static Hole toHole(HoleEntity entity) {
+    return new Hole(entity.getId(), entity.getNumber(), entity.getPar(), entity.getDistance());
   }
 
 }

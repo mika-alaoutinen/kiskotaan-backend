@@ -13,8 +13,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import mikaa.kiskotaan.player.PlayerPayload;
 import mikaa.model.NewPlayerDTO;
+import mikaa.players.domain.Player;
 import mikaa.players.errors.BadRequestException;
 import mikaa.players.infra.GlobalExceptionHandler;
 import mikaa.players.producers.PlayerProducer;
@@ -103,7 +103,7 @@ class PlayersControllerTest {
         .andExpect(jsonPath("$.id").value(1));
 
     MvcUtils.verifyName(result, "Pekka", "Kana");
-    verify(producer, atLeastOnce()).playerAdded(any(PlayerPayload.class));
+    verify(producer, atLeastOnce()).playerAdded(any(Player.class));
   }
 
   @MethodSource("invalidNewPlayers")
@@ -152,7 +152,7 @@ class PlayersControllerTest {
         .andExpect(jsonPath("$.id").value(1));
 
     MvcUtils.verifyName(result, "Edited", "Edited");
-    verify(producer, atLeastOnce()).playerUpdated(any(PlayerPayload.class));
+    verify(producer, atLeastOnce()).playerUpdated(any(Player.class));
   }
 
   @Test
@@ -208,7 +208,7 @@ class PlayersControllerTest {
         .andExpect(status().isNoContent());
 
     verify(repository, atLeastOnce()).deleteById(1L);
-    verify(producer, atLeastOnce()).playerDeleted(any(PlayerPayload.class));
+    verify(producer, atLeastOnce()).playerDeleted(any(Player.class));
   }
 
   @Test

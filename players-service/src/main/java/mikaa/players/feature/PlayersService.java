@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.player.PlayerPayload;
 import mikaa.players.domain.NewPlayer;
 import mikaa.players.domain.Player;
 import mikaa.players.producers.PlayerProducer;
@@ -37,9 +36,9 @@ class PlayersService {
   Player add(NewPlayer newPlayer) {
     var entity = fromNewPlayer(newPlayer);
     validator.validateUniqueName(entity);
-    var saved = repository.save(entity);
-    producer.playerAdded(toPayload(saved));
-    return toPlayer(saved);
+    var saved = toPlayer(repository.save(entity));
+    producer.playerAdded(saved);
+    return saved;
   }
 
   Optional<Player> update(long id, NewPlayer edited) {
@@ -53,26 +52,22 @@ class PlayersService {
           return player;
         }).map(repository::save);
 
-    saved.map(PlayersService::toPayload).ifPresent(producer::playerUpdated);
+    saved.map(PlayersService::toPlayer).ifPresent(producer::playerUpdated);
 
     return saved.map(PlayersService::toPlayer);
   }
 
   void delete(long id) {
     repository.findById(id)
-        .map(PlayersService::toPayload)
-        .ifPresent(payload -> {
+        .map(PlayersService::toPlayer)
+        .ifPresent(player -> {
           repository.deleteById(id);
-          producer.playerDeleted(payload);
+          producer.playerDeleted(player);
         });
   }
 
   private static PlayerEntity fromNewPlayer(NewPlayer newPlayer) {
     return new PlayerEntity(newPlayer.firstName(), newPlayer.lastName());
-  }
-
-  private static PlayerPayload toPayload(PlayerEntity entity) {
-    return new PlayerPayload(entity.getId(), entity.getFirstName(), entity.getLastName());
   }
 
   private static Player toPlayer(PlayerEntity entity) {

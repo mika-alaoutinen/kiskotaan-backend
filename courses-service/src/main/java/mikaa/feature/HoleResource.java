@@ -1,4 +1,4 @@
-package mikaa.feature.hole;
+package mikaa.feature;
 
 import java.util.List;
 

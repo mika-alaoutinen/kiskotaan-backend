@@ -1,4 +1,4 @@
-package mikaa.feature.hole;
+package mikaa.feature;
 
 import java.util.Collections;
 import java.util.List;
@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import mikaa.domain.Hole;
 import mikaa.domain.NewHole;
 import mikaa.domain.UpdatedHole;
-import mikaa.feature.course.CourseEntity;
-import mikaa.feature.course.CourseFinder;
 import mikaa.producers.holes.HoleProducer;
 
 @ApplicationScoped

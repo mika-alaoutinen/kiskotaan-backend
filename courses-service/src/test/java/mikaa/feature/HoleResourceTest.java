@@ -1,4 +1,4 @@
-package mikaa.feature.hole;
+package mikaa.feature;
 
 import org.junit.jupiter.api.Test;
 

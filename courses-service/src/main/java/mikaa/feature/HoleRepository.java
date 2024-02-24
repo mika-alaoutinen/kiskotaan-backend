@@ -1,4 +1,4 @@
-package mikaa.feature.hole;
+package mikaa.feature;
 
 import jakarta.enterprise.context.ApplicationScoped;
 

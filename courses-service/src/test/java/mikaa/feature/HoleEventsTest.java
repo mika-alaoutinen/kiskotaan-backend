@@ -1,4 +1,4 @@
-package mikaa.feature.hole;
+package mikaa.feature;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,8 +15,6 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.domain.NewHole;
 import mikaa.domain.UpdatedHole;
-import mikaa.feature.course.CourseEntity;
-import mikaa.feature.course.CourseFinder;
 import mikaa.kiskotaan.course.HoleEvent;
 import mikaa.kiskotaan.course.HolePayload;
 import mikaa.producers.OutgoingChannels;

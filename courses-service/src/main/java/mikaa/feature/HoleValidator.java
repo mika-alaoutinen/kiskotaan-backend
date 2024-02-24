@@ -1,7 +1,6 @@
-package mikaa.feature.hole;
+package mikaa.feature;
 
 import mikaa.errors.ValidationException;
-import mikaa.feature.course.CourseEntity;
 import mikaa.errors.ValidationError;
 
 interface HoleValidator {

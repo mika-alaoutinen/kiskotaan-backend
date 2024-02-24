@@ -1,4 +1,4 @@
-package mikaa.feature.course;
+package mikaa.feature;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,6 @@ import mikaa.domain.Course;
 import mikaa.domain.CourseSummary;
 import mikaa.domain.Hole;
 import mikaa.domain.NewCourse;
-import mikaa.feature.hole.HoleEntity;
 import mikaa.producers.courses.CourseProducer;
 
 @ApplicationScoped

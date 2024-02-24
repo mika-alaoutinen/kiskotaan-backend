@@ -1,4 +1,4 @@
-package mikaa.feature.course;
+package mikaa.feature;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,7 +6,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.feature.hole.HoleEntity;
 import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
@@ -47,7 +46,7 @@ class CourseValidationsTest {
   @Test
   void should_reject_new_course_with_duplicate_name() {
     when(repository.existsByName(anyString())).thenReturn(true);
-    
+
     var hole = new HoleDTO().number(1).par(3).distance(100);
     var invalidCourse = new NewCourseDTO().name("Duplicate name").holes(List.of(hole));
     var response = postInvalidCourse(invalidCourse);
@@ -67,7 +66,7 @@ class CourseValidationsTest {
   void should_reject_duplicate_course_name_on_update() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(courseMock()));
     when(repository.existsByName(anyString())).thenReturn(true);
-    
+
     var response = patchInvalidCourseName(new NewCourseNameDTO().name("Duplicate name"));
     assertBadRequest(response, "course.name", "Course name should be unique");
     verify(repository, never()).persist(any(CourseEntity.class));

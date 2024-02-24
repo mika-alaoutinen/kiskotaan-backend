@@ -6,7 +6,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.player.PlayerPayload;
+import mikaa.players.domain.NewPlayer;
+import mikaa.players.domain.Player;
 import mikaa.players.producers.PlayerProducer;
 
 @Service
@@ -17,52 +18,60 @@ class PlayersService {
   private final PlayersRepository repository;
   private final PlayerValidator validator;
 
-  List<PlayerEntity> findAll(String nameFilter) {
+  List<Player> findAll(String nameFilter) {
     var filters = nameFilter.split(" ");
 
-    return filters.length > 1
+    var players = filters.length > 1
         ? repository.findByFirstNameContainingIgnoreCaseAndLastNameContainingIgnoreCase(
             filters[0], filters[1])
         : repository.findByFirstOrLastname(filters[0]);
+
+    return players.stream().map(PlayersService::toPlayer).toList();
   }
 
-  Optional<PlayerEntity> findOne(long id) {
-    return repository.findById(id);
+  Optional<Player> findOne(long id) {
+    return repository.findById(id).map(PlayersService::toPlayer);
   }
 
-  PlayerEntity add(PlayerEntity newPlayer) {
-    validator.validateUniqueName(newPlayer);
-    var saved = repository.save(newPlayer);
-    producer.playerAdded(toPayload(saved));
+  Player add(NewPlayer newPlayer) {
+    var entity = fromNewPlayer(newPlayer);
+    validator.validateUniqueName(entity);
+    var saved = toPlayer(repository.save(entity));
+    producer.playerAdded(saved);
     return saved;
   }
 
-  Optional<PlayerEntity> update(long id, PlayerEntity edited) {
-    validator.validateUniqueName(edited);
+  Optional<Player> update(long id, NewPlayer edited) {
+    var entity = fromNewPlayer(edited);
+    validator.validateUniqueName(entity);
 
     var saved = repository.findById(id)
         .map(player -> {
-          player.setFirstName(edited.getFirstName());
-          player.setLastName(edited.getLastName());
+          player.setFirstName(edited.firstName());
+          player.setLastName(edited.lastName());
           return player;
         }).map(repository::save);
 
-    saved.map(PlayersService::toPayload).ifPresent(producer::playerUpdated);
+    saved.map(PlayersService::toPlayer).ifPresent(producer::playerUpdated);
 
-    return saved;
+    return saved.map(PlayersService::toPlayer);
   }
 
   void delete(long id) {
     repository.findById(id)
-        .map(PlayersService::toPayload)
-        .ifPresent(payload -> {
+        .map(PlayersService::toPlayer)
+        .ifPresent(player -> {
           repository.deleteById(id);
-          producer.playerDeleted(payload);
+          producer.playerDeleted(player);
         });
   }
 
-  private static PlayerPayload toPayload(PlayerEntity entity) {
-    return new PlayerPayload(entity.getId(), entity.getFirstName(), entity.getLastName());
+  private static PlayerEntity fromNewPlayer(NewPlayer newPlayer) {
+    return new PlayerEntity(newPlayer.firstName(), newPlayer.lastName());
+  }
+
+  private static Player toPlayer(PlayerEntity entity) {
+    return new Player(entity.getId(), entity.getFirstName(), entity.getLastName());
   }
 
 }

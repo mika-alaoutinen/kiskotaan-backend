@@ -1,13 +1,13 @@
 package mikaa.players.producers;
 
-import mikaa.kiskotaan.player.PlayerPayload;
+import mikaa.players.domain.Player;
 
 public interface PlayerProducer {
 
-  void playerAdded(PlayerPayload payload);
+  void playerAdded(Player player);
 
-  void playerDeleted(PlayerPayload payload);
+  void playerDeleted(Player player);
 
-  void playerUpdated(PlayerPayload payload);
+  void playerUpdated(Player player);
 
 }

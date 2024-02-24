@@ -1,11 +1,11 @@
 package mikaa.players.feature;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
 import jakarta.validation.Valid;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,19 +15,19 @@ import lombok.RequiredArgsConstructor;
 import mikaa.api.PlayersApi;
 import mikaa.model.NewPlayerDTO;
 import mikaa.model.PlayerDTO;
+import mikaa.players.domain.NewPlayer;
+import mikaa.players.domain.Player;
 
 @RestController
 @RequiredArgsConstructor
 class PlayersController implements PlayersApi {
 
-  private static final ModelMapper MAPPER = new ModelMapper();
   private final PlayersService service;
 
   @Override
   public ResponseEntity<PlayerDTO> addPlayer(@Valid NewPlayerDTO newPlayer) {
-    var savedPlayer = service.add(MAPPER.map(newPlayer, PlayerEntity.class));
-    var response = MAPPER.map(savedPlayer, PlayerDTO.class);
-    return new ResponseEntity<PlayerDTO>(response, HttpStatus.CREATED);
+    var savedPlayer = service.add(fromNewPlayerDto(newPlayer));
+    return new ResponseEntity<PlayerDTO>(toDto(savedPlayer), HttpStatus.CREATED);
   }
 
   @Override
@@ -56,7 +56,7 @@ class PlayersController implements PlayersApi {
 
   @Override
   public ResponseEntity<PlayerDTO> updatePlayer(Integer id, @Valid NewPlayerDTO editedPlayer) {
-    var edited = MAPPER.map(editedPlayer, PlayerEntity.class);
+    var edited = fromNewPlayerDto(editedPlayer);
 
     return service.update(id, edited)
         .map(PlayersController::toDto)
@@ -64,8 +64,12 @@ class PlayersController implements PlayersApi {
         .orElseThrow(() -> notFound(id));
   }
 
-  private static PlayerDTO toDto(PlayerEntity player) {
-    return MAPPER.map(player, PlayerDTO.class);
+  private static NewPlayer fromNewPlayerDto(NewPlayerDTO dto) {
+    return new NewPlayer(dto.getFirstName(), dto.getLastName());
+  }
+
+  private static PlayerDTO toDto(Player player) {
+    return new PlayerDTO(BigDecimal.valueOf(player.id()), player.firstName(), player.lastName());
   }
 
   private static ResponseStatusException notFound(int id) {

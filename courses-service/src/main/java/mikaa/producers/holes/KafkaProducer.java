@@ -3,6 +3,7 @@ package mikaa.producers.holes;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
+import mikaa.domain.Hole;
 import mikaa.kiskotaan.course.HoleEvent;
 import mikaa.kiskotaan.course.HolePayload;
 import mikaa.producers.OutgoingChannels;
@@ -20,21 +21,22 @@ class KafkaProducer implements HoleProducer {
   Emitter<Record<Long, HoleEvent>> emitter;
 
   @Override
-  public void holeAdded(HolePayload payload) {
-    send(Action.ADD, payload);
+  public void holeAdded(Hole hole, long courseId) {
+    send(Action.ADD, hole, courseId);
   }
 
   @Override
-  public void holeDeleted(HolePayload payload) {
-    send(Action.DELETE, payload);
+  public void holeDeleted(Hole hole, long courseId) {
+    send(Action.DELETE, hole, courseId);
   }
 
   @Override
-  public void holeUpdated(HolePayload payload) {
-    send(Action.UPDATE, payload);
+  public void holeUpdated(Hole hole, long courseId) {
+    send(Action.UPDATE, hole, courseId);
   }
 
-  private void send(Action action, HolePayload payload) {
+  private void send(Action action, Hole hole, long courseId) {
+    var payload = new HolePayload(hole.id(), courseId, hole.number(), hole.par(), hole.distance());
     var record = Record.of(payload.getId(), new HoleEvent(action, payload));
     emitter.send(record).toCompletableFuture().join();
   }

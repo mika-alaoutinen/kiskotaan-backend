@@ -12,7 +12,6 @@ import mikaa.domain.NewHole;
 import mikaa.domain.UpdatedHole;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
-import mikaa.kiskotaan.course.HolePayload;
 import mikaa.producers.holes.HoleProducer;
 
 @ApplicationScoped
@@ -45,44 +44,36 @@ class HoleService {
     course.addHole(holeEntity);
 
     repository.persist(holeEntity);
-    producer.holeAdded(payload(holeEntity));
+    producer.holeAdded(toHole(holeEntity), courseId);
 
     return toHole(holeEntity);
   }
 
   Hole update(long courseId, int holeNumber, UpdatedHole updatedHole) {
     var course = courseFinder.findCourseOrThrow(courseId);
-    var hole = findHoleOrThrow(course, holeNumber);
+    var holeEntity = findHoleOrThrow(course, holeNumber);
 
-    hole.setDistance(updatedHole.distance());
-    hole.setPar(updatedHole.par());
+    holeEntity.setDistance(updatedHole.distance());
+    holeEntity.setPar(updatedHole.par());
 
-    producer.holeUpdated(payload(hole));
+    var hole = toHole(holeEntity);
+    producer.holeUpdated(hole, courseId);
 
-    return toHole(hole);
+    return hole;
   }
 
   void delete(long courseId, int holeNumber) {
     repository.findByCourseIdAndNumber(courseId, holeNumber)
-        .map(HoleService::payload)
-        .ifPresent(payload -> {
-          repository.deleteById(payload.getId());
-          producer.holeDeleted(payload);
+        .map(HoleService::toHole)
+        .ifPresent(hole -> {
+          repository.deleteById(hole.id());
+          producer.holeDeleted(hole, courseId);
         });
   }
 
   private static HoleEntity findHoleOrThrow(CourseEntity course, int holeNumber) {
     return course.findHole(holeNumber).orElseThrow(
         () -> new NotFoundException(String.format("Course %s has no hole %s", course.getId(), holeNumber)));
-  }
-
-  private static HolePayload payload(HoleEntity entity) {
-    return new HolePayload(
-        entity.getId(),
-        entity.getCourse().getId(),
-        entity.getNumber(),
-        entity.getPar(),
-        entity.getDistance());
   }
 
   private static Hole toHole(HoleEntity entity) {

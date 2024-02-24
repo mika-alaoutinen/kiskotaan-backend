@@ -1,13 +1,13 @@
 package mikaa.producers.holes;
 
-import mikaa.kiskotaan.course.HolePayload;
+import mikaa.domain.Hole;
 
 public interface HoleProducer {
 
-  void holeAdded(HolePayload payload);
+  void holeAdded(Hole hole, long courseId);
 
-  void holeUpdated(HolePayload payload);
+  void holeUpdated(Hole hole, long courseId);
 
-  void holeDeleted(HolePayload payload);
+  void holeDeleted(Hole hole, long courseId);
 
 }

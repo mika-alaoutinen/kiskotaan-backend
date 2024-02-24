@@ -45,7 +45,7 @@ public class HoleEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private CourseEntity course;
 
-  HoleEntity(int number, int par, int distance) {
+  public HoleEntity(int number, int par, int distance) {
     this.number = number;
     this.par = par;
     this.distance = distance;
@@ -64,7 +64,7 @@ public class HoleEntity {
    * 
    * @return id or default value of "-1"
    */
-  long getId() {
+  public long getId() {
     return id != null ? id : -1;
   }
 

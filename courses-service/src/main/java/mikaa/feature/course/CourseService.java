@@ -9,6 +9,11 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.domain.Course;
+import mikaa.domain.CourseSummary;
+import mikaa.domain.Hole;
+import mikaa.domain.NewCourse;
+import mikaa.feature.hole.HoleEntity;
 import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.producers.courses.CourseProducer;
 
@@ -21,13 +26,6 @@ class CourseService implements CourseFinder {
   private final CourseRepository repository;
   private final CourseValidator validator;
 
-  List<CourseSummary> findAll(QueryFilters filters) {
-    return repository.streamAll()
-        .filter(filters::applyAll)
-        .map(CourseSummary::from)
-        .toList();
-  }
-
   @Override
   public Optional<CourseEntity> findCourse(long id) {
     return repository.findByIdOptional(id);
@@ -38,22 +36,41 @@ class CourseService implements CourseFinder {
     return findCourse(id).orElseThrow(() -> notFound(id));
   }
 
-  CourseEntity add(CourseEntity newCourse) {
-    validator.validate(newCourse);
-    newCourse.getHoles().forEach(h -> h.setCourse(newCourse)); // For JPA to work correctly
-    repository.persist(newCourse);
-    producer.courseAdded(CourseService.toPayload(newCourse));
-    return newCourse;
+  List<CourseSummary> findAll(QueryFilters filters) {
+    return repository.streamAll()
+        .filter(filters::applyAll)
+        .map(CourseService::toSummary)
+        .toList();
   }
 
-  CourseEntity updateCourseName(long id, String name) {
-    var course = repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
+  Course findByIdOrThrow(long id) {
+    return toCourse(findCourseOrThrow(id));
+  }
+
+  Course add(NewCourse newCourse) {
+    var holes = newCourse.holes()
+        .stream()
+        .map(hole -> new HoleEntity(hole.number(), hole.par(), hole.distance()))
+        .toList();
+
+    var course = new CourseEntity(newCourse.name(), holes);
+    validator.validate(course);
+    course.getHoles().forEach(h -> h.setCourse(course)); // For JPA to work correctly
+
+    repository.persist(course);
+    producer.courseAdded(toPayload(course));
+
+    return toCourse(course);
+  }
+
+  Course updateCourseName(long id, String name) {
+    var course = findCourseOrThrow(id);
     validator.validate(CourseEntity.fromName(name));
 
     course.setName(name);
     producer.courseUpdated(CourseService.toPayload(course));
 
-    return course;
+    return toCourse(course);
   }
 
   void delete(long id) {
@@ -68,6 +85,21 @@ class CourseService implements CourseFinder {
   private static NotFoundException notFound(long id) {
     String msg = "Could not find course with id " + id;
     return new NotFoundException(msg);
+  }
+
+  private static Course toCourse(CourseEntity entity) {
+    var holes = entity.getHoles()
+        .stream()
+        .map(hole -> new Hole(hole.getId(), hole.getNumber(), hole.getPar(), hole.getDistance()))
+        .toList();
+
+    return new Course(entity.getId(), entity.getName(), holes);
+  }
+
+  private static CourseSummary toSummary(CourseEntity entity) {
+    var holeCount = entity.getHoles().size();
+    var coursePar = entity.getHoles().stream().mapToInt(HoleEntity::getPar).sum();
+    return new CourseSummary(entity.getId(), entity.getName(), holeCount, coursePar);
   }
 
   private static CoursePayload toPayload(CourseEntity entity) {

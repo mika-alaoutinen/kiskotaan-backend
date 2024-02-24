@@ -12,7 +12,8 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.feature.hole.HoleEntity;
+import mikaa.domain.NewCourse;
+import mikaa.domain.NewHole;
 import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.producers.OutgoingChannels;
 import mikaa.producers.courses.CourseProducer;
@@ -54,7 +55,7 @@ class CourseEventsTest {
 
   @Test
   void should_send_event_on_add() {
-    var course = new CourseEntity(1L, "New Course", List.of(new HoleEntity(1L, 1, 3, 90, null)));
+    var course = new NewCourse("New Course", List.of(new NewHole(1, 3, 90)));
     service.add(course);
 
     assertEvent("New Course", 1);
@@ -86,7 +87,6 @@ class CourseEventsTest {
     var record = sink.received().get(0).getPayload();
     var payload = record.value().getPayload();
 
-    assertEquals(1L, record.key());
     assertEquals(name, payload.getName());
     assertEquals(holeCount, payload.getHoles().size());
   }

@@ -42,6 +42,15 @@ public class CourseEntity {
   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "course", orphanRemoval = true)
   private List<HoleEntity> holes = new ArrayList<>();
 
+  CourseEntity(String name, List<HoleEntity> holes) {
+    this.name = name;
+    this.holes = holes;
+  }
+
+  public long getId() {
+    return id != null ? id : -1;
+  }
+
   public static CourseEntity fromName(String name) {
     return new CourseEntity(null, name, new ArrayList<>());
   }

@@ -1,4 +1,4 @@
-package mikaa.feature.course;
+package mikaa.feature;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
-import mikaa.feature.hole.HoleEntity;
 
 import static org.mockito.Mockito.when;
 import static org.hamcrest.CoreMatchers.is;

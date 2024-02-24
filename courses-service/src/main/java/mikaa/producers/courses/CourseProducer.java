@@ -1,13 +1,13 @@
 package mikaa.producers.courses;
 
-import mikaa.kiskotaan.course.CoursePayload;
+import mikaa.domain.Course;
 
 public interface CourseProducer {
 
-  void courseAdded(CoursePayload payload);
+  void courseAdded(Course course);
 
-  void courseUpdated(CoursePayload payload);
+  void courseUpdated(Course course);
 
-  void courseDeleted(CoursePayload payload);
+  void courseDeleted(Course course);
 
 }

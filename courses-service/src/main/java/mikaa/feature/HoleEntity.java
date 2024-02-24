@@ -1,4 +1,4 @@
-package mikaa.feature.hole;
+package mikaa.feature;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +14,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import mikaa.feature.course.CourseEntity;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,7 +21,7 @@ import mikaa.feature.course.CourseEntity;
 @EqualsAndHashCode(callSuper = false, exclude = "course")
 @ToString(exclude = "course")
 @Entity(name = "hole")
-public class HoleEntity {
+class HoleEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +44,27 @@ public class HoleEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   private CourseEntity course;
 
-  public static HoleEntity from(int holeNumber, int par, int distance) {
+  HoleEntity(int number, int par, int distance) {
+    this.number = number;
+    this.par = par;
+    this.distance = distance;
+  }
+
+  static HoleEntity from(int holeNumber, int par, int distance) {
     return new HoleEntity(null, holeNumber, par, distance, null);
+  }
+
+  /**
+   * Write default getter for ID, because Panache repository's persist method
+   * returns void. Therefore, a mocked repository will return null for an ID even
+   * though that does not happen in reality, and this is difficult to fix.
+   * 
+   * Thanks for this feature, I guess?
+   * 
+   * @return id or default value of "-1"
+   */
+  long getId() {
+    return id != null ? id : -1;
   }
 
 }

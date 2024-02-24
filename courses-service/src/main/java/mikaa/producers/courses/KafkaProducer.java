@@ -3,8 +3,10 @@ package mikaa.producers.courses;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
+import mikaa.domain.Course;
 import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.kiskotaan.course.CoursePayload;
+import mikaa.kiskotaan.course.Hole;
 import mikaa.producers.OutgoingChannels;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
@@ -20,22 +22,29 @@ class KafkaProducer implements CourseProducer {
   Emitter<Record<Long, CourseEvent>> emitter;
 
   @Override
-  public void courseAdded(CoursePayload payload) {
-    send(Action.ADD, payload);
+  public void courseAdded(Course course) {
+    send(Action.ADD, course);
   }
 
   @Override
-  public void courseUpdated(CoursePayload payload) {
-    send(Action.UPDATE, payload);
+  public void courseUpdated(Course course) {
+    send(Action.UPDATE, course);
   }
 
   @Override
-  public void courseDeleted(CoursePayload payload) {
-    send(Action.DELETE, payload);
+  public void courseDeleted(Course course) {
+    send(Action.DELETE, course);
   }
 
-  private void send(Action action, CoursePayload payload) {
+  private void send(Action action, Course course) {
+    var holes = course.holes()
+        .stream()
+        .map(hole -> new Hole(hole.id(), hole.number(), hole.par(), hole.distance()))
+        .toList();
+
+    var payload = new CoursePayload(course.id(), course.name(), holes);
     var record = Record.of(payload.getId(), new CourseEvent(action, payload));
+
     emitter.send(record).toCompletableFuture().join();
   }
 

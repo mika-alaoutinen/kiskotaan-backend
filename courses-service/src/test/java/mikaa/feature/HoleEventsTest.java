@@ -1,4 +1,4 @@
-package mikaa.feature.hole;
+package mikaa.feature;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -13,8 +13,8 @@ import java.util.Optional;
 
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.feature.course.CourseEntity;
-import mikaa.feature.course.CourseFinder;
+import mikaa.domain.NewHole;
+import mikaa.domain.UpdatedHole;
 import mikaa.kiskotaan.course.HoleEvent;
 import mikaa.kiskotaan.course.HolePayload;
 import mikaa.producers.OutgoingChannels;
@@ -62,17 +62,17 @@ class HoleEventsTest {
   @Test
   void should_send_event_on_add() {
     when(courseFinder.findCourseOrThrow(anyLong())).thenReturn(courseMock());
-    var newHole = new HoleEntity(321l, 1, 3, 100, courseMock());
+    var newHole = new NewHole(1, 3, 100);
     service.add(COURSE_ID, newHole);
 
-    assertEvent(new HolePayload(321l, COURSE_ID, 1, 3, 100));
+    assertEvent(new HolePayload(-1L, COURSE_ID, 1, 3, 100));
     verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
   @Test
   void should_send_event_on_update() {
     when(courseFinder.findCourseOrThrow(anyLong())).thenReturn(courseMock());
-    service.update(COURSE_ID, HOLE_NUMBER, new HoleEntity(null, 0, 5, 165, courseMock()));
+    service.update(COURSE_ID, HOLE_NUMBER, new UpdatedHole(5, 165));
 
     assertEvent(new HolePayload(HOLE_ID, COURSE_ID, 2, 5, 165));
   }

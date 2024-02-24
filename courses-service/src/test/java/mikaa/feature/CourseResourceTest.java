@@ -1,4 +1,4 @@
-package mikaa.feature.course;
+package mikaa.feature;
 
 import org.junit.jupiter.api.Test;
 

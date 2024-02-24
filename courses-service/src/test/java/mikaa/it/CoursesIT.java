@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
-import mikaa.kiskotaan.course.CoursePayload;
+import mikaa.domain.Course;
 import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
@@ -45,7 +45,7 @@ class CoursesIT {
             "name", is("New Course"),
             "holes.size()", is(1));
 
-    verify(courseProducer, atLeastOnce()).courseAdded(any(CoursePayload.class));
+    verify(courseProducer, atLeastOnce()).courseAdded(any(Course.class));
   }
 
   @Test
@@ -60,7 +60,7 @@ class CoursesIT {
         .contentType(ContentType.JSON)
         .body("name", is("Updated name"));
 
-    verify(courseProducer, atLeastOnce()).courseUpdated(any(CoursePayload.class));
+    verify(courseProducer, atLeastOnce()).courseUpdated(any(Course.class));
   }
 
   @Test
@@ -71,7 +71,7 @@ class CoursesIT {
         .then()
         .statusCode(204);
 
-    verify(courseProducer, atLeastOnce()).courseDeleted(any(CoursePayload.class));
+    verify(courseProducer, atLeastOnce()).courseDeleted(any(Course.class));
   }
 
 }

@@ -53,8 +53,7 @@ class ScoreCardStateProducer implements ScoreCardProducer {
   private ScoreCardPayload toPayload(ScoreCard scoreCard) {
     var playerIds = scoreCard.players().stream().map(Player::id).toList();
 
-    var results = ScoreLogic.scoresByHole(ScoreCardInput.from(scoreCard))
-        .results()
+    var results = ScoreLogic.results(ScoreCardInput.from(scoreCard))
         .entrySet()
         .stream()
         .collect(Collectors.toMap(

@@ -7,28 +7,21 @@ import java.util.stream.Collectors;
 
 public interface ScoreLogic {
 
-  static ScoresByPlayer scoresByPlayer(ScoreCardInput input) {
-    var results = calculateRoundScores(input);
-    var scores = groupScoresByPlayer(input);
-    return new ScoresByPlayer(results, scores);
-  }
-
-  static ScoresByHole scoresByHole(ScoreCardInput input) {
-    var results = calculateRoundScores(input);
-    var scores = input.scores()
-        .stream()
-        .collect(Collectors.groupingBy(ScoreEntry::hole));
-
-    return new ScoresByHole(results, scores);
-  }
-
-  private static Map<Long, PlayerScore> calculateRoundScores(ScoreCardInput input) {
+  static Map<Long, PlayerScore> results(ScoreCardInput input) {
     return groupScoresByPlayer(input)
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
             Map.Entry::getKey,
             entry -> calculatePlayerScores(entry.getValue())));
+  }
+
+  static Map<Integer, List<ScoreEntry>> scoresByHole(ScoreCardInput input) {
+    return input.scores().stream().collect(Collectors.groupingBy(ScoreEntry::hole));
+  }
+
+  static Map<Long, List<ScoreEntry>> scoresByPlayer(ScoreCardInput input) {
+    return groupScoresByPlayer(input);
   }
 
   private static PlayerScore calculatePlayerScores(Collection<ScoreEntry> playerScores) {

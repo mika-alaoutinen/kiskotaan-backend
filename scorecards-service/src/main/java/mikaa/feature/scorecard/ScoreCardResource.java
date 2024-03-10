@@ -65,24 +65,24 @@ class ScoreCardResource implements ScoreCardsApi {
   }
 
   private static ScoreCardDTO toDto(ScoreCard scoreCard) {
-    var scoresByPlayer = ScoreLogic.scoresByPlayer(ScoreCardInput.from(scoreCard));
+    var input = ScoreCardInput.from(scoreCard);
 
     return new ScoreCardDTO()
         .id(BigDecimal.valueOf(scoreCard.id()))
         .course(mapCourse(scoreCard.course()))
         .players(mapPlayers(scoreCard.players()))
-        .results(mapResults(scoresByPlayer.results()))
-        .scores(mapScores(scoresByPlayer.scores()));
+        .results(mapResults(ScoreLogic.results(input)))
+        .scores(mapScores(ScoreLogic.scoresByPlayer(input)));
   }
 
   private static ScoreCardSummaryDTO toSummary(ScoreCard scoreCard) {
-    var scoresByPlayer = ScoreLogic.scoresByPlayer(ScoreCardInput.from(scoreCard));
+    var results = ScoreLogic.results(ScoreCardInput.from(scoreCard));
 
     return new ScoreCardSummaryDTO()
         .id(BigDecimal.valueOf(scoreCard.id()))
         .course(mapCourse(scoreCard.course()))
         .players(mapPlayers(scoreCard.players()))
-        .results(mapResults(scoresByPlayer.results()));
+        .results(mapResults(results));
   }
 
   private static CourseDTO mapCourse(Course c) {

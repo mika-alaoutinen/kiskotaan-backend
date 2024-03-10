@@ -19,8 +19,9 @@ class ScoreService {
   private final ScoreCardProducer producer;
   private final ScoreRepository repository;
 
-  ScoreEntity findOrThrow(long id) {
+  Score findOrThrow(long id) {
     return repository.findByIdOptional(id)
+        .map(score -> mapScore(score, score.getPlayer().getExternalId()))
         .orElseThrow(() -> new NotFoundException("Could not find score with id " + id));
   }
 

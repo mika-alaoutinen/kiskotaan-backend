@@ -11,6 +11,8 @@ import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.config.IncomingChannels;
+import mikaa.domain.Course;
+import mikaa.domain.Hole;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -40,17 +42,26 @@ class CourseConsumer {
 
   private void courseAdded(CoursePayload payload) {
     log.info("Course added: {}", payload);
-    service.add(payload);
+    service.add(from(payload));
   }
 
   private void courseDeleted(CoursePayload payload) {
     log.info("Course deleted: {}", payload);
-    service.delete(payload);
+    service.delete(from(payload));
   }
 
   private void courseUpdated(CoursePayload payload) {
     log.info("Course updated: {}", payload);
-    service.update(payload);
+    service.update(from(payload));
+  }
+
+  private static Course from(CoursePayload payload) {
+    var holes = payload.getHoles()
+        .stream()
+        .map(h -> new Hole(h.getNumber(), h.getPar()))
+        .toList();
+
+    return new Course(payload.getId(), payload.getName(), holes);
   }
 
 }

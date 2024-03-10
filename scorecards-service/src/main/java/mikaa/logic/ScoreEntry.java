@@ -1,12 +1,4 @@
 package mikaa.logic;
 
-import lombok.Value;
-
-@Value
-public class ScoreEntry {
-  private final long id;
-  private final long playerId;
-  private final int hole;
-  private final int par;
-  private final int score;
+public record ScoreEntry(long id, long playerId, int hole, int par, int score) {
 }

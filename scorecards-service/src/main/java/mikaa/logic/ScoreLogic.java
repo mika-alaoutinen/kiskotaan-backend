@@ -17,7 +17,7 @@ public interface ScoreLogic {
     var results = calculateRoundScores(input);
     var scores = input.scores()
         .stream()
-        .collect(Collectors.groupingBy(ScoreEntry::getHole));
+        .collect(Collectors.groupingBy(ScoreEntry::hole));
 
     return new ScoresByHole(results, scores);
   }
@@ -32,13 +32,13 @@ public interface ScoreLogic {
   }
 
   private static PlayerScore calculatePlayerScores(Collection<ScoreEntry> playerScores) {
-    int result = playerScores.stream().mapToInt(entry -> entry.getScore() - entry.getPar()).sum();
-    int total = playerScores.stream().mapToInt(ScoreEntry::getScore).sum();
+    int result = playerScores.stream().mapToInt(entry -> entry.score() - entry.par()).sum();
+    int total = playerScores.stream().mapToInt(ScoreEntry::score).sum();
     return new PlayerScore(playerScores.size(), result, total);
   }
 
   private static Map<Long, List<ScoreEntry>> groupScoresByPlayer(ScoreCardInput input) {
-    return input.scores().stream().collect(Collectors.groupingBy(ScoreEntry::getPlayerId));
+    return input.scores().stream().collect(Collectors.groupingBy(ScoreEntry::playerId));
   }
 
 }

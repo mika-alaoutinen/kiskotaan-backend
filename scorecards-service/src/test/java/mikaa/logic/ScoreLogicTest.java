@@ -13,40 +13,40 @@ class ScoreLogicTest {
   void returns_player_results_and_scores_by_player() {
     var scoresByPlayer = ScoreLogic.scoresByPlayer(input());
 
-    var akuScores = scoresByPlayer.getScores().get(313l);
-    assertEquals(2, akuScores.get(1).getHole());
-    assertEquals(3, akuScores.get(1).getScore());
+    var akuScores = scoresByPlayer.scores().get(313l);
+    assertEquals(2, akuScores.get(1).hole());
+    assertEquals(3, akuScores.get(1).score());
 
-    var iinesScores = scoresByPlayer.getScores().get(314l);
-    assertEquals(3, iinesScores.get(2).getHole());
-    assertEquals(5, iinesScores.get(2).getScore());
+    var iinesScores = scoresByPlayer.scores().get(314l);
+    assertEquals(3, iinesScores.get(2).hole());
+    assertEquals(5, iinesScores.get(2).score());
 
-    assertResults(scoresByPlayer.getResults());
+    assertResults(scoresByPlayer.results());
   }
 
   @Test
   void returns_player_results_and_scores_by_hole() {
     var scoresByHole = ScoreLogic.scoresByHole(input());
 
-    var hole1Scores = scoresByHole.getScores().get(1);
-    assertEquals(3, hole1Scores.get(0).getScore());
-    assertEquals(313, hole1Scores.get(0).getPlayerId());
-    assertEquals(4, hole1Scores.get(1).getScore());
-    assertEquals(314, hole1Scores.get(1).getPlayerId());
+    var hole1Scores = scoresByHole.scores().get(1);
+    assertEquals(3, hole1Scores.get(0).score());
+    assertEquals(313, hole1Scores.get(0).playerId());
+    assertEquals(4, hole1Scores.get(1).score());
+    assertEquals(314, hole1Scores.get(1).playerId());
 
-    assertResults(scoresByHole.getResults());
+    assertResults(scoresByHole.results());
   }
 
   private static void assertResults(Map<Long, PlayerScore> results) {
     var akuResult = results.get(313l);
-    assertEquals(-1, akuResult.getResult());
-    assertEquals(11, akuResult.getTotal());
-    assertEquals(3, akuResult.getHolesPlayed());
+    assertEquals(-1, akuResult.result());
+    assertEquals(11, akuResult.total());
+    assertEquals(3, akuResult.holesPlayed());
 
     var iinesResult = results.get(314l);
-    assertEquals(1, iinesResult.getResult());
-    assertEquals(13, iinesResult.getTotal());
-    assertEquals(3, iinesResult.getHolesPlayed());
+    assertEquals(1, iinesResult.result());
+    assertEquals(13, iinesResult.total());
+    assertEquals(3, iinesResult.holesPlayed());
   }
 
   private static ScoreCardInput input() {

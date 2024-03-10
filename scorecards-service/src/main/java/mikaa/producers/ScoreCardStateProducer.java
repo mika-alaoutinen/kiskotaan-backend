@@ -54,12 +54,12 @@ class ScoreCardStateProducer implements ScoreCardProducer {
     var playerIds = scoreCard.players().stream().map(Player::id).toList();
 
     var results = ScoreLogic.scoresByHole(ScoreCardInput.from(scoreCard))
-        .getResults()
+        .results()
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
             entry -> entry.getKey().toString(),
-            entry -> new RoundResult(entry.getValue().getResult(), entry.getValue().getTotal())));
+            entry -> new RoundResult(entry.getValue().result(), entry.getValue().total())));
 
     var scores = scoreCard.scores()
         .stream()

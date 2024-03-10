@@ -71,8 +71,8 @@ class ScoreCardResource implements ScoreCardsApi {
         .id(BigDecimal.valueOf(scoreCard.id()))
         .course(mapCourse(scoreCard.course()))
         .players(mapPlayers(scoreCard.players()))
-        .results(mapResults(scoresByPlayer.getResults()))
-        .scores(mapScores(scoresByPlayer.getScores()));
+        .results(mapResults(scoresByPlayer.results()))
+        .scores(mapScores(scoresByPlayer.scores()));
   }
 
   private static ScoreCardSummaryDTO toSummary(ScoreCard scoreCard) {
@@ -82,7 +82,7 @@ class ScoreCardResource implements ScoreCardsApi {
         .id(BigDecimal.valueOf(scoreCard.id()))
         .course(mapCourse(scoreCard.course()))
         .players(mapPlayers(scoreCard.players()))
-        .results(mapResults(scoresByPlayer.getResults()));
+        .results(mapResults(scoresByPlayer.results()));
   }
 
   private static CourseDTO mapCourse(Course c) {
@@ -112,10 +112,10 @@ class ScoreCardResource implements ScoreCardsApi {
 
   private static ScoreDTO mapScore(ScoreEntry entry) {
     return new ScoreDTO()
-        .id(BigDecimal.valueOf(entry.getId()))
-        .playerId((int) entry.getPlayerId())
-        .hole(entry.getHole())
-        .score(entry.getScore());
+        .id(BigDecimal.valueOf(entry.id()))
+        .playerId((int) entry.playerId())
+        .hole(entry.hole())
+        .score(entry.score());
   }
 
   private static Map<String, ResultDTO> mapResults(Map<Long, PlayerScore> results) {
@@ -128,9 +128,9 @@ class ScoreCardResource implements ScoreCardsApi {
 
   private static ResultDTO mapResult(PlayerScore ps) {
     return new ResultDTO()
-        .holesPlayed(ps.getHolesPlayed())
-        .result(ps.getResult())
-        .total(ps.getTotal());
+        .holesPlayed(ps.holesPlayed())
+        .result(ps.result())
+        .total(ps.total());
   }
 
 }

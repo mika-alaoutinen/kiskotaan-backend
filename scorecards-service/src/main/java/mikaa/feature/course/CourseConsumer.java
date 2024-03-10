@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.kiskotaan.course.CoursePayload;
+import mikaa.kiskotaan.domain.Action;
 import mikaa.config.IncomingChannels;
 
 @ApplicationScoped
@@ -21,23 +22,20 @@ class CourseConsumer {
   @Incoming(IncomingChannels.COURSE_STATE)
   @Transactional
   void courseEvent(CourseEvent event) {
+    var action = event.getAction();
     var payload = event.getPayload();
 
-    switch (event.getAction()) {
-      case ADD:
-        courseAdded(payload);
-        break;
-      case UPDATE:
-        courseUpdated(payload);
-        break;
-      case DELETE:
-        courseDeleted(payload);
-        break;
-      case UNKNOWN:
-      default:
-        log.warn("Unknown course event type {}", event.getAction());
-        break;
+    switch (action) {
+      case ADD -> courseAdded(payload);
+      case UPDATE -> courseUpdated(payload);
+      case DELETE -> courseDeleted(payload);
+      case UNKNOWN -> handleUnknownEvent(action);
+      default -> handleUnknownEvent(action);
     }
+  }
+
+  private void handleUnknownEvent(Action action) {
+    log.warn("Unknown course event type {}", action);
   }
 
   private void courseAdded(CoursePayload payload) {

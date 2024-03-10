@@ -4,12 +4,10 @@ import jakarta.transaction.Transactional;
 
 import org.modelmapper.ModelMapper;
 
-import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoresApi;
 import mikaa.model.ScoreDTO;
 
-@Blocking
 @RequiredArgsConstructor
 class ScoreResource implements ScoresApi {
 

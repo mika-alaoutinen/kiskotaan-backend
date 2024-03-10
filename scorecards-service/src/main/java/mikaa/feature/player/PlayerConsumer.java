@@ -8,6 +8,7 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mikaa.config.IncomingChannels;
+import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.player.PlayerEvent;
 import mikaa.kiskotaan.player.PlayerPayload;
 
@@ -21,23 +22,20 @@ class PlayerConsumer {
   @Incoming(IncomingChannels.PLAYER_STATE)
   @Transactional
   void playerEvent(PlayerEvent event) {
+    var action = event.getAction();
     var payload = event.getPayload();
 
-    switch (event.getAction()) {
-      case ADD:
-        playerAdded(payload);
-        break;
-      case UPDATE:
-        playerUpdated(payload);
-        break;
-      case DELETE:
-        playerDeleted(payload);
-        break;
-      case UNKNOWN:
-      default:
-        log.warn("Unknown player event type {}", event.getAction());
-        break;
+    switch (action) {
+      case ADD -> playerAdded(payload);
+      case UPDATE -> playerUpdated(payload);
+      case DELETE -> playerDeleted(payload);
+      case UNKNOWN -> handleUnknownEvent(action);
+      default -> handleUnknownEvent(action);
     }
+  }
+
+  private void handleUnknownEvent(Action action) {
+    log.warn("Unknown player event type {}", action);
   }
 
   private void playerAdded(PlayerPayload payload) {

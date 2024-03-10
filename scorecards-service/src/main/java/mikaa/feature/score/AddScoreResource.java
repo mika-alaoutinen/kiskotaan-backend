@@ -7,14 +7,12 @@ import jakarta.validation.constraints.NotNull;
 
 import org.modelmapper.ModelMapper;
 
-import io.smallrye.common.annotation.Blocking;
 import lombok.RequiredArgsConstructor;
 import mikaa.api.AddNewScoreApi;
 import mikaa.model.NewScoreDTO;
 import mikaa.model.ScoreDTO;
 
 @ApplicationScoped
-@Blocking
 @RequiredArgsConstructor
 class AddScoreResource implements AddNewScoreApi {
 

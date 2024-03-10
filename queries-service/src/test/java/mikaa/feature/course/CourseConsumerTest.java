@@ -23,7 +23,6 @@ import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.kiskotaan.course.CoursePayload;
-import mikaa.kiskotaan.course.HoleEvent;
 import mikaa.config.IncomingChannels;
 
 @QuarkusTest

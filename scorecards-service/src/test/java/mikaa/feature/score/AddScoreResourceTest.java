@@ -20,6 +20,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.domain.ScoreCard;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
@@ -67,7 +68,7 @@ class AddScoreResourceTest {
             "score", is(3));
 
     verify(repository, atLeastOnce()).persist(any(ScoreEntity.class));
-    verify(producer, atLeastOnce()).scoreCardUpdated(any(ScoreCardEntity.class));
+    verify(producer, atLeastOnce()).scoreCardUpdated(any(ScoreCard.class));
   }
 
   @Test
@@ -80,16 +81,16 @@ class AddScoreResourceTest {
         .score(3);
 
     String path = getEndpointUrl(1);
-    
+
     postScore(invalidScore)
         .statusCode(400)
         .contentType(ContentType.JSON)
         .body(
-          "timestamp", notNullValue(),
-          "status", is(400),
-          "error", is("Bad Request"),
-          "message", is("Invalid request body"),
-          "path", containsString(path));
+            "timestamp", notNullValue(),
+            "status", is(400),
+            "error", is("Bad Request"),
+            "message", is("Invalid request body"),
+            "path", containsString(path));
 
     verify(repository, never()).persist(any(ScoreEntity.class));
     verifyNoInteractions(producer);

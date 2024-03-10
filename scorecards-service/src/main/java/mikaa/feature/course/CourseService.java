@@ -4,7 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.course.CoursePayload;
+import mikaa.domain.Course;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -17,24 +17,24 @@ class CourseService implements CourseFinder {
     return repository.findByExternalId(id).orElseThrow(() -> notFound(id));
   }
 
-  void add(CoursePayload course) {
-    var holes = course.getHoles()
+  void add(Course course) {
+    var holes = course.holes()
         .stream()
-        .map(h -> new HoleEntity(h.getNumber(), h.getPar()))
+        .map(h -> new HoleEntity(h.number(), h.par()))
         .toList();
 
-    var entity = new CourseEntity(course.getId(), holes, course.getName());
+    var entity = new CourseEntity(course.id(), holes, course.name());
     repository.persist(entity);
   }
 
-  void delete(CoursePayload payload) {
-    repository.deleteByExternalId(payload.getId());
+  void delete(Course payload) {
+    repository.deleteByExternalId(payload.id());
   }
 
-  void update(CoursePayload course) {
-    repository.findByExternalId(course.getId())
+  void update(Course course) {
+    repository.findByExternalId(course.id())
         .map(entity -> {
-          entity.setName(course.getName());
+          entity.setName(course.name());
           return entity;
         })
         .ifPresent(repository::persist);

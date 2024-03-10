@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
+import mikaa.domain.ScoreCard;
+import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
@@ -83,7 +85,7 @@ class ScoreResourceTest {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreMock()));
     delete();
     verify(repository, atLeastOnce()).deleteById(1L);
-    verify(producer, atLeastOnce()).scoreCardUpdated(any(ScoreCardEntity.class));
+    verify(producer, atLeastOnce()).scoreCardUpdated(any(ScoreCard.class));
   }
 
   @Test
@@ -102,8 +104,9 @@ class ScoreResourceTest {
   }
 
   private static ScoreEntity scoreMock() {
+    var course = new CourseEntity(333, new ArrayList<>(), "Laajis");
     var player = new PlayerEntity(222, "Pekka", "Kana");
-    var scoreCard = new ScoreCardEntity(1L, null, Set.of(player), new ArrayList<>());
+    var scoreCard = new ScoreCardEntity(1L, course, Set.of(player), new ArrayList<>());
     return new ScoreEntity(111L, 8, 4, player, scoreCard);
   }
 

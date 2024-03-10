@@ -3,50 +3,48 @@ package mikaa.logic;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
-import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
 class ScoreLogicTest {
 
   @Test
-  void returns_player_results_and_scores_by_player() {
-    var scoresByPlayer = ScoreLogic.scoresByPlayer(input());
+  void calculates_round_results_by_player() {
+    var results = ScoreLogic.results(input());
 
-    var akuScores = scoresByPlayer.getScores().get(313l);
-    assertEquals(2, akuScores.get(1).getHole());
-    assertEquals(3, akuScores.get(1).getScore());
+    var akuResult = results.get(313l);
+    assertEquals(-1, akuResult.result());
+    assertEquals(11, akuResult.total());
+    assertEquals(3, akuResult.holesPlayed());
 
-    var iinesScores = scoresByPlayer.getScores().get(314l);
-    assertEquals(3, iinesScores.get(2).getHole());
-    assertEquals(5, iinesScores.get(2).getScore());
-
-    assertResults(scoresByPlayer.getResults());
+    var iinesResult = results.get(314l);
+    assertEquals(1, iinesResult.result());
+    assertEquals(13, iinesResult.total());
+    assertEquals(3, iinesResult.holesPlayed());
   }
 
   @Test
-  void returns_player_results_and_scores_by_hole() {
-    var scoresByHole = ScoreLogic.scoresByHole(input());
+  void calculates_scores_by_player() {
+    var scoresByPlayer = ScoreLogic.scoresByPlayer(input());
 
-    var hole1Scores = scoresByHole.getScores().get(1);
-    assertEquals(3, hole1Scores.get(0).getScore());
-    assertEquals(313, hole1Scores.get(0).getPlayerId());
-    assertEquals(4, hole1Scores.get(1).getScore());
-    assertEquals(314, hole1Scores.get(1).getPlayerId());
+    var akuScores = scoresByPlayer.get(313l);
+    assertEquals(2, akuScores.get(1).hole());
+    assertEquals(3, akuScores.get(1).score());
 
-    assertResults(scoresByHole.getResults());
+    var iinesScores = scoresByPlayer.get(314l);
+    assertEquals(3, iinesScores.get(2).hole());
+    assertEquals(5, iinesScores.get(2).score());
   }
 
-  private static void assertResults(Map<Long, PlayerScore> results) {
-    var akuResult = results.get(313l);
-    assertEquals(-1, akuResult.getResult());
-    assertEquals(11, akuResult.getTotal());
-    assertEquals(3, akuResult.getHolesPlayed());
+  @Test
+  void calculates_scores_by_hole() {
+    var scoresByHole = ScoreLogic.scoresByHole(input());
 
-    var iinesResult = results.get(314l);
-    assertEquals(1, iinesResult.getResult());
-    assertEquals(13, iinesResult.getTotal());
-    assertEquals(3, iinesResult.getHolesPlayed());
+    var hole1Scores = scoresByHole.get(1);
+    assertEquals(3, hole1Scores.get(0).score());
+    assertEquals(313, hole1Scores.get(0).playerId());
+    assertEquals(4, hole1Scores.get(1).score());
+    assertEquals(314, hole1Scores.get(1).playerId());
   }
 
   private static ScoreCardInput input() {

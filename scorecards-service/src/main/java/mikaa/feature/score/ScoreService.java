@@ -4,9 +4,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.domain.NewScore;
+import mikaa.domain.Score;
 import mikaa.feature.player.PlayerFinder;
+import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.feature.scorecard.ScoreCardFinder;
-import mikaa.model.NewScoreDTO;
+import mikaa.feature.scorecard.ScoreCardMapper;
 import mikaa.producers.ScoreCardProducer;
 
 @ApplicationScoped
@@ -18,23 +21,24 @@ class ScoreService {
   private final ScoreCardProducer producer;
   private final ScoreRepository repository;
 
-  ScoreEntity findOrThrow(long id) {
+  Score findOrThrow(long id) {
     return repository.findByIdOptional(id)
+        .map(ScoreMapper::score)
         .orElseThrow(() -> new NotFoundException("Could not find score with id " + id));
   }
 
-  ScoreEntity addScore(long id, NewScoreDTO newScore) {
+  Score addScore(long id, NewScore newScore) {
     var scoreCard = scoreCardFinder.findOrThrow(id);
-    var player = playerFinder.findOrThrow(newScore.getPlayerId().longValue());
-    var score = new ScoreEntity(newScore.getHole(), newScore.getScore());
+    var player = playerFinder.findOrThrow(newScore.playerId());
+    var scoreEntity = new ScoreEntity(newScore.hole(), newScore.score());
 
-    scoreCard.addScore(score);
-    player.addScore(score);
+    scoreCard.addScore(scoreEntity);
+    player.addScore(scoreEntity);
+    repository.persist(scoreEntity);
 
-    repository.persist(score);
-    producer.scoreCardUpdated(scoreCard);
+    produceUpdate(scoreCard);
 
-    return score;
+    return ScoreMapper.score(scoreEntity);
   }
 
   void delete(long id) {
@@ -42,8 +46,11 @@ class ScoreService {
         .map(score -> score.getScorecard().removeScore(score))
         .ifPresent(scoreCard -> {
           repository.deleteById(id);
-          producer.scoreCardUpdated(scoreCard);
+          produceUpdate(scoreCard);
         });
   }
 
+  private void produceUpdate(ScoreCardEntity entity) {
+    producer.scoreCardUpdated(ScoreCardMapper.from(entity));
+  }
 }

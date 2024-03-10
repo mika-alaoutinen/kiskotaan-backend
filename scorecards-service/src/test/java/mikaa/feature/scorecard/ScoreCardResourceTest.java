@@ -6,6 +6,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import mikaa.domain.ScoreCard;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.course.HoleEntity;
@@ -31,6 +32,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import jakarta.ws.rs.NotFoundException;
 
@@ -56,7 +58,7 @@ class ScoreCardResourceTest {
   @Test
   void should_get_all_score_cards() {
     var scoreCard = scoreCardMock();
-    when(repository.listAll()).thenReturn(List.of(scoreCard));
+    when(repository.streamAll()).thenReturn(Stream.of(scoreCard));
 
     given()
         .when()
@@ -144,7 +146,7 @@ class ScoreCardResourceTest {
             "scores", anEmptyMap());
 
     verify(repository, atLeastOnce()).persist(any(ScoreCardEntity.class));
-    verify(producer, atLeastOnce()).scoreCardAdded(any(ScoreCardEntity.class));
+    verify(producer, atLeastOnce()).scoreCardAdded(any(ScoreCard.class));
   }
 
   @Test
@@ -203,7 +205,7 @@ class ScoreCardResourceTest {
         .statusCode(204);
 
     verify(repository, atLeastOnce()).deleteById(1L);
-    verify(producer, atLeastOnce()).scoreCardDeleted(any(ScoreCardEntity.class));
+    verify(producer, atLeastOnce()).scoreCardDeleted(any(ScoreCard.class));
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, int id) {

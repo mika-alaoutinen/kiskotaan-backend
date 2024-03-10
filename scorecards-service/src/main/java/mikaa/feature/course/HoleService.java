@@ -3,7 +3,7 @@ package mikaa.feature.course;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.course.HolePayload;
+import mikaa.domain.Hole;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -11,15 +11,15 @@ class HoleService {
 
   private final CourseRepository repository;
 
-  void add(HolePayload hole) {
-    repository.findByExternalId(hole.getCourseId())
-        .map(course -> course.addHole(new HoleEntity(hole.getNumber(), hole.getPar())))
+  void add(long courseId, Hole hole) {
+    repository.findByExternalId(courseId)
+        .map(course -> course.addHole(new HoleEntity(hole.number(), hole.par())))
         .ifPresent(repository::persist);
   }
 
-  void delete(HolePayload hole) {
-    repository.findByExternalId(hole.getCourseId())
-        .map(course -> course.removeHole(hole.getNumber()))
+  void delete(long courseId, Hole hole) {
+    repository.findByExternalId(courseId)
+        .map(course -> course.removeHole(hole.number()))
         .ifPresent(repository::persist);
   }
 

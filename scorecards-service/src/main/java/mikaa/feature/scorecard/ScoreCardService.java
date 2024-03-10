@@ -7,15 +7,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
-import mikaa.domain.Course;
-import mikaa.domain.Hole;
 import mikaa.domain.NewScoreCard;
-import mikaa.domain.Player;
 import mikaa.domain.ScoreCard;
-import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerFinder;
-import mikaa.feature.score.ScoreMapper;
 import mikaa.producers.ScoreCardProducer;
 
 @ApplicationScoped
@@ -33,11 +28,11 @@ class ScoreCardService implements ScoreCardFinder {
   }
 
   List<ScoreCard> findAll() {
-    return repository.streamAll().map(ScoreCardService::mapScoreCard).toList();
+    return repository.streamAll().map(ScoreCardMapper::from).toList();
   }
 
   ScoreCard findByIdOrThrow(long id) {
-    return mapScoreCard(findOrThrow(id));
+    return ScoreCardMapper.from(findOrThrow(id));
   }
 
   ScoreCard add(NewScoreCard newScoreCard) {
@@ -51,42 +46,17 @@ class ScoreCardService implements ScoreCardFinder {
     var entity = new ScoreCardEntity(course, players);
 
     repository.persist(entity);
-    producer.scoreCardAdded(entity);
+    producer.scoreCardAdded(ScoreCardMapper.from(entity));
 
-    return mapScoreCard(entity);
+    return ScoreCardMapper.from(entity);
   }
 
   void delete(long id) {
     repository.findByIdOptional(id)
         .ifPresent(entity -> {
           repository.deleteById(id);
-          producer.scoreCardDeleted(entity);
+          producer.scoreCardDeleted(ScoreCardMapper.from(entity));
         });
-  }
-
-  private static Course mapCourse(CourseEntity entity) {
-    var holes = entity.getHoles()
-        .stream()
-        .map(h -> new Hole(h.getNumber(), h.getPar()))
-        .toList();
-
-    return new Course(entity.getExternalId(), entity.getName(), holes);
-  }
-
-  private static ScoreCard mapScoreCard(ScoreCardEntity entity) {
-    var course = mapCourse(entity.getCourse());
-
-    var players = entity.getPlayers()
-        .stream()
-        .map(p -> new Player(p.getExternalId(), p.getFirstName(), p.getLastName()))
-        .toList();
-
-    var scores = entity.getScores()
-        .stream()
-        .map(ScoreMapper::score)
-        .toList();
-
-    return new ScoreCard(entity.getId(), course, players, scores);
   }
 
   private static NotFoundException notFound(long id) {

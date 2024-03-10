@@ -1,13 +1,13 @@
 package mikaa.producers;
 
-import mikaa.feature.scorecard.ScoreCardEntity;
+import mikaa.domain.ScoreCard;
 
 public interface ScoreCardProducer {
 
-  void scoreCardAdded(ScoreCardEntity entity);
+  void scoreCardAdded(ScoreCard scoreCard);
 
-  void scoreCardDeleted(ScoreCardEntity entity);
+  void scoreCardDeleted(ScoreCard scoreCard);
 
-  void scoreCardUpdated(ScoreCardEntity entity);
+  void scoreCardUpdated(ScoreCard scoreCard);
 
 }

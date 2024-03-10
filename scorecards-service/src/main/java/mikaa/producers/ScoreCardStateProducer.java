@@ -4,7 +4,6 @@ import java.util.stream.Collectors;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
-import org.modelmapper.ModelMapper;
 
 import io.smallrye.reactive.messaging.kafka.Record;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,75 +16,73 @@ import mikaa.kiskotaan.scorecard.ScoreEntry;
 import mikaa.logic.ScoreCardInput;
 import mikaa.logic.ScoreLogic;
 import mikaa.config.OutgoingChannels;
-import mikaa.feature.course.CourseEntity;
-import mikaa.feature.course.HoleEntity;
-import mikaa.feature.score.ScoreEntity;
-import mikaa.feature.scorecard.ScoreCardEntity;
+import mikaa.domain.Course;
+import mikaa.domain.Hole;
+import mikaa.domain.Player;
+import mikaa.domain.Score;
+import mikaa.domain.ScoreCard;
 
 @ApplicationScoped
 class ScoreCardStateProducer implements ScoreCardProducer {
-
-  @Inject
-  private ModelMapper mapper;
 
   @Inject
   @Channel(OutgoingChannels.SCORECARD_STATE)
   Emitter<Record<Long, ScoreCardEvent>> emitter;
 
   @Override
-  public void scoreCardAdded(ScoreCardEntity entity) {
-    sendEvent(Action.ADD, entity);
+  public void scoreCardAdded(ScoreCard scoreCard) {
+    sendEvent(Action.ADD, scoreCard);
   }
 
   @Override
-  public void scoreCardDeleted(ScoreCardEntity entity) {
-    sendEvent(Action.DELETE, entity);
+  public void scoreCardDeleted(ScoreCard scoreCard) {
+    sendEvent(Action.DELETE, scoreCard);
   }
 
   @Override
-  public void scoreCardUpdated(ScoreCardEntity entity) {
-    sendEvent(Action.UPDATE, entity);
+  public void scoreCardUpdated(ScoreCard scoreCard) {
+    sendEvent(Action.UPDATE, scoreCard);
   }
 
-  private void sendEvent(Action action, ScoreCardEntity entity) {
-    var event = new ScoreCardEvent(action, toPayload(entity));
-    var record = Record.of(entity.getId(), event);
+  private void sendEvent(Action action, ScoreCard scoreCard) {
+    var event = new ScoreCardEvent(action, toPayload(scoreCard));
+    var record = Record.of(scoreCard.id(), event);
     emitter.send(record).toCompletableFuture().join();
   }
 
-  private ScoreCardPayload toPayload(ScoreCardEntity entity) {
-    var results = ScoreLogic.scoresByHole(ScoreCardInput.from(entity))
+  private ScoreCardPayload toPayload(ScoreCard scoreCard) {
+    var playerIds = scoreCard.players().stream().map(Player::id).toList();
+
+    var results = ScoreLogic.scoresByHole(ScoreCardInput.from(scoreCard))
         .getResults()
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
             entry -> entry.getKey().toString(),
-            entry -> mapper.map(entry.getValue(), RoundResult.class)));
+            entry -> new RoundResult(entry.getValue().getResult(), entry.getValue().getTotal())));
 
-    var scores = entity.getScores()
+    var scores = scoreCard.scores()
         .stream()
-        .map(score -> mapScore(score, entity.getCourse()))
+        .map(score -> mapScore(score, scoreCard.course()))
         .toList();
 
     return new ScoreCardPayload(
-        entity.getId(),
-        entity.getCourse().getExternalId(),
-        entity.getPlayerIds(),
+        scoreCard.id(),
+        scoreCard.course().id(),
+        playerIds,
         results,
         scores);
   }
 
-  private ScoreEntry mapScore(ScoreEntity score, CourseEntity course) {
-    var entry = mapper.map(score, ScoreEntry.class);
-    int par = course.getHoles()
+  private static ScoreEntry mapScore(Score score, Course course) {
+    int par = course.holes()
         .stream()
-        .filter(hole -> hole.getNumber() == score.getHole())
+        .filter(hole -> hole.number() == score.hole())
         .findFirst()
-        .map(HoleEntity::getPar)
+        .map(Hole::par)
         .orElse(0);
 
-    entry.setPar(par);
-    return entry;
+    return new ScoreEntry(score.id(), score.playerId(), score.hole(), par, score.score());
   }
 
 }

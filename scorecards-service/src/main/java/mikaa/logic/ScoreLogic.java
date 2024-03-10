@@ -7,23 +7,23 @@ import java.util.stream.Collectors;
 
 public interface ScoreLogic {
 
-  static ScoresByPlayer scoresByPlayer(ScoreCardInput scoreCard) {
-    var results = calculateRoundScores(scoreCard);
-    var scores = groupScoresByPlayer(scoreCard);
+  static ScoresByPlayer scoresByPlayer(ScoreCardInput input) {
+    var results = calculateRoundScores(input);
+    var scores = groupScoresByPlayer(input);
     return new ScoresByPlayer(results, scores);
   }
 
-  static ScoresByHole scoresByHole(ScoreCardInput scoreCard) {
-    var results = calculateRoundScores(scoreCard);
-    var scores = scoreCard.scores()
+  static ScoresByHole scoresByHole(ScoreCardInput input) {
+    var results = calculateRoundScores(input);
+    var scores = input.scores()
         .stream()
         .collect(Collectors.groupingBy(ScoreEntry::getHole));
 
     return new ScoresByHole(results, scores);
   }
 
-  private static Map<Long, PlayerScore> calculateRoundScores(ScoreCardInput scoreCard) {
-    return groupScoresByPlayer(scoreCard)
+  private static Map<Long, PlayerScore> calculateRoundScores(ScoreCardInput input) {
+    return groupScoresByPlayer(input)
         .entrySet()
         .stream()
         .collect(Collectors.toMap(
@@ -37,10 +37,8 @@ public interface ScoreLogic {
     return new PlayerScore(playerScores.size(), result, total);
   }
 
-  private static Map<Long, List<ScoreEntry>> groupScoresByPlayer(ScoreCardInput scoreCard) {
-    return scoreCard.scores()
-        .stream()
-        .collect(Collectors.groupingBy(ScoreEntry::getPlayerId));
+  private static Map<Long, List<ScoreEntry>> groupScoresByPlayer(ScoreCardInput input) {
+    return input.scores().stream().collect(Collectors.groupingBy(ScoreEntry::getPlayerId));
   }
 
 }

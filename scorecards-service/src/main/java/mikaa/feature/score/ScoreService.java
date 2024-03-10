@@ -21,7 +21,7 @@ class ScoreService {
 
   Score findOrThrow(long id) {
     return repository.findByIdOptional(id)
-        .map(score -> mapScore(score, score.getPlayer().getExternalId()))
+        .map(ScoreMapper::score)
         .orElseThrow(() -> new NotFoundException("Could not find score with id " + id));
   }
 
@@ -35,7 +35,7 @@ class ScoreService {
     repository.persist(scoreEntity);
     producer.scoreCardUpdated(scoreCard);
 
-    return mapScore(scoreEntity, player.getExternalId());
+    return ScoreMapper.score(scoreEntity);
   }
 
   void delete(long id) {
@@ -45,10 +45,6 @@ class ScoreService {
           repository.deleteById(id);
           producer.scoreCardUpdated(scoreCard);
         });
-  }
-
-  private static Score mapScore(ScoreEntity score, long playerId) {
-    return new Score(score.getId(), playerId, score.getHole(), score.getScore());
   }
 
 }

@@ -31,6 +31,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import jakarta.ws.rs.NotFoundException;
 
@@ -56,7 +57,7 @@ class ScoreCardResourceTest {
   @Test
   void should_get_all_score_cards() {
     var scoreCard = scoreCardMock();
-    when(repository.listAll()).thenReturn(List.of(scoreCard));
+    when(repository.streamAll()).thenReturn(Stream.of(scoreCard));
 
     given()
         .when()

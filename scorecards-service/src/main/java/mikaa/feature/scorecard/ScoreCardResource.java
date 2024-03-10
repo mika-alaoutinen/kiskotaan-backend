@@ -1,5 +1,6 @@
 package mikaa.feature.scorecard;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import jakarta.transaction.Transactional;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoreCardsApi;
+import mikaa.domain.NewScoreCard;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.model.ScoreCardDTO;
 import mikaa.model.ScoreCardSummaryDTO;
@@ -15,14 +17,16 @@ import mikaa.model.ScoreCardSummaryDTO;
 @RequiredArgsConstructor
 class ScoreCardResource implements ScoreCardsApi {
 
-  private final ScoreCardMapper mapper;
   private final ScoreCardService service;
 
   @Override
   @Transactional
   public ScoreCardDTO addScoreCard(@Valid @NotNull NewScoreCardDTO newScoreCardDTO) {
-    var scoreCard = service.add(newScoreCardDTO);
-    return mapper.toDto(scoreCard);
+    var newScoreCard = new NewScoreCard(
+        newScoreCardDTO.getCourseId().longValue(),
+        newScoreCardDTO.getPlayerIds().stream().map(BigDecimal::longValue).toList());
+
+    return ScoreCardMapper.toDto(service.add(newScoreCard));
   }
 
   @Override
@@ -33,15 +37,15 @@ class ScoreCardResource implements ScoreCardsApi {
 
   @Override
   public ScoreCardDTO getScoreCard(Integer id) {
-    var scoreCard = service.findOrThrow(id);
-    return mapper.toDto(scoreCard);
+    return ScoreCardMapper.toDto(service.findByIdOrThrow(id));
   }
 
   @Override
+  @Transactional
   public List<ScoreCardSummaryDTO> getScoreCards() {
     return service.findAll()
         .stream()
-        .map(mapper::toSummary)
+        .map(ScoreCardMapper::toSummary)
         .toList();
   }
 

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -21,13 +20,13 @@ import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.config.OutgoingChannels;
+import mikaa.domain.NewScoreCard;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
-import mikaa.model.NewScoreCardDTO;
 import mikaa.producers.ScoreCardProducer;
 
 @QuarkusTest
@@ -64,11 +63,7 @@ class ScoreCardEventsTest {
     when(courseFinder.findOrThrow(anyLong())).thenReturn(courseMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(playerMock());
 
-    var dto = new NewScoreCardDTO()
-        .courseId(BigDecimal.ONE)
-        .playerIds(Set.of(BigDecimal.TEN));
-
-    service.add(dto);
+    service.add(new NewScoreCard(1l, Set.of(10l)));
     assertEvent(Action.ADD);
   }
 

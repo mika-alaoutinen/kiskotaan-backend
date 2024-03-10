@@ -6,14 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
-
-import jakarta.enterprise.context.ApplicationScoped;
-import lombok.RequiredArgsConstructor;
-import mikaa.feature.course.CourseEntity;
-import mikaa.feature.course.HoleEntity;
+import mikaa.domain.Course;
+import mikaa.domain.Hole;
+import mikaa.domain.Player;
+import mikaa.domain.ScoreCard;
 import mikaa.logic.PlayerScore;
 import mikaa.logic.ScoreCardInput;
+import mikaa.logic.ScoreEntry;
 import mikaa.logic.ScoreLogic;
 import mikaa.model.CourseDTO;
 import mikaa.model.PlayerDTO;
@@ -22,60 +21,75 @@ import mikaa.model.ScoreCardDTO;
 import mikaa.model.ScoreCardSummaryDTO;
 import mikaa.model.ScoreDTO;
 
-@ApplicationScoped
-@RequiredArgsConstructor
-class ScoreCardMapper {
+interface ScoreCardMapper {
 
-  private final ModelMapper mapper;
-
-  ScoreCardDTO toDto(ScoreCardEntity scoreCard) {
+  static ScoreCardDTO toDto(ScoreCard scoreCard) {
     var scoresByPlayer = ScoreLogic.scoresByPlayer(ScoreCardInput.from(scoreCard));
 
-    var scores = scoresByPlayer.getScores()
-        .entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            entry -> entry.getKey().toString(),
-            entry -> mapMany(entry.getValue(), ScoreDTO.class)));
-
     return new ScoreCardDTO()
-        .id(BigDecimal.valueOf(scoreCard.getId()))
-        .course(mapCourse(scoreCard.getCourse()))
-        .players(mapMany(scoreCard.getPlayers(), PlayerDTO.class))
+        .id(BigDecimal.valueOf(scoreCard.id()))
+        .course(mapCourse(scoreCard.course()))
+        .players(mapPlayers(scoreCard.players()))
         .results(mapResults(scoresByPlayer.getResults()))
-        .scores(scores);
+        .scores(mapScores(scoresByPlayer.getScores()));
   }
 
-  ScoreCardSummaryDTO toSummary(ScoreCardEntity scoreCard) {
+  static ScoreCardSummaryDTO toSummary(ScoreCard scoreCard) {
     var scoresByPlayer = ScoreLogic.scoresByPlayer(ScoreCardInput.from(scoreCard));
 
     return new ScoreCardSummaryDTO()
-        .id(BigDecimal.valueOf(scoreCard.getId()))
-        .course(mapCourse(scoreCard.getCourse()))
-        .players(mapMany(scoreCard.getPlayers(), PlayerDTO.class))
+        .id(BigDecimal.valueOf(scoreCard.id()))
+        .course(mapCourse(scoreCard.course()))
+        .players(mapPlayers(scoreCard.players()))
         .results(mapResults(scoresByPlayer.getResults()));
   }
 
-  private CourseDTO mapCourse(CourseEntity course) {
-    var coursePar = course.getHoles().stream().mapToInt(HoleEntity::getPar).sum();
-
+  private static CourseDTO mapCourse(Course c) {
     return new CourseDTO()
-        .id(BigDecimal.valueOf(course.getExternalId()))
-        .holes(course.getHoles().size())
-        .name(course.getName())
-        .par(coursePar);
+        .id(BigDecimal.valueOf(c.id()))
+        .holes(c.holes().size())
+        .name(c.name())
+        .par(c.holes().stream().mapToInt(Hole::par).sum());
   }
 
-  private Map<String, ResultDTO> mapResults(Map<Long, PlayerScore> results) {
+  private static List<PlayerDTO> mapPlayers(Collection<Player> players) {
+    return players.stream()
+        .map(p -> new PlayerDTO()
+            .id(BigDecimal.valueOf(p.id()))
+            .firstName(p.firstName())
+            .lastName(p.lastName()))
+        .toList();
+  }
+
+  private static Map<String, List<ScoreDTO>> mapScores(Map<Long, List<ScoreEntry>> scoresByPlayer) {
+    return scoresByPlayer.entrySet()
+        .stream()
+        .collect(Collectors.toMap(
+            entry -> entry.getKey().toString(),
+            entry -> entry.getValue().stream().map(ScoreCardMapper::mapScore).toList()));
+  }
+
+  private static ScoreDTO mapScore(ScoreEntry entry) {
+    return new ScoreDTO()
+        .id(BigDecimal.valueOf(entry.getId()))
+        .playerId((int) entry.getPlayerId())
+        .hole(entry.getHole())
+        .score(entry.getScore());
+  }
+
+  private static Map<String, ResultDTO> mapResults(Map<Long, PlayerScore> results) {
     return results.entrySet()
         .stream()
         .collect(Collectors.toMap(
             entry -> entry.getKey().toString(),
-            entry -> mapper.map(entry.getValue(), ResultDTO.class)));
+            entry -> mapResult(entry.getValue())));
   }
 
-  private <T, R> List<R> mapMany(Collection<T> entities, Class<R> type) {
-    return entities.stream().map(e -> mapper.map(e, type)).toList();
+  private static ResultDTO mapResult(PlayerScore ps) {
+    return new ResultDTO()
+        .holesPlayed(ps.getHolesPlayed())
+        .result(ps.getResult())
+        .total(ps.getTotal());
   }
 
 }

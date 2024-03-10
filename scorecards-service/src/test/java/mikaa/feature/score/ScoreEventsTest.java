@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -25,13 +24,13 @@ import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
 import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.config.OutgoingChannels;
+import mikaa.domain.NewScore;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.feature.scorecard.ScoreCardFinder;
-import mikaa.model.NewScoreDTO;
 import mikaa.producers.ScoreCardProducer;
 
 @QuarkusTest
@@ -68,12 +67,7 @@ class ScoreEventsTest {
     when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(playerMock());
 
-    var newScore = new NewScoreDTO()
-        .hole(1)
-        .playerId(BigDecimal.valueOf(2l))
-        .score(4);
-
-    service.addScore(13l, newScore);
+    service.addScore(13l, new NewScore(2, 1, 4));
 
     var payload = assertEvent();
     assertEquals(1, payload.getScores().size());

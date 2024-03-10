@@ -4,9 +4,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
 
 import lombok.RequiredArgsConstructor;
+import mikaa.domain.NewScore;
+import mikaa.domain.Score;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardFinder;
-import mikaa.model.NewScoreDTO;
 import mikaa.producers.ScoreCardProducer;
 
 @ApplicationScoped
@@ -23,18 +24,17 @@ class ScoreService {
         .orElseThrow(() -> new NotFoundException("Could not find score with id " + id));
   }
 
-  ScoreEntity addScore(long id, NewScoreDTO newScore) {
+  Score addScore(long id, NewScore newScore) {
     var scoreCard = scoreCardFinder.findOrThrow(id);
-    var player = playerFinder.findOrThrow(newScore.getPlayerId().longValue());
-    var score = new ScoreEntity(newScore.getHole(), newScore.getScore());
+    var player = playerFinder.findOrThrow(newScore.playerId());
+    var scoreEntity = new ScoreEntity(newScore.hole(), newScore.score());
 
-    scoreCard.addScore(score);
-    player.addScore(score);
-
-    repository.persist(score);
+    scoreCard.addScore(scoreEntity);
+    player.addScore(scoreEntity);
+    repository.persist(scoreEntity);
     producer.scoreCardUpdated(scoreCard);
 
-    return score;
+    return mapScore(scoreEntity, player.getExternalId());
   }
 
   void delete(long id) {
@@ -44,6 +44,10 @@ class ScoreService {
           repository.deleteById(id);
           producer.scoreCardUpdated(scoreCard);
         });
+  }
+
+  private static Score mapScore(ScoreEntity score, long playerId) {
+    return new Score(score.getId(), playerId, score.getHole(), score.getScore());
   }
 
 }

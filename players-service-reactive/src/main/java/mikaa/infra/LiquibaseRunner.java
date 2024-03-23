@@ -2,17 +2,12 @@ package mikaa.infra;
 
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
-import io.quarkus.runtime.LaunchMode;
 import io.quarkus.runtime.StartupEvent;
-import io.quarkus.runtime.util.ExceptionUtil;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
-import liquibase.Contexts;
-import liquibase.LabelExpression;
-import liquibase.Liquibase;
-import liquibase.database.DatabaseFactory;
-import liquibase.exception.LiquibaseException;
-import liquibase.resource.ClassLoaderResourceAccessor;
+import liquibase.command.CommandScope;
+import liquibase.command.core.UpdateCommandStep;
+import liquibase.command.core.helpers.DbUrlConnectionArgumentsCommandStep;
 import lombok.extern.slf4j.Slf4j;
 
 @ApplicationScoped
@@ -20,47 +15,33 @@ import lombok.extern.slf4j.Slf4j;
 class LiquibaseRunner {
 
   @ConfigProperty(name = "quarkus.datasource.reactive.url")
-  String url;
+  private String url;
 
   @ConfigProperty(name = "quarkus.datasource.username")
-  String username;
+  private String username;
 
   @ConfigProperty(name = "quarkus.datasource.password")
-  String password;
+  private String password;
 
   @ConfigProperty(name = "quarkus.liquibase.change-log")
-  String changeLogLocation;
+  private String changeLogLocation;
 
+  /**
+   * Runs Liquibase migrations on application startup. This is a hack to get
+   * Liquibase working with reactive hibernate.
+   */
   void onApplicationStart(@Observes StartupEvent event) {
-    if (LaunchMode.current() != LaunchMode.TEST) {
-      runMigration();
-    } else {
-      log.info("Skipping DB migrations in TEST mode.");
-    }
-  }
-
-  private void runMigration() {
     String jdbcUrl = url.replace("vertx-reactive", "jdbc");
-    log.info("Migrating DB " + jdbcUrl);
-    Liquibase liquibase = null;
 
     try {
-      var resourceAccessor = new ClassLoaderResourceAccessor(Thread.currentThread().getContextClassLoader());
-      var conn = DatabaseFactory.getInstance()
-          .openConnection(jdbcUrl, username, password, null, resourceAccessor);
-
-      liquibase = new Liquibase(changeLogLocation, resourceAccessor, conn);
-      liquibase.update(new Contexts(), new LabelExpression());
+      new CommandScope("update")
+          .addArgumentValue(DbUrlConnectionArgumentsCommandStep.URL_ARG, jdbcUrl)
+          .addArgumentValue(DbUrlConnectionArgumentsCommandStep.USERNAME_ARG, username)
+          .addArgumentValue(DbUrlConnectionArgumentsCommandStep.PASSWORD_ARG, password)
+          .addArgumentValue(UpdateCommandStep.CHANGELOG_FILE_ARG, changeLogLocation)
+          .execute();
     } catch (Exception e) {
-      log.error("Liquibase Migration Exception: " + ExceptionUtil.generateStackTrace(e));
-    } finally {
-      if (liquibase != null) {
-        try {
-          liquibase.close();
-        } catch (LiquibaseException e) {
-          log.info(e.getMessage());
-        }
-      }
+      log.error("Liquibase Migration Exception: " + e.getStackTrace());
     }
   }
 

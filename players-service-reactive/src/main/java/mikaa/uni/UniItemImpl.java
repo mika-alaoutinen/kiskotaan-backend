@@ -11,6 +11,12 @@ class UniItemImpl<T> implements UniItem<T> {
   private final Uni<T> value;
 
   @Override
+  public <R> UniItem<T> call(Function<? super T, Uni<?>> callback) {
+    var result = value.call(callback);
+    return UniItem.from(result);
+  }
+
+  @Override
   public <R> UniItem<R> flatMap(Function<? super T, Uni<? extends R>> mapper) {
     var result = value.onItem().ifNotNull().transformToUni(mapper);
     return UniItem.from(result);
@@ -25,6 +31,11 @@ class UniItemImpl<T> implements UniItem<T> {
   @Override
   public Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper) {
     return value.onItem().ifNotNull().transformToUni(mapper);
+  }
+
+  @Override
+  public Uni<Void> discard() {
+    return value.replaceWithVoid();
   }
 
   @Override

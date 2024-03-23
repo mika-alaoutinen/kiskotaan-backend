@@ -22,11 +22,15 @@ public interface UniItem<T> {
     return new UniItemImpl<Void>(Uni.createFrom().nullItem());
   }
 
-  <U> UniItem<U> flatMap(Function<? super T, Uni<? extends U>> mapper);
+  <R> UniItem<T> call(Function<? super T, Uni<?>> callback);
 
-  <U> UniItem<U> map(Function<? super T, U> mapper);
+  <R> UniItem<R> flatMap(Function<? super T, Uni<? extends R>> mapper);
+
+  <R> UniItem<R> map(Function<? super T, R> mapper);
 
   Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper);
+
+  Uni<Void> discard();
 
   Uni<T> orThrow(Throwable failure);
 

@@ -2,6 +2,7 @@ package mikaa.feature;
 
 import java.util.Collection;
 
+import io.quarkus.hibernate.reactive.panache.common.WithSession;
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
@@ -13,6 +14,7 @@ import mikaa.uni.UniItem;
 
 @ApplicationScoped
 @RequiredArgsConstructor
+@WithSession
 class PlayerService {
 
   private final PlayerRepository repository;

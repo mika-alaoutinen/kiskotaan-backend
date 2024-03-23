@@ -6,6 +6,8 @@ avro:
         - PlayerPayload.avsc
 
 quarkus:
+  datasource:
+    jdbc: false
   hibernate-orm:
     validate-in-dev-mode: true
   http:

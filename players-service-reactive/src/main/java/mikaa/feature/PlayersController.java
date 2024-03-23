@@ -16,35 +16,35 @@ import mikaa.domain.Player;
 @ApplicationScoped
 @Path("players")
 @RequiredArgsConstructor
-class PlayersController {
+public class PlayersController {
 
   private final PlayerService service;
 
   @GET
-  Uni<Collection<Player>> findPlayers() {
+  public Uni<Collection<Player>> findPlayers() {
     return service.findAll();
   }
 
   @POST
-  Uni<Player> addPlayer(@Valid NewPlayer newPlayer) {
+  public Uni<Player> addPlayer(@Valid NewPlayer newPlayer) {
     return service.add(newPlayer);
   }
 
   @GET
   @Path("{id}")
-  Uni<Player> findPlayer(long id) {
+  public Uni<Player> findPlayer(long id) {
     return service.findOne(id);
   }
 
   @DELETE
   @Path("{id}")
-  Uni<Void> deletePlayer(long id) {
+  public Uni<Void> deletePlayer(long id) {
     return service.delete(id);
   }
 
   @POST
   @Path("{id}")
-  Uni<Player> updatePlayerName(long id, @Valid NewPlayer updatedPlayer) {
+  public Uni<Player> updatePlayerName(long id, @Valid NewPlayer updatedPlayer) {
     return service.updateName(id, updatedPlayer);
   }
 

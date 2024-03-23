@@ -1,0 +1,16 @@
+quarkus:
+  http:
+    port: 8081
+  liquibase:
+    change-log: db/changelog.yaml
+    contexts: all,test
+    migrate-at-start: true
+  log:
+    level: WARN
+
+mp:
+  messaging:
+    outgoing:
+      player-state:
+        connector: smallrye-in-memory
+        topic: "Players.player_state"

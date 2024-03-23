@@ -17,6 +17,7 @@ import mikaa.uni.UniItem;
 @RequiredArgsConstructor
 class PlayerService {
 
+  private final PlayerProducer producer;
   private final PlayerRepository repository;
 
   @WithSession
@@ -39,6 +40,7 @@ class PlayerService {
     return UniItem.from(Uni.createFrom().item(fromNewPlayer(newPlayer)))
         .flatMap(repository::persistAndFlush) // flush to create ID for entity
         .map(PlayerService::fromEntity)
+        .call(producer::playerAdded)
         .unwrap();
   }
 
@@ -52,12 +54,16 @@ class PlayerService {
         })
         .flatMap(repository::persist)
         .map(PlayerService::fromEntity)
+        .call(producer::playerUpdated)
         .orThrow(new NotFoundException("Could not find player with ID " + id));
   }
 
   @WithTransaction
   Uni<Void> delete(long id) {
-    return repository.deleteById(id).replaceWithVoid();
+    return UniItem.from(repository.deleteById(id))
+        .map(PlayerService::fromEntity)
+        .call(producer::playerDeleted)
+        .discard();
   }
 
   private static Player fromEntity(PlayerEntity entity) {

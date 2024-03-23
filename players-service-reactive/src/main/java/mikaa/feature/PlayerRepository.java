@@ -9,6 +9,13 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 class PlayerRepository implements PanacheRepository<PlayerEntity> {
 
+  Uni<PlayerEntity> deleteById(long id) {
+    return findById(id)
+        .onItem()
+        .ifNotNull()
+        .call(this::delete);
+  }
+
   Uni<Boolean> existsByFirstNameAndLastName(String firstName, String lastName) {
     return findByFirstAndLastname(firstName, lastName).map(list -> !list.isEmpty());
   }

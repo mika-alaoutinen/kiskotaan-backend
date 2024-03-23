@@ -19,22 +19,22 @@ class PlayerProducer {
   @Channel("player-state")
   MutinyEmitter<Record<Long, PlayerEvent>> emitter;
 
-  Uni<Void> playerAdded(Player player) {
+  Uni<Player> playerAdded(Player player) {
     return send(Action.ADD, player);
   }
 
-  Uni<Void> playerDeleted(Player player) {
+  Uni<Player> playerDeleted(Player player) {
     return send(Action.DELETE, player);
   }
 
-  Uni<Void> playerUpdated(Player player) {
+  Uni<Player> playerUpdated(Player player) {
     return send(Action.UPDATE, player);
   }
 
-  private Uni<Void> send(Action action, Player player) {
+  private Uni<Player> send(Action action, Player player) {
     var payload = new PlayerPayload(player.id(), player.firstName(), player.lastName());
     var record = Record.of(payload.getId(), new PlayerEvent(action, payload));
-    return emitter.send(record);
+    return emitter.send(record).replaceWith(Uni.createFrom().item(player));
   }
 
 }

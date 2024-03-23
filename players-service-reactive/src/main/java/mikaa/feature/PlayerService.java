@@ -1,6 +1,6 @@
 package mikaa.feature;
 
-import java.util.List;
+import java.util.Collection;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,11 +17,10 @@ class PlayerService {
 
   private final PlayerRepository repository;
 
-  Uni<List<Player>> findAll() {
-    UniCollection.from(repository.listAll());
-
-    return repository.listAll().map(
-        players -> players.stream().map(PlayerService::fromEntity).toList());
+  Uni<Collection<Player>> findAll() {
+    return UniCollection.fromList(repository.listAll())
+        .map(PlayerService::fromEntity)
+        .unwrap();
   }
 
   Uni<Player> findOne(long id) {

@@ -1,6 +1,6 @@
 package mikaa.feature;
 
-import java.util.List;
+import java.util.Collection;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,7 +21,7 @@ class PlayersController {
   private final PlayerService service;
 
   @GET
-  public Uni<List<Player>> findPlayers() {
+  public Uni<Collection<Player>> findPlayers() {
     return service.findAll();
   }
 

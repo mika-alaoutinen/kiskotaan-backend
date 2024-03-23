@@ -2,6 +2,7 @@ package mikaa.uni;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 import io.smallrye.mutiny.Uni;
@@ -10,6 +11,10 @@ public interface UniCollection<T> {
 
   static <T> UniCollection<T> from(Uni<Collection<T>> uni) {
     return new UniCollectionImpl<T>(uni);
+  }
+
+  static <T> UniCollection<T> fromList(Uni<List<T>> uni) {
+    return from(uni.map(l -> l));
   }
 
   static <T> UniCollection<T> empty() {

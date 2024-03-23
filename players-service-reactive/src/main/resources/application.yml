@@ -1,1 +1,30 @@
-{}
+avro:
+  codegen:
+    avsc:
+      imports:
+        - Action.avsc
+        - PlayerPayload.avsc
+
+quarkus:
+  hibernate-orm:
+    validate-in-dev-mode: true
+  http:
+    port: 8081
+  liquibase:
+    change-log: db/changelog.yaml
+    contexts: all,dev # dev context inserts test data into db
+    migrate-at-start: true
+
+mp:
+  messaging:
+    connector:
+      smallrye-kafka:
+        apicurio:
+          registry:
+            avro:
+              encoding: JSON
+            auto-register: true
+
+    outgoing:
+      player-state:
+        topic: "Players-player_state"

@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
+import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
 import mikaa.domain.NewPlayer;
@@ -42,7 +43,7 @@ public class PlayersController {
     return service.delete(id);
   }
 
-  @POST
+  @PUT
   @Path("{id}")
   public Uni<Player> updatePlayerName(long id, @Valid NewPlayer updatedPlayer) {
     return service.updateName(id, updatedPlayer);

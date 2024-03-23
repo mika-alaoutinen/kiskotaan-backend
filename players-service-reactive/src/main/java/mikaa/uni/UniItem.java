@@ -28,9 +28,9 @@ public interface UniItem<T> {
 
   <R> UniItem<R> map(Function<? super T, R> mapper);
 
-  Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper);
-
   Uni<Void> discard();
+
+  Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper);
 
   Uni<T> orThrow(Throwable failure);
 

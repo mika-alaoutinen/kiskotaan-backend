@@ -12,7 +12,7 @@ class UniItemImpl<T> implements UniItem<T> {
 
   @Override
   public <R> UniItem<T> call(Function<? super T, Uni<?>> callback) {
-    var result = value.call(callback);
+    var result = value.onItem().ifNotNull().call(callback);
     return UniItem.from(result);
   }
 
@@ -29,13 +29,13 @@ class UniItemImpl<T> implements UniItem<T> {
   }
 
   @Override
-  public Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper) {
-    return value.onItem().ifNotNull().transformToUni(mapper);
+  public Uni<Void> discard() {
+    return value.replaceWithVoid();
   }
 
   @Override
-  public Uni<Void> discard() {
-    return value.replaceWithVoid();
+  public Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper) {
+    return value.onItem().ifNotNull().transformToUni(mapper);
   }
 
   @Override

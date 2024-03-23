@@ -21,30 +21,30 @@ class PlayersController {
   private final PlayerService service;
 
   @GET
-  public Uni<Collection<Player>> findPlayers() {
+  Uni<Collection<Player>> findPlayers() {
     return service.findAll();
   }
 
   @POST
-  public Uni<Player> addPlayer(@Valid NewPlayer newPlayer) {
+  Uni<Player> addPlayer(@Valid NewPlayer newPlayer) {
     return service.add(newPlayer);
   }
 
   @GET
   @Path("{id}")
-  public Uni<Player> findPlayer(long id) {
+  Uni<Player> findPlayer(long id) {
     return service.findOne(id);
   }
 
   @DELETE
   @Path("{id}")
-  public Uni<Void> deletePlayer(long id) {
+  Uni<Void> deletePlayer(long id) {
     return service.delete(id);
   }
 
   @POST
   @Path("{id}")
-  public Uni<Player> updatePlayerName(long id, @Valid NewPlayer updatedPlayer) {
+  Uni<Player> updatePlayerName(long id, @Valid NewPlayer updatedPlayer) {
     return service.updateName(id, updatedPlayer);
   }
 

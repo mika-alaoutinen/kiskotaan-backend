@@ -57,7 +57,7 @@ class GlobalExceptionHandlerTest {
     assertEquals(400, body.status());
     assertEquals("Bad Request", body.error());
     assertEquals("Invalid request body", body.message());
-    assertEquals("/courses/1", body.path());
+    assertEquals("/players/1", body.path());
 
     var expectedError = new ValidationError("object.name", "Invalid name");
 

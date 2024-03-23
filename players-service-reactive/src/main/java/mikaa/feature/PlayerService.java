@@ -8,7 +8,8 @@ import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import mikaa.domain.NewPlayer;
 import mikaa.domain.Player;
-import mikaa.uni.UniDecorator;
+import mikaa.uni.UniCollection;
+import mikaa.uni.UniItem;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -17,26 +18,28 @@ class PlayerService {
   private final PlayerRepository repository;
 
   Uni<List<Player>> findAll() {
+    UniCollection.from(repository.listAll());
+
     return repository.listAll().map(
         players -> players.stream().map(PlayerService::fromEntity).toList());
   }
 
   Uni<Player> findOne(long id) {
-    return UniDecorator.from(repository.findById(id))
+    return UniItem.from(repository.findById(id))
         .map(PlayerService::fromEntity)
         .orThrow(new NotFoundException("Could not find player with ID " + id));
   }
 
   Uni<Player> add(NewPlayer newPlayer) {
     // How to do validation logic?
-    return UniDecorator.from(Uni.createFrom().item(fromNewPlayer(newPlayer)))
+    return UniItem.from(Uni.createFrom().item(fromNewPlayer(newPlayer)))
         .flatMap(repository::persist)
         .map(PlayerService::fromEntity)
         .unwrap();
   }
 
   Uni<Player> updateName(long id, NewPlayer updated) {
-    return UniDecorator.from(repository.findById(id))
+    return UniItem.from(repository.findById(id))
         .map(entity -> {
           entity.setFirstName(updated.firstName());
           entity.setLastName(updated.lastName());

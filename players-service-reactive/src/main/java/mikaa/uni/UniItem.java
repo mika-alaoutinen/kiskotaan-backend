@@ -5,26 +5,26 @@ import java.util.function.Function;
 import io.smallrye.mutiny.Uni;
 
 /**
- * UniDecorator fixes the ill-behaving mapping functions of Mutiny Uni and adds
+ * UniItem fixes the ill-behaving mapping functions of Mutiny Uni and adds
  * convenient shortcuts.
  * 
  * Uni mapping functions should behave in a monadic fashion similarly to f. ex.
  * Optional, where they apply the mapping function if the source is not null and
  * do nothing otherwise.
  */
-public interface UniDecorator<T> {
+public interface UniItem<T> {
 
-  static <T> UniDecorator<T> from(Uni<T> uni) {
-    return new UniImpl<T>(uni);
+  static <T> UniItem<T> from(Uni<T> uni) {
+    return new UniItemImpl<T>(uni);
   }
 
-  static UniDecorator<Void> empty() {
-    return new UniImpl<Void>(Uni.createFrom().nullItem());
+  static UniItem<Void> empty() {
+    return new UniItemImpl<Void>(Uni.createFrom().nullItem());
   }
 
-  <U> UniDecorator<U> flatMap(Function<? super T, Uni<? extends U>> mapper);
+  <U> UniItem<U> flatMap(Function<? super T, Uni<? extends U>> mapper);
 
-  <U> UniDecorator<U> map(Function<? super T, U> mapper);
+  <U> UniItem<U> map(Function<? super T, U> mapper);
 
   Uni<Void> ifPresent(Function<T, Uni<? extends Void>> mapper);
 

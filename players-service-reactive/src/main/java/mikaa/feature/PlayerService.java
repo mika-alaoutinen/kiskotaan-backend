@@ -19,6 +19,7 @@ class PlayerService {
 
   private final PlayerProducer producer;
   private final PlayerRepository repository;
+  private final PlayerValidator validator;
 
   @WithSession
   Uni<Collection<Player>> findAll() {
@@ -36,8 +37,8 @@ class PlayerService {
 
   @WithTransaction
   Uni<Player> add(NewPlayer newPlayer) {
-    // How to do validation logic?
-    return UniItem.from(Uni.createFrom().item(fromNewPlayer(newPlayer)))
+    return UniItem.from(validator.validate(newPlayer))
+        .map(PlayerService::fromNewPlayer)
         .flatMap(repository::persistAndFlush) // flush to create ID for entity
         .map(PlayerService::fromEntity)
         .call(producer::playerAdded)
@@ -70,7 +71,7 @@ class PlayerService {
     return new Player(entity.getId(), entity.getFirstName(), entity.getLastName());
   }
 
-  private PlayerEntity fromNewPlayer(NewPlayer newPlayer) {
+  private static PlayerEntity fromNewPlayer(NewPlayer newPlayer) {
     return new PlayerEntity(newPlayer.firstName(), newPlayer.lastName());
   }
 

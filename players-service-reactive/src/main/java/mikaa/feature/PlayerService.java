@@ -37,7 +37,7 @@ class PlayerService {
 
   @WithTransaction
   Uni<Player> add(NewPlayer newPlayer) {
-    return UniItem.from(validator.validate(newPlayer))
+    return UniItem.from(validator.validateUniqueName(newPlayer))
         .map(PlayerService::fromNewPlayer)
         .flatMap(repository::persistAndFlush) // flush to create ID for entity
         .map(PlayerService::fromEntity)
@@ -48,6 +48,7 @@ class PlayerService {
   @WithTransaction
   Uni<Player> updateName(long id, NewPlayer updated) {
     return UniItem.from(repository.findById(id))
+        .call(x -> validator.validateUniqueName(updated))
         .map(entity -> {
           entity.setFirstName(updated.firstName());
           entity.setLastName(updated.lastName());

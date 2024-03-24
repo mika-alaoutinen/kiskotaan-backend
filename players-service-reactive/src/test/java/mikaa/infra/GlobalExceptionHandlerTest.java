@@ -46,8 +46,8 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
-  void shoud_handle_validation_errors() throws URISyntaxException {
-    var validationException = ValidationException.from(new ValidationError("object.name", "Invalid name")).get();
+  void should_handle_validation_errors() throws URISyntaxException {
+    var validationException = new ValidationException(new ValidationError("object.name", "Invalid name"));
     var response = handler.handleValidation(validationException);
 
     assertEquals(400, response.getStatus());

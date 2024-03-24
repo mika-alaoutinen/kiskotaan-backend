@@ -13,16 +13,12 @@ class PlayerValidator {
 
   private final PlayerRepository repository;
 
-  Uni<NewPlayer> validate(NewPlayer newPlayer) {
-    return validateUniqueName(newPlayer);
-  }
-
-  private Uni<NewPlayer> validateUniqueName(NewPlayer newPlayer) {
+  Uni<NewPlayer> validateUniqueName(NewPlayer newPlayer) {
     return repository.existsByFirstNameAndLastName(newPlayer.firstName(), newPlayer.lastName())
         .invoke(exists -> {
           if (exists) {
-            var error = new ValidationError("player", "Found existing player with the same name");
-            ValidationException.maybeThrow(error);
+            var error = new ValidationError("firstName, lastName", "Found existing player with the same name.");
+            throw new ValidationException(error);
           }
         }).replaceWith(newPlayer);
   }

@@ -17,7 +17,7 @@ import mikaa.domain.Player;
 @ApplicationScoped
 @Path("players")
 @RequiredArgsConstructor
-public class PlayersController {
+public class PlayerResource {
 
   private final PlayerService service;
 

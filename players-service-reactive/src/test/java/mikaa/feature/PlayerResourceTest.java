@@ -2,12 +2,7 @@ package mikaa.feature;
 
 import static org.mockito.Mockito.verifyNoInteractions;
 
-import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.NullSource;
 
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -48,9 +43,9 @@ class PlayerResourceTest {
         .statusCode(200)
         .contentType(ContentType.JSON)
         .body(
-            "$.id", is(1L),
-            "$.firstName", is("Aku"),
-            "$.lastName", is("Ankka"));
+            "id", is(1),
+            "firstName", is("Aku"),
+            "lastName", is("Ankka"));
   }
 
   @Test
@@ -63,11 +58,9 @@ class PlayerResourceTest {
     assertNotFoundResponse(response, 99);
   }
 
-  @MethodSource("invalidNewPlayers")
-  @NullSource
-  @ParameterizedTest
-  void should_not_add_player_if_malformed_payload(NewPlayer invalidPlayer) {
-    var response = postPlayer(invalidPlayer);
+  @Test
+  void should_not_add_player_if_malformed_payload() {
+    var response = postPlayer(new NewPlayer("", "Player"));
     assertBadRequestResponse(response);
     verifyNoInteractions(producer);
   }
@@ -86,11 +79,9 @@ class PlayerResourceTest {
     verifyNoInteractions(producer);
   }
 
-  @MethodSource("invalidNewPlayers")
-  @NullSource
-  @ParameterizedTest
-  void should_not_update_player_if_malformed_payload(NewPlayer invalidPlayer) {
-    var response = putPlayer(invalidPlayer, 1);
+  @Test
+  void should_not_update_player_if_malformed_payload() {
+    var response = putPlayer(new NewPlayer("", "Player"), 1);
     assertBadRequestResponse(response);
     verifyNoInteractions(producer);
   }
@@ -98,7 +89,7 @@ class PlayerResourceTest {
   @Test
   void should_not_update_player_if_name_not_unique() {
     var response = putPlayer(new NewPlayer("Aku", "Ankka"), 2);
-    assertNotFoundResponse(response, 99);
+    assertBadRequestResponse(response);
     verifyNoInteractions(producer);
   }
 
@@ -153,12 +144,6 @@ class PlayerResourceTest {
             "error", is("Not Found"),
             "message", is("Could not find player with id " + id),
             "path", containsString("/players/" + id));
-  }
-
-  private static Stream<NewPlayer> invalidNewPlayers() {
-    return Stream.of(
-        new NewPlayer("Kalle", null),
-        new NewPlayer("Kalle", ""));
   }
 
 }

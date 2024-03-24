@@ -7,7 +7,8 @@ import io.restassured.http.ContentType;
 import mikaa.domain.NewPlayer;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.ArgumentMatchers.isNotNull;
+import static org.hamcrest.CoreMatchers.notNullValue;
+
 import static io.restassured.RestAssured.given;
 
 @QuarkusTest
@@ -25,9 +26,9 @@ class PlayerIT {
         .then()
         .statusCode(200)
         .body(
-            "$.id", isNotNull(),
-            "$.firstName", is("New"),
-            "$.lastName", is("Player"));
+            "id", notNullValue(),
+            "firstName", is("New"),
+            "lastName", is("Player"));
   }
 
   @Test
@@ -40,9 +41,9 @@ class PlayerIT {
         .then()
         .statusCode(200)
         .body(
-            "$.id", isNotNull(),
-            "$.firstName", is("Iines"),
-            "$.lastName", is("Metso"));
+            "id", notNullValue(),
+            "firstName", is("Iines"),
+            "lastName", is("Metso"));
   }
 
   @Test

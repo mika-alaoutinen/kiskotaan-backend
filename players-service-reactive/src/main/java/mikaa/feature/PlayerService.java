@@ -32,7 +32,7 @@ class PlayerService {
   Uni<Player> findOne(long id) {
     return UniItem.from(repository.findById(id))
         .map(PlayerService::fromEntity)
-        .orThrow(new NotFoundException("Could not find player with ID " + id));
+        .orThrow(new NotFoundException("Could not find player with id " + id));
   }
 
   @WithTransaction
@@ -57,7 +57,7 @@ class PlayerService {
         .flatMap(repository::persist)
         .map(PlayerService::fromEntity)
         .call(producer::playerUpdated)
-        .orThrow(new NotFoundException("Could not find player with ID " + id));
+        .orThrow(new NotFoundException("Could not find player with id " + id));
   }
 
   @WithTransaction

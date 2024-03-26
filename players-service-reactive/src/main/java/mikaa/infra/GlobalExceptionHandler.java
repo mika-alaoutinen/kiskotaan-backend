@@ -7,6 +7,8 @@ import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
 import jakarta.enterprise.context.RequestScoped;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriInfo;
@@ -21,6 +23,19 @@ import mikaa.errors.ValidationException;
 class GlobalExceptionHandler {
 
   private final UriInfo uri;
+
+  @ServerExceptionMapper(ConstraintViolationException.class)
+  RestResponse<ValidationErrorDTO> handleConstraintViolation(ConstraintViolationException ex) {
+    log.info(ex.getMessage());
+
+    var errors = ex.getConstraintViolations()
+        .stream()
+        .map(GlobalExceptionHandler::fromConstraintViolation)
+        .toList();
+
+    var body = validationErrorBody(errors, uri);
+    return RestResponse.status(Status.BAD_REQUEST, body);
+  }
 
   @ServerExceptionMapper(NotFoundException.class)
   RestResponse<ErrorBodyDTO> handleNotFound(NotFoundException ex) {
@@ -42,6 +57,14 @@ class GlobalExceptionHandler {
     var body = validationErrorBody(ex.getErrors(), uri);
 
     return RestResponse.status(Status.BAD_REQUEST, body);
+  }
+
+  // Constraint violations have a path of methodName.objectName.objectField.
+  // Return objectName.objectField as error field.
+  private static ValidationError fromConstraintViolation(ConstraintViolation<?> violation) {
+    var path = violation.getPropertyPath().toString();
+    var field = path.substring(path.indexOf(".") + 1);
+    return new ValidationError(field, violation.getMessage());
   }
 
   private static ValidationErrorDTO validationErrorBody(List<ValidationError> errors, UriInfo uri) {

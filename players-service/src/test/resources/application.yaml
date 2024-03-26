@@ -1,24 +1,16 @@
-apicurio-url: "null"
-
-spring:
-  datasource:
-    driverClassName: org.testcontainers.jdbc.ContainerDatabaseDriver
-    url: jdbc:tc:postgresql:///player_it_db
-
-  jpa:
-    open-in-view: false
-
-  kafka:
-    producer:
-      client-id: players-producer
-      key-serializer: org.apache.kafka.common.serialization.LongSerializer
-      value-serializer: io.apicurio.registry.serde.avro.AvroKafkaSerializer
-      properties:
-        apicurio:
-          registry:
-            auto-register: true
-            url: ${apicurio-url}
-
+quarkus:
+  http:
+    port: 8081
   liquibase:
     change-log: db/changelog.yaml
     contexts: all,test
+    migrate-at-start: true
+  log:
+    level: WARN
+
+mp:
+  messaging:
+    outgoing:
+      player-state:
+        connector: smallrye-in-memory
+        topic: "Players-player_state"

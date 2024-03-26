@@ -1,24 +1,26 @@
-# Build jar package with Maven:
+# Builder image
 FROM maven:3.9-eclipse-temurin-21-alpine AS build
-WORKDIR /app
+WORKDIR /code
 
-COPY pom.xml .
-COPY src src
+COPY pom.xml /code/
+COPY src /code/src
 
-RUN mvn clean package -f /app/pom.xml -B -DskipTests
-RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
+RUN mvn package -f /code/pom.xml -B -DskipTests
 
-# Create the Docker image:
+# Application image
 FROM eclipse-temurin:21
+WORKDIR /work
 
-# Run application as user "spring"
-RUN addgroup --system spring && useradd -g spring spring
-USER spring:spring
+RUN chmod 775 /work
 
-# Copy dependencies from build stage
-ARG DEPENDENCY=/app/target/dependency
-COPY --from=build ${DEPENDENCY}/BOOT-INF/lib /app/lib
-COPY --from=build ${DEPENDENCY}/META-INF /app/META-INF
-COPY --from=build ${DEPENDENCY}/BOOT-INF/classes /app
+ARG APP=/code/target/quarkus-app
+COPY --chown=185 --from=build ${APP}/lib/ /deployments/lib/
+COPY --chown=185 --from=build ${APP}/*.jar /deployments/
+COPY --chown=185 --from=build ${APP}/app/ /deployments/app/
+COPY --chown=185 --from=build ${APP}/quarkus/ /deployments/quarkus/
 
-ENTRYPOINT ["java","-cp","app:app/lib/*","mikaa.players.PlayersApplication"]
+USER 185
+EXPOSE 8082
+
+ENV JAVA_OPTS="-Dquarkus.http.host=0.0.0.0 -Djava.util.logging.manager=org.jboss.logmanager.LogManager"
+ENV JAVA_APP_JAR="/deployments/quarkus-run.jar"

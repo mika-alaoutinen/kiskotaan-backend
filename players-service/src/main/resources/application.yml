@@ -1,0 +1,37 @@
+avro:
+  codegen:
+    avsc:
+      imports:
+        - Action.avsc
+        - PlayerPayload.avsc
+
+quarkus:
+  datasource:
+    jdbc: false
+  hibernate-orm:
+    database:
+      generation: none
+    physical-naming-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    validate-in-dev-mode: true
+  http:
+    port: 8081
+  liquibase:
+    change-log: db/changelog.yaml
+    contexts: all,dev # dev context inserts test data into db
+    migrate-at-start: true
+  reactive:
+    url: postgresql:///players
+
+mp:
+  messaging:
+    connector:
+      smallrye-kafka:
+        apicurio:
+          registry:
+            avro:
+              encoding: JSON
+            auto-register: true
+
+    outgoing:
+      player-state:
+        topic: "Players-player_state"

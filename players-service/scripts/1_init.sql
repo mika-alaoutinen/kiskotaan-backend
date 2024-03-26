@@ -1,4 +1,0 @@
-CREATE DATABASE players_db WITH
-    ENCODING = 'UTF-8'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1;

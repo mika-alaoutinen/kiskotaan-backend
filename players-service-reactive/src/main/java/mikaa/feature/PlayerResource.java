@@ -1,6 +1,9 @@
 package mikaa.feature;
 
 import java.util.Collection;
+import java.util.Optional;
+
+import org.jboss.resteasy.reactive.RestQuery;
 
 import io.smallrye.mutiny.Uni;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -22,8 +25,8 @@ public class PlayerResource {
   private final PlayerService service;
 
   @GET
-  public Uni<Collection<Player>> findPlayers() {
-    return service.findAll();
+  public Uni<Collection<Player>> findPlayers(@RestQuery Optional<String> name) {
+    return service.findAll(name.orElse(""));
   }
 
   @POST

@@ -22,8 +22,14 @@ class PlayerService {
   private final PlayerValidator validator;
 
   @WithSession
-  Uni<Collection<Player>> findAll() {
-    return UniCollection.fromList(repository.listAll())
+  Uni<Collection<Player>> findAll(String nameFilter) {
+    var filters = nameFilter.split(" ");
+
+    var players = filters.length > 1
+        ? repository.findByFirstAndLastname(filters[0], filters[1])
+        : repository.findByFirstOrLastname(filters[0]);
+
+    return UniCollection.fromList(players)
         .map(PlayerService::fromEntity)
         .unwrap();
   }

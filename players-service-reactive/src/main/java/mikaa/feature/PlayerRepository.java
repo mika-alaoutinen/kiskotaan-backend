@@ -21,13 +21,18 @@ class PlayerRepository implements PanacheRepository<PlayerEntity> {
   }
 
   Uni<List<PlayerEntity>> findByFirstAndLastname(String firstName, String lastName) {
-    return list("lower(firstName) = ?1 and lower(lastName) = ?2",
+    return list("lower(firstName) LIKE CONCAT('%', ?1, '%') and lower(lastName) LIKE CONCAT('%', ?2, '%')",
         firstName.toLowerCase(), lastName.toLowerCase());
   }
 
   Uni<List<PlayerEntity>> findByFirstOrLastname(String name) {
-    String nameQuery = "%" + name.toLowerCase() + "%";
-    return list("firstName like ?1 or lastName like ?1", nameQuery);
+    String query = """
+        SELECT p FROM player p WHERE
+          LOWER(p.firstName) LIKE LOWER(CONCAT('%', ?1, '%')) OR
+          LOWER(p.lastName) LIKE LOWER(CONCAT('%', ?1, '%'))
+          """;
+
+    return list(query, name);
   }
 
 }

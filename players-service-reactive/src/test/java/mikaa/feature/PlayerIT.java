@@ -2,19 +2,26 @@ package mikaa.feature;
 
 import org.junit.jupiter.api.Test;
 
+import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import mikaa.domain.NewPlayer;
+import mikaa.domain.Player;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 import static io.restassured.RestAssured.given;
 
 @QuarkusTest
 class PlayerIT {
 
   private static final String ENDPOINT = "/players";
+
+  @InjectMock
+  private PlayerProducer producer;
 
   @Test
   void should_add_new_player() {
@@ -29,6 +36,8 @@ class PlayerIT {
             "id", notNullValue(),
             "firstName", is("New"),
             "lastName", is("Player"));
+
+    verify(producer, atLeastOnce()).playerAdded(any(Player.class));
   }
 
   @Test
@@ -44,6 +53,8 @@ class PlayerIT {
             "id", notNullValue(),
             "firstName", is("Iines"),
             "lastName", is("Metso"));
+
+    verify(producer, atLeastOnce()).playerUpdated(any(Player.class));
   }
 
   @Test
@@ -54,6 +65,8 @@ class PlayerIT {
         .delete(ENDPOINT + "/3")
         .then()
         .statusCode(204);
+
+    verify(producer, atLeastOnce()).playerDeleted(any(Player.class));
   }
 
 }

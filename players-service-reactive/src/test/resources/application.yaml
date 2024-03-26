@@ -13,4 +13,4 @@ mp:
     outgoing:
       player-state:
         connector: smallrye-in-memory
-        topic: "Players.player_state"
+        topic: "Players-player_state"

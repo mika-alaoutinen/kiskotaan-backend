@@ -4,6 +4,8 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
@@ -12,16 +14,22 @@ import io.restassured.response.ValidatableResponse;
 @QuarkusTest
 class PlayerFilteringIT {
 
-  @Test
+  @ParameterizedTest
+  @ValueSource(strings = { "Hessu", "essu", "hes", "opo" })
   void should_filter_players_by_first_name_or_last_name() {
     doGet("Hessu")
-        .body("$.size()", is(1), "firstName", "Hessu");
+        .body(
+            "$.size()", is(1),
+            "[0].firstName", is("Hessu"));
   }
 
-  @Test
+  @ParameterizedTest
+  @ValueSource(strings = { "Hessu Hopo", "ess opo" })
   void should_filter_players_by_first_name_and_last_name() {
     doGet("hes opo")
-        .body("$.size()", is(1), "firstName", "Hessu");
+        .body(
+            "$.size()", is(1),
+            "[0].firstName", is("Hessu"));
   }
 
   @Test

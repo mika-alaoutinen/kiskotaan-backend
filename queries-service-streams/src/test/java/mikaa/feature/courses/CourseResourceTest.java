@@ -2,7 +2,6 @@ package mikaa.feature.courses;
 
 import java.util.List;
 
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -15,12 +14,14 @@ import io.quarkus.test.kafka.InjectKafkaCompanion;
 import io.quarkus.test.kafka.KafkaCompanionResource;
 import io.smallrye.reactive.messaging.kafka.companion.KafkaCompanion;
 import jakarta.inject.Inject;
-import mikaa.graphql.QueryClient;
 import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.player.PlayerEvent;
+import mikaa.kiskotaan.player.PlayerPayload;
 import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.kiskotaan.course.Hole;
-import mikaa.streams.TopologyDescription.CoursesTopology;
+import mikaa.util.KafkaCompanionWrapper;
+import mikaa.util.QueryClient;
 
 @QuarkusTest
 @QuarkusTestResource(KafkaCompanionResource.class)
@@ -37,15 +38,21 @@ class CourseResourceTest {
       }
       """;
 
-  @Inject
-  private CoursesTopology topology;
-
   @InjectKafkaCompanion
   private KafkaCompanion kafka;
 
+  @Inject
+  private KafkaCompanionWrapper kafkaWrapper;
+
   @BeforeAll
   void sendKafkaEvents() throws InterruptedException {
-    sendRecords(createRecord(Action.ADD, 1, "Laajis"), createRecord(Action.ADD, 2, "Kippis"));
+    var aku = new PlayerPayload(1L, "Aku", "Ankka");
+    kafkaWrapper.sendPlayer(new PlayerEvent(Action.ADD, aku), kafka);
+
+    var laajis = new CoursePayload(1L, "Laajis", List.of(new Hole(111l, 1, 4, 120)));
+    var kippis = new CoursePayload(2L, "Kippis", List.of());
+    kafkaWrapper.sendCourse(new CourseEvent(Action.ADD, laajis), kafka);
+    kafkaWrapper.sendCourse(new CourseEvent(Action.ADD, kippis), kafka);
   }
 
   @Test
@@ -78,24 +85,12 @@ class CourseResourceTest {
 
   @Test
   void should_not_show_deleted_course() throws InterruptedException {
-    sendRecords(createRecord(Action.DELETE, 2, "Kippis"));
+    var kippis = new CoursePayload(1L, "Laajis", List.of());
+    kafkaWrapper.sendCourse(new CourseEvent(Action.DELETE, kippis), kafka);
 
     QueryClient.query(ALL_COURSES_QUERY)
         .statusCode(200)
         .body("data.courses.size()", Matchers.is(1));
-  }
-
-  private ProducerRecord<Long, CourseEvent> createRecord(Action action, long id, String name) {
-    var inputTopic = topology.description().input();
-    var payload = new CoursePayload(id, name, List.of(new Hole(111l, 1, 4, 120)));
-    return new ProducerRecord<>(inputTopic.name(), id, new CourseEvent(action, payload));
-  }
-
-  @SafeVarargs
-  private void sendRecords(ProducerRecord<Long, CourseEvent>... records) throws InterruptedException {
-    var inputTopic = topology.description().input();
-    kafka.produce(inputTopic.keySerde(), inputTopic.valueSerde()).fromRecords(records);
-    Thread.sleep(5000);
   }
 
 }

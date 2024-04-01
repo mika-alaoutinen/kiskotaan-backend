@@ -21,6 +21,8 @@ public interface KafkaStreamsConfig {
 
   interface StateStores {
     String courses();
+
+    String players();
   }
 
 }

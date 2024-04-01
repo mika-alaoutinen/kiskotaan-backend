@@ -14,12 +14,14 @@ import lombok.extern.slf4j.Slf4j;
 class TopologyProducer {
 
   private final CoursesTopologyBuilder coursesTopology;
+  private final PlayersTopologyBuilder playersTopology;
 
   @Produces
   Topology topology() {
     var builder = new StreamsBuilder();
 
     coursesTopology.build(builder);
+    playersTopology.build(builder);
 
     var topology = builder.build();
     log.info("topology {}", topology.describe());

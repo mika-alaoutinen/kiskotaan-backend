@@ -9,6 +9,7 @@ import org.eclipse.microprofile.graphql.Query;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
+import mikaa.domain.Course;
 
 @ApplicationScoped
 @GraphQLApi

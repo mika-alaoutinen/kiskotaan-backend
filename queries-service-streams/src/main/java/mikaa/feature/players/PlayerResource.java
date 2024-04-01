@@ -9,30 +9,29 @@ import org.eclipse.microprofile.graphql.Query;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mikaa.domain.Player;
 
+// Everything in the resource class has to be public for smallrye-graphql to work
 @ApplicationScoped
 @GraphQLApi
 @RequiredArgsConstructor
+@Slf4j
 public class PlayerResource {
-
-  private static final QueryFilter EMPTY_FILTER = new QueryFilter("");
 
   private final PlayerService service;
 
   @Description("Find all players. Players can also be filtered by first name and/or lastname.")
   @Query
-  public Collection<Player> players(QueryFilter filters) {
-    return service.streamPlayers();
+  public Collection<Player> players(PlayerQueryFilters filters) {
+    log.info("Querying players with filters " + filters);
+    return service.streamPlayers(filters);
   }
 
   @Description("Find player by id.")
   @Query
   public Optional<Player> player(long id) {
     return service.findPlayer(id);
-  }
-
-  public static record QueryFilter(String name) {
   }
 
 }

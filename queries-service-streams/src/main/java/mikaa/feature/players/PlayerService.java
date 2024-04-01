@@ -14,7 +14,7 @@ class PlayerService {
 
   private final PlayerStore store;
 
-  Collection<Player> streamPlayers() {
+  Collection<Player> streamPlayers(PlayerQueryFilters filters) {
     return store.streamAll().map(PlayerService::fromPayload).toList();
   }
 

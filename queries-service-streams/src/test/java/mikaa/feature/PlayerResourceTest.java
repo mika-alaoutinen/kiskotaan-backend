@@ -1,4 +1,4 @@
-package mikaa.feature.courses;
+package mikaa.feature;
 
 import java.util.List;
 
@@ -14,26 +14,26 @@ import io.quarkus.test.kafka.InjectKafkaCompanion;
 import io.quarkus.test.kafka.KafkaCompanionResource;
 import io.smallrye.reactive.messaging.kafka.companion.KafkaCompanion;
 import jakarta.inject.Inject;
-import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.player.PlayerEvent;
-import mikaa.kiskotaan.player.PlayerPayload;
 import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.kiskotaan.course.Hole;
+import mikaa.kiskotaan.domain.Action;
+import mikaa.kiskotaan.player.PlayerEvent;
+import mikaa.kiskotaan.player.PlayerPayload;
 import mikaa.util.KafkaCompanionWrapper;
 import mikaa.util.QueryClient;
 
 @QuarkusTest
 @QuarkusTestResource(KafkaCompanionResource.class)
 @TestInstance(Lifecycle.PER_CLASS)
-class CourseResourceTest {
+class PlayerResourceTest {
 
-  private static final String ALL_COURSES_QUERY = """
+  private static final String ALL_PLAYERS_QUERY = """
       {
-        courses {
+        players {
           id
-          name
-          par
+          firstName
+          lastName
         }
       }
       """;
@@ -49,50 +49,53 @@ class CourseResourceTest {
     kafkaWrapper.init(kafka);
 
     var aku = new PlayerPayload(1L, "Aku", "Ankka");
+    var iines = new PlayerPayload(2L, "Iines", "Ankka");
     kafkaWrapper.sendPlayer(new PlayerEvent(Action.ADD, aku));
+    kafkaWrapper.sendPlayer(new PlayerEvent(Action.ADD, iines));
 
     var laajis = new CoursePayload(1L, "Laajis", List.of(new Hole(111l, 1, 4, 120)));
-    var kippis = new CoursePayload(2L, "Kippis", List.of());
     kafkaWrapper.sendCourse(new CourseEvent(Action.ADD, laajis));
-    kafkaWrapper.sendCourse(new CourseEvent(Action.ADD, kippis));
   }
 
   @Test
-  void should_return_courses() {
-    QueryClient.query(ALL_COURSES_QUERY)
+  void should_return_players() {
+    QueryClient.query(ALL_PLAYERS_QUERY)
         .statusCode(200)
         .body(
-            "data.courses[0].name",
-            Matchers.is("Laajis"),
-            "data.courses[1].name",
-            Matchers.is("Kippis"));
+            "data.players[0].firstName",
+            Matchers.is("Aku"),
+            "data.players[0].lastName",
+            Matchers.is("Ankka"),
+            "data.players[1].firstName",
+            Matchers.is("Iines"),
+            "data.players[1].lastName",
+            Matchers.is("Ankka"));
   }
 
   @Test
-  void should_return_course_by_id() {
+  void should_return_player_by_id() {
     String query = """
         {
-          course(id: 1) {
+          player(id: 1) {
             id
-            name
-            par
+            firstName
           }
         }
         """;
 
     QueryClient.query(query)
         .statusCode(200)
-        .body("data.course.name", Matchers.is("Laajis"));
+        .body("data.player.firstName", Matchers.is("Aku"));
   }
 
   @Test
-  void should_not_show_deleted_course() throws InterruptedException {
-    var kippis = new CoursePayload(1L, "Laajis", List.of());
-    kafkaWrapper.sendCourse(new CourseEvent(Action.DELETE, kippis));
+  void should_not_show_deleted_player() throws InterruptedException {
+    var iines = new PlayerPayload(2L, "Iines", "Ankka");
+    kafkaWrapper.sendPlayer(new PlayerEvent(Action.DELETE, iines));
 
-    QueryClient.query(ALL_COURSES_QUERY)
+    QueryClient.query(ALL_PLAYERS_QUERY)
         .statusCode(200)
-        .body("data.courses.size()", Matchers.is(1));
+        .body("data.players.size()", Matchers.is(1));
   }
 
 }

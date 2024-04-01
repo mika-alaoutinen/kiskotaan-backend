@@ -19,14 +19,21 @@ public class KafkaCompanionWrapper {
   private final CoursesTopology coursesTopology;
   private final PlayersTopology playersTopology;
 
-  public void sendCourse(CourseEvent event, KafkaCompanion kafka) throws InterruptedException {
+  private KafkaCompanion kafka;
+
+  // lateinit due to KafkaCompanion magic
+  public void init(KafkaCompanion kafka) {
+    this.kafka = kafka;
+  }
+
+  public void sendCourse(CourseEvent event) throws InterruptedException {
     var record = courseRecord(event);
     var inputTopic = coursesTopology.description().input();
     kafka.produce(inputTopic.keySerde(), inputTopic.valueSerde()).fromRecords(record);
     Thread.sleep(SLEEP_MILLIS);
   }
 
-  public void sendPlayer(PlayerEvent event, KafkaCompanion kafka) throws InterruptedException {
+  public void sendPlayer(PlayerEvent event) throws InterruptedException {
     var record = playerRecord(event);
     var inputTopic = playersTopology.description().input();
     kafka.produce(inputTopic.keySerde(), inputTopic.valueSerde()).fromRecords(record);

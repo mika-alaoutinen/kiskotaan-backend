@@ -46,13 +46,15 @@ class CourseResourceTest {
 
   @BeforeAll
   void sendKafkaEvents() throws InterruptedException {
+    kafkaWrapper.init(kafka);
+
     var aku = new PlayerPayload(1L, "Aku", "Ankka");
-    kafkaWrapper.sendPlayer(new PlayerEvent(Action.ADD, aku), kafka);
+    kafkaWrapper.sendPlayer(new PlayerEvent(Action.ADD, aku));
 
     var laajis = new CoursePayload(1L, "Laajis", List.of(new Hole(111l, 1, 4, 120)));
     var kippis = new CoursePayload(2L, "Kippis", List.of());
-    kafkaWrapper.sendCourse(new CourseEvent(Action.ADD, laajis), kafka);
-    kafkaWrapper.sendCourse(new CourseEvent(Action.ADD, kippis), kafka);
+    kafkaWrapper.sendCourse(new CourseEvent(Action.ADD, laajis));
+    kafkaWrapper.sendCourse(new CourseEvent(Action.ADD, kippis));
   }
 
   @Test
@@ -86,7 +88,7 @@ class CourseResourceTest {
   @Test
   void should_not_show_deleted_course() throws InterruptedException {
     var kippis = new CoursePayload(1L, "Laajis", List.of());
-    kafkaWrapper.sendCourse(new CourseEvent(Action.DELETE, kippis), kafka);
+    kafkaWrapper.sendCourse(new CourseEvent(Action.DELETE, kippis));
 
     QueryClient.query(ALL_COURSES_QUERY)
         .statusCode(200)

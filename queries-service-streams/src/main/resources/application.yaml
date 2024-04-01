@@ -7,6 +7,7 @@ mikaa:
       scorecards: Scorecards-scorecard_state
     state-stores:
       courses: courses_v1
+      players: players_v1
 
 avro:
   codegen:

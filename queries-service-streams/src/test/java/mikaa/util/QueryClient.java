@@ -1,4 +1,4 @@
-package mikaa.graphql;
+package mikaa.util;
 
 import static io.restassured.RestAssured.given;
 

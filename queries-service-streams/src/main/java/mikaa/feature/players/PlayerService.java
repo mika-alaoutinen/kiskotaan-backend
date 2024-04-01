@@ -1,11 +1,12 @@
 package mikaa.feature.players;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import mikaa.domain.Player;
-import mikaa.kiskotaan.domain.PlayerPayload;
+import mikaa.kiskotaan.player.PlayerPayload;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -15,6 +16,10 @@ class PlayerService {
 
   Collection<Player> streamPlayers() {
     return store.streamAll().map(PlayerService::fromPayload).toList();
+  }
+
+  Optional<Player> findPlayer(long id) {
+    return store.findById(id).map(PlayerService::fromPayload);
   }
 
   private static Player fromPayload(PlayerPayload p) {

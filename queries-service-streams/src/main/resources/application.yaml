@@ -47,3 +47,4 @@ quarkus:
     schema-registry-key: apicurio.registry.url
     topics:
       - ${mikaa.kafka-streams.input-topics.courses}
+      - ${mikaa.kafka-streams.input-topics.players}

@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
-import mikaa.kiskotaan.domain.PlayerPayload;
+import mikaa.kiskotaan.player.PlayerPayload;
 import mikaa.streams.InteractiveQueries;
 import mikaa.streams.KafkaStreamsConfig;
 

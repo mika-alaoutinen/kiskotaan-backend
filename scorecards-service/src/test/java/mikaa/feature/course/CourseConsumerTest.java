@@ -37,16 +37,47 @@ class CourseConsumerTest {
 
   @Test
   void handles_add_course_event() throws InterruptedException {
-    var payload = new CoursePayload(222l, "New Course", List.of(new Hole(333L, 1, 3, 80)));
+    var payload = new CoursePayload(222l, "New Course", List.of(new Hole(333L, 1, 4, 100)));
     sendEvent(new CourseEvent(Action.ADD, payload));
-    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
+    var expectedCourse = new CourseEntity(222, List.of(new HoleEntity(1, 4)), "New Course");
+    verify(repository, atLeastOnce()).persist(expectedCourse);
   }
 
   @Test
-  void handles_upate_course_event() throws InterruptedException {
+  void handles_upate_course_name() throws InterruptedException {
     when(repository.findByExternalId(1)).thenReturn(Optional.of(LAAJIS));
     sendUpdateEvent();
-    verify(repository, atLeastOnce()).persist(any(CourseEntity.class));
+    var expectedCourse = new CourseEntity(1, "Laajavuori");
+    verify(repository, atLeastOnce()).persist(expectedCourse);
+  }
+
+  @Test
+  void handles_add_hole_event() throws InterruptedException {
+    when(repository.findByExternalId(1)).thenReturn(Optional.of(LAAJIS));
+    sendUpdateEvent(List.of(new Hole(2L, 18, 4, 120)));
+    var expectedCourse = new CourseEntity(1, List.of(new HoleEntity(18, 4)), "Laajavuori");
+    verify(repository, atLeastOnce()).persist(expectedCourse);
+  }
+
+  @Test
+  void handles_update_hole_event() throws InterruptedException {
+    var existingCourse = new CourseEntity(1, List.of(new HoleEntity(1, 3)), "Laajis");
+    when(repository.findByExternalId(1)).thenReturn(Optional.of(existingCourse));
+
+    sendUpdateEvent(List.of(new Hole(2L, 1, 5, 210)));
+    var expectedCourse = new CourseEntity(1, List.of(new HoleEntity(1, 5)), "Laajavuori");
+    verify(repository, atLeastOnce()).persist(expectedCourse);
+  }
+
+  @Test
+  void handles_delete_hole_event() throws InterruptedException {
+    var existingHoles = List.of(new HoleEntity(1, 3), new HoleEntity(2, 4));
+    var existingCourse = new CourseEntity(1, existingHoles, "Laajis");
+    when(repository.findByExternalId(1)).thenReturn(Optional.of(existingCourse));
+
+    sendUpdateEvent(List.of(new Hole(2L, 1, 3, 120)));
+    var expectedCourse = new CourseEntity(1, List.of(new HoleEntity(1, 3)), "Laajavuori");
+    verify(repository, atLeastOnce()).persist(expectedCourse);
   }
 
   @Test
@@ -83,6 +114,11 @@ class CourseConsumerTest {
 
   private void sendUpdateEvent() throws InterruptedException {
     var payload = new CoursePayload(1L, "Laajavuori", List.of());
+    sendEvent(new CourseEvent(Action.UPDATE, payload));
+  }
+
+  private void sendUpdateEvent(List<Hole> holes) throws InterruptedException {
+    var payload = new CoursePayload(1L, "Laajavuori", holes);
     sendEvent(new CourseEvent(Action.UPDATE, payload));
   }
 

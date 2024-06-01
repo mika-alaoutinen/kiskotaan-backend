@@ -8,8 +8,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseNameDTO;
-import mikaa.producers.courses.CourseProducer;
-import mikaa.producers.holes.HoleProducer;
+import mikaa.producers.CourseProducer;
 
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.hamcrest.CoreMatchers.is;
@@ -23,10 +22,7 @@ class CourseResourceTest {
   private static final String ENDPOINT = "/courses";
 
   @InjectMock
-  private CourseProducer courseProducer;
-
-  @InjectMock
-  private HoleProducer holeProducer;
+  private CourseProducer producer;
 
   @Test
   void should_get_all_courses() {
@@ -73,7 +69,7 @@ class CourseResourceTest {
         .then();
 
     assertNotFoundResponse(response, 99);
-    verifyNoInteractions(holeProducer);
+    verifyNoInteractions(producer);
   }
 
   @Test
@@ -86,7 +82,7 @@ class CourseResourceTest {
         .then();
 
     assertNotFoundResponse(response, 99);
-    verifyNoInteractions(courseProducer);
+    verifyNoInteractions(producer);
   }
 
   @Test
@@ -97,7 +93,7 @@ class CourseResourceTest {
         .then()
         .statusCode(204);
 
-    verifyNoInteractions(courseProducer);
+    verifyNoInteractions(producer);
   }
 
   private static void assertNotFoundResponse(ValidatableResponse response, int id) {

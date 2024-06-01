@@ -5,13 +5,12 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
-import mikaa.domain.Hole;
+import mikaa.domain.Course;
 import mikaa.model.HoleDTO;
 import mikaa.model.UpdatedHoleDTO;
-import mikaa.producers.holes.HoleProducer;
+import mikaa.producers.CourseProducer;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.hamcrest.CoreMatchers.is;
@@ -23,7 +22,7 @@ class HolesIT {
   private static final String ENDPOINT = "/courses/3/holes";
 
   @InjectMock
-  private HoleProducer producer;
+  private CourseProducer producer;
 
   @Test
   void should_add_hole_for_a_course() {
@@ -40,7 +39,7 @@ class HolesIT {
             "par", is(3),
             "distance", is(90));
 
-    verify(producer, atLeastOnce()).holeAdded(any(Hole.class), anyLong());
+    verify(producer, atLeastOnce()).courseUpdated(any(Course.class));
   }
 
   @Test
@@ -58,7 +57,7 @@ class HolesIT {
             "par", is(3),
             "distance", is(90));
 
-    verify(producer, atLeastOnce()).holeUpdated(any(Hole.class), anyLong());
+    verify(producer, atLeastOnce()).courseUpdated(any(Course.class));
   }
 
   @Test
@@ -69,7 +68,7 @@ class HolesIT {
         .then()
         .statusCode(204);
 
-    verify(producer, atLeastOnce()).holeDeleted(any(Hole.class), anyLong());
+    verify(producer, atLeastOnce()).courseUpdated(any(Course.class));
   }
 
 }

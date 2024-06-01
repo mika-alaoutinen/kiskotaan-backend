@@ -1,4 +1,4 @@
-package mikaa.producers.courses;
+package mikaa.producers;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -7,7 +7,6 @@ import mikaa.domain.Course;
 import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.kiskotaan.course.Hole;
-import mikaa.producers.OutgoingChannels;
 
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
@@ -18,7 +17,7 @@ import io.smallrye.reactive.messaging.kafka.Record;
 class KafkaProducer implements CourseProducer {
 
   @Inject
-  @Channel(OutgoingChannels.COURSE_STATE)
+  @Channel(CourseProducer.COURSE_STATE)
   Emitter<Record<Long, CourseEvent>> emitter;
 
   @Override

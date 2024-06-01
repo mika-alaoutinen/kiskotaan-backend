@@ -1,6 +1,7 @@
 package mikaa.feature;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -15,8 +16,8 @@ import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.domain.NewHole;
 import mikaa.domain.UpdatedHole;
-import mikaa.kiskotaan.course.HoleEvent;
-import mikaa.kiskotaan.course.HolePayload;
+import mikaa.kiskotaan.course.CourseEvent;
+import mikaa.kiskotaan.course.Hole;
 import mikaa.producers.CourseProducer;
 import mikaa.producers.OutgoingChannels;
 
@@ -49,7 +50,7 @@ class HoleEventsTest {
   @InjectMock
   private HoleRepository repository;
 
-  private InMemorySink<Record<Long, HoleEvent>> sink;
+  private InMemorySink<Record<Long, CourseEvent>> sink;
   private HoleService service;
 
   @BeforeEach
@@ -65,7 +66,7 @@ class HoleEventsTest {
     var newHole = new NewHole(1, 3, 100);
     service.add(COURSE_ID, newHole);
 
-    assertEvent(new HolePayload(-1L, COURSE_ID, 1, 3, 100));
+    assertEvent(new Hole(-1L, 1, 3, 100));
     verify(repository, atLeastOnce()).persist(any(HoleEntity.class));
   }
 
@@ -74,7 +75,7 @@ class HoleEventsTest {
     when(courseFinder.findCourseOrThrow(anyLong())).thenReturn(courseMock());
     service.update(COURSE_ID, HOLE_NUMBER, new UpdatedHole(5, 165));
 
-    assertEvent(new HolePayload(HOLE_ID, COURSE_ID, 2, 5, 165));
+    assertEvent(new Hole(HOLE_ID, 2, 5, 165));
   }
 
   @Test
@@ -82,22 +83,17 @@ class HoleEventsTest {
     when(repository.findByCourseIdAndNumber(anyLong(), anyInt())).thenReturn(Optional.of(holeMock()));
     service.delete(COURSE_ID, HOLE_NUMBER);
 
-    assertEvent(new HolePayload(HOLE_ID, COURSE_ID, 2, 3, 123));
+    assertEvent(new Hole(HOLE_ID, 2, 3, 123));
     verify(repository, atLeastOnce()).deleteById(anyLong());
   }
 
-  private void assertEvent(HolePayload expected) {
+  private void assertEvent(Hole expected) {
     assertEquals(1, sink.received().size());
     var record = sink.received().get(0).getPayload();
     var payload = record.value().getPayload();
 
     assertEquals(payload.getId(), record.key());
-
-    assertEquals(expected.getId(), payload.getId());
-    assertEquals(expected.getCourseId(), payload.getCourseId());
-    assertEquals(expected.getNumber(), payload.getNumber());
-    assertEquals(expected.getDistance(), payload.getDistance());
-    assertEquals(expected.getPar(), payload.getPar());
+    assertTrue(payload.getHoles().contains(expected));
   }
 
   private static CourseEntity courseMock() {

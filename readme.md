@@ -69,7 +69,6 @@ The list of Kafka topics published by the different services.
 
 ### Courses service produces
 - Courses-course_state
-- Courses-hole_state
 
 ### Players service produces
 - Players-player_state
@@ -100,8 +99,6 @@ There doesn't seem to be a sensible way to generate reactive interfaces from an 
 `org.jboss.resteasy.reactive.ResponseStatus` annotation does nothing. It should be possible to set the status code of a response using the annotation, but in reality the annotation does nothing. The workaround is to wrap responses in `Response` or `RestResponse` and set headers that way. Unfortunately OpenAPI code generation does not support RestResponse.
 
 # TODO
-- Probably have to get rid of `Courses-hole_state` topic?
-  - Instead of sending events regarding holes, simply always send full course events?
 - Add `CourseSummary.avsc` to Courses service.
   - A course summary contains course name, hole count and course par.
   - Try reading emitted course events from Kafka and map them to a new `Courses-course_summary` topic?

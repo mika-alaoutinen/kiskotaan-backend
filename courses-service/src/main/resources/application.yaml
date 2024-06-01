@@ -4,7 +4,6 @@ avro:
       imports:
         - Action.avsc
         - CoursePayload.avsc
-        - HolePayload.avsc
 
 quarkus:
   hibernate-orm:
@@ -29,5 +28,3 @@ mp:
     outgoing:
       course-state:
         topic: "Courses-course_state"
-      hole-state:
-        topic: "Courses-hole_state"

@@ -2,7 +2,6 @@ mikaa:
   kafka-streams:
     input-topics:
       courses: Courses-course_state
-      holes: Courses-hole_state
       players: Players-player_state
       scorecards: Scorecards-scorecard_state
     state-stores:
@@ -17,7 +16,6 @@ avro:
         - RoundResult.avsc
         - ScoreEntry.avsc
         - CoursePayload.avsc
-        - HolePayload.avsc
         - PlayerPayload.avsc
         - ScoreCardPayload.avsc
 

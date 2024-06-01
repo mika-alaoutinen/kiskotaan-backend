@@ -52,19 +52,40 @@ class CoursesTopologyBuilderTest {
 
   @Test
   void should_add_laajis_to_state_store() {
-    assertCourse(LAAJIS_ID, "Laajis");
+    assertCourse(LAAJIS_ID, "Laajis", 1);
   }
 
   @Test
   void should_update_course_in_state_store() {
-    assertCourse(LAAJIS_ID, "Laajis");
+    assertCourse(LAAJIS_ID, "Laajis", 1);
     inputTopic.pipeInput(LAAJIS_ID, event(Action.UPDATE, LAAJIS_ID, "Updated"));
-    assertCourse(LAAJIS_ID, "Updated");
+    assertCourse(LAAJIS_ID, "Updated", 1);
+  }
+
+  @Test
+  void should_add_hole_to_course() {
+    assertCourse(LAAJIS_ID, "Laajis", 1);
+    var holes = List.of(new Hole(2l, 1, 3, 90), new Hole(9L, 2, 4, 120));
+    inputTopic.pipeInput(LAAJIS_ID, holeEvent(holes));
+    assertCourse(LAAJIS_ID, "Laajis", 2);
+  }
+
+  @Test
+  void should_update_hole() {
+    assertCourse(LAAJIS_ID, "Laajis", 1);
+    var holes = List.of(new Hole(2l, 1, 5, 220));
+    inputTopic.pipeInput(LAAJIS_ID, holeEvent(holes));
+    var course = assertCourse(LAAJIS_ID, "Laajis", 1);
+
+    var hole1 = course.getHoles().get(0);
+    assertEquals(1, hole1.getNumber());
+    assertEquals(5, hole1.getPar());
+    assertEquals(220, hole1.getDistance());
   }
 
   @Test
   void should_delete_course_from_state_store() {
-    assertCourse(LAAJIS_ID, "Laajis");
+    assertCourse(LAAJIS_ID, "Laajis", 1);
     inputTopic.pipeInput(LAAJIS_ID, event(Action.DELETE, LAAJIS_ID, "Deleted"));
     assertNull(stateStore.get(LAAJIS_ID));
   }
@@ -81,10 +102,17 @@ class CoursesTopologyBuilderTest {
     return new CourseEvent(action, course);
   }
 
-  private void assertCourse(long expectedId, String expectedName) {
+  private static CourseEvent holeEvent(List<Hole> holes) {
+    var course = new CoursePayload(LAAJIS_ID, "Laajis", holes);
+    return new CourseEvent(Action.UPDATE, course);
+  }
+
+  private CoursePayload assertCourse(long expectedId, String expectedName, int expectedHoles) {
     var course = stateStore.get(expectedId);
     assertEquals(expectedId, course.getId());
     assertEquals(expectedName, course.getName());
+    assertEquals(expectedHoles, course.getHoles().size());
+    return course;
   }
 
 }

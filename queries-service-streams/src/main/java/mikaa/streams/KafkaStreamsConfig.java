@@ -12,8 +12,6 @@ public interface KafkaStreamsConfig {
   interface InputTopics {
     String courses();
 
-    String holes();
-
     String players();
 
     String scorecards();

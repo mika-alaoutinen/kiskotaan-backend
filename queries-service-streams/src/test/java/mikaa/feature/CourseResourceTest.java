@@ -2,7 +2,6 @@ package mikaa.feature;
 
 import java.util.List;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -23,6 +22,8 @@ import mikaa.kiskotaan.course.Hole;
 import mikaa.util.KafkaCompanionWrapper;
 import mikaa.util.QueryClient;
 
+import static org.hamcrest.Matchers.is;
+
 @QuarkusTest
 @QuarkusTestResource(KafkaCompanionResource.class)
 @TestInstance(Lifecycle.PER_CLASS)
@@ -33,7 +34,11 @@ class CourseResourceTest {
         courses {
           id
           name
-          par
+          holes {
+            number
+            par
+            distance
+          }
         }
       }
       """;
@@ -62,10 +67,8 @@ class CourseResourceTest {
     QueryClient.query(ALL_COURSES_QUERY)
         .statusCode(200)
         .body(
-            "data.courses[0].name",
-            Matchers.is("Laajis"),
-            "data.courses[1].name",
-            Matchers.is("Kippis"));
+            "data.courses[0].name", is("Laajis"),
+            "data.courses[1].name", is("Kippis"));
   }
 
   @Test
@@ -75,14 +78,21 @@ class CourseResourceTest {
           course(id: 1) {
             id
             name
-            par
+            holes {
+              number
+              par
+              distance
+            }
           }
         }
         """;
 
     QueryClient.query(query)
         .statusCode(200)
-        .body("data.course.name", Matchers.is("Laajis"));
+        .body("data.course.name", is("Laajis"),
+            "data.course.holes[0].number", is(1),
+            "data.course.holes[0].par", is(4),
+            "data.course.holes[0].distance", is(120));
   }
 
   @Test
@@ -92,7 +102,7 @@ class CourseResourceTest {
 
     QueryClient.query(ALL_COURSES_QUERY)
         .statusCode(200)
-        .body("data.courses.size()", Matchers.is(1));
+        .body("data.courses.size()", is(1));
   }
 
 }

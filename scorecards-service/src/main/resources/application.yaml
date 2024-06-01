@@ -6,7 +6,6 @@ avro:
         - RoundResult.avsc
         - ScoreEntry.avsc
         - CoursePayload.avsc
-        - HolePayload.avsc
         - PlayerPayload.avsc
         - ScoreCardPayload.avsc
         - ScoreCardGroupedScoresPayload.avsc
@@ -34,8 +33,6 @@ mp:
     incoming:
       course-state:
         topic: "Courses-course_state"
-      hole-state:
-        topic: "Courses-hole_state"
       player-state:
         topic: "Players-player_state"
       scorecard-state-incoming: # channels need to have unique names

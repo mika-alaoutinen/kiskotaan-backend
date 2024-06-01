@@ -1,4 +1,6 @@
 package mikaa.domain;
 
-public record Course(long id, String name, int par) {
+import java.util.Collection;
+
+public record Course(long id, String name, Collection<Hole> holes) {
 }

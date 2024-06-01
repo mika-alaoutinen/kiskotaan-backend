@@ -6,8 +6,8 @@ import java.util.Optional;
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.RequiredArgsConstructor;
 import mikaa.domain.Course;
+import mikaa.domain.Hole;
 import mikaa.kiskotaan.course.CoursePayload;
-import mikaa.kiskotaan.course.Hole;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -23,12 +23,13 @@ class CourseService {
     return store.findById(id).map(CourseService::fromPayload);
   }
 
-  private static Course fromPayload(CoursePayload c) {
-    return new Course(c.getId(), c.getName(), calculateCoursePar(c));
-  }
+  private static Course fromPayload(CoursePayload course) {
+    var holes = course.getHoles()
+        .stream()
+        .map(h -> new Hole(h.getNumber(), h.getPar(), h.getDistance()))
+        .toList();
 
-  private static int calculateCoursePar(CoursePayload c) {
-    return c.getHoles().stream().mapToInt(Hole::getPar).sum();
+    return new Course(course.getId(), course.getName(), holes);
   }
 
 }

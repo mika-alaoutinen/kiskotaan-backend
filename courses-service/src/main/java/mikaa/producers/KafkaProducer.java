@@ -17,7 +17,7 @@ import io.smallrye.reactive.messaging.kafka.Record;
 class KafkaProducer implements CourseProducer {
 
   @Inject
-  @Channel(OutgoingChannels.COURSE_STATE)
+  @Channel(CourseProducer.COURSE_STATE)
   Emitter<Record<Long, CourseEvent>> emitter;
 
   @Override

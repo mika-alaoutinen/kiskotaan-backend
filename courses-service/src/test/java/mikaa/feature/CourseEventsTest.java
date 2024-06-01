@@ -16,7 +16,6 @@ import mikaa.domain.NewCourse;
 import mikaa.domain.NewHole;
 import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.producers.CourseProducer;
-import mikaa.producers.OutgoingChannels;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +47,7 @@ class CourseEventsTest {
 
   @BeforeEach
   void setup() {
-    sink = connector.sink(OutgoingChannels.COURSE_STATE);
+    sink = connector.sink(CourseProducer.COURSE_STATE);
     sink.clear();
     service = new CourseService(producer, repository, validator);
   }

@@ -15,7 +15,7 @@ import mikaa.domain.Course;
 import mikaa.model.HoleDTO;
 import mikaa.model.NewCourseDTO;
 import mikaa.model.NewCourseNameDTO;
-import mikaa.producers.courses.CourseProducer;
+import mikaa.producers.CourseProducer;
 
 import static org.hamcrest.CoreMatchers.is;
 import static io.restassured.RestAssured.given;

@@ -7,7 +7,7 @@ import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
 import mikaa.model.UpdatedHoleDTO;
-import mikaa.producers.holes.HoleProducer;
+import mikaa.producers.CourseProducer;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -18,7 +18,7 @@ import static io.restassured.RestAssured.given;
 class HoleResourceTest {
 
   @InjectMock
-  private HoleProducer producer;
+  private CourseProducer producer;
 
   @Test
   void should_find_holes_for_a_course() {

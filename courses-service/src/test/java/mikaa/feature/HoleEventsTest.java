@@ -17,8 +17,8 @@ import mikaa.domain.NewHole;
 import mikaa.domain.UpdatedHole;
 import mikaa.kiskotaan.course.HoleEvent;
 import mikaa.kiskotaan.course.HolePayload;
+import mikaa.producers.CourseProducer;
 import mikaa.producers.OutgoingChannels;
-import mikaa.producers.holes.HoleProducer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ class HoleEventsTest {
   private InMemoryConnector connector;
 
   @Inject
-  private HoleProducer producer;
+  private CourseProducer producer;
 
   @InjectMock
   private CourseFinder courseFinder;
@@ -54,7 +54,7 @@ class HoleEventsTest {
 
   @BeforeEach
   void setup() {
-    sink = connector.sink(OutgoingChannels.HOLE_STATE);
+    sink = connector.sink(OutgoingChannels.COURSE_STATE);
     sink.clear();
     service = new HoleService(courseFinder, producer, repository);
   }

@@ -10,14 +10,14 @@ import lombok.RequiredArgsConstructor;
 import mikaa.domain.Hole;
 import mikaa.domain.NewHole;
 import mikaa.domain.UpdatedHole;
-import mikaa.producers.holes.HoleProducer;
+import mikaa.producers.CourseProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
 class HoleService {
 
   private final CourseFinder courseFinder;
-  private final HoleProducer producer;
+  private final CourseProducer producer;
   private final HoleRepository repository;
 
   List<Hole> findHoles(long courseId) {
@@ -25,57 +25,60 @@ class HoleService {
         .map(CourseEntity::getHoles)
         .orElseGet(Collections::emptyList);
 
-    return holes.stream().map(HoleService::toHole).toList();
+    return holes.stream().map(DomainModelMapper::hole).toList();
   }
 
   Hole findOne(long courseId, int holeNumber) {
     var course = courseFinder.findCourseOrThrow(courseId);
-    var hole = findHoleOrThrow(course, holeNumber);
-    return toHole(hole);
+    var holeEntity = findHoleOrThrow(course, holeNumber);
+    return DomainModelMapper.hole(holeEntity);
   }
 
   Hole add(long courseId, NewHole newHole) {
-    var course = courseFinder.findCourseOrThrow(courseId);
-    HoleValidator.validateUniqueHoleNumber(newHole.number(), course);
+    var courseEntity = courseFinder.findCourseOrThrow(courseId);
+    HoleValidator.validateUniqueHoleNumber(newHole.number(), courseEntity);
 
     var holeEntity = new HoleEntity(newHole.number(), newHole.par(), newHole.distance());
-    course.addHole(holeEntity);
-
+    courseEntity.addHole(holeEntity);
     repository.persist(holeEntity);
-    producer.holeAdded(toHole(holeEntity), courseId);
 
-    return toHole(holeEntity);
+    var course = DomainModelMapper.course(courseEntity);
+    producer.courseUpdated(course);
+
+    return DomainModelMapper.hole(holeEntity);
   }
 
   Hole update(long courseId, int holeNumber, UpdatedHole updatedHole) {
-    var course = courseFinder.findCourseOrThrow(courseId);
-    var holeEntity = findHoleOrThrow(course, holeNumber);
+    var courseEntity = courseFinder.findCourseOrThrow(courseId);
+    var holeEntity = findHoleOrThrow(courseEntity, holeNumber);
 
     holeEntity.setDistance(updatedHole.distance());
     holeEntity.setPar(updatedHole.par());
 
-    var hole = toHole(holeEntity);
-    producer.holeUpdated(hole, courseId);
+    var hole = DomainModelMapper.hole(holeEntity);
+    var course = DomainModelMapper.course(courseEntity);
+    course.holes().stream().map(h -> h.id() == hole.id() ? hole : h);
+
+    producer.courseUpdated(course);
 
     return hole;
   }
 
   void delete(long courseId, int holeNumber) {
     repository.findByCourseIdAndNumber(courseId, holeNumber)
-        .map(HoleService::toHole)
-        .ifPresent(hole -> {
-          repository.deleteById(hole.id());
-          producer.holeDeleted(hole, courseId);
-        });
+        .map(hole -> {
+          var course = hole.getCourse();
+          repository.deleteById(hole.getId());
+          repository.flush();
+          return course;
+        })
+        .map(DomainModelMapper::course)
+        .ifPresent(producer::courseUpdated);
   }
 
   private static HoleEntity findHoleOrThrow(CourseEntity course, int holeNumber) {
     return course.findHole(holeNumber).orElseThrow(
         () -> new NotFoundException(String.format("Course %s has no hole %s", course.getId(), holeNumber)));
-  }
-
-  private static Hole toHole(HoleEntity entity) {
-    return new Hole(entity.getId(), entity.getNumber(), entity.getPar(), entity.getDistance());
   }
 
 }

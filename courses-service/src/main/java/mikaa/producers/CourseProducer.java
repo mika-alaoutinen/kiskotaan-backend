@@ -1,4 +1,4 @@
-package mikaa.producers.courses;
+package mikaa.producers;
 
 import mikaa.domain.Course;
 

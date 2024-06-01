@@ -15,8 +15,8 @@ import jakarta.inject.Inject;
 import mikaa.domain.NewCourse;
 import mikaa.domain.NewHole;
 import mikaa.kiskotaan.course.CourseEvent;
+import mikaa.producers.CourseProducer;
 import mikaa.producers.OutgoingChannels;
-import mikaa.producers.courses.CourseProducer;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

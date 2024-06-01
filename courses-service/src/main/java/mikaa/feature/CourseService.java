@@ -9,9 +9,8 @@ import jakarta.ws.rs.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import mikaa.domain.Course;
 import mikaa.domain.CourseSummary;
-import mikaa.domain.Hole;
 import mikaa.domain.NewCourse;
-import mikaa.producers.courses.CourseProducer;
+import mikaa.producers.CourseProducer;
 
 @ApplicationScoped
 @RequiredArgsConstructor
@@ -39,7 +38,7 @@ class CourseService implements CourseFinder {
   }
 
   Course findByIdOrThrow(long id) {
-    return toCourse(findCourseOrThrow(id));
+    return DomainModelMapper.course(findCourseOrThrow(id));
   }
 
   Course add(NewCourse newCourse) {
@@ -48,29 +47,32 @@ class CourseService implements CourseFinder {
         .map(hole -> new HoleEntity(hole.number(), hole.par(), hole.distance()))
         .toList();
 
-    var course = new CourseEntity(newCourse.name(), holes);
-    validator.validate(course);
-    course.getHoles().forEach(h -> h.setCourse(course)); // For JPA to work correctly
+    var courseEntity = new CourseEntity(newCourse.name(), holes);
+    validator.validate(courseEntity);
+    courseEntity.getHoles().forEach(h -> h.setCourse(courseEntity)); // For JPA to work correctly
+    repository.persist(courseEntity);
 
-    repository.persist(course);
-    producer.courseAdded(toCourse(course));
+    var course = DomainModelMapper.course(courseEntity);
+    producer.courseAdded(course);
 
-    return toCourse(course);
+    return course;
   }
 
   Course updateCourseName(long id, String name) {
-    var course = findCourseOrThrow(id);
     validator.validate(CourseEntity.fromName(name));
 
-    course.setName(name);
-    producer.courseUpdated(toCourse(course));
+    var courseEntity = findCourseOrThrow(id);
+    courseEntity.setName(name);
 
-    return toCourse(course);
+    var course = DomainModelMapper.course(courseEntity);
+    producer.courseUpdated(course);
+
+    return course;
   }
 
   void delete(long id) {
     repository.findByIdOptional(id)
-        .map(CourseService::toCourse)
+        .map(DomainModelMapper::course)
         .ifPresent(course -> {
           repository.deleteById(id);
           producer.courseDeleted(course);
@@ -78,17 +80,7 @@ class CourseService implements CourseFinder {
   }
 
   private static NotFoundException notFound(long id) {
-    String msg = "Could not find course with id " + id;
-    return new NotFoundException(msg);
-  }
-
-  private static Course toCourse(CourseEntity entity) {
-    var holes = entity.getHoles()
-        .stream()
-        .map(hole -> new Hole(hole.getId(), hole.getNumber(), hole.getPar(), hole.getDistance()))
-        .toList();
-
-    return new Course(entity.getId(), entity.getName(), holes);
+    return new NotFoundException("Could not find course with id " + id);
   }
 
   private static CourseSummary toSummary(CourseEntity entity) {

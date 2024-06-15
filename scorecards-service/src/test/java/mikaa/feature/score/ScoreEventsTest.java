@@ -75,7 +75,6 @@ class ScoreEventsTest {
     var hole1Score = payload.getScores().get(0);
     assertEquals(2, hole1Score.getPlayerId());
     assertEquals(1, hole1Score.getHole());
-    assertEquals(5, hole1Score.getPar());
     assertEquals(4, hole1Score.getScore());
 
     String playerId = playerMock().getExternalId() + "";

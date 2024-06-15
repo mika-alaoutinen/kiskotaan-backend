@@ -32,17 +32,19 @@ mp:
 
     incoming:
       course-state:
-        topic: "Courses-course_state"
+        topic: Courses-course_state
       player-state:
-        topic: "Players-player_state"
+        topic: Players-player_state
       scorecard-state-incoming: # channels need to have unique names
         broadcast: true
-        topic: "Scorecards-scorecard_state"
+        topic: Scorecards-scorecard_state
 
     outgoing:
       scorecard-state:
-        topic: "Scorecards-scorecard_state"
+        topic: Scorecards-scorecard_state
+      scores:
+        topic: Scorecards-score_entries
       scorecard-by-hole-state:
-        topic: "Scorecards-scorecard_by_hole_state"
+        topic: Scorecards-scorecard_by_hole_state
       scorecard-by-player-state:
-        topic: "Scorecards-scorecard_by_player_state"
+        topic: Scorecards-scorecard_by_player_state

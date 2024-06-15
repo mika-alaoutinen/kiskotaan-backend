@@ -16,8 +16,6 @@ import mikaa.kiskotaan.scorecard.ScoreEntry;
 import mikaa.logic.ScoreCardInput;
 import mikaa.logic.ScoreLogic;
 import mikaa.config.OutgoingChannels;
-import mikaa.domain.Course;
-import mikaa.domain.Hole;
 import mikaa.domain.Player;
 import mikaa.domain.Score;
 import mikaa.domain.ScoreCard;
@@ -62,7 +60,7 @@ class ScoreCardStateProducer implements ScoreCardProducer {
 
     var scores = scoreCard.scores()
         .stream()
-        .map(score -> mapScore(score, scoreCard.course()))
+        .map(score -> mapScore(scoreCard.id(), score))
         .toList();
 
     return new ScoreCardPayload(
@@ -73,15 +71,13 @@ class ScoreCardStateProducer implements ScoreCardProducer {
         scores);
   }
 
-  private static ScoreEntry mapScore(Score score, Course course) {
-    int par = course.holes()
-        .stream()
-        .filter(hole -> hole.number() == score.hole())
-        .findFirst()
-        .map(Hole::par)
-        .orElse(0);
-
-    return new ScoreEntry(score.id(), score.playerId(), score.hole(), par, score.score());
+  private static ScoreEntry mapScore(long scoreCardId, Score score) {
+    return new ScoreEntry(
+        score.id(),
+        score.playerId(),
+        scoreCardId,
+        score.hole(),
+        score.score());
   }
 
 }

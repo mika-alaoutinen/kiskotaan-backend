@@ -106,7 +106,7 @@ class ScoreCardProcessorTest {
 
   private static ScoreCardPayload payload() {
     var results = Map.of("2", new RoundResult(-1, 3));
-    var scores = List.of(new ScoreEntry(10l, 2l, 1, 4, 3));
+    var scores = List.of(new ScoreEntry(10l, 2l, 13l, 1, 3));
     return new ScoreCardPayload(13l, 1l, List.of(2l), results, scores);
   }
 

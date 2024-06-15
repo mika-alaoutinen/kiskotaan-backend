@@ -19,7 +19,6 @@ import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import io.smallrye.reactive.messaging.memory.InMemorySink;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.config.OutgoingChannels;
 import mikaa.domain.NewScoreCard;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.CourseFinder;
@@ -54,7 +53,7 @@ class ScoreCardEventsTest {
   @BeforeEach
   void setup() {
     service = new ScoreCardService(courseFinder, playerFinder, producer, repository);
-    sink = connector.sink(OutgoingChannels.SCORECARD_STATE);
+    sink = connector.sink(ScoreCardProducer.SCORECARD_STATE);
     sink.clear();
   }
 

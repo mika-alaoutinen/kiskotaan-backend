@@ -12,11 +12,11 @@
       "type": "long"
     },
     {
-      "name": "hole",
-      "type": "int"
+      "name": "scoreCardId",
+      "type": "long"
     },
     {
-      "name": "par",
+      "name": "hole",
       "type": "int"
     },
     {

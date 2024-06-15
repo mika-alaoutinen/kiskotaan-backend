@@ -1,7 +1,5 @@
 package mikaa.producers;
 
-import java.util.stream.Collectors;
-
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 
@@ -9,24 +7,14 @@ import io.smallrye.reactive.messaging.kafka.Record;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
-import mikaa.kiskotaan.scorecard.ScoreCardPayload;
-import mikaa.kiskotaan.scorecard.ScoreEntry;
-import mikaa.logic.ScoreCardInput;
-import mikaa.logic.ScoreLogic;
-import mikaa.config.OutgoingChannels;
-import mikaa.domain.Course;
-import mikaa.domain.Hole;
-import mikaa.domain.Player;
-import mikaa.domain.Score;
 import mikaa.domain.ScoreCard;
 
 @ApplicationScoped
 class ScoreCardStateProducer implements ScoreCardProducer {
 
   @Inject
-  @Channel(OutgoingChannels.SCORECARD_STATE)
+  @Channel(ScoreCardProducer.SCORECARD_STATE)
   Emitter<Record<Long, ScoreCardEvent>> emitter;
 
   @Override
@@ -45,43 +33,9 @@ class ScoreCardStateProducer implements ScoreCardProducer {
   }
 
   private void sendEvent(Action action, ScoreCard scoreCard) {
-    var event = new ScoreCardEvent(action, toPayload(scoreCard));
+    var event = new ScoreCardEvent(action, ScoreCardMapper.toPayload(scoreCard));
     var record = Record.of(scoreCard.id(), event);
     emitter.send(record).toCompletableFuture().join();
-  }
-
-  private ScoreCardPayload toPayload(ScoreCard scoreCard) {
-    var playerIds = scoreCard.players().stream().map(Player::id).toList();
-
-    var results = ScoreLogic.results(ScoreCardInput.from(scoreCard))
-        .entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            entry -> entry.getKey().toString(),
-            entry -> new RoundResult(entry.getValue().result(), entry.getValue().total())));
-
-    var scores = scoreCard.scores()
-        .stream()
-        .map(score -> mapScore(score, scoreCard.course()))
-        .toList();
-
-    return new ScoreCardPayload(
-        scoreCard.id(),
-        scoreCard.course().id(),
-        playerIds,
-        results,
-        scores);
-  }
-
-  private static ScoreEntry mapScore(Score score, Course course) {
-    int par = course.holes()
-        .stream()
-        .filter(hole -> hole.number() == score.hole())
-        .findFirst()
-        .map(Hole::par)
-        .orElse(0);
-
-    return new ScoreEntry(score.id(), score.playerId(), score.hole(), par, score.score());
   }
 
 }

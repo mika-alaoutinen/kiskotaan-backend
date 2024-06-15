@@ -7,7 +7,6 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mikaa.config.IncomingChannels;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.player.PlayerEvent;
 import mikaa.kiskotaan.player.PlayerPayload;
@@ -17,9 +16,11 @@ import mikaa.kiskotaan.player.PlayerPayload;
 @Slf4j
 class PlayerConsumer {
 
+  static final String PLAYER_STATE = "player-state";
+
   private final PlayerService service;
 
-  @Incoming(IncomingChannels.PLAYER_STATE)
+  @Incoming(PLAYER_STATE)
   @Transactional
   void playerEvent(PlayerEvent event) {
     var action = event.getAction();

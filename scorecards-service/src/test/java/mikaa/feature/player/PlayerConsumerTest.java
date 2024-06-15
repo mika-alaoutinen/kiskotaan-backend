@@ -16,7 +16,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.smallrye.reactive.messaging.memory.InMemoryConnector;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.config.IncomingChannels;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.player.PlayerEvent;
 import mikaa.kiskotaan.player.PlayerPayload;
@@ -73,7 +72,7 @@ class PlayerConsumerTest {
   }
 
   private void sendEvent(PlayerEvent event) throws InterruptedException {
-    var source = connector.source(IncomingChannels.PLAYER_STATE);
+    var source = connector.source(PlayerConsumer.PLAYER_STATE);
     source.send(event);
     // I guess in-memory test channels don't work so great with blocking code
     Thread.sleep(500);

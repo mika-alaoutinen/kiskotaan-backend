@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import mikaa.kiskotaan.course.CourseEvent;
 import mikaa.kiskotaan.course.CoursePayload;
 import mikaa.kiskotaan.domain.Action;
-import mikaa.config.IncomingChannels;
 import mikaa.domain.Course;
 import mikaa.domain.Hole;
 
@@ -19,9 +18,11 @@ import mikaa.domain.Hole;
 @Slf4j
 class CourseConsumer {
 
+  static final String COURSE_STATE = "course-state";
+
   private final CourseService service;
 
-  @Incoming(IncomingChannels.COURSE_STATE)
+  @Incoming(COURSE_STATE)
   @Transactional
   void courseEvent(CourseEvent event) {
     var action = event.getAction();

@@ -70,12 +70,6 @@ public class ScoreCardEntity {
     return this;
   }
 
-  public ScoreCardEntity removeScore(ScoreEntity score) {
-    scores.remove(score);
-    score.setScorecard(null);
-    return this;
-  }
-
   /**
    * Write default getter for ID, because Panache repository's persist method
    * returns void. Therefore, a mocked repository will return null for an ID even

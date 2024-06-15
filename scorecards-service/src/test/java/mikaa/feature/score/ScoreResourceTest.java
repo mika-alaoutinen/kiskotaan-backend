@@ -1,9 +1,7 @@
 package mikaa.feature.score;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -17,13 +15,10 @@ import org.junit.jupiter.api.Test;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
-import mikaa.domain.ScoreCard;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
-import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
-import mikaa.feature.scorecard.ScoreCardFinder;
-import mikaa.producers.ScoreCardProducer;
+import mikaa.producers.ScoreProducer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -34,13 +29,7 @@ class ScoreResourceTest {
   private static final String ENDPOINT = "/scores";
 
   @InjectMock
-  private ScoreCardFinder scoreCardFinder;
-
-  @InjectMock
-  private PlayerFinder playerFinder;
-
-  @InjectMock
-  private ScoreCardProducer producer;
+  private ScoreProducer producer;
 
   @InjectMock
   private ScoreRepository repository;
@@ -64,8 +53,6 @@ class ScoreResourceTest {
 
   @Test
   void should_throw_404_when_score_not_found() {
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.empty());
-
     given()
         .when()
         .get(ENDPOINT + "/111")
@@ -82,16 +69,16 @@ class ScoreResourceTest {
 
   @Test
   void should_delete_score() {
-    when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreMock()));
+    when(repository.deleteById(anyLong())).thenReturn(true);
     delete();
     verify(repository, atLeastOnce()).deleteById(1L);
-    verify(producer, atLeastOnce()).scoreCardUpdated(any(ScoreCard.class));
+    verify(producer, atLeastOnce()).scoreDeleted(1L);
   }
 
   @Test
   void should_do_nothing_on_delete_if_score_not_found() {
     delete();
-    verify(repository, never()).deleteById(anyLong());
+    verify(repository, atLeastOnce()).deleteById(1L);
     verifyNoInteractions(producer);
   }
 

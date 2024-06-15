@@ -10,7 +10,6 @@ import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import io.smallrye.mutiny.Uni;
 import io.smallrye.reactive.messaging.kafka.Record;
 import jakarta.enterprise.context.ApplicationScoped;
-import mikaa.config.IncomingChannels;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
 import mikaa.kiskotaan.scorecard.ScoreCardGroupedScoresEvent;
 import mikaa.kiskotaan.scorecard.ScoreCardGroupedScoresPayload;
@@ -23,10 +22,11 @@ import mikaa.kiskotaan.scorecard.ScoreEntry;
 @ApplicationScoped
 class ScoreCardProcessor {
 
+  static final String SCORECARD_STATE = "scorecard-state-incoming";
   static final String SCORECARD_BY_PLAYER_STATE = "scorecard-by-player-state";
   static final String SCORECARD_BY_HOLE_STATE = "scorecard-by-hole-state";
 
-  @Incoming(IncomingChannels.SCORECARD_STATE)
+  @Incoming(SCORECARD_STATE)
   @Outgoing(SCORECARD_BY_HOLE_STATE)
   Uni<Record<Long, ScoreCardGroupedScoresEvent>> sendScoresByHoleEvent(ScoreCardEvent event) {
     var scores = event.getPayload()
@@ -37,7 +37,7 @@ class ScoreCardProcessor {
     return sendEvent(event, scores);
   }
 
-  @Incoming(IncomingChannels.SCORECARD_STATE)
+  @Incoming(SCORECARD_STATE)
   @Outgoing(SCORECARD_BY_PLAYER_STATE)
   Uni<Record<Long, ScoreCardGroupedScoresEvent>> sendScoresByPlayerEvent(ScoreCardEvent event) {
     var scores = event.getPayload()

@@ -17,7 +17,6 @@ import io.smallrye.reactive.messaging.memory.InMemorySink;
 import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
-import mikaa.config.IncomingChannels;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
@@ -37,7 +36,7 @@ class ScoreCardProcessorTest {
 
   @BeforeEach
   void setup() {
-    source = connector.source(IncomingChannels.SCORECARD_STATE);
+    source = connector.source(ScoreCardProcessor.SCORECARD_STATE);
   }
 
   @ParameterizedTest

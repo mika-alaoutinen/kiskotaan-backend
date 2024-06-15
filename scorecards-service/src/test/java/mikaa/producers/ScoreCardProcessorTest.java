@@ -18,7 +18,6 @@ import io.smallrye.reactive.messaging.memory.InMemorySource;
 import jakarta.enterprise.inject.Any;
 import jakarta.inject.Inject;
 import mikaa.config.IncomingChannels;
-import mikaa.config.OutgoingChannels;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
@@ -43,8 +42,8 @@ class ScoreCardProcessorTest {
 
   @ParameterizedTest
   @ValueSource(strings = {
-      OutgoingChannels.SCORECARD_BY_HOLE_STATE,
-      OutgoingChannels.SCORECARD_BY_PLAYER_STATE
+      ScoreCardProcessor.SCORECARD_BY_HOLE_STATE,
+      ScoreCardProcessor.SCORECARD_BY_PLAYER_STATE
   })
   void sends_add_event_to_grouped_score_kafka_topics(String channel) {
     sink = connector.sink(channel);
@@ -55,8 +54,8 @@ class ScoreCardProcessorTest {
 
   @ParameterizedTest
   @ValueSource(strings = {
-      OutgoingChannels.SCORECARD_BY_HOLE_STATE,
-      OutgoingChannels.SCORECARD_BY_PLAYER_STATE
+      ScoreCardProcessor.SCORECARD_BY_HOLE_STATE,
+      ScoreCardProcessor.SCORECARD_BY_PLAYER_STATE
   })
   void sends_delete_event_to_grouped_score_kafka_topics(String channel) {
     sink = connector.sink(channel);
@@ -67,12 +66,12 @@ class ScoreCardProcessorTest {
 
   @Test
   void sends_update_event_to_grouped_by_hole_topic() {
-    assertScoreUpdateEvent(OutgoingChannels.SCORECARD_BY_HOLE_STATE, "1");
+    assertScoreUpdateEvent(ScoreCardProcessor.SCORECARD_BY_HOLE_STATE, "1");
   }
 
   @Test
   void sends_update_event_to_grouped_by_player_topic() {
-    assertScoreUpdateEvent(OutgoingChannels.SCORECARD_BY_PLAYER_STATE, "2");
+    assertScoreUpdateEvent(ScoreCardProcessor.SCORECARD_BY_PLAYER_STATE, "2");
   }
 
   private void assertGroupedByEvent(InMemorySink<Record<Long, ScoreCardGroupedScoresEvent>> sink, Action action) {

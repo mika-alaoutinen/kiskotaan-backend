@@ -15,7 +15,6 @@ import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
 import mikaa.logic.ScoreCardInput;
 import mikaa.logic.ScoreLogic;
-import mikaa.config.OutgoingChannels;
 import mikaa.domain.Player;
 import mikaa.domain.Score;
 import mikaa.domain.ScoreCard;
@@ -24,7 +23,7 @@ import mikaa.domain.ScoreCard;
 class ScoreCardStateProducer implements ScoreCardProducer {
 
   @Inject
-  @Channel(OutgoingChannels.SCORECARD_STATE)
+  @Channel(ScoreCardProducer.SCORECARD_STATE)
   Emitter<Record<Long, ScoreCardEvent>> emitter;
 
   @Override

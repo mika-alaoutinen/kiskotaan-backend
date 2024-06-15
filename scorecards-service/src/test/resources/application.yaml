@@ -19,10 +19,14 @@ mp:
         broadcast: true
         connector: smallrye-in-memory
         topic: Scorecards-scorecard_state
+      scores-incoming:
+        connector: smallrye-in-memory
+        topic: Scorecards-score_entries
 
     outgoing:
       scorecard-state:
         connector: smallrye-in-memory
+        merge: true
         topic: Scorecards-scorecard_state
       scores:
         connector: smallrye-in-memory

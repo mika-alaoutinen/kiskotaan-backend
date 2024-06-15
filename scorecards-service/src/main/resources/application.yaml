@@ -38,9 +38,12 @@ mp:
       scorecard-state-incoming: # channels need to have unique names
         broadcast: true
         topic: Scorecards-scorecard_state
+      scores-incoming:
+        topic: Scorecards-score_entries
 
     outgoing:
       scorecard-state:
+        merge: true
         topic: Scorecards-scorecard_state
       scores:
         topic: Scorecards-score_entries

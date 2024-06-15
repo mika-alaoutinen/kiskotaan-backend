@@ -27,12 +27,13 @@ class ScoreCardService implements ScoreCardFinder {
     return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }
 
-  List<ScoreCard> findAll() {
-    return repository.streamAll().map(ScoreCardMapper::from).toList();
+  @Override
+  public ScoreCard findByIdOrThrow(long id) {
+    return ScoreCardMapper.from(findOrThrow(id));
   }
 
-  ScoreCard findByIdOrThrow(long id) {
-    return ScoreCardMapper.from(findOrThrow(id));
+  List<ScoreCard> findAll() {
+    return repository.streamAll().map(ScoreCardMapper::from).toList();
   }
 
   ScoreCard add(NewScoreCard newScoreCard) {

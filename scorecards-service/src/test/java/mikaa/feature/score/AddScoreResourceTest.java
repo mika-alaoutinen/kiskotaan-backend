@@ -20,14 +20,14 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import mikaa.domain.ScoreCard;
+import mikaa.domain.Score;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
 import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
-import mikaa.producers.ScoreCardProducer;
+import mikaa.producers.ScoreProducer;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -49,7 +49,7 @@ class AddScoreResourceTest {
   private PlayerFinder playerFinder;
 
   @InjectMock
-  private ScoreCardProducer producer;
+  private ScoreProducer producer;
 
   @InjectMock
   private ScoreRepository repository;
@@ -68,7 +68,7 @@ class AddScoreResourceTest {
             "score", is(3));
 
     verify(repository, atLeastOnce()).persist(any(ScoreEntity.class));
-    verify(producer, atLeastOnce()).scoreCardUpdated(any(ScoreCard.class));
+    verify(producer, atLeastOnce()).scoreAdded(anyLong(), any(Score.class));
   }
 
   @Test

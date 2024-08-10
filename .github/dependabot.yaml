@@ -7,26 +7,18 @@ updates:
       interval: weekly
 
   - package-ecosystem: maven
-    directory: courses-service
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: maven
-    directory: players-service
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: maven
-    directory: queries-service
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: maven
-    directory: queries-service-streams
-    schedule:
-      interval: weekly
-
-  - package-ecosystem: maven
-    directory: scorecards-service
+    directories:
+      - courses-service
+      - players-service
+      - queries-service
+      - queries-service-streams
+      - scorecards-service
+    groups:
+      quarkus:
+        patterns:
+          - "quarkus*"
+        update-types:
+          - "patch"
+          - "minor"
     schedule:
       interval: weekly

@@ -1,5 +1,5 @@
 # Kiskotaan backend
-`Kiskotaan backend` is a (disc) golf scorekeeping application that consists of several microservices. The services are written in Java using Quarkus and Spring Boot frameworks.
+`Kiskotaan backend` is a (disc) golf scorekeeping application that consists of several microservices. The services are written in Java using Quarkus framework.
 
 
 # Microservices
@@ -9,10 +9,6 @@
 - Port `8080`.
 - Consolidates GET requests to different resources into one service.
 - Maintains a read-only replica of the datasets (courses, players and score cards) in other services.
-
-### Queries streams service
-- Port `8080`.
-- An alternative implementation to `Queries service`, using Kafka Streams instead of Kafka Consumers.
 
 ### Players service
 - Port `8081`.
@@ -48,7 +44,7 @@ In addition to the microservices listed above, `Kiskotaan backend` requires seve
 
 ### MongoDB
 - Microservices that want to operate in a non-blocking manner use MongoDB instead of Postgres as their database.
-- At the moment, used in `Queries` service.
+- Used in `Queries` service.
 
 ### Postgres
 - Microservices primarily use Postgres as their database.
@@ -65,16 +61,13 @@ Topic name consists of the domain/service name, a descriptive event type and a v
 > Domain-event_type-version
 
 ## Current topics
-The list of Kafka topics published by the different services.
-
-### Courses service produces
+The list of Kafka topics published by the different services:
 - Courses-course_state
-
-### Players service produces
 - Players-player_state
-
-### Score cards service produces
 - Scorecards-scorecard_state
+- Scorecards-score_entries
+- Scorecards-scorecard_by_hole_state
+- Scorecards-scorecard_by_player_state
 
 # Running Kiskotaan backend
 The entire stack, including Kafka and a Postgres database, can be spun up with Docker compose:
@@ -102,22 +95,11 @@ There doesn't seem to be a sensible way to generate reactive interfaces from an 
 - Add `CourseSummary.avsc` to Courses service.
   - A course summary contains course name, hole count and course par.
   - Try reading emitted course events from Kafka and map them to a new `Courses-course_summary` topic?
-- Play around with GraphQL in Queries service streams.
-  - It should be possible to dynamically create summarized or full views using GraphQL's `@Source` feature.
-  - For example, display course hole count or a list of holes based on what the client requests.
-- Implement `Queries service`.
-  - Use Kafka Streams to query the state of different domain entities.
-  - MongoDB won't be needed anymore.
-  - Figure out how to send course, player and score card events to Kafka on application launch to create initial test data.
-- Implement search functionality for score cards.
+- Play around with GraphQL in Queries service. It should be possible to dynamically create summarized or full views using GraphQL's `@Source` feature.
 
 # Ideas for further development
-1. Try out the `outbox` pattern in `Courses service` to share course state to a Kafka topic. Use the Debezium connector for Postgres. 
+1. Replace dual writes with the `transactional outbox` pattern.
 
 2. Add `Analytics service` that aggregates facts about played rounds. 
-  - Try out Kafka Streams.
   - Who has the most bogies and birdies? 
   - What are the most popular courses?
-
-3. Add `Tournament service` that assigns players to scorecards and keeps track
-   of overall player scores.

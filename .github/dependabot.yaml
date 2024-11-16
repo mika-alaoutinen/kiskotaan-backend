@@ -11,7 +11,6 @@ updates:
       - courses-service
       - players-service
       - queries-service
-      - queries-service-streams
       - scorecards-service
     groups:
       quarkus:

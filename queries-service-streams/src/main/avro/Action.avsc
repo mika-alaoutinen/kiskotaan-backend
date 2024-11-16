@@ -1,7 +1,0 @@
-{
-  "namespace": "mikaa.kiskotaan.domain",
-  "name": "Action",
-  "type": "enum",
-  "symbols": ["ADD", "UPDATE", "DELETE", "UNKNOWN"],
-  "default": "UNKNOWN"
-}

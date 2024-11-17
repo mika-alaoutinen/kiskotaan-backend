@@ -1,4 +1,4 @@
-package mikaa.feature.score;
+package mikaa.feature.scorecard;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.NotFoundException;
@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import mikaa.domain.NewScore;
 import mikaa.domain.Score;
 import mikaa.feature.player.PlayerFinder;
-import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.producers.ScoreProducer;
 
 @ApplicationScoped
@@ -15,7 +14,7 @@ import mikaa.producers.ScoreProducer;
 class ScoreService {
 
   private final PlayerFinder playerFinder;
-  private final ScoreCardFinder scoreCardFinder;
+  private final ScoreCardService scoreCardService;
   private final ScoreProducer producer;
   private final ScoreRepository repository;
 
@@ -26,7 +25,7 @@ class ScoreService {
   }
 
   Score addScore(long id, NewScore newScore) {
-    var scoreCard = scoreCardFinder.findOrThrow(id);
+    var scoreCard = scoreCardService.findOrThrow(id);
     var player = playerFinder.findOrThrow(newScore.playerId());
     var scoreEntity = new ScoreEntity(newScore.hole(), newScore.score());
 

@@ -1,4 +1,4 @@
-package mikaa.feature.score;
+package mikaa.feature.scorecard;
 
 import jakarta.transaction.Transactional;
 

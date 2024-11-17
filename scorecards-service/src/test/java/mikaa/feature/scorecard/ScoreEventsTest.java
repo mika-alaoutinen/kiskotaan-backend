@@ -1,4 +1,4 @@
-package mikaa.feature.score;
+package mikaa.feature.scorecard;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -25,8 +25,6 @@ import mikaa.feature.course.CourseEntity;
 import mikaa.feature.course.HoleEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
-import mikaa.feature.scorecard.ScoreCardEntity;
-import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.producers.ScoreProducer;
 
 @QuarkusTest
@@ -43,7 +41,7 @@ class ScoreEventsTest {
   private ScoreRepository repository;
 
   @InjectMock
-  private ScoreCardFinder scoreCardFinder;
+  private ScoreCardService scoreCardService;
 
   @InjectMock
   private PlayerFinder playerFinder;
@@ -53,14 +51,14 @@ class ScoreEventsTest {
 
   @BeforeEach
   void setup() {
-    service = new ScoreService(playerFinder, scoreCardFinder, producer, repository);
+    service = new ScoreService(playerFinder, scoreCardService, producer, repository);
     sink = connector.sink(ScoreProducer.SCORES_CHANNEL);
     sink.clear();
   }
 
   @Test
   void sends_event_on_add() {
-    when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
+    when(scoreCardService.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(playerMock());
 
     service.addScore(13l, new NewScore(2, 1, 4));

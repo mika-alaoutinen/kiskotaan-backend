@@ -12,7 +12,6 @@ import mikaa.feature.course.CourseFinder;
 import mikaa.feature.course.HoleEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
-import mikaa.feature.score.ScoreEntity;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.model.ScoreCardDTO;
 import mikaa.producers.ScoreCardProducer;
@@ -32,7 +31,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import jakarta.ws.rs.NotFoundException;
 
@@ -56,24 +54,6 @@ class ScoreCardResourceTest {
   private PlayerFinder playerFinder;
 
   @Test
-  void should_get_all_score_cards() {
-    var scoreCard = scoreCardMock();
-    when(repository.streamAll()).thenReturn(Stream.of(scoreCard));
-
-    given()
-        .when()
-        .get(ENDPOINT)
-        .then()
-        .statusCode(200)
-        .contentType(ContentType.JSON)
-        .body(
-            "[0].id", is(1),
-            "[0].course.holes", is(3),
-            "[0].course.name", is("Laajis"),
-            "[0].course.par", is(12));
-  }
-
-  @Test
   void should_get_score_card_by_id() {
     when(repository.findByIdOptional(anyLong())).thenReturn(Optional.of(scoreCardMock()));
 
@@ -95,12 +75,7 @@ class ScoreCardResourceTest {
         .as(ScoreCardDTO.class);
 
     // Examining maps seems like a pain with Hamcrest
-    var results = response.getResults().get("123");
-    assertEquals(2, results.getHolesPlayed());
-    assertEquals(8, results.getTotal());
-    assertEquals(-1, results.getResult());
-
-    var scores = response.getScores().get("123");
+    var scores = response.getScores();
     var entry1 = scores.get(0);
     assertEquals(1, entry1.getHole());
     assertEquals(3, entry1.getScore());
@@ -143,7 +118,7 @@ class ScoreCardResourceTest {
             "course.par", is(12),
             "players.size()", is(1),
             "players[0].id", is(123),
-            "scores", anEmptyMap());
+            "scores", empty());
 
     verify(repository, atLeastOnce()).persist(any(ScoreCardEntity.class));
     verify(producer, atLeastOnce()).scoreCardAdded(any(ScoreCard.class));

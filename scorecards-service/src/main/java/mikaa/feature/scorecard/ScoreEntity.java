@@ -1,4 +1,4 @@
-package mikaa.feature.score;
+package mikaa.feature.scorecard;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -15,7 +15,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import mikaa.feature.player.PlayerEntity;
-import mikaa.feature.scorecard.ScoreCardEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = false, exclude = { "player", "scorecard" })

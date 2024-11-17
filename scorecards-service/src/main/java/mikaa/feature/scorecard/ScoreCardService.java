@@ -22,7 +22,6 @@ class ScoreCardService implements ScoreCardFinder {
   private final ScoreCardProducer producer;
   private final ScoreCardRepository repository;
 
-  @Override
   public ScoreCardEntity findOrThrow(long id) {
     return repository.findByIdOptional(id).orElseThrow(() -> notFound(id));
   }

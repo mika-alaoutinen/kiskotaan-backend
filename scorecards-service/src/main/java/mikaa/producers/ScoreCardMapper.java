@@ -16,11 +16,13 @@ interface ScoreCardMapper {
     var playerIds = scoreCard.players().stream().map(Player::id).toList();
 
     var results = RoundResultCalculator.results(ScoreCardInput.from(scoreCard))
-        .entrySet()
         .stream()
         .collect(Collectors.toMap(
-            entry -> entry.getKey().toString(),
-            entry -> new RoundResult(entry.getValue().result(), entry.getValue().total())));
+            roundScore -> roundScore.playerId() + "",
+            roundScore -> RoundResult.newBuilder()
+                .setResult(roundScore.total())
+                .setTotal(roundScore.total())
+                .build()));
 
     var scores = scoreCard.scores()
         .stream()

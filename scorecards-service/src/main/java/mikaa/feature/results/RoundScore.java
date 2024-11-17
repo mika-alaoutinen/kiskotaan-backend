@@ -1,4 +1,4 @@
 package mikaa.feature.results;
 
-public record RoundScore(int holesPlayed, int result, int total) {
+public record RoundScore(long playerId, int holesPlayed, int result, int total) {
 }

@@ -3,7 +3,6 @@ package mikaa.feature.results;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -64,13 +63,12 @@ class RoundResultsResource implements RoundResultsApi {
         .toList();
   }
 
-  private static List<ResultDTO> mapResults(Map<Long, RoundScore> results) {
-    return results.values()
-        .stream()
-        .map(playerScore -> new ResultDTO()
-            .holesPlayed(playerScore.holesPlayed())
-            .result(playerScore.result())
-            .total(playerScore.total()))
+  private static List<ResultDTO> mapResults(Collection<RoundScore> roundScores) {
+    return roundScores.stream()
+        .map(rs -> new ResultDTO()
+            .holesPlayed(rs.holesPlayed())
+            .result(rs.result())
+            .total(rs.total()))
         .toList();
   }
 

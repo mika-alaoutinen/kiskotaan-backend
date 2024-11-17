@@ -12,15 +12,22 @@ class RoundResultCalculatorTest {
   void calculates_round_results_by_player() {
     var results = RoundResultCalculator.results(input());
 
-    var akuResult = results.get(313l);
+    var akuResult = scoreForPlayer(313, results);
     assertEquals(-1, akuResult.result());
     assertEquals(11, akuResult.total());
     assertEquals(3, akuResult.holesPlayed());
 
-    var iinesResult = results.get(314l);
+    var iinesResult = scoreForPlayer(314, results);
     assertEquals(1, iinesResult.result());
     assertEquals(13, iinesResult.total());
     assertEquals(3, iinesResult.holesPlayed());
+  }
+
+  private static RoundScore scoreForPlayer(long playerId, List<RoundScore> roundScores) {
+    return roundScores.stream()
+        .filter(roundScore -> roundScore.playerId() == playerId)
+        .findFirst()
+        .orElseThrow();
   }
 
   private static ScoreCardInput input() {

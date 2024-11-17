@@ -16,10 +16,6 @@ public interface ScoreLogic {
             entry -> calculatePlayerScores(entry.getValue())));
   }
 
-  static Map<Integer, List<ScoreEntry>> scoresByHole(ScoreCardInput input) {
-    return input.scores().stream().collect(Collectors.groupingBy(ScoreEntry::hole));
-  }
-
   static Map<Long, List<ScoreEntry>> scoresByPlayer(ScoreCardInput input) {
     return groupScoresByPlayer(input);
   }

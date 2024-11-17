@@ -15,10 +15,8 @@ import mikaa.domain.Hole;
 import mikaa.domain.NewScore;
 import mikaa.domain.NewScoreCard;
 import mikaa.domain.Player;
+import mikaa.domain.Score;
 import mikaa.domain.ScoreCard;
-import mikaa.logic.ScoreCardInput;
-import mikaa.logic.ScoreEntry;
-import mikaa.logic.ScoreLogic;
 import mikaa.model.CourseDTO;
 import mikaa.model.NewScoreCardDTO;
 import mikaa.model.NewScoreDTO;
@@ -62,18 +60,11 @@ class ScoreCardResource implements ScoreCardsApi {
   }
 
   private static ScoreCardDTO toDto(ScoreCard scoreCard) {
-    var input = ScoreCardInput.from(scoreCard);
-    var scores = ScoreLogic.scoresByPlayer(input)
-        .values()
-        .stream()
-        .flatMap(Collection::stream)
-        .toList();
-
     return new ScoreCardDTO()
         .id(BigDecimal.valueOf(scoreCard.id()))
         .course(mapCourse(scoreCard.course()))
         .players(mapPlayers(scoreCard.players()))
-        .scores(mapScores(scores));
+        .scores(mapScores(scoreCard.scores()));
   }
 
   private static CourseDTO mapCourse(Course c) {
@@ -93,13 +84,13 @@ class ScoreCardResource implements ScoreCardsApi {
         .toList();
   }
 
-  private static List<ScoreDTO> mapScores(List<ScoreEntry> scores) {
+  private static List<ScoreDTO> mapScores(Collection<Score> scores) {
     return scores.stream()
-        .map(score -> new ScoreDTO()
-            .id(BigDecimal.valueOf(score.id()))
-            .playerId((int) score.playerId())
-            .hole(score.hole())
-            .score(score.score()))
+        .map(s -> new ScoreDTO()
+            .id(BigDecimal.valueOf(s.id()))
+            .playerId((int) s.playerId())
+            .hole(s.hole())
+            .score(s.score()))
         .toList();
   }
 

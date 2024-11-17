@@ -23,19 +23,6 @@ class ScoreLogicTest {
     assertEquals(3, iinesResult.holesPlayed());
   }
 
-  @Test
-  void calculates_scores_by_player() {
-    var scoresByPlayer = ScoreLogic.scoresByPlayer(input());
-
-    var akuScores = scoresByPlayer.get(313l);
-    assertEquals(2, akuScores.get(1).hole());
-    assertEquals(3, akuScores.get(1).score());
-
-    var iinesScores = scoresByPlayer.get(314l);
-    assertEquals(3, iinesScores.get(2).hole());
-    assertEquals(5, iinesScores.get(2).score());
-  }
-
   private static ScoreCardInput input() {
     var scores = List.of(
         new ScoreEntry(1, 313, 1, 3, 3),

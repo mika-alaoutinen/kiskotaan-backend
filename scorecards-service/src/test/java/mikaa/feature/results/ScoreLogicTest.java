@@ -1,4 +1,4 @@
-package mikaa.logic;
+package mikaa.feature.results;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

@@ -4,11 +4,11 @@ import java.util.stream.Collectors;
 
 import mikaa.domain.Player;
 import mikaa.domain.ScoreCard;
+import mikaa.feature.results.ScoreCardInput;
+import mikaa.feature.results.ScoreLogic;
 import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
-import mikaa.logic.ScoreCardInput;
-import mikaa.logic.ScoreLogic;
 
 interface ScoreCardMapper {
 

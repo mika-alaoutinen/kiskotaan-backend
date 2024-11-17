@@ -8,7 +8,6 @@ import io.smallrye.reactive.messaging.kafka.Record;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.kiskotaan.domain.Action;
 import mikaa.kiskotaan.scorecard.ScoreCardEvent;
 import mikaa.kiskotaan.scorecard.ScoreEntry;

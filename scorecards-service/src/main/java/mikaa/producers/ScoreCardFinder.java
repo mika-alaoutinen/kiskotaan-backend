@@ -1,4 +1,4 @@
-package mikaa.feature.scorecard;
+package mikaa.producers;
 
 import mikaa.domain.ScoreCard;
 

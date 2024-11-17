@@ -1,6 +1,6 @@
 package mikaa.feature.scorecard;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -11,7 +11,6 @@ import mikaa.domain.NewScoreCard;
 import mikaa.domain.ScoreCard;
 import mikaa.feature.course.CourseFinder;
 import mikaa.feature.player.PlayerFinder;
-import mikaa.producers.ScoreCardFinder;
 import mikaa.producers.ScoreCardProducer;
 
 @ApplicationScoped
@@ -32,7 +31,8 @@ class ScoreCardService implements ScoreCardFinder {
     return ScoreCardMapper.from(findOrThrow(id));
   }
 
-  List<ScoreCard> findAll() {
+  @Override
+  public Collection<ScoreCard> findAll() {
     return repository.streamAll().map(ScoreCardMapper::from).toList();
   }
 

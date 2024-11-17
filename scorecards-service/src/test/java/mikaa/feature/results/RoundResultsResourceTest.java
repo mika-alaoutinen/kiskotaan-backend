@@ -1,36 +1,35 @@
-package mikaa.feature.scorecard;
+package mikaa.feature.results;
 
 import static org.mockito.Mockito.when;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
-import mikaa.feature.course.CourseEntity;
-import mikaa.feature.course.HoleEntity;
-import mikaa.feature.player.PlayerEntity;
+import mikaa.domain.Course;
+import mikaa.domain.Hole;
+import mikaa.domain.Player;
+import mikaa.domain.Score;
+import mikaa.domain.ScoreCard;
+import mikaa.feature.scorecard.ScoreCardFinder;
 
 @QuarkusTest
 class RoundResultsResourceTest {
 
   private static final String ENDPOINT = "/results";
-  private static final CourseEntity COURSE = courseMock();
-  private static final PlayerEntity PEKKA_KANA = new PlayerEntity(123L, "Pekka", "Kana");
 
   @InjectMock
-  private ScoreCardRepository repository;
+  private ScoreCardFinder scoreCardFinder;
 
   @Test
   void should_get_all_round_results() {
-    when(repository.streamAll()).thenReturn(Stream.of(scoreCardMock()));
+    when(scoreCardFinder.findAll()).thenReturn(List.of(scoreCardMock()));
 
     given()
         .when()
@@ -47,7 +46,7 @@ class RoundResultsResourceTest {
 
   @Test
   void should_get_round_result_by_score_card_id() {
-    when(repository.findByIdOptional(1L)).thenReturn(Optional.of(scoreCardMock()));
+    when(scoreCardFinder.findByIdOrThrow(1L)).thenReturn(scoreCardMock());
 
     given()
         .when()
@@ -62,21 +61,20 @@ class RoundResultsResourceTest {
             "course.par", is(12));
   }
 
-  private static CourseEntity courseMock() {
+  private static ScoreCard scoreCardMock() {
     var holes = List.of(
-        new HoleEntity(1, 4),
-        new HoleEntity(2, 5),
-        new HoleEntity(3, 3));
+        new Hole(1, 4),
+        new Hole(2, 5),
+        new Hole(3, 3));
 
-    return new CourseEntity(321L, holes, "Laajis");
-  }
+    var course = new Course(321L, "Laajis", holes);
+    var player = new Player(123L, "Pekka", "Kana");
 
-  private static ScoreCardEntity scoreCardMock() {
     var scores = List.of(
-        new ScoreEntity(1, 3, PEKKA_KANA),
-        new ScoreEntity(2, 5, PEKKA_KANA));
+        new Score(1, player.id(), 1, 3),
+        new Score(2, player.id(), 2, 5));
 
-    return new ScoreCardEntity(1L, COURSE, Set.of(PEKKA_KANA), scores);
+    return new ScoreCard(1L, course, Set.of(player), scores);
   }
 
 }

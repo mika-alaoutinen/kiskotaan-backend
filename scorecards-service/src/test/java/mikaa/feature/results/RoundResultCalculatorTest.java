@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-class ScoreLogicTest {
+class RoundResultCalculatorTest {
 
   @Test
   void calculates_round_results_by_player() {
-    var results = ScoreLogic.results(input());
+    var results = RoundResultCalculator.results(input());
 
     var akuResult = results.get(313l);
     assertEquals(-1, akuResult.result());

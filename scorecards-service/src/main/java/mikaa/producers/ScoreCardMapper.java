@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import mikaa.domain.Player;
 import mikaa.domain.ScoreCard;
 import mikaa.feature.results.ScoreCardInput;
-import mikaa.feature.results.ScoreLogic;
+import mikaa.feature.results.RoundResultCalculator;
 import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardPayload;
 import mikaa.kiskotaan.scorecard.ScoreEntry;
@@ -15,7 +15,7 @@ interface ScoreCardMapper {
   static ScoreCardPayload toPayload(ScoreCard scoreCard) {
     var playerIds = scoreCard.players().stream().map(Player::id).toList();
 
-    var results = ScoreLogic.results(ScoreCardInput.from(scoreCard))
+    var results = RoundResultCalculator.results(ScoreCardInput.from(scoreCard))
         .entrySet()
         .stream()
         .collect(Collectors.toMap(

@@ -1,11 +1,10 @@
-package mikaa.feature.scorecard;
+package mikaa.feature.results;
 
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import mikaa.api.RoundResultsApi;
@@ -13,19 +12,16 @@ import mikaa.domain.Course;
 import mikaa.domain.Hole;
 import mikaa.domain.Player;
 import mikaa.domain.ScoreCard;
-import mikaa.feature.results.PlayerScore;
-import mikaa.feature.results.ScoreCardInput;
-import mikaa.feature.results.ScoreLogic;
+import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.CourseDTO;
 import mikaa.model.PlayerDTO;
 import mikaa.model.ResultDTO;
 import mikaa.model.RoundResultDTO;
 
-@ApplicationScoped
 @RequiredArgsConstructor
 class RoundResultsResource implements RoundResultsApi {
 
-  private final ScoreCardService service;
+  private final ScoreCardFinder service;
 
   @Override
   public RoundResultDTO getRoundResult(Integer id) {
@@ -42,7 +38,7 @@ class RoundResultsResource implements RoundResultsApi {
   }
 
   private static RoundResultDTO fromScoreCard(ScoreCard scoreCard) {
-    var results = ScoreLogic.results(ScoreCardInput.from(scoreCard));
+    var results = RoundResultCalculator.results(ScoreCardInput.from(scoreCard));
 
     return new RoundResultDTO()
         .id(BigDecimal.valueOf(scoreCard.id()))
@@ -68,7 +64,7 @@ class RoundResultsResource implements RoundResultsApi {
         .toList();
   }
 
-  private static List<ResultDTO> mapResults(Map<Long, PlayerScore> results) {
+  private static List<ResultDTO> mapResults(Map<Long, RoundScore> results) {
     return results.values()
         .stream()
         .map(playerScore -> new ResultDTO()

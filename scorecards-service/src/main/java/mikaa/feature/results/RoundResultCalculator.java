@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public interface ScoreLogic {
+public interface RoundResultCalculator {
 
-  static Map<Long, PlayerScore> results(ScoreCardInput input) {
+  static Map<Long, RoundScore> results(ScoreCardInput input) {
     var scoresByPlayer = input.scores()
         .stream()
         .collect(Collectors.groupingBy(ScoreEntry::playerId));
@@ -18,10 +18,10 @@ public interface ScoreLogic {
             entry -> calculatePlayerScores(entry.getValue())));
   }
 
-  private static PlayerScore calculatePlayerScores(Collection<ScoreEntry> playerScores) {
+  private static RoundScore calculatePlayerScores(Collection<ScoreEntry> playerScores) {
     int result = playerScores.stream().mapToInt(entry -> entry.score() - entry.par()).sum();
     int total = playerScores.stream().mapToInt(ScoreEntry::score).sum();
-    return new PlayerScore(playerScores.size(), result, total);
+    return new RoundScore(playerScores.size(), result, total);
   }
 
 }

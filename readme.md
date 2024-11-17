@@ -66,8 +66,6 @@ The list of Kafka topics published by the different services:
 - Players-player_state
 - Scorecards-scorecard_state
 - Scorecards-score_entries
-- Scorecards-scorecard_by_hole_state
-- Scorecards-scorecard_by_player_state
 
 # Running Kiskotaan backend
 The entire stack, including Kafka and a Postgres database, can be spun up with Docker compose:

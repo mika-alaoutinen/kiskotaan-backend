@@ -1,4 +1,4 @@
-package mikaa.logic;
+package mikaa.feature.results;
 
 import java.util.Collection;
 import java.util.Map;

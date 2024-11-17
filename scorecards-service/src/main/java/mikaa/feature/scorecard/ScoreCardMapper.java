@@ -5,7 +5,6 @@ import mikaa.domain.Hole;
 import mikaa.domain.Player;
 import mikaa.domain.ScoreCard;
 import mikaa.feature.course.CourseEntity;
-import mikaa.feature.score.ScoreMapper;
 
 public interface ScoreCardMapper {
 

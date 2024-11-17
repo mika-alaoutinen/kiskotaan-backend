@@ -1,11 +1,11 @@
-package mikaa.feature.score;
+package mikaa.feature.scorecard;
 
 import java.math.BigDecimal;
 
 import mikaa.domain.Score;
 import mikaa.model.ScoreDTO;
 
-public interface ScoreMapper {
+interface ScoreMapper {
 
   static ScoreDTO dto(Score score) {
     return new ScoreDTO()

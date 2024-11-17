@@ -3,8 +3,6 @@ package mikaa.feature.scorecard;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -14,25 +12,31 @@ import lombok.RequiredArgsConstructor;
 import mikaa.api.ScoreCardsApi;
 import mikaa.domain.Course;
 import mikaa.domain.Hole;
+import mikaa.domain.NewScore;
 import mikaa.domain.NewScoreCard;
 import mikaa.domain.Player;
+import mikaa.domain.Score;
 import mikaa.domain.ScoreCard;
-import mikaa.logic.PlayerScore;
-import mikaa.logic.ScoreCardInput;
-import mikaa.logic.ScoreEntry;
-import mikaa.logic.ScoreLogic;
 import mikaa.model.CourseDTO;
 import mikaa.model.NewScoreCardDTO;
+import mikaa.model.NewScoreDTO;
 import mikaa.model.PlayerDTO;
-import mikaa.model.ResultDTO;
 import mikaa.model.ScoreCardDTO;
-import mikaa.model.ScoreCardSummaryDTO;
 import mikaa.model.ScoreDTO;
 
 @RequiredArgsConstructor
 class ScoreCardResource implements ScoreCardsApi {
 
+  private final ScoreService scoreService;
   private final ScoreCardService service;
+
+  @Override
+  @Transactional
+  public ScoreDTO addScore(Integer id, @Valid @NotNull NewScoreDTO newScoreDTO) {
+    var newScore = new NewScore(newScoreDTO.getPlayerId().longValue(), newScoreDTO.getHole(), newScoreDTO.getScore());
+    var score = scoreService.addScore(id, newScore);
+    return ScoreMapper.dto(score);
+  }
 
   @Override
   @Transactional
@@ -55,34 +59,12 @@ class ScoreCardResource implements ScoreCardsApi {
     return toDto(service.findByIdOrThrow(id));
   }
 
-  @Override
-  @Transactional
-  public List<ScoreCardSummaryDTO> getScoreCards() {
-    return service.findAll()
-        .stream()
-        .map(ScoreCardResource::toSummary)
-        .toList();
-  }
-
   private static ScoreCardDTO toDto(ScoreCard scoreCard) {
-    var input = ScoreCardInput.from(scoreCard);
-
     return new ScoreCardDTO()
         .id(BigDecimal.valueOf(scoreCard.id()))
         .course(mapCourse(scoreCard.course()))
         .players(mapPlayers(scoreCard.players()))
-        .results(mapResults(ScoreLogic.results(input)))
-        .scores(mapScores(ScoreLogic.scoresByPlayer(input)));
-  }
-
-  private static ScoreCardSummaryDTO toSummary(ScoreCard scoreCard) {
-    var results = ScoreLogic.results(ScoreCardInput.from(scoreCard));
-
-    return new ScoreCardSummaryDTO()
-        .id(BigDecimal.valueOf(scoreCard.id()))
-        .course(mapCourse(scoreCard.course()))
-        .players(mapPlayers(scoreCard.players()))
-        .results(mapResults(results));
+        .scores(mapScores(scoreCard.scores()));
   }
 
   private static CourseDTO mapCourse(Course c) {
@@ -102,35 +84,14 @@ class ScoreCardResource implements ScoreCardsApi {
         .toList();
   }
 
-  private static Map<String, List<ScoreDTO>> mapScores(Map<Long, List<ScoreEntry>> scoresByPlayer) {
-    return scoresByPlayer.entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            entry -> entry.getKey().toString(),
-            entry -> entry.getValue().stream().map(ScoreCardResource::mapScore).toList()));
-  }
-
-  private static ScoreDTO mapScore(ScoreEntry entry) {
-    return new ScoreDTO()
-        .id(BigDecimal.valueOf(entry.id()))
-        .playerId((int) entry.playerId())
-        .hole(entry.hole())
-        .score(entry.score());
-  }
-
-  private static Map<String, ResultDTO> mapResults(Map<Long, PlayerScore> results) {
-    return results.entrySet()
-        .stream()
-        .collect(Collectors.toMap(
-            entry -> entry.getKey().toString(),
-            entry -> mapResult(entry.getValue())));
-  }
-
-  private static ResultDTO mapResult(PlayerScore ps) {
-    return new ResultDTO()
-        .holesPlayed(ps.holesPlayed())
-        .result(ps.result())
-        .total(ps.total());
+  private static List<ScoreDTO> mapScores(Collection<Score> scores) {
+    return scores.stream()
+        .map(s -> new ScoreDTO()
+            .id(BigDecimal.valueOf(s.id()))
+            .playerId((int) s.playerId())
+            .hole(s.hole())
+            .score(s.score()))
+        .toList();
   }
 
 }

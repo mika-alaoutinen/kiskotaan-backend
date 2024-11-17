@@ -1,4 +1,4 @@
-package mikaa.feature.score;
+package mikaa.feature.scorecard;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.atLeastOnce;
@@ -17,7 +17,6 @@ import io.quarkus.test.InjectMock;
 import io.restassured.http.ContentType;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
-import mikaa.feature.scorecard.ScoreCardEntity;
 import mikaa.producers.ScoreProducer;
 
 import static io.restassured.RestAssured.given;

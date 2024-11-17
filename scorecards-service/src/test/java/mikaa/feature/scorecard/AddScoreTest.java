@@ -1,4 +1,4 @@
-package mikaa.feature.score;
+package mikaa.feature.scorecard;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -24,8 +24,6 @@ import mikaa.domain.Score;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
 import mikaa.feature.player.PlayerFinder;
-import mikaa.feature.scorecard.ScoreCardEntity;
-import mikaa.feature.scorecard.ScoreCardFinder;
 import mikaa.model.NewScoreDTO;
 import mikaa.producers.ScoreProducer;
 
@@ -34,7 +32,7 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.never;
 
 @QuarkusTest
-class AddScoreResourceTest {
+class AddScoreTest {
 
   private static final PlayerEntity PEKKA_KANA = new PlayerEntity(123L, "Pekka", "Kana");
   private static final NewScoreDTO NEW_SCORE = new NewScoreDTO()
@@ -43,7 +41,7 @@ class AddScoreResourceTest {
       .score(3);
 
   @InjectMock
-  private ScoreCardFinder scoreCardFinder;
+  private ScoreCardService scoreCardService;
 
   @InjectMock
   private PlayerFinder playerFinder;
@@ -56,7 +54,7 @@ class AddScoreResourceTest {
 
   @Test
   void should_add_new_score() {
-    when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
+    when(scoreCardService.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
 
     postScore(NEW_SCORE)
@@ -73,7 +71,7 @@ class AddScoreResourceTest {
 
   @Test
   void should_throw_400_when_invalid_request_body() {
-    when(scoreCardFinder.findOrThrow(anyLong())).thenReturn(scoreCardMock());
+    when(scoreCardService.findOrThrow(anyLong())).thenReturn(scoreCardMock());
     when(playerFinder.findOrThrow(anyLong())).thenReturn(PEKKA_KANA);
 
     var invalidScore = new NewScoreDTO()
@@ -99,7 +97,7 @@ class AddScoreResourceTest {
   @Test
   void should_throw_404_when_scorecard_not_found() {
     String errorMsg = "Could not find score card with id 1";
-    when(scoreCardFinder.findOrThrow(anyLong())).thenThrow(new NotFoundException(errorMsg));
+    when(scoreCardService.findOrThrow(anyLong())).thenThrow(new NotFoundException(errorMsg));
 
     var response = postScore(NEW_SCORE);
     assertNotFoundResponse(response, errorMsg, 1);

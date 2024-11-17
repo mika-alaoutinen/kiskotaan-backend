@@ -24,7 +24,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import mikaa.feature.course.CourseEntity;
 import mikaa.feature.player.PlayerEntity;
-import mikaa.feature.score.ScoreEntity;
 
 @Data
 @EqualsAndHashCode(callSuper = false)

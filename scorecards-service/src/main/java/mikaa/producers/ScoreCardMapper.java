@@ -1,7 +1,5 @@
 package mikaa.producers;
 
-import java.util.stream.Collectors;
-
 import mikaa.domain.Player;
 import mikaa.domain.ScoreCard;
 import mikaa.feature.results.ScoreCardInput;
@@ -13,16 +11,19 @@ import mikaa.kiskotaan.scorecard.ScoreEntry;
 interface ScoreCardMapper {
 
   static ScoreCardPayload toPayload(ScoreCard scoreCard) {
-    var playerIds = scoreCard.players().stream().map(Player::id).toList();
+    var playerIds = scoreCard.players()
+        .stream()
+        .map(Player::id)
+        .toList();
 
     var results = RoundResultCalculator.results(ScoreCardInput.from(scoreCard))
         .stream()
-        .collect(Collectors.toMap(
-            roundScore -> roundScore.playerId() + "",
-            roundScore -> RoundResult.newBuilder()
-                .setResult(roundScore.total())
-                .setTotal(roundScore.total())
-                .build()));
+        .map(roundScore -> RoundResult.newBuilder()
+            .setPlayerId(roundScore.playerId())
+            .setResult(roundScore.total())
+            .setTotal(roundScore.total())
+            .build())
+        .toList();
 
     var scores = scoreCard.scores()
         .stream()

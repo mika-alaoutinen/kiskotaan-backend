@@ -21,8 +21,8 @@
     {
       "name": "results",
       "type": {
-        "type": "map",
-        "values": "RoundResult"
+        "type": "array",
+        "items": "RoundResult"
       }
     },
     {

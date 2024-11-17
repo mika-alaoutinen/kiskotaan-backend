@@ -15,10 +15,6 @@ mp:
       player-state:
         connector: smallrye-in-memory
         topic: Players-player_state
-      scorecard-state-incoming:
-        broadcast: true
-        connector: smallrye-in-memory
-        topic: Scorecards-scorecard_state
       scores-incoming:
         connector: smallrye-in-memory
         topic: Scorecards-score_entries
@@ -26,14 +22,7 @@ mp:
     outgoing:
       scorecard-state:
         connector: smallrye-in-memory
-        merge: true
         topic: Scorecards-scorecard_state
       scores:
         connector: smallrye-in-memory
         topic: Scorecards-score_entries
-      scorecard-by-hole-state:
-        connector: smallrye-in-memory
-        topic: Scorecards-scorecard_by_hole_state
-      scorecard-by-player-state:
-        connector: smallrye-in-memory
-        topic: Scorecards-scorecard_by_player_state

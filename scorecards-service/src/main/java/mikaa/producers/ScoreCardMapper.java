@@ -3,7 +3,6 @@ package mikaa.producers;
 import java.util.stream.Collectors;
 
 import mikaa.domain.Player;
-import mikaa.domain.Score;
 import mikaa.domain.ScoreCard;
 import mikaa.kiskotaan.scorecard.RoundResult;
 import mikaa.kiskotaan.scorecard.ScoreCardPayload;
@@ -25,24 +24,22 @@ interface ScoreCardMapper {
 
     var scores = scoreCard.scores()
         .stream()
-        .map(score -> mapScore(scoreCard.id(), score))
+        .map(score -> ScoreEntry.newBuilder()
+            .setId(score.id())
+            .setPlayerId(score.playerId())
+            .setScoreCardId(scoreCard.id())
+            .setHole(score.hole())
+            .setScore(score.score())
+            .build())
         .toList();
 
-    return new ScoreCardPayload(
-        scoreCard.id(),
-        scoreCard.course().id(),
-        playerIds,
-        results,
-        scores);
-  }
-
-  private static ScoreEntry mapScore(long scoreCardId, Score score) {
-    return new ScoreEntry(
-        score.id(),
-        score.playerId(),
-        scoreCardId,
-        score.hole(),
-        score.score());
+    return ScoreCardPayload.newBuilder()
+        .setId(scoreCard.id())
+        .setCourseId(scoreCard.course().id())
+        .setPlayerIds(playerIds)
+        .setResults(results)
+        .setScores(scores)
+        .build();
   }
 
 }
